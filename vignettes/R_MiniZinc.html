@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Akshit Achara" />
+
+<meta name="date" content="2020-03-12" />
+
+<title>Using MiniZinc with R</title>
+
+<script src="R_MiniZinc_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="R_MiniZinc_files/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="R_MiniZinc_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="R_MiniZinc_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="R_MiniZinc_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="R_MiniZinc_files/navigation-1.1/tabsets.js"></script>
+<link href="R_MiniZinc_files/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="R_MiniZinc_files/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Using MiniZinc with R</h1>
+<h4 class="author">Akshit Achara</h4>
+<h4 class="date">2020-03-12</h4>
+
+</div>
+
+
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>This is a package which is aimed to provide functionalities to R users to be able to use MiniZinc. MiniZinc can be used to solve integer programming,knapsack and binpacking,graph algorithms and network flows,assignment problems,resource scheduling or planning, routing (incl mid-sized TSP) and other constraint satisfaction problems.</p>
+<p>The current implementation includes functionalities to create a basic model file(.mzn file), and data_file(.dzn file) and get the results. A basic checker model has also been implemented to check the solutions.</p>
+<div class="figure">
+<img src="/home/akshit/RMiniZinc/data/model_minizinc.png" alt="Structure of the model/functions to create the model" width="60%" />
+<p class="caption">
+Structure of the model/functions to create the model
+</p>
+</div>
+<div class="figure">
+<img src="/home/akshit/RMiniZinc/data/get_solution.png" alt="Obtaining the results" width="50%" />
+<p class="caption">
+Obtaining the results
+</p>
+</div>
+<div class="figure">
+<img src="/home/akshit/RMiniZinc/data/check_sol.png" alt="Steps to check if the solution is correct" width="30%" />
+<p class="caption">
+Steps to check if the solution is correct
+</p>
+</div>
+<div id="problem-1satisfaction" class="section level2">
+<h2>Problem 1(Satisfaction)</h2>
+<p>A satisfaction problem described on page 5 of the MiniZinc manual has been solved below.The manual is stored in the data folder.The problem is to colour 7 Australian states with three different colours.The decision variables are different states and all have the range of 1 to 3 which means that they can take one of the three colours. More details can be seen from the pdf.</p>
+<div id="create-the-model-file" class="section level3">
+<h3>Create the Model File</h3>
+<pre class="r"><code>single_var_types &lt;- &quot;int&quot;
+single_var_names &lt;- &quot;n&quot;
+single_var_values &lt;- c(5)
+create_vars(single_var_names, single_var_types, data_file_bool = FALSE, 
+            single_var_values= single_var_values,path = path_of_model_mzn)
+single_dec_var_names &lt;- c(&quot;wa&quot;,&quot;nt&quot;,&quot;sa&quot;,&quot;q&quot;,&quot;nsw&quot;,&quot;v&quot;,&quot;t&quot;)
+single_dec_var_ranges &lt;- list(c(1,3),c(1,3),c(1,3),c(1,3),c(1,3),c(1,3),c(1,3))
+create_decision_vars(single_dec_var_names,single_dec_var_ranges, path = path_of_model_mzn)
+constraint_list &lt;- c(&quot;wa != nt&quot;,&quot;wa != sa&quot;,&quot;nt != sa&quot;,&quot;nt != q&quot;,&quot;sa != q&quot;,&quot;sa != nsw&quot;,&quot;sa != v&quot;,&quot;q != nsw&quot;,&quot;nsw != v&quot;)
+setup_constraints(constraint_list, path = path_of_model_mzn)
+type_of_problem &lt;- &#39;s&#39; #satisfaction problem
+setup_solvers(type_of_problem, path =  path_of_model_mzn)
+default_output_bool &lt;- TRUE
+setup_output(path = path_of_model_mzn, default_output_bool = TRUE)</code></pre>
+</div>
+<div id="give-both-the-input-files-and-get-the-results" class="section level3">
+<h3>Give both the input files and get the Results</h3>
+<p>Make sure that you have minizinc installed on your system and you have enabled the command line use</p>
+<pre class="r"><code> cat(get_results(path_of_model_mzn,solver = &quot;Gecode&quot;, task = &quot;solve&quot;,
+                FlatZinc_bool = FALSE, data_file_bool = FALSE))</code></pre>
+<pre><code>## wa = 3; nt = 2; sa = 1; q = 3; nsw = 2; v = 3; t = 1; ----------</code></pre>
+</div>
+<div id="check-the-results" class="section level3">
+<h3>Check the results</h3>
+<p>Checker file can be created to check the results</p>
+<pre class="r"><code>single_dec_var_types &lt;- c(&quot;int&quot;,&quot;int&quot;,&quot;int&quot;,&quot;int&quot;,&quot;int&quot;,&quot;int&quot;,&quot;int&quot;)
+setup_checker_model_input(single_dec_var_names,single_dec_var_types, constraint_list,
+                          path = path_of_model_mzc_mzn)
+cat(check_results(path_of_model_mzn = path_of_model_mzn,path_of_model_mzc_mzn = path_of_model_mzc_mzn))</code></pre>
+<pre><code>## wa = 3; nt = 2; sa = 1; q = 3; nsw = 2; v = 3; t = 1; % Solution checker report: % CORRECT ----------</code></pre>
+</div>
+<div id="create-a-data-file" class="section level3">
+<h3>create a data file</h3>
+<p>A sample data file for this model could have been created like this</p>
+<pre class="r"><code>var1 &lt;- &quot;n&quot;
+val1 &lt;- 5
+create_data_dzn(&quot;n&quot;,5, path = path_of_data_dzn)</code></pre>
+</div>
+</div>
+<div id="problem-2-maximization" class="section level2">
+<h2>Problem 2 (Maximization)</h2>
+<p>A banana cake which takes 250g of selfraising flour, 2 mashed bananas, 75g sugar and 100g of butter, and a chocolate cake which takes 200g of self-raising flour, 75g of cocoa, 150g sugar and 150g of butter. We can sell a chocolate cake for $4.50 and a banana cake for $4.00. And we have 4kg self-raising flour, 6 bananas, 2kg of sugar, 500g of butter and 500g of cocoa. The question is how many of each sort of cake should we bake for the fete to maximise the profit. This question can be found in the manual.</p>
+<div id="solve-the-maximization-problem" class="section level3">
+<h3>solve the maximization problem</h3>
+<pre class="r"><code>single_decision_var_names &lt;- c(&quot;bananas&quot;,&quot;cakes&quot;)
+single_decision_var_ranges &lt;- list(c(1,100),c(1,100))
+create_decision_vars(single_decision_var_names,single_decision_var_ranges, append_bool = FALSE,
+                     path = path_of_model_mzn)
+constraint_list &lt;- c(&quot;250*bananas + 200*cakes &lt;= 4000&quot;,&quot;75*bananas + 150*cakes &lt;= 2000&quot;,
+                     &quot;100*bananas + 150*cakes &lt;= 500&quot;,&quot;75*cakes &lt;= 500&quot;)
+setup_constraints(constraint_list, path = path_of_model_mzn)
+type_of_problem &lt;- &quot;max&quot; #maximization problem
+arithmetic_expression &lt;- &quot;400*bananas + 450*cakes&quot;
+setup_solvers(type_of_problem, arithmetic_expression, path = path_of_model_mzn)
+get_results(path_of_model_mzn,data_file_bool = FALSE)</code></pre>
+<pre><code>## [1] &quot;bananas = 2;&quot; &quot;cakes = 2;&quot;   &quot;----------&quot;   &quot;==========&quot;</code></pre>
+</div>
+<div id="check-the-results-1" class="section level3">
+<h3>check the results</h3>
+<pre class="r"><code>single_decision_var_types &lt;- c(&quot;int&quot;, &quot;int&quot;)
+setup_checker_model_input(single_decision_var_names,single_decision_var_types, constraint_list,
+                          path = path_of_model_mzc_mzn)
+cat(check_results(path_of_model_mzn = path_of_model_mzn,path_of_model_mzc_mzn = path_of_model_mzc_mzn))</code></pre>
+<pre><code>## bananas = 2; cakes = 2; % Solution checker report: % CORRECT ---------- ==========</code></pre>
+</div>
+</div>
+<div id="problem-3-minimization" class="section level2">
+<h2>Problem 3 (Minimization)</h2>
+<p>The maximization problem above can also be solved as a minimization problem.</p>
+<div id="solve-the-minimization-problem" class="section level3">
+<h3>solve the minimization problem</h3>
+<pre class="r"><code>single_decision_var_names &lt;- c(&quot;bananas&quot;,&quot;cakes&quot;)
+single_decision_var_ranges &lt;- list(c(1,100),c(1,100))
+create_decision_vars(single_decision_var_names,single_decision_var_ranges, append_bool = FALSE,
+                     path = path_of_model_mzn)
+constraint_list &lt;- c(&quot;250*bananas + 200*cakes &lt;= 4000&quot;,&quot;75*bananas + 150*cakes &lt;= 2000&quot;,
+                     &quot;100*bananas + 150*cakes &lt;= 500&quot;,&quot;75*cakes &lt;= 500&quot;)
+setup_constraints(constraint_list, path = path_of_model_mzn)
+type_of_problem &lt;- &quot;min&quot; #minimization problem
+arithmetic_expression &lt;- &quot;400*bananas + 450*cakes&quot;
+setup_solvers(type_of_problem, arithmetic_expression, path = path_of_model_mzn)
+get_results(path_of_model_mzn,data_file_bool = FALSE)</code></pre>
+<pre><code>## [1] &quot;bananas = 1;&quot; &quot;cakes = 1;&quot;   &quot;----------&quot;   &quot;==========&quot;</code></pre>
+</div>
+<div id="check-the-results-2" class="section level3">
+<h3>check the results</h3>
+<pre class="r"><code>single_decision_var_types &lt;- c(&quot;int&quot;, &quot;int&quot;)
+setup_checker_model_input(single_decision_var_names,single_decision_var_types, constraint_list,
+                          path = path_of_model_mzc_mzn)
+cat(check_results(path_of_model_mzn = path_of_model_mzn,path_of_model_mzc_mzn = path_of_model_mzc_mzn))</code></pre>
+<pre><code>## bananas = 1; cakes = 1; % Solution checker report: % CORRECT ---------- ==========</code></pre>
+</div>
+</div>
+<div id="outlook" class="section level2">
+<h2>Outlook</h2>
+<p>The current implementation is very simple and is only useful for basic problems. The implementation can be extended to provide more functionalities like:</p>
+<ol style="list-style-type: decimal">
+<li>adding better ways to create a model, data and checker files</li>
+<li>using more commandline options while calling minizinc</li>
+</ol>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
