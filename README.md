@@ -10,4 +10,4 @@ Donwload the package and put it into your home directory for building the packag
 
 Please check the package vignette for more information!
 
-NOTE: Please give co-authorship if you are using or modifying this code!
+
