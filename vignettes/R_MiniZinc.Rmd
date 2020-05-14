@@ -1,157 +1,61 @@
 ---
-title: "Using MiniZinc with R"
+title: "MiniZinc Interface with R"
 author: Akshit Achara 
 date: "`r Sys.Date()`"
 output: 
-  rmarkdown::html_document:
-    self_contained: no
+  rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{R functionalities to use MiniZinc}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
-#Introduction
+
+
+## Introduction
+
 This is a package which is aimed to provide functionalities to R users to be able to use MiniZinc.
 MiniZinc can be used to solve integer programming,knapsack and binpacking,graph algorithms and 
 network flows,assignment problems,resource scheduling or planning, routing (incl mid-sized TSP)
 and other constraint satisfaction problems.
 
-The current implementation includes functionalities to create a basic model file(.mzn file), and 
-data_file(.dzn file) and get the results. A basic checker model has also been implemented to check the solutions. 
+The current implementation includes functionalities to create a basic model file(.mzn file) and get the results. 
 
-```{r pressure, echo=FALSE, fig.cap="Structure of the model/functions to create the model", out.width = '60%'}
-knitr::include_graphics("~/RMiniZinc/data/model_minizinc.png")
-```
+## Problem 1(Satisfaction)
 
-```{r , echo=FALSE, fig.cap="Obtaining the results", out.width = '50%'}
-knitr::include_graphics("~/RMiniZinc/data/get_solution.png")
-```
-
-```{r , echo=FALSE, fig.cap="Steps to check if the solution is correct", out.width = '30%'}
-knitr::include_graphics("~/RMiniZinc/data/check_sol.png")
-```
-
-##Problem 1(Satisfaction)
 A satisfaction problem described on page 5 of the MiniZinc manual has been solved below.The manual is stored in the data folder.The problem is to colour 7 Australian states with three different colours.The decision variables are different states and all have the range of 1 to 3 which means that they can take one of the three colours. More details can be seen from the pdf.
 
 
 
-###Create the Model File
+### Create the Model File
+
 ```{r, echo=FALSE}
-path_of_model_mzn <- "~/RMiniZinc/data/model.mzn"
+library(rminizinc)
+model <- tempfile(fileext=".mzn" )
 ```
 ```{r}
-single_var_types <- "int"
-single_var_names <- "n"
-single_var_values <- c(5)
-create_vars(single_var_names, single_var_types, data_file_bool = FALSE, 
-            single_var_values= single_var_values,path = path_of_model_mzn)
+par1_type <- "int"
+par1_name <- "n"
+par1_value <- 5
+new_param(model = model,par_name =  par1_name,par_type = par1_type, single_par_val = par1_value)
 single_dec_var_names <- c("wa","nt","sa","q","nsw","v","t")
 single_dec_var_ranges <- list(c(1,3),c(1,3),c(1,3),c(1,3),c(1,3),c(1,3),c(1,3))
-create_decision_vars(single_dec_var_names,single_dec_var_ranges, path = path_of_model_mzn)
+create_decision_vars(model = model,single_dec_var_names,single_dec_var_ranges)
 constraint_list <- c("wa != nt","wa != sa","nt != sa","nt != q","sa != q","sa != nsw","sa != v","q != nsw","nsw != v")
-setup_constraints(constraint_list, path = path_of_model_mzn)
+setup_constraints(model=model, constraint_list)
 type_of_problem <- 's' #satisfaction problem
-setup_solvers(type_of_problem, path =  path_of_model_mzn)
-default_output_bool <- TRUE
-setup_output(path = path_of_model_mzn, default_output_bool = TRUE)
-
+specify_problem(model = model, type_of_problem)
 ```
 
 
 
-###Give both the input files and get the Results
+### Give both the input files and get the Results
+
 Make sure that you have minizinc installed on your system and you have enabled the command line use
 ```{r,results='markup'}
- cat(get_results(path_of_model_mzn,solver = "Gecode", task = "solve",
-                FlatZinc_bool = FALSE, data_file_bool = FALSE))
+ str_options = solver_options(statistics = TRUE)
+ cat(get_mzn_results(model = model,str_options = str_options))
+```
+```{r, echo=FALSE, results='hide'}
+ file.remove(model)
 ```
 
-###Check the results
-Checker file can be created to check the results
-```{r, echo=FALSE}
-path_of_model_mzc_mzn <- "~/RMiniZinc/data/model.mzc.mzn"
-```
-```{r}
-single_dec_var_types <- c("int","int","int","int","int","int","int")
-setup_checker_model_input(single_dec_var_names,single_dec_var_types, constraint_list,
-                          path = path_of_model_mzc_mzn)
-cat(check_results(path_of_model_mzn = path_of_model_mzn,path_of_model_mzc_mzn = path_of_model_mzc_mzn))
-```
-
-###create a data file 
-A sample data file for this model could have been created like this
-```{r,echo=FALSE}
-path_of_data_dzn <- "~/RMiniZinc/data/data.dzn"
-```
-```{r}
-var1 <- "n"
-val1 <- 5
-create_data_dzn("n",5, path = path_of_data_dzn)
-```
-
-##Problem 2 (Maximization)
-
-A banana cake which takes 250g of selfraising flour, 2 mashed bananas, 75g sugar and 100g of butter, and a chocolate cake which takes 200g of self-raising flour, 75g of cocoa, 150g sugar and 150g of butter. We can sell a
-chocolate cake for \$4.50 and a banana cake for \$4.00. And we have 4kg self-raising flour, 6
-bananas, 2kg of sugar, 500g of butter and 500g of cocoa. The question is how many of each
-sort of cake should we bake for the fete to maximise the profit. This question can be found in the manual.
-
-###solve the maximization problem
-```{r }
-single_decision_var_names <- c("bananas","cakes")
-single_decision_var_ranges <- list(c(1,100),c(1,100))
-create_decision_vars(single_decision_var_names,single_decision_var_ranges, append_bool = FALSE,
-                     path = path_of_model_mzn)
-constraint_list <- c("250*bananas + 200*cakes <= 4000","75*bananas + 150*cakes <= 2000",
-                     "100*bananas + 150*cakes <= 500","75*cakes <= 500")
-setup_constraints(constraint_list, path = path_of_model_mzn)
-type_of_problem <- "max" #maximization problem
-arithmetic_expression <- "400*bananas + 450*cakes"
-setup_solvers(type_of_problem, arithmetic_expression, path = path_of_model_mzn)
-get_results(path_of_model_mzn,data_file_bool = FALSE)
-
-```
-
-###check the results
-```{r}
-single_decision_var_types <- c("int", "int")
-setup_checker_model_input(single_decision_var_names,single_decision_var_types, constraint_list,
-                          path = path_of_model_mzc_mzn)
-cat(check_results(path_of_model_mzn = path_of_model_mzn,path_of_model_mzc_mzn = path_of_model_mzc_mzn))
-```
-
-##Problem 3 (Minimization)
-The maximization problem above can also be solved as a minimization problem.
-
-###solve the minimization problem
-```{r }
-single_decision_var_names <- c("bananas","cakes")
-single_decision_var_ranges <- list(c(1,100),c(1,100))
-create_decision_vars(single_decision_var_names,single_decision_var_ranges, append_bool = FALSE,
-                     path = path_of_model_mzn)
-constraint_list <- c("250*bananas + 200*cakes <= 4000","75*bananas + 150*cakes <= 2000",
-                     "100*bananas + 150*cakes <= 500","75*cakes <= 500")
-setup_constraints(constraint_list, path = path_of_model_mzn)
-type_of_problem <- "min" #minimization problem
-arithmetic_expression <- "400*bananas + 450*cakes"
-setup_solvers(type_of_problem, arithmetic_expression, path = path_of_model_mzn)
-get_results(path_of_model_mzn,data_file_bool = FALSE)
-
-```
-
-###check the results
-```{r}
-single_decision_var_types <- c("int", "int")
-setup_checker_model_input(single_decision_var_names,single_decision_var_types, constraint_list,
-                          path = path_of_model_mzc_mzn)
-cat(check_results(path_of_model_mzn = path_of_model_mzn,path_of_model_mzc_mzn = path_of_model_mzc_mzn))
-```
-
-##Outlook
-
-The current implementation is very simple and is only useful for basic problems.
-The implementation can be extended to provide more functionalities like:
-
-1) adding better ways to create a model, data and checker files
-2) using more commandline options while calling minizinc
