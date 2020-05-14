@@ -1,13 +1,10 @@
 # RMiniZinc
 
+##Under Development
+
+This package is aimed towards providing the r users to use minizinc from within R. Currently basic integer programming problems can be solved. The package vignette contains a basic demonstration of how to create a MiniZinc model for basic constraint programming problems and obtain a string output.
 
 
-This package is aimed towards providing the r users to use minizinc from within R.
-Currently basic integer programming problems can be solved.
-A basic functionality to check the solution is also provided.
 
-Donwload the package and put it into your home directory for building the package.
-
-Please check the package vignette for more information!
 
 
