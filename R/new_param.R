@@ -1,4 +1,4 @@
-#' Declare a new parameter for the MiniZinc model
+#' Declare a new parameter for the MiniZinc model.
 #' @export
 #' @param model an instance of the temporary mzn file
 #' @param par_name the name of the parameter to initialize

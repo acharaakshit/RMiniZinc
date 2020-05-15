@@ -2,7 +2,7 @@
 % Please edit documentation in R/new_param.R
 \name{new_param}
 \alias{new_param}
-\title{Declare a new parameter for the MiniZinc model}
+\title{Declare a new parameter for the MiniZinc model.}
 \usage{
 new_param(
   model,
@@ -36,7 +36,7 @@ new_param(
 \item{array_type}{The data type of values present in the array}
 }
 \description{
-Declare a new parameter for the MiniZinc model
+Declare a new parameter for the MiniZinc model.
 }
 \details{
 The variables declared in.

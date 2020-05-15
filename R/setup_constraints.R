@@ -1,4 +1,4 @@
-#' setup the constraints of the model. structure of output should look like constraint 〈Boolean expression〉;
+#' specify the constraints of the model.
 #' @export
 #' @param  model the oath of the model_mzn file
 #' @param constraint_list list of the constraints of the model

@@ -2,7 +2,7 @@
 % Please edit documentation in R/setup_constraints.R
 \name{setup_constraints}
 \alias{setup_constraints}
-\title{setup the constraints of the model. structure of output should look like constraint 〈Boolean expression〉;}
+\title{specify the constraints of the model.}
 \usage{
 setup_constraints(model, constraint_list)
 }
@@ -12,5 +12,5 @@ setup_constraints(model, constraint_list)
 \item{constraint_list}{list of the constraints of the model}
 }
 \description{
-setup the constraints of the model. structure of output should look like constraint 〈Boolean expression〉;
+specify the constraints of the model.
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_mzn_results.R
 \name{get_mzn_results}
 \alias{get_mzn_results}
-\title{get the minizinc results from the command line}
+\title{get the minizinc results from the command line.}
 \usage{
 get_mzn_results(
   model,
@@ -15,7 +15,7 @@ get_mzn_results(
 \arguments{
 \item{model}{the path of the temporary model file.}
 
-\item{str_options}{string returned by solver_options()}
+\item{str_options}{string returned by solver_options().}
 
 \item{as_string}{bool to specify if output is required as a string.}
 
@@ -24,5 +24,5 @@ get_mzn_results(
 \item{timeout}{time in milis (integer) specifying the timeout limit. NA by default.}
 }
 \description{
-get the minizinc results from the command line
+get the minizinc results from the command line.
 }

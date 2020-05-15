@@ -1,4 +1,4 @@
-#' Specify the solver options
+#' Specify the command line options for MiniZinc.
 #' @export
 #' @param solver name of the solver to be used by MiniZinc "Gecode" by default.
 #' @param all_solutions bool to specify if all the solutions should be printed or not. FALSE by default.

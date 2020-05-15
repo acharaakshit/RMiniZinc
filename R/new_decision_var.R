@@ -1,4 +1,4 @@
-#' create the decision variables
+#' create the variables.
 #' @export
 #' @param single_dec_var_names list of names of single decision variables
 #' @param single_dec_var_ranges list of ranges of the single decision variables. Typical range should look like c(2,10).

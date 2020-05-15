@@ -1,7 +1,7 @@
-#' get the minizinc results from the command line
+#' get the minizinc results from the command line.
 #' @export
 #' @param model the path of the temporary model file.
-#' @param str_options string returned by solver_options()
+#' @param str_options string returned by solver_options().
 #' @param as_string bool to specify if output is required as a string.
 #' @param as_R6 bool to specify if output is required as an R6 class object.
 #' @param timeout time in milis (integer) specifying the timeout limit. NA by default.

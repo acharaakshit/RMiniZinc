@@ -2,7 +2,7 @@
 % Please edit documentation in R/new_decision_var.R
 \name{create_decision_vars}
 \alias{create_decision_vars}
-\title{create the decision variables}
+\title{create the variables.}
 \usage{
 create_decision_vars(
   single_dec_var_names,
@@ -32,5 +32,5 @@ should look like c(lower_limit,upper_limit), for eg. c(2,10) for 2D array and si
 \item{model}{the path for model mzn}
 }
 \description{
-create the decision variables
+create the variables.
 }

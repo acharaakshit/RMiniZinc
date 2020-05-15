@@ -1,4 +1,4 @@
-#' mention the type of problem
+#' mention if the problem is satisfaction, minimization or maximization.
 #' @export
 #' @param model the path of model mzn
 #' @param type_of_problem the type of optimization problem. choose s for satisfaction problem,

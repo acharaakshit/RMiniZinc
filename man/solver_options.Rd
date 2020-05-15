@@ -2,7 +2,7 @@
 % Please edit documentation in R/solver_options.R
 \name{solver_options}
 \alias{solver_options}
-\title{Specify the solver options}
+\title{Specify the command line options for MiniZinc.}
 \usage{
 solver_options(
   solver = "Gecode",
@@ -24,5 +24,5 @@ solver_options(
 \item{threads}{integer specifying the number of threads to use. 1 by default.}
 }
 \description{
-Specify the solver options
+Specify the command line options for MiniZinc.
 }

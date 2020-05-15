@@ -2,7 +2,7 @@
 % Please edit documentation in R/specify_problem.R
 \name{specify_problem}
 \alias{specify_problem}
-\title{mention the type of problem}
+\title{mention if the problem is satisfaction, minimization or maximization.}
 \usage{
 specify_problem(model, type_of_problem, arithmetic_expression = " ")
 }
@@ -16,5 +16,5 @@ min for minimization problem and max for maximization}
 problems. Empty by default.}
 }
 \description{
-mention the type of problem
+mention if the problem is satisfaction, minimization or maximization.
 }
