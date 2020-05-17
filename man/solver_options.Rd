@@ -2,17 +2,21 @@
 % Please edit documentation in R/solver_options.R
 \name{solver_options}
 \alias{solver_options}
-\title{Specify the command line options for MiniZinc.}
+\title{command line options for MiniZinc.}
 \usage{
 solver_options(
+  model,
   solver = "Gecode",
   all_solutions = FALSE,
   statistics = FALSE,
   keep_files = FALSE,
-  threads = 1
+  threads = 1,
+  timeout = NA
 )
 }
 \arguments{
+\item{model}{the path of the temporary model.}
+
 \item{solver}{name of the solver to be used by MiniZinc "Gecode" by default.}
 
 \item{all_solutions}{bool to specify if all the solutions should be printed or not. FALSE by default.}
@@ -22,7 +26,9 @@ solver_options(
 \item{keep_files}{bool to specify if the flattened model should be kept or not. FALSE by default.}
 
 \item{threads}{integer specifying the number of threads to use. 1 by default.}
+
+\item{timeout}{time in milis (integer) specifying the timeout limit. NA by default.}
 }
 \description{
-Specify the command line options for MiniZinc.
+Specify the different command line options that can be used with MiniZinc.
 }

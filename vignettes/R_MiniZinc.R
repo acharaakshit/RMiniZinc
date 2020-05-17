@@ -1,24 +1,63 @@
-## ---- echo=FALSE--------------------------------------------------------------
+## -----------------------------------------------------------------------------
 library(rminizinc)
-model <- tempfile(fileext=".mzn" )
+par = variable$new(type = "array", kind = "parameter", value = array(data = c(1,2,3,4,5)))
+dec = variable$new(type = "float", kind = "decision", domain = c(0, 1))
 
 ## -----------------------------------------------------------------------------
-par1_type <- "int"
-par1_name <- "n"
-par1_value <- 5
-new_param(model = model,par_name =  par1_name,par_type = par1_type, single_par_val = par1_value)
-single_dec_var_names <- c("wa","nt","sa","q","nsw","v","t")
-single_dec_var_ranges <- list(c(1,3),c(1,3),c(1,3),c(1,3),c(1,3),c(1,3),c(1,3))
-create_decision_vars(model = model,single_dec_var_names,single_dec_var_ranges)
-constraint_list <- c("wa != nt","wa != sa","nt != sa","nt != q","sa != q","sa != nsw","sa != v","q != nsw","nsw != v")
-setup_constraints(model=model, constraint_list)
-type_of_problem <- 's' #satisfaction problem
-specify_problem(model = model, type_of_problem)
+par = variable$new(type = "float", kind = "parameter", value = 0.8)
+var1 = variable$new(type = "float", kind = "decision", domain = c(0, par$value))
+var2 = variable$new(type = "float", kind = "decision", domain = c(0, par$value))
 
-## ----results='markup'---------------------------------------------------------
- str_options = solver_options(statistics = TRUE)
- cat(get_mzn_results(model = model,str_options = str_options))
+constr = constraint$new(operator = ">=", variables = c(var1, var2))
 
-## ---- echo=FALSE, results='hide'----------------------------------------------
- file.remove(model)
+## -----------------------------------------------------------------------------
+obj <- objective$new(type_of_problem = "satisfy")
+
+## -----------------------------------------------------------------------------
+# parameter variable
+p1 = variable$new(type = "int", value = 3, kind = "parameter")
+
+# decision variables
+v1 = variable$new(type = "int", kind = "decision", domain = c(1, p1$value), 
+                  name = "wa")
+v2 = variable$new(type = "int", kind = "decision", domain = c(1, p1$value), 
+                  name = "nt")
+v3 = variable$new(type = "int", kind = "decision", domain = c(1, p1$value), 
+                  name = "sa")
+v4 = variable$new(type = "int", kind = "decision", domain = c(1, p1$value),
+                  name = "q")
+v5 = variable$new(type = "int", kind = "decision", domain = c(1, p1$value),
+                  name = "nsw")
+v6 = variable$new(type = "int", kind = "decision", domain = c(1, p1$value),
+                  name = "v")
+v7 = variable$new(type = "int", kind = "decision", domain = c(1, p1$value),
+                  name = "t")
+vars = c(v1, v2, v3, v4, v5, v6, v7)
+
+# constraints
+c1 = constraint$new(operator = "!=", variables = c(v1, v2))
+c2 = constraint$new(operator = "!=", variables = c(v1, v3))
+c3 = constraint$new(operator = "!=", variables = c(v2, v3))
+c4 = constraint$new(operator = "!=", variables = c(v2, v4))
+c5 = constraint$new(operator = "!=", variables = c(v3, v4))
+c6 = constraint$new(operator = "!=", variables = c(v3, v5))
+c7 = constraint$new(operator = "!=", variables = c(v3, v6))
+c8 = constraint$new(operator = "!=", variables = c(v4, v5))
+c9 = constraint$new(operator = "!=", variables = c(v5, v6))
+constr = c(c1, c2, c3, c4, c5, c6, c7, c8, c9)
+
+objective_of_problem  = objective$new(type_of_problem = "satisfy")
+
+# create the model
+m = model$new(parameter = c(p1), decision = vars, constraints = constr, 
+              objective = objective_of_problem)
+
+## -----------------------------------------------------------------------------
+solution <- results$new(model = m, result_type = "string")
+# show the solution
+print(solution$result)
+
+## ----echo=FALSE---------------------------------------------------------------
+# remove the temporary model file 
+file.remove(solution$mzn)
 

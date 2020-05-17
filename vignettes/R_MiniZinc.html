@@ -12,7 +12,7 @@
 
 <meta name="author" content="Akshit Achara" />
 
-<meta name="date" content="2020-05-14" />
+<meta name="date" content="2020-05-17" />
 
 <title>MiniZinc Interface with R</title>
 
@@ -301,39 +301,115 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">MiniZinc Interface with R</h1>
 <h4 class="author">Akshit Achara</h4>
-<h4 class="date">2020-05-14</h4>
+<h4 class="date">2020-05-17</h4>
 
 
 
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>This is a package which is aimed to provide functionalities to R users to be able to use MiniZinc. MiniZinc can be used to solve integer programming,knapsack and binpacking,graph algorithms and network flows,assignment problems,resource scheduling or planning, routing (incl mid-sized TSP) and other constraint satisfaction problems.</p>
-<p>The current implementation includes functionalities to create a basic model file(.mzn file) and get the results.</p>
+<p>MiniZinc is a free and open-source constraint modeling language. Constraint satisfaction and discrete optimization problems can be formulated in a high-level modeling language. Models are compiled into an intermediate representation that is understood by a wide range of solvers. MiniZinc itself provides several solvers, for instance GeoCode. The existing packages in R are not powerful enough to solve even mid-sized problems in combinatorial optimization</p>
+<p>There are implementations of an Interface to MiniZinc in Python like MiniZinc Python and pymzn and JMiniZinc for Java but such an interface does not exist for R.</p>
+<p>This package provides an implementation of a very simple and easy to use interface for R that will help R users to solve optimization problems that can’t be solved with R currently.</p>
+<p>It’s important to understand R6 classes before getting into the details. If you are not comfortable with R6, please go through this <a href="https://adv-r.hadley.nz/r6.html">tutorial</a>.</p>
+<p>It would be nice to go through this <a href="https://www.minizinc.org/tutorial/minizinc-tute.pdf">manual</a> to understand more about MiniZinc. This is mainly for those who are interested in contributing to the package.</p>
+<p>Please make sure to install MiniZinc on your operating system and also ensure that minizinc is accessible from command line by typing ‘minizinc’ on the command line without the single quotes. The installation instructtiojns can be found at <a href="https://www.minizinc.org/doc-2.4.3/en/installation.html">instructions</a></p>
 </div>
-<div id="problem-1satisfaction" class="section level2">
-<h2>Problem 1(Satisfaction)</h2>
-<p>A satisfaction problem described on page 5 of the MiniZinc manual has been solved below.The manual is stored in the data folder.The problem is to colour 7 Australian states with three different colours.The decision variables are different states and all have the range of 1 to 3 which means that they can take one of the three colours. More details can be seen from the pdf.</p>
-<div id="create-the-model-file" class="section level3">
-<h3>Create the Model File</h3>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">par1_type &lt;-<span class="st"> &quot;int&quot;</span></a>
-<a class="sourceLine" id="cb1-2" data-line-number="2">par1_name &lt;-<span class="st"> &quot;n&quot;</span></a>
-<a class="sourceLine" id="cb1-3" data-line-number="3">par1_value &lt;-<span class="st"> </span><span class="dv">5</span></a>
-<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="kw">new_param</span>(<span class="dt">model =</span> model,<span class="dt">par_name =</span>  par1_name,<span class="dt">par_type =</span> par1_type, <span class="dt">single_par_val =</span> par1_value)</a>
-<a class="sourceLine" id="cb1-5" data-line-number="5">single_dec_var_names &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;wa&quot;</span>,<span class="st">&quot;nt&quot;</span>,<span class="st">&quot;sa&quot;</span>,<span class="st">&quot;q&quot;</span>,<span class="st">&quot;nsw&quot;</span>,<span class="st">&quot;v&quot;</span>,<span class="st">&quot;t&quot;</span>)</a>
-<a class="sourceLine" id="cb1-6" data-line-number="6">single_dec_var_ranges &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">3</span>),<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">3</span>),<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">3</span>),<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">3</span>),<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">3</span>),<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">3</span>),<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">3</span>))</a>
-<a class="sourceLine" id="cb1-7" data-line-number="7"><span class="kw">create_decision_vars</span>(<span class="dt">model =</span> model,single_dec_var_names,single_dec_var_ranges)</a>
-<a class="sourceLine" id="cb1-8" data-line-number="8">constraint_list &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;wa != nt&quot;</span>,<span class="st">&quot;wa != sa&quot;</span>,<span class="st">&quot;nt != sa&quot;</span>,<span class="st">&quot;nt != q&quot;</span>,<span class="st">&quot;sa != q&quot;</span>,<span class="st">&quot;sa != nsw&quot;</span>,<span class="st">&quot;sa != v&quot;</span>,<span class="st">&quot;q != nsw&quot;</span>,<span class="st">&quot;nsw != v&quot;</span>)</a>
-<a class="sourceLine" id="cb1-9" data-line-number="9"><span class="kw">setup_constraints</span>(<span class="dt">model=</span>model, constraint_list)</a>
-<a class="sourceLine" id="cb1-10" data-line-number="10">type_of_problem &lt;-<span class="st"> 's'</span> <span class="co">#satisfaction problem</span></a>
-<a class="sourceLine" id="cb1-11" data-line-number="11"><span class="kw">specify_problem</span>(<span class="dt">model =</span> model, type_of_problem)</a></code></pre></div>
+<div id="variables" class="section level1">
+<h1>Variables</h1>
+<p>There are two types of variables in MiniZinc – decision variables and parameters.</p>
+<p>Parameter is used to specify a parameter in a given problem. Parameters can be single types i.e integers (int), floating point numbers (float), Booleans (bool) and strings (string) but strings are only used in output formatting so they won’t be used as parameter types and collections i.e sets, enums and arrays (upto 5 dimensional arrays).</p>
+<p>Decision variables are the unknowns that Minizinc model is finding solutions for. We do not need to give them a value, but instead we give them a domain of possible values. Sometimes expressions involving other variables and paramters are also assigned to decision variables. Decision variables need to satisfy a set of constraints which form the core of the problem.</p>
+<p>Here are examples of how we can create parameters and decision variables.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(rminizinc)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">par =<span class="st"> </span>variable<span class="op">$</span><span class="kw">new</span>(<span class="dt">type =</span> <span class="st">&quot;array&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;parameter&quot;</span>, <span class="dt">value =</span> <span class="kw">array</span>(<span class="dt">data =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>)))</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3">dec =<span class="st"> </span>variable<span class="op">$</span><span class="kw">new</span>(<span class="dt">type =</span> <span class="st">&quot;float&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;decision&quot;</span>, <span class="dt">domain =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</a></code></pre></div>
+<p>More information on variable is available in <code>?variable</code>.</p>
 </div>
-<div id="give-both-the-input-files-and-get-the-results" class="section level3">
-<h3>Give both the input files and get the Results</h3>
-<p>Make sure that you have minizinc installed on your system and you have enabled the command line use</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"> str_options =<span class="st"> </span><span class="kw">solver_options</span>(<span class="dt">statistics =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"> <span class="kw">cat</span>(<span class="kw">get_mzn_results</span>(<span class="dt">model =</span> model,<span class="dt">str_options =</span> str_options))</a></code></pre></div>
-<pre><code>## wa = 3; nt = 2; sa = 1; q = 3; nsw = 2; v = 3; t = 1; ---------- %%  runtime:       0.000 (0.263 ms) %%  solvetime:     0.000 (0.089 ms) %%  solutions:     1 %%  variables:     7 %%  propagators:   9 %%  propagations:  9 %%  nodes:         4 %%  failures:      0 %%  restarts:      0 %%  peak depth:    3</code></pre>
+<div id="constraints" class="section level1">
+<h1>Constraints</h1>
+<p>Constraints specify the Boolean expressions that decision variables must satisfy. Examples of such constraints are given below.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">par =<span class="st"> </span>variable<span class="op">$</span><span class="kw">new</span>(<span class="dt">type =</span> <span class="st">&quot;float&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;parameter&quot;</span>, <span class="dt">value =</span> <span class="fl">0.8</span>)</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">var1 =<span class="st"> </span>variable<span class="op">$</span><span class="kw">new</span>(<span class="dt">type =</span> <span class="st">&quot;float&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;decision&quot;</span>, <span class="dt">domain =</span> <span class="kw">c</span>(<span class="dv">0</span>, par<span class="op">$</span>value))</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">var2 =<span class="st"> </span>variable<span class="op">$</span><span class="kw">new</span>(<span class="dt">type =</span> <span class="st">&quot;float&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;decision&quot;</span>, <span class="dt">domain =</span> <span class="kw">c</span>(<span class="dv">0</span>, par<span class="op">$</span>value))</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb2-5" data-line-number="5">constr =<span class="st"> </span>constraint<span class="op">$</span><span class="kw">new</span>(<span class="dt">operator =</span> <span class="st">&quot;&gt;=&quot;</span>, <span class="dt">variables =</span> <span class="kw">c</span>(var1, var2))</a></code></pre></div>
+<p>For now, this package can only support relational constraints that involve two variables at a time only. Once the development of the get_expression class is finshed, the package will support expressions involving multiple operators and variables.</p>
 </div>
+<div id="objective" class="section level1">
+<h1>Objective</h1>
+<p>The constraint programming problem can be of three types, namely: Satisfaction , Minimization and Maximization. Satisfaction problems produce all the solutions that satify the constraints whereas minimization and maximization problems produce the solution which minimizes and maximizes the given arithmetic expression. An example of how to specify the objective is shown below:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">obj &lt;-<span class="st"> </span>objective<span class="op">$</span><span class="kw">new</span>(<span class="dt">type_of_problem =</span> <span class="st">&quot;satisfy&quot;</span>)</a></code></pre></div>
+<p>Currently the minimization and maximization problems are not supported. They will be supported once the development of get_expression class is finished.</p>
+</div>
+<div id="models" class="section level1">
+<h1>Models</h1>
+<p>The components mentioned above can be combined to create a MiniZinc model. The demonstration of the same is given below:</p>
+<p>Here is an example of map coloring problem of Australian states.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="co"># parameter variable</span></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">p1 =<span class="st"> </span>variable<span class="op">$</span><span class="kw">new</span>(<span class="dt">type =</span> <span class="st">&quot;int&quot;</span>, <span class="dt">value =</span> <span class="dv">3</span>, <span class="dt">kind =</span> <span class="st">&quot;parameter&quot;</span>)</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="co"># decision variables</span></a>
+<a class="sourceLine" id="cb4-5" data-line-number="5">v1 =<span class="st"> </span>variable<span class="op">$</span><span class="kw">new</span>(<span class="dt">type =</span> <span class="st">&quot;int&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;decision&quot;</span>, <span class="dt">domain =</span> <span class="kw">c</span>(<span class="dv">1</span>, p1<span class="op">$</span>value), </a>
+<a class="sourceLine" id="cb4-6" data-line-number="6">                  <span class="dt">name =</span> <span class="st">&quot;wa&quot;</span>)</a>
+<a class="sourceLine" id="cb4-7" data-line-number="7">v2 =<span class="st"> </span>variable<span class="op">$</span><span class="kw">new</span>(<span class="dt">type =</span> <span class="st">&quot;int&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;decision&quot;</span>, <span class="dt">domain =</span> <span class="kw">c</span>(<span class="dv">1</span>, p1<span class="op">$</span>value), </a>
+<a class="sourceLine" id="cb4-8" data-line-number="8">                  <span class="dt">name =</span> <span class="st">&quot;nt&quot;</span>)</a>
+<a class="sourceLine" id="cb4-9" data-line-number="9">v3 =<span class="st"> </span>variable<span class="op">$</span><span class="kw">new</span>(<span class="dt">type =</span> <span class="st">&quot;int&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;decision&quot;</span>, <span class="dt">domain =</span> <span class="kw">c</span>(<span class="dv">1</span>, p1<span class="op">$</span>value), </a>
+<a class="sourceLine" id="cb4-10" data-line-number="10">                  <span class="dt">name =</span> <span class="st">&quot;sa&quot;</span>)</a>
+<a class="sourceLine" id="cb4-11" data-line-number="11">v4 =<span class="st"> </span>variable<span class="op">$</span><span class="kw">new</span>(<span class="dt">type =</span> <span class="st">&quot;int&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;decision&quot;</span>, <span class="dt">domain =</span> <span class="kw">c</span>(<span class="dv">1</span>, p1<span class="op">$</span>value),</a>
+<a class="sourceLine" id="cb4-12" data-line-number="12">                  <span class="dt">name =</span> <span class="st">&quot;q&quot;</span>)</a>
+<a class="sourceLine" id="cb4-13" data-line-number="13">v5 =<span class="st"> </span>variable<span class="op">$</span><span class="kw">new</span>(<span class="dt">type =</span> <span class="st">&quot;int&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;decision&quot;</span>, <span class="dt">domain =</span> <span class="kw">c</span>(<span class="dv">1</span>, p1<span class="op">$</span>value),</a>
+<a class="sourceLine" id="cb4-14" data-line-number="14">                  <span class="dt">name =</span> <span class="st">&quot;nsw&quot;</span>)</a>
+<a class="sourceLine" id="cb4-15" data-line-number="15">v6 =<span class="st"> </span>variable<span class="op">$</span><span class="kw">new</span>(<span class="dt">type =</span> <span class="st">&quot;int&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;decision&quot;</span>, <span class="dt">domain =</span> <span class="kw">c</span>(<span class="dv">1</span>, p1<span class="op">$</span>value),</a>
+<a class="sourceLine" id="cb4-16" data-line-number="16">                  <span class="dt">name =</span> <span class="st">&quot;v&quot;</span>)</a>
+<a class="sourceLine" id="cb4-17" data-line-number="17">v7 =<span class="st"> </span>variable<span class="op">$</span><span class="kw">new</span>(<span class="dt">type =</span> <span class="st">&quot;int&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;decision&quot;</span>, <span class="dt">domain =</span> <span class="kw">c</span>(<span class="dv">1</span>, p1<span class="op">$</span>value),</a>
+<a class="sourceLine" id="cb4-18" data-line-number="18">                  <span class="dt">name =</span> <span class="st">&quot;t&quot;</span>)</a>
+<a class="sourceLine" id="cb4-19" data-line-number="19">vars =<span class="st"> </span><span class="kw">c</span>(v1, v2, v3, v4, v5, v6, v7)</a>
+<a class="sourceLine" id="cb4-20" data-line-number="20"></a>
+<a class="sourceLine" id="cb4-21" data-line-number="21"><span class="co"># constraints</span></a>
+<a class="sourceLine" id="cb4-22" data-line-number="22">c1 =<span class="st"> </span>constraint<span class="op">$</span><span class="kw">new</span>(<span class="dt">operator =</span> <span class="st">&quot;!=&quot;</span>, <span class="dt">variables =</span> <span class="kw">c</span>(v1, v2))</a>
+<a class="sourceLine" id="cb4-23" data-line-number="23">c2 =<span class="st"> </span>constraint<span class="op">$</span><span class="kw">new</span>(<span class="dt">operator =</span> <span class="st">&quot;!=&quot;</span>, <span class="dt">variables =</span> <span class="kw">c</span>(v1, v3))</a>
+<a class="sourceLine" id="cb4-24" data-line-number="24">c3 =<span class="st"> </span>constraint<span class="op">$</span><span class="kw">new</span>(<span class="dt">operator =</span> <span class="st">&quot;!=&quot;</span>, <span class="dt">variables =</span> <span class="kw">c</span>(v2, v3))</a>
+<a class="sourceLine" id="cb4-25" data-line-number="25">c4 =<span class="st"> </span>constraint<span class="op">$</span><span class="kw">new</span>(<span class="dt">operator =</span> <span class="st">&quot;!=&quot;</span>, <span class="dt">variables =</span> <span class="kw">c</span>(v2, v4))</a>
+<a class="sourceLine" id="cb4-26" data-line-number="26">c5 =<span class="st"> </span>constraint<span class="op">$</span><span class="kw">new</span>(<span class="dt">operator =</span> <span class="st">&quot;!=&quot;</span>, <span class="dt">variables =</span> <span class="kw">c</span>(v3, v4))</a>
+<a class="sourceLine" id="cb4-27" data-line-number="27">c6 =<span class="st"> </span>constraint<span class="op">$</span><span class="kw">new</span>(<span class="dt">operator =</span> <span class="st">&quot;!=&quot;</span>, <span class="dt">variables =</span> <span class="kw">c</span>(v3, v5))</a>
+<a class="sourceLine" id="cb4-28" data-line-number="28">c7 =<span class="st"> </span>constraint<span class="op">$</span><span class="kw">new</span>(<span class="dt">operator =</span> <span class="st">&quot;!=&quot;</span>, <span class="dt">variables =</span> <span class="kw">c</span>(v3, v6))</a>
+<a class="sourceLine" id="cb4-29" data-line-number="29">c8 =<span class="st"> </span>constraint<span class="op">$</span><span class="kw">new</span>(<span class="dt">operator =</span> <span class="st">&quot;!=&quot;</span>, <span class="dt">variables =</span> <span class="kw">c</span>(v4, v5))</a>
+<a class="sourceLine" id="cb4-30" data-line-number="30">c9 =<span class="st"> </span>constraint<span class="op">$</span><span class="kw">new</span>(<span class="dt">operator =</span> <span class="st">&quot;!=&quot;</span>, <span class="dt">variables =</span> <span class="kw">c</span>(v5, v6))</a>
+<a class="sourceLine" id="cb4-31" data-line-number="31">constr =<span class="st"> </span><span class="kw">c</span>(c1, c2, c3, c4, c5, c6, c7, c8, c9)</a>
+<a class="sourceLine" id="cb4-32" data-line-number="32"></a>
+<a class="sourceLine" id="cb4-33" data-line-number="33">objective_of_problem  =<span class="st"> </span>objective<span class="op">$</span><span class="kw">new</span>(<span class="dt">type_of_problem =</span> <span class="st">&quot;satisfy&quot;</span>)</a>
+<a class="sourceLine" id="cb4-34" data-line-number="34"></a>
+<a class="sourceLine" id="cb4-35" data-line-number="35"><span class="co"># create the model</span></a>
+<a class="sourceLine" id="cb4-36" data-line-number="36">m =<span class="st"> </span>model<span class="op">$</span><span class="kw">new</span>(<span class="dt">parameter =</span> <span class="kw">c</span>(p1), <span class="dt">decision =</span> vars, <span class="dt">constraints =</span> constr, </a>
+<a class="sourceLine" id="cb4-37" data-line-number="37">              <span class="dt">objective =</span> objective_of_problem)</a></code></pre></div>
+<p>Now, we have created the model and have set up MiniZinc on our system. The next step is to evaluate the results.</p>
+<p>The information about result class and how to use it correctly can be found using <code>?results</code></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">solution &lt;-<span class="st"> </span>results<span class="op">$</span><span class="kw">new</span>(<span class="dt">model =</span> m, <span class="dt">result_type =</span> <span class="st">&quot;string&quot;</span>)</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="co"># show the solution</span></a>
+<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="kw">print</span>(solution<span class="op">$</span>result)</a></code></pre></div>
+<pre><code>## [1] &quot;wa = 3;&quot;    &quot;nt = 2;&quot;    &quot;sa = 1;&quot;    &quot;q = 3;&quot;     &quot;nsw = 2;&quot;  
+## [6] &quot;v = 3;&quot;     &quot;t = 1;&quot;     &quot;----------&quot;</code></pre>
+<p>Currently, the utility to get parsed results as R6 objects has not been provided. It will be provided later when the parser to parse the MiniZinc solutions is developed.</p>
+<pre><code>## [1] TRUE</code></pre>
+<p>A Minizinc implementation of the same problem is given below:</p>
+<pre class="minizinc"><code>% Colouring Australia using nc colours
+int: nc = 3;
+
+var 1..nc: wa;   var 1..nc: nt;  var 1..nc: sa;   var 1..nc: q;
+var 1..nc: nsw;  var 1..nc: v;   var 1..nc: t;
+
+constraint wa != nt;
+constraint wa != sa;
+constraint nt != sa;
+constraint nt != q;
+constraint sa != q;
+constraint sa != nsw;
+constraint sa != v;
+constraint q != nsw;
+constraint nsw != v;
+solve satisfy;
+</code></pre>
+<p>Now, that the basic structure of the problem is clear, we can create functions for solving different constraint programming problems.</p>
 </div>
 
 
