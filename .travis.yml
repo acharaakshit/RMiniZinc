@@ -1,9 +1,20 @@
 --- 
-addons: 
-  snaps: 
-    - "minizinc --classic"
+addons:
+   snaps:
+     - minizinc --classic
+
+before_install:
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+      wget https://github.com/MiniZinc/MiniZincIDE/releases/download/2.4.3/MiniZincIDE-2.4.3-bundled.dmg -P /Applications ;
+    fi
+
+before_script:
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+      export PATH=/Applications/MiniZincIDE.app/Contents/Resources:$PATH ;
+    fi
+
 cache: packages
-dist: xenial
 language: R
 os: 
   - linux
+  - osx
