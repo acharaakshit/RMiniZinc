@@ -6,9 +6,9 @@ addons:
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
       wget https://github.com/MiniZinc/MiniZincIDE/releases/download/2.4.3/MiniZincIDE-2.4.3-bundled.dmg ;
-      sudo hdiutil attach MiniZincIDE-2.4.3-bundled.dmg ;
+      hdiutil mount MiniZincIDE-2.4.3-bundled.dmg ;
       sudo cp -R '''/Volumes/MiniZinc IDE 2.4.3 (bundled)/MiniZincIDE.app''' /Applications ;
-      sudo hdiutil detach ''' /Volumes/MiniZinc IDE 2.4.3 (bundled)/ ''' ;
+      hdiutil unmount ''' /Volumes/MiniZinc IDE 2.4.3 (bundled)/ ''' ;
     fi
 
 before_script:
