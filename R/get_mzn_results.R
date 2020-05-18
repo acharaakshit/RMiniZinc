@@ -9,7 +9,7 @@ get_mzn_results <- function(model, str_options, as_string = TRUE, as_R6 = FALSE,
                             timeout = NA){
   timeout_str  = " "
   if(!is.na(timeout)) { timeout_str = paste0(' --fzn-flags /"-time ', timeout   , '/" ')}
-  if(Sys.info()["sysname"] == "Linux"){
+  if(Sys.info()["sysname"] == "Linux" || Sys.info()["sysname"] == "Darwin"){
     output_str <- as.character(system(paste0("minizinc ", str_options, model, timeout_str), intern = TRUE))
   }else if(Sys.info()["sysname"] == "Windows"){
     output_str <- system2(paste0("minizinc ", str_options, model, timeout_str), stdout = TRUE)
