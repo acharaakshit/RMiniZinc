@@ -3,7 +3,7 @@ addons:
    snaps:
      - minizinc --classic
 
-install:
+before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
       wget https://github.com/MiniZinc/MiniZincIDE/releases/download/2.4.3/MiniZincIDE-2.4.3-bundled.dmg -P /Applications ;
     fi

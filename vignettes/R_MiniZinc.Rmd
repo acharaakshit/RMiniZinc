@@ -23,14 +23,16 @@ It's important to understand R6 classes before getting into the details. If you 
 
 It would be nice to go through this [manual](https://www.minizinc.org/tutorial/minizinc-tute.pdf) to understand more about MiniZinc. This is mainly for those who are interested in contributing to the package.
 
-Please make sure to install MiniZinc on your operating system and also ensure that minizinc is accessible from command line by typing 'minizinc' on the command line without the single quotes. The installation instructtiojns can be found at [instructions](https://www.minizinc.org/doc-2.4.3/en/installation.html)
+Please make sure to install MiniZinc on your operating system and also ensure that minizinc is accessible from command line by typing 'minizinc' on the command line without the single quotes. The installation instructions can be found at [instructions](https://www.minizinc.org/doc-2.4.3/en/installation.html)
 
 
 # Variables
 
 There are two types of variables in MiniZinc -- decision variables and parameters. 
 
-Parameter is used to specify a parameter in a given problem. Parameters can be single types i.e integers (int), floating point numbers (float), Booleans (bool) and strings (string) but strings are only used in output formatting so they won't be used as parameter types and collections i.e sets, enums and arrays (upto 5 dimensional arrays).
+The data types of variables can be single types i.e integers (int), floating point numbers (float), Booleans (bool) and strings (string) but strings are only used in output formatting so they won't be used as data types and collections i.e sets, enums and arrays (upto 5 dimensional arrays).
+
+Parameter is used to specify a parameter in a given problem and they are assigned a fixed value.
 
 Decision variables are the unknowns that Minizinc model is finding solutions for. We do not need to give them a value, but instead we give them a domain of possible values. Sometimes expressions involving other variables and paramters are also assigned to decision variables. Decision variables need to satisfy a set of constraints which form the core of the problem. 
 
@@ -45,6 +47,7 @@ dec = variable$new(type = "float", kind = "decision", domain = c(0, 1))
 More information on variable is available in `?variable`. 
 
 # Constraints
+
 Constraints specify the Boolean expressions that decision variables must satisfy. Examples of such constraints are given below. 
 
 ```{r}
@@ -93,6 +96,7 @@ v6 = variable$new(type = "int", kind = "decision", domain = c(1, p1$value),
                   name = "v")
 v7 = variable$new(type = "int", kind = "decision", domain = c(1, p1$value),
                   name = "t")
+
 vars = c(v1, v2, v3, v4, v5, v6, v7)
 
 # constraints
@@ -105,6 +109,7 @@ c6 = constraint$new(operator = "!=", variables = c(v3, v5))
 c7 = constraint$new(operator = "!=", variables = c(v3, v6))
 c8 = constraint$new(operator = "!=", variables = c(v4, v5))
 c9 = constraint$new(operator = "!=", variables = c(v5, v6))
+
 constr = c(c1, c2, c3, c4, c5, c6, c7, c8, c9)
 
 objective_of_problem  = objective$new(type_of_problem = "satisfy")
@@ -115,7 +120,6 @@ m = model$new(parameter = c(p1), decision = vars, constraints = constr,
 ```
 
 Now, we have created the model and have set up MiniZinc on our system. The next step is to evaluate the results.
-
 The information about result class and how to use it correctly can be found using `?results`
 
 ```{r}
