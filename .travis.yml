@@ -7,8 +7,8 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
       wget https://github.com/MiniZinc/MiniZincIDE/releases/download/2.4.3/MiniZincIDE-2.4.3-bundled.dmg ;
       sudo hdiutil attach MiniZincIDE-2.4.3-bundled.dmg ;
-      sudo installer -package /Volumes/MiniZincIDE-2.4.3-bundled/MiniZincIDE-2.4.3-bundled.pkg -target / ;
-      sudo hdiutil detach /Volumes/MiniZincIDE-2.4.3-bundled.pkg ;
+      sudo installer -package /Volumes/MiniZinc IDE 2.4.3 (bundled)/MiniZinc IDE 2.4.3 (bundled).app -target / ;
+      sudo hdiutil detach /Volumes/MiniZinc IDE 2.4.3 (bundled) ;
     fi
 
 before_script:
