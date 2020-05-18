@@ -1,4 +1,5 @@
 --- 
+warnings_are_errors: false
 addons:
    snaps:
      - minizinc --classic
