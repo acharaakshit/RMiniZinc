@@ -15,7 +15,8 @@ jobs:
           - $HOME/AppData/Local/Temp/chocolatey
       before_install:
         - wget https://github.com/MiniZinc/MiniZincIDE/releases/download/2.4.3/MiniZincIDE-2.4.3-bundled-setup-win64.exe ;
-        - setx PATH "%PATH%;C:\Program Files\MiniZinc 2.4.3 (bundled)\";
+        - MiniZincIDE-2.4.3-bundled-setup-win64.exe ;
+        - setx PATH '''%PATH%;C:\Program Files\MiniZinc 2.4.3 (bundled)\''';
       install:
         - choco install -y r --version 3.6.2
         - choco install -y rtools --version 3.5.0.4
