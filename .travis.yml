@@ -14,7 +14,8 @@ jobs:
         directories:
           - $HOME/AppData/Local/Temp/chocolatey
       before_install:
-        - wget https://github.com/MiniZinc/MiniZincIDE/releases/download/2.4.3/MiniZincIDE-2.4.3-bundled-setup-win64.exe ;
+        - wget -c --directory-prefix='''C:\Program Files\''' https://github.com/MiniZinc/MiniZincIDE/releases/download/2.4.3/MiniZincIDE-2.4.3-bundled-setup-win64.exe ;
+        - cd '''C:\Program Files\'''
         - MiniZincIDE-2.4.3-bundled-setup-win64.exe ;
         - setx PATH '''%PATH%;C:\Program Files\MiniZinc 2.4.3 (bundled)\''';
       install:
