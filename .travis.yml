@@ -1,25 +1,49 @@
 --- 
 warnings_are_errors: false
-addons:
-   snaps:
-     - minizinc --classic
-
-before_install:
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-      wget https://github.com/MiniZinc/MiniZincIDE/releases/download/2.4.3/MiniZincIDE-2.4.3-bundled.dmg ;
-      hdiutil mount MiniZincIDE-2.4.3-bundled.dmg ;
-      sudo cp -R '''/Volumes/MiniZinc IDE 2.4.3 (bundled)/MiniZincIDE.app''' /Applications ;
-      hdiutil unmount '''/Volumes/MiniZinc IDE 2.4.3 (bundled)/''' ;
-    fi
-
-before_script:
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-      export PATH=/Applications/MiniZincIDE.app/Contents/Resources:$PATH ;
-      echo PATH ;
-    fi
-
-cache: packages
-language: R
-os: 
-  - linux
-  - osx
+jobs:
+  include:
+    - os: linux
+      language: R
+      addons:
+        snaps:
+          - minizinc --classic
+      cache: packages
+    - os: windows
+      language: bash
+      cache:
+        directories:
+          - $HOME/AppData/Local/Temp/chocolatey
+      before_install:
+        - wget https://github.com/MiniZinc/MiniZincIDE/releases/download/2.4.3/MiniZincIDE-2.4.3-bundled-setup-win64.exe ;
+        - setx PATH "%PATH%;C:\Program Files\MiniZinc 2.4.3 (bundled)\";
+      install:
+        - choco install -y r --version 3.6.2
+        - choco install -y rtools --version 3.5.0.4
+        - "url=$(curl https://miktex.org/download | sed -n 's/.*href=.\\(.*x64.exe\\).*/https:\\/\\/miktex.org\\1/p' | head -1)"
+        - if ! [ -f $HOME/AppData/Local/Temp/chocolatey/miktex.exe ]; then
+            curl -Lo $HOME/AppData/Local/Temp/chocolatey/miktex.exe $url;
+           fi
+        - $HOME/AppData/Local/Temp/chocolatey/miktex.exe --unattended --auto-install=yes 
+        - "export PATH=/c/Program\\ Files/MiKTeX\\ 2.9/miktex/bin/x64:$PATH"
+        - choco install -y pandoc
+        - "export PATH=/c/Program\\ Files/R/R-3.6.2/bin/x64:/c/Rtools/bin:/c/RTools/mingw_64/bin:$PATH"
+        - mkdir -p ${HOME}/Documents/R/win-library/3.6
+        - export R_LIBS_USER=${HOME}/Documents/R/win-library/3.6
+        - echo 'options(repos = c(CRAN = "https://cloud.r-project.org"))' > .Rprofile
+        - Rscript -e 'install.packages("devtools")'
+        - Rscript -e 'install.packages(c("remotes"));if (!all(c("remotes") %in% installed.packages())) { q(status = 1, save = "no")}'
+        - "Rscript -e 'deps <- remotes::dev_package_deps(dependencies = NA);remotes::install_deps(dependencies = TRUE);if (!all(deps$package %in% installed.packages())) { message(\"missing: \", paste(setdiff(deps$package, installed.packages()), collapse=\", \")); q(status = 1, save = \"no\")}'"
+      script:
+        - R CMD build .
+        - R CMD check *tar.gz --as-cran  
+    - os: osx
+      language: R
+      before_install:
+        - wget https://github.com/MiniZinc/MiniZincIDE/releases/download/2.4.3/MiniZincIDE-2.4.3-bundled.dmg ;
+        - hdiutil mount MiniZincIDE-2.4.3-bundled.dmg ;
+        - sudo cp -R '''/Volumes/MiniZinc IDE 2.4.3 (bundled)/MiniZincIDE.app''' /Applications ;
+        - hdiutil unmount '''/Volumes/MiniZinc IDE 2.4.3 (bundled)/''' ;
+        - export PATH=/Applications/MiniZincIDE.app/Contents/Resources:$PATH ;
+        - echo PATH ;
+  allow_failures:
+    - os: windows 
