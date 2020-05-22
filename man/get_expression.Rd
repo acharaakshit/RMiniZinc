@@ -10,7 +10,14 @@ operators. The data structure to be chosen for storing expressions is yet to be 
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{Mat}}{This is a matrix containing the variable names}
+\item{\code{expr}}{the generated expression from the inputs}
+}
+\if{html}{\out{</div>}}
+}
+\section{Active bindings}{
+\if{html}{\out{<div class="r6-active-bindings">}}
+\describe{
+\item{\code{expr}}{the generated expression from the inputs}
 }
 \if{html}{\out{</div>}}
 }
@@ -18,6 +25,7 @@ operators. The data structure to be chosen for storing expressions is yet to be 
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{get_expression$new()}}
+\item \href{#method-get_expr}{\code{get_expression$get_expr()}}
 \item \href{#method-clone}{\code{get_expression$clone()}}
 }
 }
@@ -27,7 +35,26 @@ operators. The data structure to be chosen for storing expressions is yet to be 
 \subsection{Method \code{new()}}{
 the function to store an expression
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{get_expression$new()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{get_expression$new(variables, arithmetic_operator = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{variables}}{the variables involved in the expression in order}
+
+\item{\code{arithmetic_operator}}{the arithmetic operators involved in the function}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_expr"></a>}}
+\if{latex}{\out{\hypertarget{method-get_expr}{}}}
+\subsection{Method \code{get_expr()}}{
+Returns the required expression
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{get_expression$get_expr()}\if{html}{\out{</div>}}
 }
 
 }

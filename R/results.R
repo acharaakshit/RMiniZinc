@@ -26,7 +26,11 @@ results <- R6Class("results",
                    #' obtain the results from the model
                    #' @param model object of the model class
                    #' @param result_type string or R6 MiniZinc output
-                   initialize = function(model, result_type){
+                   #' @param all_solutions boolean to specify is all solutions are needed. FALSE by default.
+                   #' @param statistics boolean to specify if statistics are required. FALSE by default.
+                   #' @param threads number of threads to be used by MiniZinc. 1 by default.
+                   initialize = function(model, result_type, all_solutions = FALSE, 
+                                         statistics = FALSE, threads = 1){
                    assert_r6(model, "model")
                    self$model = model
                    
@@ -35,7 +39,11 @@ results <- R6Class("results",
                    
                    assert_choice(result_type, .globals$result_types)
                    
-                   command = solver_options(self$mzn)
+                   command = solver_options(self$mzn, all_solutions = all_solutions, 
+                                            statistics = statistics, threads = threads)
+                   
+                   assert_choice(result_type, c("string", "R6"))
+                   
                    if(test_choice(result_type,"string")){
                      if(test_choice(Sys.info()["sysname"], "Linux")){
                        self$result = system(command, intern = TRUE)

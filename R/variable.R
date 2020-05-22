@@ -29,6 +29,9 @@ variable <- R6Class("variable",
                       #' @field expr
                       #' the expression for a decision or parameter
                       expr = NULL,
+                      #' @field sub_type
+                      #' the data type of elements of a collection type
+                      sub_type = NULL,
                       #' @description initialize the variable class
                       #' @param kind parameter or decision variable
                       #' @param name name of the parameter or decision variable
@@ -36,25 +39,73 @@ variable <- R6Class("variable",
                       #' @param value value of the parameter or decision variable
                       #' @param domain domain of decision variable
                       #' @param expr  expression value for the decision variable
+                      #' @param sub_type the data type of element of collections
                       initialize = function(kind, name = NULL, type, value = NULL,
-                                            domain = NULL, expr = NULL){
+                                            domain = NULL, expr = NULL, sub_type = NULL){
                         
+                              # kind checks
                               assert_choice(kind, .globals$kinds)
                               self$kind = kind
                               
+                              # type checks
                               assert(test_choice(type, .globals$types$single),
                                      test_choice(type, .globals$types$collection),combine = "or")
                               self$type = type
                               
-                              if(test_choice(kind, "decision")){
-                                self$domain = domain
+                              # value checks for parameters
+                              if(test_choice(kind, "parameter")){
+                                assert(!test_null(value))
+                              if(test_choice(self$type, .globals$types$single)){
+                                assert_scalar(value)
+                                if(test_choice(self$type, "int")){
+                                  assert(all(value == floor(value)))
+                                }else if(test_choice(self$type, "float")){
+                                  assert_choice(typeof(value), "double")
+                                }else{
+                                  assert_choice(typeof(value), "logical")
+                                }
+                                self$value = value
                               }
                               
-                              if(!is.null(value) && test_choice(kind, "parameter")){
-                                self$value = value   
-                              }else if(!is.null(expr)){
+                              if(test_choice(type, .globals$types$collection)){
+                                if(test_choice(self$type , "enum")){
+                                  assert(test_character(value),
+                                         !test_scalar(value), combine = "and")
+                                }else if(test_choice(self$type , "set")){
+                                  
+                                  assert(!test_null(sub_type), test_choice(sub_type, .globals$sub_types),
+                                         test_atomic_vector(value), combine = "and")
+                                  assert(!test_scalar(value), test_choice(typeof(value), "double"),
+                                         test_atomic_vector(value), combine = "and")
+                                  self$sub_type = sub_type
+                                }else{
+                                  assert(!test_null(sub_type), test_choice(sub_type, .globals$sub_types),
+                                         combine = "and")
+                                  assert(test_array(value) , test_true(length(dim(value)) < 6), 
+                                         combine = "and")
+                                  if(test_choice(sub_type, "enum")){
+                                    assert(test_choice(typeof(value), "character"))
+                                  }else if(test_choice(sub_type, "set")){
+                                    assert(test_choice(typeof(value), "double"))
+                                  }
+                                  self$sub_type = sub_type
+                                }  
+                                self$value = value
+                              }
+                              
+                              }
+                              
+                              if(test_choice(kind, "decision")){
+                                if(!test_null(domain)){
+                                self$domain = domain
+                                }
+                              }
+                              
+                              if(!is.null(expr)){
+                                # expression checks (to be done)
                                 self$expr = expr
                               }
+                              
                               if(!is.null(name)){
                                 self$name = name
                               }else {
@@ -90,3 +141,5 @@ variable <- R6Class("variable",
                       
                       .static = env(parameter = 0, decision = 0)
                     ))
+
+

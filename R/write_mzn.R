@@ -18,19 +18,28 @@ write_mzn <- function(model, mzn){
       if(test_scalar(parameters[[i]]$value)){
       code = sprintf("%s%s: %s = %s;\n", code, parameters[[i]]$type,
                      parameters[[i]]$get_name(), parameters[[i]]$value)
-      }else if(test_atomic_vector(parameters[[i]]$value) && !test_scalar(parameters[[i]]$value)){
+      }else{
         
         if(test_choice(parameters[[i]]$type, "enum")){
+          enum_values <- paste(parameters[[i]]$value, collapse=", ")
           sprintf("%s%s: %s = {%s};\n", code, parameters[[i]]$type,
-                  parameters[[i]]$get_name(), paste(as.character(parameters[[i]]$value), collapse=", "))
+                  parameters[[i]]$get_name(), enum_values)
         }else if(test_choice(parameters[[i]]$type, "set")){
-          sprintf("%s%s of %s: %s = %s..%s;\n", code, parameters[[i]]$type, type_of(parameters[[i]]$value[1]),
-                  parameters[[i]]$get_name(), parameters[[i]]$value[1], parameters[[i]]$value[2])
+          set_values <- paste0(parameters[[i]]$value, collapse = ",")
+          sprintf("%s%s of %s: %s = {%s};\n", code, parameters[[i]]$type, parameters[[i]]$sub_type,
+                  parameters[[i]]$get_name(), set_values)
         }else if(test_array(parameters[[i]]$type, "array")){
-          sprintf("%s%s of %s: %s = {%s};\n", code, parameters[[i]]$type, type_of(parameters[[i]]$value[1]),
-                  parameters[[i]]$get_name(), parameters[[i]]$value) 
-        }else{
-          stop("The parameter value is not a valid MiniZinc type")
+          
+          # this is the number of dimensions of array
+          n <- length(dim(parameters[[i]]$value))
+          dim_sizes <- ""
+          for(x in seq(1,n,1)){
+            dim_sizes <- paste0(dim_sizes, dim(parameters[[i]]$value)[x], ", ")
+          }
+          array_values <- as.vector(parameters[[i]]$value)
+          array_indices  = paste0(dim(parameters[[i]]$value), collapse = ",")
+          sprintf("%s%s[%s] of %s: %s = array%sd(%s%s);\n", code, parameters[[i]]$type, array_indices,
+                  parameters[[i]]$sub_type, parameters[[i]]$get_name(), n, dim_sizes, array_values) 
         }
       }
     }
@@ -39,16 +48,30 @@ write_mzn <- function(model, mzn){
     
     # add definitions for decision variables
     for(i in 1:length(decisions)) {
-      code = sprintf("%svar %s..%s: %s;\n", code, decisions[[i]]$domain[1],
-                     decisions[[i]]$domain[2], decisions[[i]]$get_name())
+      if(test_null(decisions[[i]]$domain) || test_choice(decisions[[i]]$type, "enum")){
+        if(test_choice(decisions[[i]]$type, .globals$types$single)){
+          code = sprintf("%svar %s: %s;\n", code, decisions[[i]]$type,
+                       decisions[[i]]$get_name())  
+        }else if(test_choice(decisions[[i]]$type, "set")){
+          # to be done
+        }else{
+          # to be done
+        }
+      }else{
+        if(test_choice(decisions[[i]]$type, .globals$types$single)){
+            code = sprintf("%svar %s..%s: %s;\n", code, decisions[[i]]$domain[1],
+                              decisions[[i]]$domain[2], decisions[[i]]$get_name())
+        }
+      }
     }
+    
     
     constraints = model$constraints
     # add constraints
     for(i in 1:length(constraints)) {
       code = sprintf("%sconstraint %s %s %s;\n", code,
-                     constraints[[i]]$variables[[1]]$get_name(), constraints[[i]]$operator,
-                     constraints[[i]]$variables[[2]]$get_name())
+                     constraints[[i]]$LHS_expression, constraints[[i]]$operator,
+                     constraints[[i]]$RHS_expression)
     }
     
     objective = model$objective
@@ -61,21 +84,3 @@ write_mzn <- function(model, mzn){
     write(code,mzn)
 }
 
-#' @title helper function to get data type 
-#' 
-#' @description 
-#' This function is used to map the data types obtained using typeof()
-#' in R to the data types of MiniZinc
-#' 
-#' @export
-#' @param val the value of parameter
-
-type_of <- function(val){
-  if(test_choice(typeof(val), "integer")){
-    return("int")
-  }else if(test_choice(typeof(val), "double")){
-    return("float")
-  }else if(test_choice(typeof(val), "logical")){
-    return("bool")
-  }
-}

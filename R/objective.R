@@ -29,17 +29,11 @@ objective <- R6Class("objective",
                                   assert_choice(type_of_problem, .globals$objectives)
                                   self$type_of_problem = type_of_problem
                                   
-                                  assert(test_choice(type_of_problem, "satisfy"), 
-                                         test_null(arithmetic_expression), combine = "and")
-                                  
-                                  if(testTRUE(!test_choice(type_of_problem, "satisfy")) && 
-                                         testTRUE(!test_null(arithmetic_expression))){
-                                    self$arithmetic_expression = arithmetic_expression  
-                                  }else{
+                                  if(test_choice(type_of_problem, "satisfy")){
                                     assert_null(arithmetic_expression)
+                                  }else{
+                                    assert(!test_null(arithmetic_expression))
+                                    self$arithmetic_expression = arithmetic_expression$get_expr()
                                   }
-                                  
-                                  
-                                  
                                   
                                   }))

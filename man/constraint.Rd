@@ -21,7 +21,11 @@ Taken from Minizinc documentation.}
 \item{\code{variables}}{A list of objects of
 \code{\link{variable}} class.}
 
-\item{\code{expr}}{expression for the constraint}
+\item{\code{LHS_expression}}{left hand side expression for the constraint}
+
+\item{\code{RHS_expression}}{right hand side expression for the constraint}
+
+\item{\code{fn}}{name of the inbuild function to be used.}
 
 \item{\code{name}}{Constraint character name for internal use within Minizinc model.}
 }
@@ -38,6 +42,7 @@ Taken from Minizinc documentation.}
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{constraint$new()}}
+\item \href{#method-iterator_fnc}{\code{constraint$iterator_fnc()}}
 \item \href{#method-get_name}{\code{constraint$get_name()}}
 \item \href{#method-clone}{\code{constraint$clone()}}
 }
@@ -48,7 +53,7 @@ Taken from Minizinc documentation.}
 \subsection{Method \code{new()}}{
 Creates a new instance of Constraint class.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{constraint$new(operator, variables)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{constraint$new(operator, LHS_expression, RHS_expression, fn_attributes = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -56,7 +61,33 @@ Creates a new instance of Constraint class.
 \describe{
 \item{\code{operator}}{a constraint of model}
 
-\item{\code{variables}}{the variables involved in the constraint}
+\item{\code{LHS_expression}}{the left hand side expression in boolean expression}
+
+\item{\code{RHS_expression}}{the right hand side expression}
+
+\item{\code{fn_attributes}}{the name, var to iterate on and boolean expression
+of inbuilt function to use.}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-iterator_fnc"></a>}}
+\if{latex}{\out{\hypertarget{method-iterator_fnc}{}}}
+\subsection{Method \code{iterator_fnc()}}{
+use the builtin function forall (currently in development)
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{constraint$iterator_fnc(iterate_on, bool_expr, name_fn = "forall")}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{iterate_on}}{the varaible to be traversed.}
+
+\item{\code{bool_expr}}{the boolean expression inside the loop.}
+
+\item{\code{name_fn}}{the name of function to be used. "forall" by default}
 }
 \if{html}{\out{</div>}}
 }

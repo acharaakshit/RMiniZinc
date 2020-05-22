@@ -32,7 +32,13 @@ This class will get the MiniZinc results by creating the mzn file.
 \subsection{Method \code{new()}}{
 obtain the results from the model
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{results$new(model, result_type)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{results$new(
+  model,
+  result_type,
+  all_solutions = FALSE,
+  statistics = FALSE,
+  threads = 1
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -41,6 +47,12 @@ obtain the results from the model
 \item{\code{model}}{object of the model class}
 
 \item{\code{result_type}}{string or R6 MiniZinc output}
+
+\item{\code{all_solutions}}{boolean to specify is all solutions are needed. FALSE by default.}
+
+\item{\code{statistics}}{boolean to specify if statistics are required. FALSE by default.}
+
+\item{\code{threads}}{number of threads to be used by MiniZinc. 1 by default.}
 }
 \if{html}{\out{</div>}}
 }

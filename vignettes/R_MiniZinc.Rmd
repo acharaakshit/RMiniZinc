@@ -26,7 +26,7 @@ It would be nice to go through this [manual](https://www.minizinc.org/tutorial/m
 Please make sure to install MiniZinc on your operating system and also ensure that minizinc is accessible from command line by typing 'minizinc' on the command line without the single quotes. The installation instructions can be found at [instructions](https://www.minizinc.org/doc-2.4.3/en/installation.html)
 
 
-# Variables
+## Variables
 
 There are two types of variables in MiniZinc -- decision variables and parameters. 
 
@@ -40,27 +40,33 @@ Here are examples of how we can create parameters and decision variables.
 
 ```{r}
 library(rminizinc)
-par = variable$new(type = "array", kind = "parameter", value = array(data = c(1,2,3,4,5)))
+# declare an array parameter (only dimensions upto 5 are allowed)
+par = variable$new(type = "array", kind = "parameter", sub_type = "int", value = array(1:50, c(10,10,10,10,10)))
+# declare a floating point decision variable with a domain of (0,1)
 dec = variable$new(type = "float", kind = "decision", domain = c(0, 1))
 ```
 
-More information on variable is available in `?variable`. 
+More information on variable is available in `?variable`. Currently only integer, float or boolean arrays are supported and only integer indices can be used.
 
-# Constraints
+## Constraints
 
 Constraints specify the Boolean expressions that decision variables must satisfy. Examples of such constraints are given below. 
 
 ```{r}
-par = variable$new(type = "float", kind = "parameter", value = 0.8)
-var1 = variable$new(type = "float", kind = "decision", domain = c(0, par$value))
+par = variable$new(type = "float", kind = "parameter", value = 3)
+# decision variables can be declared without a domain also
+var1 = variable$new(type = "float", kind = "decision")
 var2 = variable$new(type = "float", kind = "decision", domain = c(0, par$value))
-
-constr = constraint$new(operator = ">=", variables = c(var1, var2))
+# get the LHS expression of the constraint
+LHS_expr = get_expression$new(variables = c(var1,var2), arithmetic_operator = "+" )
+# get the right hand side expression of the constraint
+RHS_expr = get_expression$new(variables = c(var1,var2), arithmetic_operator = "*" )
+constr = constraint$new(operator = ">=", LHS_expression = LHS_expr, RHS_expression = RHS_expr)
 ```
 
-For now, this package can only support relational constraints that involve two variables at a time only. Once the development of the get_expression class is finshed, the package will support expressions involving multiple operators and variables.
+For now, this package can only support constraints which involve arithmetic operators only. The utility to use inbuild functions and loops like 'forall' and 'exists' will be provided soon.
 
-# Objective
+## Objective
 
 The constraint programming problem can be of three types, namely: Satisfaction , Minimization and Maximization.
 Satisfaction problems produce all the solutions that satify the constraints whereas minimization and maximization problems produce the solution which minimizes and maximizes the given arithmetic expression.
@@ -69,61 +75,62 @@ An example of how to specify the objective is shown below:
 ```{r}
 obj <- objective$new(type_of_problem = "satisfy")
 ```
-Currently the minimization and maximization problems are not supported. They will be supported once the development of get_expression class is finished.
 
-# Models
+
+## Models
 
 The components mentioned above can be combined to create a MiniZinc model. The demonstration of the same is given below:
 
-Here is an example of map coloring problem of Australian states. 
+Here is a model for determining how many banana and chocolate cakes to bake for the
+school fete.
 
 ```{r}
-# parameter variable
-p1 = variable$new(type = "int", value = 3, kind = "parameter")
-
 # decision variables
-v1 = variable$new(type = "int", kind = "decision", domain = c(1, p1$value), 
-                  name = "wa")
-v2 = variable$new(type = "int", kind = "decision", domain = c(1, p1$value), 
-                  name = "nt")
-v3 = variable$new(type = "int", kind = "decision", domain = c(1, p1$value), 
-                  name = "sa")
-v4 = variable$new(type = "int", kind = "decision", domain = c(1, p1$value),
-                  name = "q")
-v5 = variable$new(type = "int", kind = "decision", domain = c(1, p1$value),
-                  name = "nsw")
-v6 = variable$new(type = "int", kind = "decision", domain = c(1, p1$value),
-                  name = "v")
-v7 = variable$new(type = "int", kind = "decision", domain = c(1, p1$value),
-                  name = "t")
 
-vars = c(v1, v2, v3, v4, v5, v6, v7)
+# number of bananas
+v1 = variable$new(type = "int", kind = "decision", domain = c(0, 100), 
+                  name = "b")
+# number pf cakes
+v2 = variable$new(type = "int", kind = "decision", domain = c(0, 100), 
+                  name = "c")
+
+
+vars = c(v1, v2)
 
 # constraints
-c1 = constraint$new(operator = "!=", variables = c(v1, v2))
-c2 = constraint$new(operator = "!=", variables = c(v1, v3))
-c3 = constraint$new(operator = "!=", variables = c(v2, v3))
-c4 = constraint$new(operator = "!=", variables = c(v2, v4))
-c5 = constraint$new(operator = "!=", variables = c(v3, v4))
-c6 = constraint$new(operator = "!=", variables = c(v3, v5))
-c7 = constraint$new(operator = "!=", variables = c(v3, v6))
-c8 = constraint$new(operator = "!=", variables = c(v4, v5))
-c9 = constraint$new(operator = "!=", variables = c(v5, v6))
+c1 = constraint$new(operator = "<=", LHS_expr = get_expression$new(variables = c(250,v1,200,v2),
+                                                          arithmetic_operator = c("*","+","*")), 
+                                                RHS_expr = get_expression$new(variables = 4000))
+c2 = constraint$new(operator = "<=", LHS_expr = get_expression$new(variables = c(2, v1),
+                                                          arithmetic_operator = "*"), 
+                                                RHS_expr = get_expression$new(variables = 6))
+c3 = constraint$new(operator = "<=", LHS_expr = get_expression$new(variables = c(75,v1,150,v2),
+                                                          arithmetic_operator = c("*","+","*")), 
+                                     RHS_expr = get_expression$new(variables = 2000))
+c4 = constraint$new(operator = "<=", LHS_expr = get_expression$new(variables = c(100,v1,150,v2),
+                                                          arithmetic_operator = c("*","+","*")), 
+                                     RHS_expr = get_expression$new(variables = 500))
+c5 = constraint$new(operator = "<=", LHS_expr = get_expression$new(variables = c(75, v2),
+                                                          arithmetic_operator = "*"), 
+                                                RHS_expr = get_expression$new(variables = 500))
 
-constr = c(c1, c2, c3, c4, c5, c6, c7, c8, c9)
 
-objective_of_problem  = objective$new(type_of_problem = "satisfy")
+constr = c(c1, c2, c3, c4, c5)
+
+objective_of_problem  = objective$new(type_of_problem = "maximize", 
+                                      arithmetic_expression = get_expression$new(variables = c(400,v1,450,v2),
+                                                                        arithmetic_operator = c("*","+","*")))
 
 # create the model
-m = model$new(parameter = c(p1), decision = vars, constraints = constr, 
+m = model$new(decision = vars, constraints = constr, 
               objective = objective_of_problem)
 ```
 
 Now, we have created the model and have set up MiniZinc on our system. The next step is to evaluate the results.
-The information about result class and how to use it correctly can be found using `?results`
+The information about result class and how to use it correctly can be found using `?results`. We wish to get all the solutions of the problem so we will set `all_solutions` to `TRUE`
 
 ```{r}
-solution <- results$new(model = m, result_type = "string")
+solution <- results$new(model = m, result_type = "string", all_solutions = TRUE)
 # show the solution
 print(solution$result)
 ```
@@ -139,22 +146,22 @@ file.remove(solution$mzn)
 A Minizinc implementation of the same problem is given below:
 
 ```{minizinc}
-% Colouring Australia using nc colours
-int: nc = 3;
 
-var 1..nc: wa;   var 1..nc: nt;  var 1..nc: sa;   var 1..nc: q;
-var 1..nc: nsw;  var 1..nc: v;   var 1..nc: t;
-
-constraint wa != nt;
-constraint wa != sa;
-constraint nt != sa;
-constraint nt != q;
-constraint sa != q;
-constraint sa != nsw;
-constraint sa != v;
-constraint q != nsw;
-constraint nsw != v;
-solve satisfy;
+% Baking cakes for the school fete
+var 0..100: b; % no. of banana cakes
+var 0..100: c; % no. of chocolate cakes
+% flour
+constraint 250*b + 200*c <= 4000;
+% bananas
+constraint 2*b <= 6;
+% sugar
+constraint 75*b + 150*c <= 2000;
+% butter
+constraint 100*b + 150*c <= 500;
+% cocoa
+constraint 75*c <= 500;
+% maximize our profit
+solve maximize 400*b + 450*c;
 
 ```
 

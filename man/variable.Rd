@@ -21,6 +21,8 @@ An object containing all the properties of a variable.
 
 \item{\code{expr}}{the expression for a decision or parameter}
 
+\item{\code{sub_type}}{the data type of elements of a collection type}
+
 \item{\code{name}}{Variable character name for internal use within Minizinc model.}
 }
 \if{html}{\out{</div>}}
@@ -40,7 +42,15 @@ An object containing all the properties of a variable.
 \subsection{Method \code{new()}}{
 initialize the variable class
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{variable$new(kind, name = NULL, type, value = NULL, domain = NULL, expr = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{variable$new(
+  kind,
+  name = NULL,
+  type,
+  value = NULL,
+  domain = NULL,
+  expr = NULL,
+  sub_type = NULL
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -57,6 +67,8 @@ initialize the variable class
 \item{\code{domain}}{domain of decision variable}
 
 \item{\code{expr}}{expression value for the decision variable}
+
+\item{\code{sub_type}}{the data type of element of collections}
 }
 \if{html}{\out{</div>}}
 }
