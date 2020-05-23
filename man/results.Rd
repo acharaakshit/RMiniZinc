@@ -37,7 +37,9 @@ obtain the results from the model
   result_type,
   all_solutions = FALSE,
   statistics = FALSE,
-  threads = 1
+  threads = 1,
+  keep_files = FALSE,
+  timeout = NA
 )}\if{html}{\out{</div>}}
 }
 
@@ -53,6 +55,10 @@ obtain the results from the model
 \item{\code{statistics}}{boolean to specify if statistics are required. FALSE by default.}
 
 \item{\code{threads}}{number of threads to be used by MiniZinc. 1 by default.}
+
+\item{\code{keep_files}}{bool to specify if the flattened model should be kept or not. FALSE by default.}
+
+\item{\code{timeout}}{time in milis (integer) specifying the timeout limit. NA by default.}
 }
 \if{html}{\out{</div>}}
 }

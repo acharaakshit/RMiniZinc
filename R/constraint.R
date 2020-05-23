@@ -1,9 +1,8 @@
 #' @title constraint Class
 #'
 #' @description
-#' Constraint is a class to describe Minizinc constraints on variables.
-#' It contains information that is needed to define a Minizinc constraint, such as
-#' type of constraint (==, !=, >, <, >=, <=) and variables involved in a given constraint.
+#' Constraint is a class to describe Minizinc constraints on decision variables.
+#' 
 #'
 #' @import R6
 #' @import checkmate
