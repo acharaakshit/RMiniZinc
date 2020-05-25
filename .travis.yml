@@ -10,9 +10,6 @@ jobs:
       cache: packages
     - os: windows
       language: bash
-      cache:
-        directories:
-          - $HOME/AppData/Local/Temp/chocolatey
       before_install:
         - wget -c --directory-prefix='''C:\Program Files\''' https://github.com/MiniZinc/MiniZincIDE/releases/download/2.4.3/MiniZincIDE-2.4.3-bundled-setup-win64.exe ;
         - PowerShell -Command Start-Process -FilePath "C:/Program Files/MiniZincIDE-2.4.3-bundled-setup-win64.exe" -ArgumentList "/VERYSILENT AGREETOLICENSE=yes ACCEPTEULA=yes /qb" -NoNewWindow -Wait -PassThru ;
