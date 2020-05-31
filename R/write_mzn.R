@@ -37,7 +37,8 @@ write_mzn <- function(model, mzn){
             dim_sizes <- paste0(dim_sizes, dim(parameters[[i]]$value)[x], ", ")
           }
           array_values <- as.vector(parameters[[i]]$value)
-          array_indices  = paste0(dim(parameters[[i]]$value), collapse = ",")
+          #indices as integer set ranges
+          array_indices  = paste0("1..",dim(parameters[[i]]$value), collapse = ",")
           sprintf("%s%s[%s] of %s: %s = array%sd(%s%s);\n", code, parameters[[i]]$type, array_indices,
                   parameters[[i]]$sub_type, parameters[[i]]$get_name(), n, dim_sizes, array_values) 
         }
