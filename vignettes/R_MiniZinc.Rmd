@@ -130,12 +130,11 @@ Now, we have created the model and have set up MiniZinc on our system. The next 
 The information about result class and how to use it correctly can be found using `?results`. We wish to get all the solutions of the problem so we will set `all_solutions` to `TRUE`
 
 ```{r}
-solution <- results$new(model = m, result_type = "string", all_solutions = TRUE)
+solution <- results$new(model = m, result_type = "R6", all_solutions = TRUE)
 # show the solution
-print(solution$result)
+print(solution$result$optimal_solution)
 ```
-Currently, the utility to get parsed results as R6 objects has not been provided. It will be provided later
-when the parser to parse the MiniZinc solutions is developed.
+The results can be obtained as strings or R6 objects. The R6 object has three attributes namely: `solutions`, `best_solution` and `optimal_solution` which contain all the solutions, the best solution found and the optimal solution respectively
 
 
 ```{r,echo=FALSE}

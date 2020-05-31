@@ -61,9 +61,9 @@ m = model$new(decision = vars, constraints = constr,
               objective = objective_of_problem)
 
 ## -----------------------------------------------------------------------------
-solution <- results$new(model = m, result_type = "string", all_solutions = TRUE)
+solution <- results$new(model = m, result_type = "R6", all_solutions = TRUE)
 # show the solution
-print(solution$result)
+print(solution$result$optimal_solution)
 
 ## ----echo=FALSE---------------------------------------------------------------
 # remove the temporary model file 

@@ -29,8 +29,11 @@ results <- R6Class("results",
                    #' @param all_solutions boolean to specify is all solutions are needed. FALSE by default.
                    #' @param statistics boolean to specify if statistics are required. FALSE by default.
                    #' @param threads number of threads to be used by MiniZinc. 1 by default.
+                   #' @param keep_files bool to specify if the flattened model should be kept or not. FALSE by default.
+                   #' @param timeout time in milis (integer) specifying the timeout limit. NA by default.
                    initialize = function(model, result_type, all_solutions = FALSE, 
-                                         statistics = FALSE, threads = 1){
+                                         statistics = FALSE, threads = 1, keep_files = FALSE,
+                                         timeout = NA){
                    assert_r6(model, "model")
                    self$model = model
                    
@@ -42,16 +45,22 @@ results <- R6Class("results",
                    command = solver_options(self$mzn, all_solutions = all_solutions, 
                                             statistics = statistics, threads = threads)
                    
+                   if(test_choice(Sys.info()["sysname"], "Linux") || test_choice(Sys.info()["sysname"], "Darwin")){
+                     result = system(command, intern = TRUE)
+                   }else if(test_choice(Sys.info()["sysname"], "Windows")){
+                     result = system2(command, stdout = TRUE)
+                   }
+                   
+                   assert(test_character(result), test_true(length(result)>0), combine = "and")
+                   
+                  
+                   
                    assert_choice(result_type, c("string", "R6"))
                    
                    if(test_choice(result_type,"string")){
-                     if(test_choice(Sys.info()["sysname"], "Linux")){
-                       self$result = system(command, intern = TRUE)
-                     }else if(test_choice(Sys.info()["sysname"], "Windows")){
-                       self$result = system2(command, stdout = TRUE)
-                     }
+                     self$result = result
                    }else{
-                     parsed_obj = result_R6$new(self$result)
+                     parsed_obj = parsetoR6$new(result)
                      self$result = parsed_obj
                    }
   
