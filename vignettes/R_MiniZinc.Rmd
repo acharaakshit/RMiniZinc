@@ -1,5 +1,5 @@
 ---
-title: "MiniZinc Interface with R"
+title: "MiniZinc Interface for R"
 author: Akshit Achara 
 date: "`r Sys.Date()`"
 output: 
