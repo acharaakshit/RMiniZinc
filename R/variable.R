@@ -32,6 +32,9 @@ variable <- R6Class("variable",
                       #' @field sub_type
                       #' the data type of elements of a collection type
                       sub_type = NULL,
+                      #' @field array_index
+                      #' the index values if the variable is of type array
+                      array_index = NULL,
                       #' @description initialize the variable class
                       #' @param kind parameter or decision variable
                       #' @param name name of the parameter or decision variable
@@ -40,8 +43,10 @@ variable <- R6Class("variable",
                       #' @param domain domain of decision variable
                       #' @param expr  expression value for the decision variable
                       #' @param sub_type the data type of element of collections
+                      #' @param array_index the index if variable is an array
                       initialize = function(kind, name = NULL, type, value = NULL,
-                                            domain = NULL, expr = NULL, sub_type = NULL){
+                                            domain = NULL, expr = NULL, sub_type = NULL,
+                                            array_index = NULL){
                         
                               # kind checks
                               assert_choice(kind, .globals$kinds)
@@ -59,24 +64,50 @@ variable <- R6Class("variable",
                                 assert_scalar(value)
                                 assert_null(sub_type)
                                 if(test_choice(self$type, "int")){
-                                  assert(all(value == floor(value)))
+                                  assert_int(value)
                                 }else if(test_choice(self$type, "float")){
-                                  assert_choice(typeof(value), "double")
+                                  assert(!(floor(value) == value))
                                 }else{
-                                  assert_choice(typeof(value), "logical")
+                                  assert_logical(value)
                                 }
                                 self$value = value
                               }
                               
                               if(test_choice(type, .globals$types$collection)){
                                 if(test_choice(self$type , "enum")){
-                                  assert(test_character(value),
-                                         !test_scalar(value), test_null(sub_type), combine = "and")
+                                  assert(test_character(value), test_atomic_vector(a),
+                                         test_null(sub_type), combine = "and")
                                 }else if(test_choice(self$type , "set")){
+                                  # set parameters can be only of type int, float, bool, enum
                                   assert(test_choice(sub_type, .globals$sub_types),
                                          !test_choice(sub_type , "set"), combine = "and")
-                                  assert(!test_scalar(value), test_choice(typeof(value), "double"),
-                                         test_atomic_vector(value), combine = "and")
+                                  # if value is not an integer or float ranges
+                                  if(test_null(names(value))){
+                                    if(test_choice(sub_type, "int")){
+                                      # for integer sets
+                                      assert(test_int(value), test_atomic_vector(value),
+                                             combine = "and")
+                                    }else if(test_choice(sub_type, "float")){
+                                      # for floating point sets
+                                      assert(!all(floor(value) == value), test_atomic_vector(value),
+                                             combine = "and")
+                                    }
+                                  }else{
+                                    # if the value is a range
+                                    if(test_choice(sub_type,"int")){
+                                      # for integer sets
+                                      assert(test_choice(names(value), c("l","u")),
+                                             test_int(value["l"]), test_int(value["u"]),
+                                             test_atomic_vector(value), combine = "and")
+                                    }else if(test_choice(sub_type,"float")){
+                                      # for floating point sets
+                                      assert(test_choice(names(value), c("l","u")),
+                                             !all(floor(value["l"]) == value["l"]), 
+                                             !all(floor(value["u"]) == value["u"]),
+                                             test_atomic_vector(value), combine = "and")
+                                    }
+                                  }
+                                  
                                   self$sub_type = sub_type
                                 }else{
                                   assert(test_choice(sub_type, .globals$sub_types),
@@ -84,9 +115,9 @@ variable <- R6Class("variable",
                                   assert(test_array(value) , test_true(length(dim(value)) < 6), 
                                          combine = "and")
                                   if(test_choice(sub_type, "enum")){
-                                    assert(test_choice(typeof(value), "character"))
+                                    assert(test_character(value))
                                   }else if(test_choice(sub_type, "set")){
-                                    assert(test_choice(typeof(value), "double"))
+                                    assert(test_double(value, "double"))
                                   }
                                   self$sub_type = sub_type
                                 }  
@@ -95,6 +126,7 @@ variable <- R6Class("variable",
                               
                               }
                               
+                              # checks for decision variables
                               if(test_choice(kind, "decision")){
                                 if(!test_null(domain)){
                                   self$domain = domain
@@ -110,6 +142,25 @@ variable <- R6Class("variable",
                                   self$sub_type = sub_type
                                 }
                                 
+                                #check for array_index
+                                if(!test_null(array_index)){
+                                  # array_index can be  an integer range, a set variable initialised to 
+                                  # an integer range or an enumeration type.
+                                  if(test_choice(names(array_index), c("l","u"))){
+                                    # for integer range index
+                                    assert(test_int(array_index["l"]), test_int(array_index["u"]), 
+                                           test_atomic_vector(array_index), combine = "and")
+                                  }else{
+                                    assert_r6(array_index,"variable")
+                                    # for set index
+                                    assert(test_choice(array_index$type, "set"),
+                                            test_choice(array_index$type, "enum"))
+                                  }
+                                  self$array_index = array_index 
+                                  
+                                }
+                                
+                                
                                 assert_null(value)
                                 if(!test_null(expr)){
                                   assert_r6(expr, "get_expression")
@@ -118,12 +169,7 @@ variable <- R6Class("variable",
                                 
                                 
                               }
-                              
-                              if(!is.null(expr)){
-                                # expression checks (to be done)
-                                self$expr = expr
-                              }
-                              
+                            
                               if(!is.null(name)){
                                 self$name = name
                               }else {

@@ -23,6 +23,8 @@ An object containing all the properties of a variable.
 
 \item{\code{sub_type}}{the data type of elements of a collection type}
 
+\item{\code{array_index}}{the index values if the variable is of type array}
+
 \item{\code{name}}{Variable character name for internal use within Minizinc model.}
 }
 \if{html}{\out{</div>}}
@@ -49,7 +51,8 @@ initialize the variable class
   value = NULL,
   domain = NULL,
   expr = NULL,
-  sub_type = NULL
+  sub_type = NULL,
+  array_index = NULL
 )}\if{html}{\out{</div>}}
 }
 
@@ -69,6 +72,8 @@ initialize the variable class
 \item{\code{expr}}{expression value for the decision variable}
 
 \item{\code{sub_type}}{the data type of element of collections}
+
+\item{\code{array_index}}{the index if variable is an array}
 }
 \if{html}{\out{</div>}}
 }
