@@ -11,36 +11,62 @@
 write_mzn <- function(model, mzn){
     code = ""
     
-    parameters = model$parameters
-    
-    for(i in 1:length(parameters)) {
-      # if the value is a scalar i.e int, float or logical
-      if(test_scalar(parameters[[i]]$value)){
-      code = sprintf("%s%s: %s = %s;\n", code, parameters[[i]]$type,
-                     parameters[[i]]$get_name(), parameters[[i]]$value)
-      }else{
-        
-        if(test_choice(parameters[[i]]$type, "enum")){
-          enum_values <- paste(parameters[[i]]$value, collapse=", ")
-          sprintf("%s%s: %s = {%s};\n", code, parameters[[i]]$type,
-                  parameters[[i]]$get_name(), enum_values)
-        }else if(test_choice(parameters[[i]]$type, "set")){
-          set_values <- paste0(parameters[[i]]$value, collapse = ",")
-          sprintf("%s%s of %s: %s = {%s};\n", code, parameters[[i]]$type, parameters[[i]]$sub_type,
-                  parameters[[i]]$get_name(), set_values)
-        }else if(test_array(parameters[[i]]$type, "array")){
-          
-          # this is the number of dimensions of array
-          n <- length(dim(parameters[[i]]$value))
-          dim_sizes <- ""
-          for(x in seq(1,n,1)){
-            dim_sizes <- paste0(dim_sizes, dim(parameters[[i]]$value)[x], ", ")
+    if(!testNull(model$parameters)){
+      
+      parameters = model$parameters
+      
+      for(i in 1:length(parameters)) {
+        # if the value is a scalar i.e int, float or logical
+        if(test_scalar(parameters[[i]]$value) && test_choice(parameters[[i]]$type,.globals$types$single)){
+          code = sprintf("%s%s: %s = %s;\n", code, parameters[[i]]$type,
+                         parameters[[i]]$get_name(), parameters[[i]]$value)
+        }else{
+          if(test_choice(parameters[[i]]$type, "enum")){
+            enum_values <- paste(parameters[[i]]$value, collapse=", ")
+            sprintf("%s%s: %s = {%s};\n", code, parameters[[i]]$type,
+                    parameters[[i]]$get_name(), enum_values)
+          }else if(test_choice(parameters[[i]]$type, "set")){
+            # set
+            if(!test_null(names(parameters[[i]]$value))){
+              # integer, float or enum range
+              sprintf("%s%s of %s: %s = %s..%s;\n", code, parameters[[i]]$type, parameters[[i]]$sub_type,
+                      parameters[[i]]$get_name(), parameters[[i]]$value["l"], parameters[[i]]$value["u"] )
+            }else{
+              # set literals
+              set_values <- paste0(parameters[[i]]$value, collapse = ",")
+              sprintf("%s%s of %s: %s = {%s};\n", code, parameters[[i]]$type, parameters[[i]]$sub_type,
+                      parameters[[i]]$get_name(), set_values)
+          }}else{
+            # array
+            assert_choice(parameters[[i]]$type, "array")
+            # value
+            array_values <- as.vector(parameters[[i]]$value)
+            # the dimensions
+            n <- length(dim(parameters[[i]]$value))
+            
+            if(test_null(parameters[[i]]$array_index)){
+              # if array index is not given
+              dim_sizes <- paste0("1..", dim(parameters[[i]]$value), collapse = ", ")
+              # indices 
+              array_indices  <- dim_sizes
+              
+            }else{
+              indices_n_dims <- sapply(parameters[[i]]$array_index, function(x) 
+                if(all.equal(names(x),c("l","u"))){
+                  # integer range
+                  list(array_indices = paste0(x["l"],"..",x["u"]), 
+                       dim_sizes =  paste0(x["l"],"..",x["u"]))
+                }else{
+                   # set or enum
+                   list(array_indices = x$get_name, dim_sizes = paste0("1..", length(x$value)))
+                  })
+              array_indices = paste0(indices_n_dims["array_indices",], collapse = ",")
+              dim_sizes = paste0(indices_n_dims["dim_sizes",], collapse = ",")
+                
+           }
+            sprintf("%s%s[%s] of %s: %s = array%sd(%s%s);\n", code, parameters[[i]]$type, array_indices,
+                    parameters[[i]]$sub_type, parameters[[i]]$get_name(), n, dim_sizes, array_values) 
           }
-          array_values <- as.vector(parameters[[i]]$value)
-          #indices as integer set ranges
-          array_indices  = paste0("1..",dim(parameters[[i]]$value), collapse = ",")
-          sprintf("%s%s[%s] of %s: %s = array%sd(%s%s);\n", code, parameters[[i]]$type, array_indices,
-                  parameters[[i]]$sub_type, parameters[[i]]$get_name(), n, dim_sizes, array_values) 
         }
       }
     }
