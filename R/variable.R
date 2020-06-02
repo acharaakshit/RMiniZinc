@@ -16,7 +16,7 @@
 #' par_enum <- variable$new(kind = "parameter", type = "enum", value = c("RED","YELLOW","GREEN"))   
 #' # set value can either be an atomic vector of integers or floats 
 #' par_setA <- variable$new(kind = "parameter", type = "set", sub_type = "float", value = c(1,3,4.5,6))
-#' # or they can be given integer or floating point ranges using c(l=lower_bound, u = upper_bound)
+#' # or they can be given integer, floating point or enum ranges using c(l=lower_bound, u = upper_bound)
 #' par_setB <- variable$new(kind = "parameter", type = "set", sub_type = "int", value = c(l=1,u=10))
 #' # arrays can only be provided "array" type values in R. They can be declared without indices 
 #' par_arrrayA <- variable$new(kind = "parameter", type = "array", sub_type = "int", 
@@ -103,23 +103,25 @@ variable <- R6Class("variable",
                                     
                                     # if value is not an integer or float ranges
                                     if(test_null(names(value))){
-                                      if(test_choice(sub_type, c("int", "float"))){
-                                        assert(test_double(value), test_atomic_vector(value),
-                                               combine = "and")   
-                                      }else if(test_choice(sub_type, "bool")){
-                                        assert(test_logical(value), test_atomic_vector(value),
-                                               combine = "and")   
+                                      if(test_choice(sub_type, c("int", "float", "bool"))){
+                                        assert(test_double(value), test_logical(value), combine = "and")   
                                       }else{
                                         assert(test_r6(value, "variable"),
                                                test_choice(value$type,"enum"),
                                                combine = "and")
                                       }
-                                      
                                     }else{
                                       # if the value is a range (integer or float)
-                                      assert(all.equal(names(value),c("l","u")),
-                                             test_double(value["l"]), test_double(value["u"]),
-                                             test_atomic_vector(value), combine = "and")
+                                      if(test_character(value)){
+                                        assert(all.equal(names(value),c("l","u", "enum_par")),
+                                               test_true(value["l"] %in% value["enum_par"]$value), 
+                                               test_true(value["u"] %in% value["enum_par"]$value),
+                                               combine = "and")
+                                      }else{
+                                        assert(all.equal(names(value),c("l","u")),
+                                              test_double(value["l"]), test_double(value["u"]),
+                                              combine = "and")
+                                      }
                                     }
                                     self$sub_type = sub_type
                                   }else{
@@ -225,7 +227,7 @@ variable <- R6Class("variable",
                       }),
                     private = list(
                       #' @field name
-                      #' Variable character name for internal use within Minizinc model.
+                      #' variable character name for internal use within Minizinc model.
                       .name = NULL,
                       
                       .static = env(parameter = 0, decision = 0)

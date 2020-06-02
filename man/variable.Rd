@@ -15,7 +15,7 @@ var_float <- variable$new(kind = "decision", type = "float" )
 par_enum <- variable$new(kind = "parameter", type = "enum", value = c("RED","YELLOW","GREEN"))   
 # set value can either be an atomic vector of integers or floats 
 par_setA <- variable$new(kind = "parameter", type = "set", sub_type = "float", value = c(1,3,4.5,6))
-# or they can be given integer or floating point ranges using c(l=lower_bound, u = upper_bound)
+# or they can be given integer, floating point or enum ranges using c(l=lower_bound, u = upper_bound)
 par_setB <- variable$new(kind = "parameter", type = "set", sub_type = "int", value = c(l=1,u=10))
 # arrays can only be provided "array" type values in R. They can be declared without indices 
 par_arrrayA <- variable$new(kind = "parameter", type = "array", sub_type = "int", 
@@ -44,7 +44,7 @@ par_arrayB <- variable$new(kind = "parameter", type = "array", sub_type = "int",
 
 \item{\code{array_index}}{the index values if the variable is of type array}
 
-\item{\code{name}}{Variable character name for internal use within Minizinc model.}
+\item{\code{name}}{variable character name for internal use within Minizinc model.}
 }
 \if{html}{\out{</div>}}
 }
