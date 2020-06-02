@@ -15,15 +15,15 @@ var_float <- variable$new(kind = "decision", type = "float" )
 par_enum <- variable$new(kind = "parameter", type = "enum", value = c("RED","YELLOW","GREEN"))   
 # set value can either be an atomic vector of integers or floats 
 par_setA <- variable$new(kind = "parameter", type = "set", sub_type = "float", value = c(1,3,4.5,6))
-# or they can be given integer, floating point or enum ranges using c(l=lower_bound, u = upper_bound)
+# or they can be given integer, float or enum ranges using c(l=lower_bound, u = upper_bound)
 par_setB <- variable$new(kind = "parameter", type = "set", sub_type = "int", value = c(l=1,u=10))
 # arrays can only be provided "array" type values in R. They can be declared without indices 
 par_arrrayA <- variable$new(kind = "parameter", type = "array", sub_type = "int", 
-                            value = array(1:50, c(10,10,10,10,10)))
+               value = array(1:50, c(10,10,10,10,10)))
 # or with given indices that can be sets, enums or integer ranges (can only be a list)
 par_arrayB <- variable$new(kind = "parameter", type = "array", sub_type = "int", 
-                           value = array(1:10), array_index = list(c(l=1,u=10),c(l=1,u=10)
-                           ,c(l=1,u=10),c(l=1,u=10),c(l=1,u=10)) )
+              value = array(1:50, c(10,10,10,10,10)), array_index = list(c(l=1,u=10),c(l=1,u=10)
+              ,c(l=1,u=10),c(l=1,u=10),c(l=1,u=10)) )
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}

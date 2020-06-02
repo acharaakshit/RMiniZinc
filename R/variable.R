@@ -16,15 +16,15 @@
 #' par_enum <- variable$new(kind = "parameter", type = "enum", value = c("RED","YELLOW","GREEN"))   
 #' # set value can either be an atomic vector of integers or floats 
 #' par_setA <- variable$new(kind = "parameter", type = "set", sub_type = "float", value = c(1,3,4.5,6))
-#' # or they can be given integer, floating point or enum ranges using c(l=lower_bound, u = upper_bound)
+#' # or they can be given integer, float or enum ranges using c(l=lower_bound, u = upper_bound)
 #' par_setB <- variable$new(kind = "parameter", type = "set", sub_type = "int", value = c(l=1,u=10))
 #' # arrays can only be provided "array" type values in R. They can be declared without indices 
 #' par_arrrayA <- variable$new(kind = "parameter", type = "array", sub_type = "int", 
-#'                             value = array(1:50, c(10,10,10,10,10)))
+#'                value = array(1:50, c(10,10,10,10,10)))
 #' # or with given indices that can be sets, enums or integer ranges (can only be a list)
 #' par_arrayB <- variable$new(kind = "parameter", type = "array", sub_type = "int", 
-#'                            value = array(1:10), array_index = list(c(l=1,u=10),c(l=1,u=10)
-#'                            ,c(l=1,u=10),c(l=1,u=10),c(l=1,u=10)) )
+#'               value = array(1:50, c(10,10,10,10,10)), array_index = list(c(l=1,u=10),c(l=1,u=10)
+#'               ,c(l=1,u=10),c(l=1,u=10),c(l=1,u=10)) )
 
 
 variable <- R6Class("variable",
@@ -77,70 +77,72 @@ variable <- R6Class("variable",
                               
                               # value checks for parameters
                               if(test_choice(kind, "parameter")){
+                                # value or expression should be provided 
                                 assert(!test_null(value), !testNull(expr), combine = "or")
-                              if(testNull(expr)){
-                                if(test_choice(self$type, .globals$types$single)){
-                                  assert_scalar(value)
-                                  assert_null(sub_type)
-                                  if(test_choice(self$type, "int")){
-                                    assert_int(value)
-                                  }else if(test_choice(self$type, "float")){
-                                    assert_double(value)
-                                  }else{
-                                    assert_logical(value)
-                                  }
-                                  self$value = value
-                                }
-                                
-                                if(test_choice(type, .globals$types$collection)){
-                                  if(test_choice(self$type , "enum")){
-                                    assert(test_character(value), test_atomic_vector(value),
-                                           test_null(sub_type), combine = "and")
-                                  }else if(test_choice(self$type , "set")){
-                                    # set parameters can be only of type int, float, bool, enum
-                                    assert(test_choice(sub_type, .globals$sub_types),
-                                           !test_choice(sub_type , "set"), combine = "and")
-                                    
-                                    # if value is not an integer or float ranges
-                                    if(test_null(names(value))){
-                                      if(test_choice(sub_type, c("int", "float", "bool"))){
-                                        assert(test_double(value), test_logical(value), combine = "and")   
-                                      }else{
-                                        assert(test_r6(value, "variable"),
-                                               test_choice(value$type,"enum"),
-                                               combine = "and")
-                                      }
+                                if(testNull(expr)){
+                                  if(test_choice(self$type, .globals$types$single)){
+                                    assert_scalar(value)
+                                    assert_null(sub_type)
+                                    if(test_choice(self$type, "int")){
+                                      assert_int(value)
+                                    }else if(test_choice(self$type, "float")){
+                                      assert_double(value)
                                     }else{
-                                      # if the value is a range (integer or float)
-                                      if(test_character(value)){
-                                        assert(all.equal(names(value),c("l","u", "enum_par")),
-                                               test_true(value["l"] %in% value["enum_par"]$value), 
-                                               test_true(value["u"] %in% value["enum_par"]$value),
-                                               combine = "and")
+                                      assert_logical(value)
+                                    }
+                                    self$value = value
+                                  }
+                                  
+                                  if(test_choice(type, .globals$types$collection)){
+                                    if(test_choice(self$type , "enum")){
+                                      assert(test_character(value), test_atomic_vector(value),
+                                             test_null(sub_type), combine = "and")
+                                    }else if(test_choice(self$type , "set")){
+                                      # set parameters can be only of type int, float, bool, enum
+                                      assert(test_choice(sub_type, .globals$sub_types),
+                                             !test_choice(sub_type , "set"), combine = "and")
+                                      
+                                      # if value is not an integer or float ranges
+                                      if(test_null(names(value))){
+                                        if(test_choice(sub_type, c("int", "float", "bool"))){
+                                          assert(test_double(value), test_logical(value), combine = "or")   
+                                        }else{
+                                          assert(test_r6(value, "variable"),
+                                                 test_choice(value$type,"enum"),
+                                                 combine = "and")
+                                        }
                                       }else{
-                                        assert(all.equal(names(value),c("l","u")),
-                                              test_double(value["l"]), test_double(value["u"]),
-                                              combine = "and")
+                                        # if the value is a range (integer or float)
+                                        if(test_character(value)){
+                                          assert(all.equal(names(value),c("l","u", "enum_par")),
+                                                 test_true(value["l"] %in% value["enum_par"]$value), 
+                                                 test_true(value["u"] %in% value["enum_par"]$value),
+                                                 combine = "and")
+                                        }else{
+                                          assert(all.equal(names(value),c("l","u")),
+                                                test_double(value["l"]), test_double(value["u"]),
+                                                combine = "and")
+                                        }
                                       }
-                                    }
-                                    self$sub_type = sub_type
-                                  }else{
-                                    assert(test_choice(sub_type, .globals$sub_types),
-                                           !test_choice(sub_type, "array"), combine = "and")
-                                    assert(test_array(value) , test_true(length(dim(value)) < 6), 
-                                           combine = "and")
-                                    if(test_choice(sub_type, "enum")){
-                                      assert(test_character(value))
-                                    }else if(test_choice(sub_type, "set")){
-                                      assert(test_double(value, "double"))
-                                    }
-                                    self$sub_type = sub_type
-                                  }  
-                                  self$value = value
-                                }   
+                                      self$sub_type = sub_type
+                                    }else{
+                                      assert(test_choice(sub_type, .globals$sub_types),
+                                             !test_choice(sub_type, "array"), combine = "and")
+                                      assert(test_array(value) , test_true(length(dim(value)) < 6), 
+                                             combine = "and")
+                                      if(test_choice(sub_type, "enum")){
+                                        assert(test_character(value))
+                                      }else if(test_choice(sub_type, "set")){
+                                        assert(test_double(value, "double"))
+                                      }
+                                      self$sub_type = sub_type
+                                    }  
+                                    self$value = value
+                                  }   
                               }else{
-                                assert_r6(expr, "get_expression")
-                                self$expr = expr;
+                                  assert(test_r6(expr, "get_expression"),
+                                         !test_null(array_index), combine = "and")
+                                  self$expr = expr;
                               }
                             }
                               
@@ -160,7 +162,8 @@ variable <- R6Class("variable",
                                   self$sub_type = sub_type
                                 }
                                 if(!test_null(expr)){
-                                    assert_r6(expr, "get_expression")
+                                    assert(test_r6(expr, "get_expression"),
+                                           !test_null(array_index), combine = "and")
                                     self$expr = expr;
                                   }
                               }
@@ -172,13 +175,15 @@ variable <- R6Class("variable",
                                   }
                                   
                                   assert(test_list(array_index),
-                                         test_true(length(array_index) < 6 && length(array_index) > 0),
+                                         test_true(length(array_index) == length(dim(value))),
                                          combine = "and")
                                   # array_index can be  an integer range, a set variable initialised to 
                                   # an integer range or an enumeration type
                                   assert(all(sapply(array_index, function(x) 
                                     if(all.equal(names(x),c("l","u"))){
                                       # for integer ranges  
+                                      # add implementation for checking the length of 
+                                      # each dimension of array with the index
                                       assert(all(sapply(x, test_int)))
                                       TRUE
                                   }else{
