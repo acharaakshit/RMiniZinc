@@ -31,7 +31,8 @@ model <- R6Class("model",
                  #' @param objective  type of the problem
                  initialize = function(parameters = NULL, decisions, constraints, objective){
                    
-                   assert(test_list(parameters, "variable"), test_null(parameters), combine = "or")
+                   assert(test_null(parameters), 
+                          all(lapply(parameters, function(x) if(x$kind == "parameter"){TRUE})), combine = "or")
                    self$parameters = parameters
                    
                    assert_list(decisions, "variable")

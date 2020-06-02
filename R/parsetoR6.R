@@ -26,6 +26,8 @@ parsetoR6 <- R6Class("parsetoR6",
                        #' @param mzn_result the result (string output) of MiniZinc model
                        initialize = function(mzn_result){
                          
+                         assert_character(mzn_result)
+                         
                          if(test_choice(length(mzn_result),1)){
                           if(test_choice(mzn_result,"----------")){
                             stop("Empty model was given to MiniZinc")
