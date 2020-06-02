@@ -64,7 +64,7 @@ RHS_expr = get_expression$new(variables = c(var1,var2), arithmetic_operator = "*
 constr = constraint$new(operator = ">=", LHS_expression = LHS_expr, RHS_expression = RHS_expr)
 ```
 
-For now, this package can only support constraints which involve arithmetic operators only. The utility to use inbuild functions and loops like 'forall' and 'exists' will be provided soon.
+For now, this package can only support constraints which involve arithmetic operators only. The utility to use inbuilt functions and loops like 'forall' and 'exists' will be provided soon.
 
 ## Objective
 

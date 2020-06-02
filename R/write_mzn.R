@@ -84,7 +84,7 @@ write_mzn <- function(model, mzn){
             }
             if(is.null(array_values)){
               # if the value was not provided to the parameter
-              sprintf("%s%s[%s] of %s: %s = ;\n", code, parameters[[i]]$type, array_indices,
+              sprintf("%s%s[%s] of %s: %s = %s ;\n", code, parameters[[i]]$type, array_indices,
                       parameters[[i]]$sub_type, parameters[[i]]$get_name(), parameters[[i]]$expr)
             }else{
               # if the value was provided to the array
@@ -105,9 +105,22 @@ write_mzn <- function(model, mzn){
           code = sprintf("%svar %s: %s;\n", code, decisions[[i]]$type,
                        decisions[[i]]$get_name())  
         }else if(test_choice(decisions[[i]]$type, "set")){
-          # to be done
+          # set
+          code = sprintf("%svar %s of %s: %s;\n", code, decisions[[i]]$type, decisions[[i]]$sub_type,
+                         decisions[[i]]$get_name())  
         }else{
-          # to be done
+          # array
+          indices_n_dims <- sapply(decisions[[i]]$array_index, function(x) 
+            if(all.equal(names(x),c("l","u"))){
+              # integer range
+              list(array_indices = paste0(x["l"],"..",x["u"]))
+            }else{
+              # set or enum
+              list(array_indices = x$get_name)
+            })
+          array_indices = paste0(indices_n_dims["array_indices",], collapse = ",")
+          sprintf("%s%s[%s] of %s: %s;\n", code, decisions[[i]]$type, array_indices,
+                  parameters[[i]]$sub_type, decisions[[i]]$get_name())
         }
       }else{
         if(test_choice(decisions[[i]]$type, .globals$types$single)){
