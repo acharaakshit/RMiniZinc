@@ -167,8 +167,23 @@ solve maximize 400*b + 450*c;
 
 Now, that the basic structure of the problem is clear, we can create functions for solving different constraint programming problems.
 
+The workflow of the approach used above is given below:
+```{r Workflow 1, echo=FALSE, out.width = '100%'}
+knitr::include_graphics(paste0(getwd(),"/workflows/first_approach.png"))
+```
 
+This approach is helpful for R users who have little understanding of MiniZinc.
 
+The next approach is to use the MiniZinc C++ API. This involves giving the MiniZinc model to the Rcpp function, evaluate the results and return them back to R. The workflow can be seen below:
+```{r Workflow 2, echo=FALSE, fig.cap="A caption", out.width = '100%'}
+knitr::include_graphics(paste0(getwd(),"/workflows/ongoing_approach.png"))
+```
+This has not been developed at present.
 
+A parser function `parse_MiniZinc` has also been implemented which can be used to detect possible syntax errors before the MiniZinc model is evaluated. 
+
+```{r}
+rminizinc:::parse_MiniZinc("int: b = 10; set of int: m = 1..10; constraint a<1; solve satisfy")
+```
 
 

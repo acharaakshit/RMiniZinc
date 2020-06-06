@@ -78,8 +78,11 @@ variable <- R6Class("variable",
                               # value checks for parameters
                               if(test_choice(kind, "parameter")){
                                 # value or expression should be provided 
-                                assert(!test_null(value), !testNull(expr), combine = "or")
-                                if(testNull(expr)){
+                                assert(!test_null(value),  !test_null(expr), combine = "or")
+                                if(test_null(value)){
+                                  assert_r6(expr, "get_expression")
+                                  self$expr = expr
+                                }else{
                                   if(test_choice(self$type, .globals$types$single)){
                                     assert_scalar(value)
                                     assert_null(sub_type)
@@ -92,116 +95,37 @@ variable <- R6Class("variable",
                                     }
                                     self$value = value
                                   }
-                                  
-                                  if(test_choice(type, .globals$types$collection)){
-                                    if(test_choice(self$type , "enum")){
-                                      assert(test_character(value), test_atomic_vector(value),
-                                             test_null(sub_type), combine = "and")
-                                    }else if(test_choice(self$type , "set")){
-                                      # set parameters can be only of type int, float, bool, enum
-                                      assert(test_choice(sub_type, .globals$sub_types),
-                                             !test_choice(sub_type , "set"), combine = "and")
-                                      
-                                      # if value is not an integer or float ranges
-                                      if(test_null(names(value))){
-                                        if(test_choice(sub_type, c("int", "float", "bool"))){
-                                          assert(test_double(value), test_logical(value), combine = "or")   
-                                        }else{
-                                          assert(test_r6(value, "variable"),
-                                                 test_choice(value$type,"enum"),
-                                                 combine = "and")
-                                        }
-                                      }else{
-                                        # if the value is a range (integer or float)
-                                        if(test_character(value)){
-                                          assert(all.equal(names(value),c("l","u", "enum_par")),
-                                                 test_true(value["l"] %in% value["enum_par"]$value), 
-                                                 test_true(value["u"] %in% value["enum_par"]$value),
-                                                 combine = "and")
-                                        }else{
-                                          assert(all.equal(names(value),c("l","u")),
-                                                test_double(value["l"]), test_double(value["u"]),
-                                                combine = "and")
-                                        }
-                                      }
-                                      self$sub_type = sub_type
-                                    }else{
-                                      assert(test_choice(sub_type, .globals$sub_types),
-                                             !test_choice(sub_type, "array"), combine = "and")
-                                      assert(test_array(value) , test_true(length(dim(value)) < 6), 
-                                             combine = "and")
-                                      if(test_choice(sub_type, "enum")){
-                                        assert(test_character(value))
-                                      }else if(test_choice(sub_type, "set")){
-                                        assert(test_double(value, "double"))
-                                      }
-                                      self$sub_type = sub_type
-                                    }  
-                                    self$value = value
-                                  }   
-                              }else{
-                                  assert(test_r6(expr, "get_expression"),
-                                         !test_null(array_index), combine = "and")
-                                  self$expr = expr;
+                                  if(test_choice(self$type , "enum")){
+                                    assert(test_character(value), test_atomic_vector(value),
+                                           test_null(sub_type), combine = "and")
+                                  }
+                                }
                               }
-                            }
                               
-                              # checks for decision variables
-                              if(test_choice(kind, "decision")){
+                            # checks for decision variables (except sets and arrays)
+                            if(test_choice(kind, "decision")){
                                 if(!test_null(domain)){
                                   self$domain = domain
-                                }
-                                if(test_choice(type, .globals$types$collection) &&
-                                   !test_choice(type, "enum")){
-                                  if(test_choice(type,"set")){
-                                    assert_choice(sub_type, c("int","enum"))
-                                  }else{
-                                    assert(test_choice(sub_type, .globals$sub_types),
-                                           !test_choice(sub_type, "array"), combine = "and")
-                                  }
-                                  self$sub_type = sub_type
-                                }
-                                if(!test_null(expr)){
-                                    assert(test_r6(expr, "get_expression"),
-                                           !test_null(array_index), combine = "and")
-                                    self$expr = expr;
-                                  }
+                                }}
+                              if(!test_null(expr)){
+                                assert_r6(expr, "get_expression")
+                                self$expr = expr
                               }
-                                
-                                #check for array_index
-                                if(!test_null(array_index)){
-                                  if(test_choice(kind, "parameter")){
-                                    assert_array(value)
-                                  }
-                                  
-                                  assert(test_list(array_index),
-                                         test_true(length(array_index) == length(dim(value))),
-                                         combine = "and")
-                                  # array_index can be  an integer range, a set variable initialised to 
-                                  # an integer range or an enumeration type
-                                  assert(all(sapply(array_index, function(x) 
-                                    if(all.equal(names(x),c("l","u"))){
-                                      # for integer ranges  
-                                      # add implementation for checking the length of 
-                                      # each dimension of array with the index
-                                      assert(all(sapply(x, test_int)))
-                                      TRUE
-                                  }else{
-                                      assert_list(x, "variable")
-                                      if(x$type == "set"){
-                                        # set of int
-                                        assert(x$sub_type == "int")
-                                      }else{
-                                        # enum
-                                        assert(x$type == "enum")
-                                      }
-                                    TRUE
-                                  })))
-                                  
-                                self$array_index = array_index 
-                              }
-                                
-                                
+                      
+                            # checks for sets and arrays      
+                            if(test_choice(self$type , "set")){
+                              #set
+                                set_checks$new(kind, sub_type, value, expr)
+                                self$sub_type = sub_type
+                                self$value = value
+                            }else if(test_choice(self$type , "array")){
+                                #array checks
+                                array_checks$new(kind, sub_type, value,
+                                                       array_index, expr) 
+                                self$sub_type = sub_type
+                                self$value = value  
+                                }
+                              
                               if(!is.null(name)){
                                 self$name = name
                               }else {
@@ -238,4 +162,125 @@ variable <- R6Class("variable",
                       .static = env(parameter = 0, decision = 0)
                     ))
 
+#' @title set checks
+#' 
+#' @description 
+#' this class contains the various checks required for sets
+#' 
+#' @import R6
+#' @import checkmate
+#' 
+#' @export
+set_checks <- R6Class("set_checks",
+                      public = list(
+                        #' @description checks related to set variables and parameters
+                        #' @param set_kind parameter or decision
+                        #' @param set_type data type of the set
+                        #' @param set_value the value of set if it's a parameter
+                        #' @param set_expression the input expression
+                        initialize = function(set_kind, set_type, set_value, set_expression){
+                          if(!testNull(set_expression)){
+                            assert_r6(set_expression, "get_expression")
+                          }else{
+                            if(set_kind == "parameter"){
+                              # set parameters can be only of type int, float, bool, enum
+                              assert(test_choice(set_type, .globals$sub_types),
+                                     !test_choice(set_type , "set"), combine = "and")
+                              
+                              # if value is not an integer or float ranges
+                              if(test_null(names(set_value))){
+                                if(test_choice(set_type, c("int", "float", "bool"))){
+                                  assert(test_double(set_value), test_logical(set_value), combine = "or")   
+                                }else{
+                                  # enum
+                                  assert(test_r6(set_value, "variable"),
+                                         test_choice(set_value$type,"enum"),
+                                         combine = "and")
+                                }
+                              }else{
+                                # if the value is a range (integer or float)
+                                if(test_character(set_value)){
+                                  assert(all.equal(names(set_value),c("l","u", "enum_par")),
+                                         test_true(set_value["l"] %in% set_value["enum_par"]$value), 
+                                         test_true(set_value["u"] %in% set_value["enum_par"]$value),
+                                         combine = "and")
+                                }else{
+                                  assert(all.equal(names(set_value),c("l","u")),
+                                         test_double(set_value["l"]), test_double(set_value["u"]),
+                                         combine = "and")
+                                }
+                              }  
+                            }else{
+                              assert_choice(set_type, c("int","enum"))
+                            }
+                            
+                          }
+                        }
+                      ))
+
+#' @title array checks
+#' 
+#' @description 
+#' this class contains the various checks required for array values
+#' 
+#' @import R6
+#' @import checkmate
+#' 
+#' @export
+array_checks <- R6Class("array_checks", 
+                       public = list(
+                         #' @description this constructor contains the checks for array values
+                         #' @param array_kind parameter or decision
+                         #' @param array_type int, float, bool, set or enum
+                         #' @param array_value value of the array (only for parameters)
+                         #' @param array_index index of the array
+                         #' @param array_expr expression to be given to the array
+                         initialize = function(array_kind, array_type, array_value = NULL,
+                                               array_index = NULL, array_expr = NULL){
+                        
+                           assert(test_choice(array_type, .globals$sub_types),
+                                  !test_choice(array_type, "array"), combine = "and")
+                           if(test_choice(array_kind, "parameter")){
+                             assert(!test_null(array_expr), !test_null(array_value),
+                                    combine = "or")
+                             assert(test_array(array_value) , test_true(length(dim(array_value)) < 6), 
+                                    combine = "and")
+                             if(test_choice(array_type, "enum")){
+                               assert(test_character(array_value))
+                             }else if(test_choice(array_type, "set")){
+                               assert(test_double(array_value, "double"))
+                             }
+                           }else{
+                             assert(!test_null(array_index) , test_null(array_value),
+                                    combine = "and")
+                           }
+                           
+                           if(!test_null(array_index)){
+                             assert(test_list(array_index))
+                             if(test_null(array_expr)){
+                               assert(length(array_index) == length(dim(array_value)))
+                             }
+                             # array_index can be  an integer range, a set variable initialised to 
+                             # an integer range or an enumeration type
+                             assert(all(sapply(array_index, function(x) 
+                               if(all.equal(names(x),c("l","u"))){
+                                 # for integer ranges  
+                                 # add implementation for checking the length of 
+                                 # each dimension of array with the index
+                                 assert(all(sapply(x, test_int)))
+                                 TRUE
+                               }else{
+                                 assert_list(x, "variable")
+                                 if(x$type == "set"){
+                                   # set of int
+                                   assert(x$sub_type == "int")
+                                 }else{
+                                   # enum
+                                   assert(x$type == "enum")
+                                 }
+                                 TRUE
+                               })))     
+                           }
+                        } 
+                       ))
 

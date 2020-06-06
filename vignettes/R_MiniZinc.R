@@ -69,3 +69,12 @@ print(solution$result$optimal_solution)
 # remove the temporary model file 
 file.remove(solution$mzn)
 
+## ----Workflow 1, echo=FALSE, out.width = '100%'-------------------------------
+knitr::include_graphics(paste0(getwd(),"/workflows/first_approach.png"))
+
+## ----Workflow 2, echo=FALSE, fig.cap="A caption", out.width = '100%'----------
+knitr::include_graphics(paste0(getwd(),"/workflows/ongoing_approach.png"))
+
+## -----------------------------------------------------------------------------
+rminizinc:::parse_MiniZinc("int: b = 10; set of int: m = 1..10; constraint a<1; solve satisfy")
+
