@@ -431,8 +431,8 @@ A caption
 </div>
 <p>This has not been developed at present.</p>
 <p>A parser function <code>parse_MiniZinc</code> has also been implemented which can be used to detect possible syntax errors before the MiniZinc model is evaluated.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">rminizinc<span class="op">:::</span><span class="kw">parse_MiniZinc</span>(<span class="st">&quot;int: b = 10; set of int: m = 1..10; constraint a&lt;1; solve satisfy&quot;</span>)</a></code></pre></div>
-<pre><code>## [1] 10</code></pre>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">rminizinc<span class="op">:::</span><span class="kw">parse_MiniZinc</span>(<span class="st">&quot;var 0..100: b; var 0..100: c; constraint 250*b + 200*c &lt;= 4000; constraint 2*b &lt;= 6; constraint 75*b + 150*c &lt;= 2000; constraint 100*b + 150*c &lt;= 500; constraint 75*c &lt;= 500; solve maximize 400*b + 450*c;&quot;</span>)</a></code></pre></div>
+<pre><code>## numeric(0)</code></pre>
 </div>
 
 

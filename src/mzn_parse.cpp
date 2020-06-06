@@ -1,5 +1,6 @@
 #include <Rcpp.h>
-#include "minizinc/parser.hh"
+#include <minizinc/parser.hh>
+#include <minizinc/solver.hh>
 
 
 using namespace std;
@@ -37,7 +38,29 @@ NumericVector parse_MiniZinc(const char* modelString){
     Location lc = items[i]->loc();
     switch(items[i]->iid()){
     case Item::II_VD:
-      // the name of the variables	
+      // decision variables or parameters
+      if(items[i]->cast<VarDeclI>()->e()->e() == NULL){
+        cout << "item " << i << " is a decision variable" << endl;
+        if(items[i]->cast<VarDeclI>()->e()->ti()->domain() != NULL){
+          // variable has a domain
+          if(items[i]->cast<VarDeclI>()->e()->ti()->domain()->cast<SetLit>()->isv() != NULL){
+            // integer set value
+            cout << "The maximum value of domain of item" << i << " is: ";
+            cout << items[i]->cast<VarDeclI>()->e()->ti()->domain()->cast<SetLit>()->isv()->max()<<  endl;
+            cout << "The minimum value of domain of item" << i << " is: ";
+            cout << items[i]->cast<VarDeclI>()->e()->ti()->domain()->cast<SetLit>()->isv()->min()<<  endl;  
+          }else{
+            // float set value
+            cout << "The maximum value of domain of item" << i << " is: ";
+            cout << items[i]->cast<VarDeclI>()->e()->ti()->domain()->cast<SetLit>()->fsv()->max()<<  endl;
+            cout << "The minimum value of domain of item" << i << " is: ";
+            cout << items[i]->cast<VarDeclI>()->e()->ti()->domain()->cast<SetLit>()->fsv()->min()<<  endl;
+          }
+          	
+        }		
+        continue;
+      }
+      // the name of the parameters	
       cout << "The name of variable "<< i + 1 << " is " << items[i]->cast<VarDeclI>()->e()->id()->v() << endl;
       type =  items[i]->cast<VarDeclI>()->e()->e()->eid();
       switch(type){
@@ -54,7 +77,16 @@ NumericVector parse_MiniZinc(const char* modelString){
         break;
       case Expression::E_SETLIT:
         cout << "item " << i + 1 << " is a set parameter" << endl;
-        cout << *(items[i]->cast<VarDeclI>()->e()->e()->cast<SetLit>()->isv());
+        if(items[i]->cast<VarDeclI>()->e()->e()->cast<SetLit>()->isv()!=NULL){
+          // integer set
+          cout << "max possible value " <<  items[i]->cast<VarDeclI>()->e()->e()->cast<SetLit>()->isv()->max();
+          cout << "min possible value " << items[i]->cast<VarDeclI>()->e()->e()->cast<SetLit>()->isv()->min();  
+        }else{
+          // floating point set
+          cout << "max possible value " <<  items[i]->cast<VarDeclI>()->e()->e()->cast<SetLit>()->fsv()->max();
+          cout << "min possible value " << items[i]->cast<VarDeclI>()->e()->e()->cast<SetLit>()->fsv()->min();
+        }
+        
         break;
       case Expression::E_ARRAYLIT:
         cout << "item " << i + 1 << " is an array parameter" << endl;
