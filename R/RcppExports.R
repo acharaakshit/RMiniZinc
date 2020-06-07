@@ -8,9 +8,11 @@
 #' @importFrom Rcpp sourceCpp
 #' @export mzn_eval
 #' @useDynLib rminizinc, .registration=TRUE
-#' @param modelString the string representation of the model to be evaluated
-mzn_eval <- function(modelString) {
-    invisible(.Call(`_rminizinc_mzn_eval`, modelString))
+#' @param modelString the string representation of the model to be evaluated.
+#' @param solver the name of the solver to use.
+#' @param libpath the path of the library where the solver is present.
+mzn_eval <- function(modelString, solver, libpath) {
+    .Call(`_rminizinc_mzn_eval`, modelString, solver, libpath)
 }
 
 #' @title MiniZinc syntax parser
