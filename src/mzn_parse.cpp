@@ -58,11 +58,7 @@ NumericVector mzn_parse(const char* modelString){
             cout << "item " << i << " is a float" <<  tp_string << " declaration for a float set" << endl;
           }else if(tp.isboolset()){
             cout << "item " << i << " is a bool" << tp_string << " declaration for a boolean set" << endl;
-          }else{
-            cout << "unknown set type";
-          }
-        }
-        else{
+          }}else{
           if(tp.isintarray()){
             cout << "item " << i << " is an " << tp_string << " declaration for an integer array" << endl;
           }else if(tp.isintsetarray()){
@@ -70,27 +66,25 @@ NumericVector mzn_parse(const char* modelString){
           }else if(tp.isboolarray()){
             cout << "item " << i << " is a bool" << tp_string << " declaration for a boolean array" << endl;
           }else{
-            cout << "unknown array type";
+            
+              if(items[i]->cast<VarDeclI>()->e()->ti()->domain() != NULL){
+                // variable has a domain
+                if(items[i]->cast<VarDeclI>()->e()->ti()->domain()->cast<SetLit>()->isv() != NULL){
+                  // integer set value
+                  cout << "The maximum value of domain of item" << i << " is: ";
+                  cout << items[i]->cast<VarDeclI>()->e()->ti()->domain()->cast<SetLit>()->isv()->max()<<  endl;
+                  cout << "The minimum value of domain of item" << i << " is: ";
+                  cout << items[i]->cast<VarDeclI>()->e()->ti()->domain()->cast<SetLit>()->isv()->min()<<  endl;  
+                }else{
+                  // float set value
+                  cout << "The maximum value of domain of item" << i << " is: ";
+                  cout << items[i]->cast<VarDeclI>()->e()->ti()->domain()->cast<SetLit>()->fsv()->max()<<  endl;
+                  cout << "The minimum value of domain of item" << i << " is: ";
+                  cout << items[i]->cast<VarDeclI>()->e()->ti()->domain()->cast<SetLit>()->fsv()->min()<<  endl;
+                }
+            }
           }	
         }
-        if(items[i]->cast<VarDeclI>()->e()->ti()->domain() != NULL){
-          // variable has a domain
-          if(items[i]->cast<VarDeclI>()->e()->ti()->domain()->cast<SetLit>()->isv() != NULL){
-            // integer set value
-            cout << "The maximum value of domain of item" << i << " is: ";
-            cout << items[i]->cast<VarDeclI>()->e()->ti()->domain()->cast<SetLit>()->isv()->max()<<  endl;
-            cout << "The minimum value of domain of item" << i << " is: ";
-            cout << items[i]->cast<VarDeclI>()->e()->ti()->domain()->cast<SetLit>()->isv()->min()<<  endl;  
-          }else{
-            // float set value
-            cout << "The maximum value of domain of item" << i << " is: ";
-            cout << items[i]->cast<VarDeclI>()->e()->ti()->domain()->cast<SetLit>()->fsv()->max()<<  endl;
-            cout << "The minimum value of domain of item" << i << " is: ";
-            cout << items[i]->cast<VarDeclI>()->e()->ti()->domain()->cast<SetLit>()->fsv()->min()<<  endl;
-          }
-          
-        }		
-        
         continue;
       }
       // the name of the parameters	
