@@ -72,7 +72,7 @@ file.remove(solution$mzn)
 ## ----Workflow 1, echo=FALSE, out.width = '100%'-------------------------------
 knitr::include_graphics(paste0(getwd(),"/workflows/first_approach.png"))
 
-## ----Workflow 2, echo=FALSE, fig.cap="A caption", out.width = '100%'----------
+## ----Workflow 2, echo=FALSE, out.width = '100%'-------------------------------
 knitr::include_graphics(paste0(getwd(),"/workflows/ongoing_approach.png"))
 
 ## -----------------------------------------------------------------------------

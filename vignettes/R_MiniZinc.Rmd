@@ -175,7 +175,7 @@ knitr::include_graphics(paste0(getwd(),"/workflows/first_approach.png"))
 This approach is helpful for R users who have little understanding of MiniZinc.
 
 The next approach is to use the MiniZinc C++ API. This involves giving the MiniZinc model to the Rcpp function, evaluate the results and return them back to R. The workflow can be seen below:
-```{r Workflow 2, echo=FALSE, fig.cap="A caption", out.width = '100%'}
+```{r Workflow 2, echo=FALSE, out.width = '100%'}
 knitr::include_graphics(paste0(getwd(),"/workflows/ongoing_approach.png"))
 ```
 This has not been developed at present.
@@ -183,7 +183,7 @@ This has not been developed at present.
 A parser function `parse_MiniZinc` has also been implemented which can be used to detect possible syntax errors before the MiniZinc model is evaluated. 
 
 ```{r}
-rminizinc:::parse_MiniZinc("var 0..100: b; var 0..100: c; constraint 250*b + 200*c <= 4000; constraint 2*b <= 6; constraint 75*b + 150*c <= 2000; constraint 100*b + 150*c <= 500; constraint 75*c <= 500; solve maximize 400*b + 450*c;")
+rminizinc:::mzn_parse("var 0..100: b; var 0..100: c; constraint 250*b + 200*c <= 4000; constraint 2*b <= 6; constraint 75*b + 150*c <= 2000; constraint 100*b + 150*c <= 500; constraint 75*c <= 500; solve maximize 400*b + 450*c;")
 ```
 
 

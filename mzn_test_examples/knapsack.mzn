@@ -1,10 +1,10 @@
 % taken from minizinc-examples https://github.com/MiniZinc/minizinc-examples
 
-int: n; % number of objects
+int: n = 3; % number of objects
 set of int: OBJ = 1..n;
-int: capacity;
-array[OBJ] of int: profit;
-array[OBJ] of int: size;
+int: capacity = 9;
+array[OBJ] of int: profit = [15,10,7];
+array[OBJ] of int: size = [4,3,2];
 
 array[OBJ] of var int: x; % how many of each object
 
