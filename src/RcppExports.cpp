@@ -5,20 +5,31 @@
 
 using namespace Rcpp;
 
-// parse_MiniZinc
-NumericVector parse_MiniZinc(const char* modelString);
-RcppExport SEXP _rminizinc_parse_MiniZinc(SEXP modelStringSEXP) {
+// mzn_eval
+void mzn_eval(const char* modelString);
+RcppExport SEXP _rminizinc_mzn_eval(SEXP modelStringSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const char* >::type modelString(modelStringSEXP);
+    mzn_eval(modelString);
+    return R_NilValue;
+END_RCPP
+}
+// mzn_parse
+NumericVector mzn_parse(const char* modelString);
+RcppExport SEXP _rminizinc_mzn_parse(SEXP modelStringSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const char* >::type modelString(modelStringSEXP);
-    rcpp_result_gen = Rcpp::wrap(parse_MiniZinc(modelString));
+    rcpp_result_gen = Rcpp::wrap(mzn_parse(modelString));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_rminizinc_parse_MiniZinc", (DL_FUNC) &_rminizinc_parse_MiniZinc, 1},
+    {"_rminizinc_mzn_eval", (DL_FUNC) &_rminizinc_mzn_eval, 1},
+    {"_rminizinc_mzn_parse", (DL_FUNC) &_rminizinc_mzn_parse, 1},
     {NULL, NULL, 0}
 };
 
