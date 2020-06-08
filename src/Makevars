@@ -1,6 +1,6 @@
-PKG_CXXFLAGS=-I. -I/usr/local/lib/libminizinc-master/include
-PKG_CPPFLAGS=-I. -I/usr/local/lib/libminizinc-master/include
+PKG_CXXFLAGS=-I. -I/usr/local/lib/libminizinc/include
+PKG_CPPFLAGS=-I. -I/usr/local/lib/libminizinc/include
 PKG_LDFLAGS=-lmzn
 OBJECTS = RcppExports.o mzn_parse.o mzn_eval.o $(SOURCES:.cpp=.o)
-PKG_LIBS=-L/usr/local/lib/libminizinc-master	-lmzn 
+PKG_LIBS=-L/usr/local/lib/libminizinc	-lmzn 
 PKG_SHAREDCPPFLAGS = -fPIC

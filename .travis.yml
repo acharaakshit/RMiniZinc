@@ -8,16 +8,17 @@ jobs:
       before_install:
         - cd /usr/local/lib;
         - sudo git clone https://github.com/MiniZinc/libminizinc.git; 
-        - cd libminizinc-master;
-        - sudo sed -i '3 i set(CMAKE_CXX_FLAGS "-fpic")' CMakeLists.txt
+        - cd libminizinc/;
+        - sudo sed -i '3 i set(CMAKE_CXX_FLAGS "-fpic")' CMakeLists.txt;
         - sudo cmake CMakeLists.txt;
         - sudo make;
         - sudo make install;
-        - sudo cp /snap/minizinc/current/share/minizinc  /usr/local/lib/libminizinc-master/share/minizinc;
-        - cd /share/minizinc/solvers;
-        - sudo sed -i 's+../../..+usr+g' gecode.msc; 
-        - sudo export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/libminizinc-master;
-        - sudo echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/libminizinc-master' >> ~/.bashrc;
+        - sudo cp -r /snap/minizinc/current/share/minizinc/solvers  /usr/local/lib/libminizinc/share/minizinc;
+        - cd share/minizinc/solvers;
+        - sudo sed -i 's+../../..+/usr+g' gecode.msc; 
+        - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/libminizinc;
+        - sudo echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/libminizinc' >> ~/.bashrc;
+        - sudo ldconfig;
       addons:
         snaps:
           - minizinc --classic
