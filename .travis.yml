@@ -10,6 +10,7 @@ jobs:
         - sudo git clone https://github.com/MiniZinc/libminizinc.git; 
         - cd libminizinc/;
         - sudo sed -i '3 i set(CMAKE_CXX_FLAGS "-fpic" CACHE INTERNAL "")' CMakeLists.txt;
+        - sudo sed -i '4 i set(CMAKE_CPP_FLAGS "-fpic" CACHE INTERNAL "")' CMakeLists.txt
         - sudo apt-get install build-essential cmake;
         - sudo -E cmake CMakeLists.txt;
         - sudo make;
