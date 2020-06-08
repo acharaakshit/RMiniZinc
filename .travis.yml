@@ -22,7 +22,7 @@ jobs:
         - sudo ldconfig;
         - cd;
         - echo $TRAVIS_BUILD_DIR;
-        - cd $TRAVIS_BUILD_DIR/RMiniZinc;
+        - cd $TRAVIS_BUILD_DIR;
       addons:
         snaps:
           - minizinc --classic
