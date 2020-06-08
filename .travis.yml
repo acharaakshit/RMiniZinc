@@ -4,6 +4,19 @@ jobs:
   include:
     - os: linux
       language: R
+      before_install:
+        - cd /usr/local/lib;
+        - git clone https://github.com/MiniZinc/libminizinc.git; 
+        - cd libminizinc-master;
+        - sed -i '3 i set(CMAKE_CXX_FLAGS "-fpic")' CMakeLists.txt
+        - cmake CMakeLists.txt;
+        - make;
+        - make install;
+        - cp /snap/minizinc/current/share/minizinc  /usr/local/lib/libminizinc-master/share/minizinc;
+        - cd /share/minizinc/solvers;
+        - sed -i 's+../../..+usr+g' gecode.msc; 
+        - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/libminizinc-master;
+        - echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/libminizinc-master' >> ~/.bashrc;
       addons:
         snaps:
           - minizinc --classic
