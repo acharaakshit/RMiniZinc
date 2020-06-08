@@ -104,6 +104,7 @@ variable <- R6Class("variable",
                               
                             # checks for decision variables (except sets and arrays)
                             if(test_choice(kind, "decision")){
+                                assert_null(value)
                                 if(!test_null(domain)){
                                   self$domain = domain
                                 }}
