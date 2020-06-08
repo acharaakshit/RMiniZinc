@@ -21,7 +21,8 @@ jobs:
         - sudo echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/libminizinc' >> ~/.bashrc;
         - sudo ldconfig;
         - cd;
-        - cd RMiniZinc;
+        - echo $TRAVIS_BUILD_DIR;
+        - cd $TRAVIS_BUILD_DIR/RMiniZinc;
       addons:
         snaps:
           - minizinc --classic
