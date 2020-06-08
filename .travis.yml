@@ -10,7 +10,7 @@ jobs:
         - sudo git clone https://github.com/MiniZinc/libminizinc.git; 
         - cd libminizinc/;
         - sudo sed -i '3 i set(CMAKE_CXX_FLAGS "-fpic")' CMakeLists.txt;
-        - sudo cmake CMakeLists.txt;
+        - sudo -E cmake CMakeLists.txt;
         - sudo make;
         - sudo make install;
         - sudo cp -r /snap/minizinc/current/share/minizinc/solvers  /usr/local/lib/libminizinc/share/minizinc;
