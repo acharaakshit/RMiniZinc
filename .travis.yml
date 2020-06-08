@@ -19,7 +19,6 @@ jobs:
         - sudo sed -i 's+../../..+/usr+g' gecode.msc; 
         - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/libminizinc;
         - sudo echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/libminizinc' >> ~/.bashrc;
-        - sudo ldconfig;
       addons:
         snaps:
           - minizinc --classic
