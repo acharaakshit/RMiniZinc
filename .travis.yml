@@ -28,38 +28,10 @@ jobs:
         - cd;
         - echo $TRAVIS_BUILD_DIR;
         - cd $TRAVIS_BUILD_DIR;
-        
       addons:
         snaps:
           - minizinc --classic
       cache: packages
-    - os: windows
-      language: bash
-      before_install:
-        - wget -c --directory-prefix='''C:\Program Files\''' https://github.com/MiniZinc/MiniZincIDE/releases/download/2.4.3/MiniZincIDE-2.4.3-bundled-setup-win64.exe ;
-        - PowerShell -Command Start-Process -FilePath "C:/Program Files/MiniZincIDE-2.4.3-bundled-setup-win64.exe" -ArgumentList "/VERYSILENT", "AGREETOLICENSE=yes","ACCEPTEULA=yes","/qb" -NoNewWindow -Wait -PassThru ;
-        - echo ls;
-        - setx PATH '''%PATH%;C:\Program Files\MiniZinc\''';
-      install:
-        - choco install -y r --version 3.6.2
-        - choco install -y rtools --version 3.5.0.4
-        - "url=$(curl https://miktex.org/download | sed -n 's/.*href=.\\(.*x64.exe\\).*/https:\\/\\/miktex.org\\1/p' | head -1)"
-        - if ! [ -f $HOME/AppData/Local/Temp/chocolatey/miktex.exe ]; then
-            curl -Lo $HOME/AppData/Local/Temp/chocolatey/miktex.exe $url;
-           fi
-        - $HOME/AppData/Local/Temp/chocolatey/miktex.exe --unattended --auto-install=yes 
-        - "export PATH=/c/Program\\ Files/MiKTeX\\ 2.9/miktex/bin/x64:$PATH"
-        - choco install -y pandoc
-        - "export PATH=/c/Program\\ Files/R/R-3.6.2/bin/x64:/c/Rtools/bin:/c/RTools/mingw_64/bin:$PATH"
-        - mkdir -p ${HOME}/Documents/R/win-library/3.6
-        - export R_LIBS_USER=${HOME}/Documents/R/win-library/3.6
-        - echo 'options(repos = c(CRAN = "https://cloud.r-project.org"))' > .Rprofile
-        - Rscript -e 'install.packages("devtools")'
-        - Rscript -e 'install.packages(c("remotes"));if (!all(c("remotes") %in% installed.packages())) { q(status = 1, save = "no")}'
-        - "Rscript -e 'deps <- remotes::dev_package_deps(dependencies = NA);remotes::install_deps(dependencies = TRUE);if (!all(deps$package %in% installed.packages())) { message(\"missing: \", paste(setdiff(deps$package, installed.packages()), collapse=\", \")); q(status = 1, save = \"no\")}'"
-      script:
-        - R CMD build .
-        - R CMD check *tar.gz --as-cran  
     - os: osx
       language: R
       before_install:
@@ -70,6 +42,5 @@ jobs:
         - export PATH=/Applications/MiniZincIDE.app/Contents/Resources:$PATH ;
         - echo PATH ;
   allow_failures:
-    os: 
-      - windows
-      - osx
+    os: osx
+   
