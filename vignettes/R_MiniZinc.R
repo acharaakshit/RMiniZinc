@@ -69,3 +69,19 @@ print(solution$result$optimal_solution)
 # remove the temporary model file 
 file.remove(solution$mzn)
 
+## ----Workflow 1, echo=FALSE, out.width = '100%'-------------------------------
+knitr::include_graphics(paste0(getwd(),"/workflows/first_approach.png"))
+
+## ----Workflow 2, echo=FALSE, out.width = '100%'-------------------------------
+knitr::include_graphics(paste0(getwd(),"/workflows/ongoing_approach.png"))
+
+## -----------------------------------------------------------------------------
+rminizinc:::mzn_parse("var 0..100: b; var 0..100: c; constraint 250*b + 200*c <= 4000; constraint 2*b <= 6; constraint 75*b + 150*c <= 2000; constraint 100*b + 150*c <= 500; constraint 75*c <= 500; solve maximize 400*b + 450*c;")
+
+## -----------------------------------------------------------------------------
+modelString="int: n; set of int: OBJ = 1..n; int: capacity; array[OBJ] of int: profit; array[OBJ] of int: size; array[OBJ] of var int: x; constraint forall(i in OBJ)(x[i] >= 0); constraint sum(i in OBJ)(size[i] * x[i]) <= capacity; solve maximize sum(i in OBJ)(profit[i] * x[i]);"
+dzn_path = paste0(dirname(getwd()), "/mzn_test_examples/knapsack.dzn")
+rminizinc:::mzn_eval(modelString = modelString, solver = "org.gecode.gecode",
+                     libpath = "/snap/minizinc/current/share/minizinc",
+                     datafile = dzn_path)
+

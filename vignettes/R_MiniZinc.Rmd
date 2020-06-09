@@ -167,8 +167,31 @@ solve maximize 400*b + 450*c;
 
 Now, that the basic structure of the problem is clear, we can create functions for solving different constraint programming problems.
 
+The workflow of the approach used above is given below:
+```{r Workflow 1, echo=FALSE, out.width = '100%'}
+knitr::include_graphics(paste0(getwd(),"/workflows/first_approach.png"))
+```
 
+This approach is helpful for R users who have little understanding of MiniZinc.
 
+The next approach is to use the MiniZinc C++ API. This involves giving the MiniZinc model to the Rcpp function, evaluate the results and return them back to R. The workflow can be seen below:
+```{r Workflow 2, echo=FALSE, out.width = '100%'}
+knitr::include_graphics(paste0(getwd(),"/workflows/ongoing_approach.png"))
+```
+This has not been developed at present.
 
+A parser function `parse_MiniZinc` has also been implemented which can be used to detect possible syntax errors before the MiniZinc model is evaluated. 
 
+```{r}
+rminizinc:::mzn_parse("var 0..100: b; var 0..100: c; constraint 250*b + 200*c <= 4000; constraint 2*b <= 6; constraint 75*b + 150*c <= 2000; constraint 100*b + 150*c <= 500; constraint 75*c <= 500; solve maximize 400*b + 450*c;")
+```
 
+The function `mzn_eval` can be used to evaluate a MiniZinc model. A string model should be passed to the function along with the solver name along with the path of the MiniZinc library where the solver to be used is present.A dzn file can also be provided if required. Currently, only gecode solver can be used. This is still under development.
+
+```{r}
+modelString="int: n; set of int: OBJ = 1..n; int: capacity; array[OBJ] of int: profit; array[OBJ] of int: size; array[OBJ] of var int: x; constraint forall(i in OBJ)(x[i] >= 0); constraint sum(i in OBJ)(size[i] * x[i]) <= capacity; solve maximize sum(i in OBJ)(profit[i] * x[i]);"
+dzn_path = paste0(dirname(getwd()), "/mzn_test_examples/knapsack.dzn")
+rminizinc:::mzn_eval(modelString = modelString, solver = "org.gecode.gecode",
+                     libpath = "/snap/minizinc/current/share/minizinc",
+                     datafile = dzn_path)
+```
