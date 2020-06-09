@@ -22,9 +22,13 @@ jobs:
         - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/libminizinc;
         - sudo echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/libminizinc' >> ~/.bashrc;
         - sudo ldconfig;
+        - sudo cp -r /snap/minizinc/current/share/minizinc/solvers/ /usr/share/minizinc/;
+        - cd /usr/share/minizinc/;
+        - sudo sed -i 's+../../..+/usr+g' gecode.msc;
         - cd;
         - echo $TRAVIS_BUILD_DIR;
         - cd $TRAVIS_BUILD_DIR;
+        
       addons:
         snaps:
           - minizinc --classic
