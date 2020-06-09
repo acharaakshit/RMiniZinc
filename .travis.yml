@@ -6,18 +6,18 @@ jobs:
       language: R
       sudo: required
       before_install:
-        - export LD_BIND_NOW=1;
         - cd /usr/local/lib;
         - sudo git clone https://github.com/MiniZinc/libminizinc.git; 
         - cd libminizinc/;
         - sudo sed -i '3 i set(CMAKE_CXX_FLAGS "-fpic" CACHE INTERNAL "")' CMakeLists.txt;
-        - sudo sed -i '4 i set(CMAKE_CPP_FLAGS "-fpic" CACHE INTERNAL "")' CMakeLists.txt
+        - sudo sed -i '4 i set(CMAKE_CPP_FLAGS "-fpic" CACHE INTERNAL "")' CMakeLists.txt;
+        - sudo sed -i '5 i set(CMAKE_C_FLAGS "-fpic" CACHE INTERNAL "")' CMakeLists.txt;
         - sudo apt-get install build-essential cmake;
         - sudo -E cmake CMakeLists.txt;
         - sudo make;
         - sudo make install;
         - sudo cp -r /snap/minizinc/current/share/minizinc/solvers  /usr/local/lib/libminizinc/share/minizinc;
-        - cd share/minizinc/solvers;
+        - cd share/minizinc/solvers;sudo ldconfig
         - sudo sed -i 's+../../..+/usr+g' gecode.msc; 
         - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/libminizinc;
         - sudo echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/libminizinc' >> ~/.bashrc;
