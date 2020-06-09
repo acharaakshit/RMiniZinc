@@ -6,6 +6,7 @@ jobs:
       language: R
       sudo: required
       before_install:
+        - export LD_BIND_NOW=1;
         - cd /usr/local/lib;
         - sudo git clone https://github.com/MiniZinc/libminizinc.git; 
         - cd libminizinc/;
