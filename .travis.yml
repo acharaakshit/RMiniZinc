@@ -22,8 +22,8 @@ jobs:
         - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/libminizinc;
         - sudo echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/libminizinc' >> ~/.bashrc;
         - sudo ldconfig;
-        - sudo cp -r /snap/minizinc/current/share/minizinc/. /usr/share/minizinc/;
-        - cd /usr/share/minizinc/solvers;
+        - sudo cp -r /snap/minizinc/current/share/minizinc/. /usr/local/share/minizinc/;
+        - cd /usr/local/share/minizinc/solvers;
         - sudo sed -i 's+../../../bin+/snap/minizinc/current/bin+g' gecode.msc;
         - cd;
         - echo $TRAVIS_BUILD_DIR;
