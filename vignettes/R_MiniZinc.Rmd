@@ -180,10 +180,12 @@ knitr::include_graphics(paste0(getwd(),"/workflows/ongoing_approach.png"))
 ```
 This has not been developed at present.
 
-A parser function `parse_MiniZinc` has also been implemented which can be used to detect possible syntax errors before the MiniZinc model is evaluated. 
+A parser function `mzn_parse` has also been implemented which can be used to detect possible syntax errors before the MiniZinc model is evaluated. This function can either take the path of a model file path and data file path (optional) or it can take a string model along with a custom name to the string model.
 
 ```{r}
-rminizinc:::mzn_parse("var 0..100: b; var 0..100: c; constraint 250*b + 200*c <= 4000; constraint 2*b <= 6; constraint 75*b + 150*c <= 2000; constraint 100*b + 150*c <= 500; constraint 75*c <= 500; solve maximize 400*b + 450*c;")
+modelString = "var 0..100: b; var 0..100: c; constraint 250*b + 200*c <= 4000; constraint 2*b <= 6; constraint 75*b + 150*c <= 2000; constraint 100*b + 150*c <= 500; constraint 75*c <= 500; solve maximize 400*b + 450*c;"
+rminizinc:::mzn_parse(modelString = modelString, modelStringName = "abc.mzn", mznfilename = "",
+                      dznfilename = "")
 ```
 
 The function `mzn_eval` can be used to evaluate a MiniZinc model. A string model should be passed to the function along with the solver name along with the path of the MiniZinc library where the solver to be used is present.A dzn file can also be provided if required. Currently, only gecode solver can be used. This is still under development.

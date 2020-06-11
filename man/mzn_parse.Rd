@@ -4,10 +4,16 @@
 \alias{mzn_parse}
 \title{MiniZinc syntax parser}
 \usage{
-mzn_parse(modelString)
+mzn_parse(modelString, modelStringName, mznfilename, dznfilename)
 }
 \arguments{
-\item{modelString}{string representation of the MiniZinc model}
+\item{modelString}{string representation of the MiniZinc model.}
+
+\item{modelStringName}{the name of model string.}
+
+\item{mznfilename}{the name of model.}
+
+\item{dznfilename}{the name of the dzn file.}
 }
 \description{
 parses the MiniZinc syntax into R objects

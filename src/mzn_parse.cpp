@@ -14,29 +14,48 @@ using namespace Rcpp;
 //' @importFrom Rcpp sourceCpp
 //' @export mzn_parse
 //' @useDynLib rminizinc, .registration=TRUE
-//' @param modelString string representation of the MiniZinc model
+//' @param modelString string representation of the MiniZinc model.
+//' @param modelStringName the name of model string.
+//' @param mznfilename the name of model.
+//' @param dznfilename the name of the dzn file.
 // [[Rcpp::export]]
-NumericVector mzn_parse(const char* modelString){
+NumericVector mzn_parse(std::string modelString, std::string  modelStringName,
+                        std::vector<std::string> mznfilename,
+                        std::vector<std::string> dznfilename){
   
-  Env* env = new Env();
-  const char* modelStr = modelString;
-  vector<string> ip = {};
-  ostream& os = cerr;
-  vector<SyntaxError> se;
-  Model* model = MiniZinc::parseFromString(*env, modelStr, "mymodel.mzn" , ip, true, true, true, os, se);
+  Model* model;
+  if(modelString.empty() && mznfilename.empty()){
+    cout << "please provide either modelString or mznfilename";
+    //return 100;
+  }else{ 
+    Env* env = new Env();
+    vector<string> ip = {};
+    ostream& os = cerr;
+    if(mznfilename.empty()){
+      //use parse
+      model = MiniZinc::parse(*env, mznfilename, dznfilename, modelString, modelStringName,
+                              ip, true, true, true, os);
+    }else{
+      // use parsefromString
+      vector<SyntaxError> se;
+      model = MiniZinc::parseFromString(*env, modelString, modelStringName , ip, true, true, true, os, se);
+    }}
+  
   int s = (model-> size());
   cout << "The number of items in the model are " << s << endl;
   vector<Item*> items;
   MiniZinc::ItemVisitor* iv = new ItemVisitor();
   int type = 0;
   NumericVector retval = 0;
+  // to store the variable names
+  string name;
   for(int i=0; i < s; i++){
     items.push_back(model->operator[] (i));
     Location lc = items[i]->loc();
     switch(items[i]->iid()){
     case Item::II_VD:
       // decision variables or parameters
-      items[i]->cast<VarDeclI>()->e()->type();
+      name = items[i]->cast<VarDeclI>()->e()->id()->str().aststr()->c_str();
       if((items[i]->cast<VarDeclI>()->e()->e() == NULL &&  items[i]->cast<VarDeclI>()->e()->type().ispar()) || items[i]->cast<VarDeclI>()->e()->type().isvar()){
         Type tp = items[i]->cast<VarDeclI>()->e()->type();
         string tp_string = "";
@@ -46,40 +65,40 @@ NumericVector mzn_parse(const char* modelString){
           tp_string = "parameter" ;
         }
         if(tp.isint()){
-          cout << "item " << i << " is an integer " << tp_string << " declaration" << endl;
+          cout << "item " << name << " is an integer " << tp_string << " declaration" << endl;
         }else if(tp.isfloat()){
-          cout << "item " << i << " is a float " << tp_string <<  " declaration" << endl;
+          cout << "item " << name << " is a float " << tp_string <<  " declaration" << endl;
         }else if(tp.isbool()){
-          cout << "item " << i << " is a bool " << tp_string << " declaration" << endl;
+          cout << "item " << name << " is a bool " << tp_string << " declaration" << endl;
         }else if(tp.is_set()){
           if(tp.isintset()){
-            cout << "item " << i << " is a" << tp_string << " declaration for an integer set" << endl;
+            cout << "item " << name << " is a" << tp_string << " declaration for an integer set" << endl;
           }else if(tp.isfloatset()){
-            cout << "item " << i << " is a float" <<  tp_string << " declaration for a float set" << endl;
+            cout << "item " << name << " is a float" <<  tp_string << " declaration for a float set" << endl;
           }else if(tp.isboolset()){
-            cout << "item " << i << " is a bool" << tp_string << " declaration for a boolean set" << endl;
+            cout << "item " << name << " is a bool" << tp_string << " declaration for a boolean set" << endl;
           }}else{
           if(tp.isintarray()){
-            cout << "item " << i << " is an " << tp_string << " declaration for an integer array" << endl;
+            cout << "item " << name << " is an " << tp_string << " declaration for an integer array" << endl;
           }else if(tp.isintsetarray()){
-            cout << "item " << i << " is a float" <<  tp_string << " declaration for an integer set array" << endl;
+            cout << "item " << name << " is a float" <<  tp_string << " declaration for an integer set array" << endl;
           }else if(tp.isboolarray()){
-            cout << "item " << i << " is a bool" << tp_string << " declaration for a boolean array" << endl;
+            cout << "item " << name << " is a bool" << tp_string << " declaration for a boolean array" << endl;
           }else{
             
               if(items[i]->cast<VarDeclI>()->e()->ti()->domain() != NULL){
                 // variable has a domain
                 if(items[i]->cast<VarDeclI>()->e()->ti()->domain()->cast<SetLit>()->isv() != NULL){
                   // integer set value
-                  cout << "The maximum value of domain of item" << i << " is: ";
+                  cout << "The maximum value of domain of " <<  name << " is: ";
                   cout << items[i]->cast<VarDeclI>()->e()->ti()->domain()->cast<SetLit>()->isv()->max()<<  endl;
-                  cout << "The minimum value of domain of item" << i << " is: ";
+                  cout << "The minimum value of domain of " << name << " is: ";
                   cout << items[i]->cast<VarDeclI>()->e()->ti()->domain()->cast<SetLit>()->isv()->min()<<  endl;  
                 }else{
                   // float set value
-                  cout << "The maximum value of domain of item" << i << " is: ";
+                  cout << "The maximum value of domain of item " <<  name << " is: ";
                   cout << items[i]->cast<VarDeclI>()->e()->ti()->domain()->cast<SetLit>()->fsv()->max()<<  endl;
-                  cout << "The minimum value of domain of item" << i << " is: ";
+                  cout << "The minimum value of domain of item " << name << " is: ";
                   cout << items[i]->cast<VarDeclI>()->e()->ti()->domain()->cast<SetLit>()->fsv()->min()<<  endl;
                 }
             }
@@ -88,22 +107,22 @@ NumericVector mzn_parse(const char* modelString){
         continue;
       }
       // the name of the parameters	
-      cout << "The name of variable "<< i + 1 << " is " << items[i]->cast<VarDeclI>()->e()->id()->v() << endl;
+      cout << "The name of variable "<< name << " is " << items[i]->cast<VarDeclI>()->e()->id()->v() << endl;
       type =  items[i]->cast<VarDeclI>()->e()->e()->eid();
       switch(type){
       case Expression::E_INTLIT:
-        cout << "item " << i + 1 << " is an integer parameter initialization" << endl;
+        cout << "item " << name << " is an integer parameter initialization" << endl;
         retval = items[i]->cast<VarDeclI>()->e()->e()->unboxedIntToIntVal().toInt();
         break;
       case Expression::E_FLOATLIT:
-        cout << "item " << i + 1 << " is a float parameter initialization" << endl;
+        cout << "item " << name << " is a float parameter initialization" << endl;
         items[i]->cast<VarDeclI>()->e()->e()->unboxedFloatToFloatVal();
         break;
       case Expression::E_BOOLLIT:
-        cout << "item " << i + 1 << " is a boolean parameter initialization" << endl;
+        cout << "item " << name << " is a boolean parameter initialization" << endl;
         break;
       case Expression::E_SETLIT:
-        cout << "item " << i + 1 << " is a set parameter initialization" << endl;
+        cout << "item " << name << " is a set parameter initialization" << endl;
         if(items[i]->cast<VarDeclI>()->e()->e()->cast<SetLit>()->isv()!=NULL){
           // integer set
           cout << "max possible value " <<  items[i]->cast<VarDeclI>()->e()->e()->cast<SetLit>()->isv()->max();
@@ -116,7 +135,7 @@ NumericVector mzn_parse(const char* modelString){
         
         break;
       case Expression::E_ARRAYLIT:
-        cout << "item " << i + 1 << " is an array parameter initialization" << endl;
+        cout << "item " << name << " is an array parameter initialization" << endl;
         break;
       case Expression::E_ARRAYACCESS:
         break;
@@ -131,6 +150,12 @@ NumericVector mzn_parse(const char* modelString){
       break;
     case Item::II_SOL:
       items[i]->cast<SolveI>();
+      break;
+    case Item::II_OUT:
+      //cout << "item number " << i << " is an output item" << endl;
+      break;
+    case Item::II_ASN:
+      cout << "item " << items[i]->cast<AssignI>()->id().str()  << " is an assignment" << endl;
       break;
     default:;
       //cout << "Invalid input" << endl;

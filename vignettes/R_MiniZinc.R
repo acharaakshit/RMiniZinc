@@ -76,7 +76,9 @@ knitr::include_graphics(paste0(getwd(),"/workflows/first_approach.png"))
 knitr::include_graphics(paste0(getwd(),"/workflows/ongoing_approach.png"))
 
 ## -----------------------------------------------------------------------------
-rminizinc:::mzn_parse("var 0..100: b; var 0..100: c; constraint 250*b + 200*c <= 4000; constraint 2*b <= 6; constraint 75*b + 150*c <= 2000; constraint 100*b + 150*c <= 500; constraint 75*c <= 500; solve maximize 400*b + 450*c;")
+modelString = "var 0..100: b; var 0..100: c; constraint 250*b + 200*c <= 4000; constraint 2*b <= 6; constraint 75*b + 150*c <= 2000; constraint 100*b + 150*c <= 500; constraint 75*c <= 500; solve maximize 400*b + 450*c;"
+rminizinc:::mzn_parse(modelString = modelString, modelStringName = "abc.mzn", mznfilename = "",
+                      dznfilename = "")
 
 ## -----------------------------------------------------------------------------
 modelString="int: n; set of int: OBJ = 1..n; int: capacity; array[OBJ] of int: profit; array[OBJ] of int: size; array[OBJ] of var int: x; constraint forall(i in OBJ)(x[i] >= 0); constraint sum(i in OBJ)(size[i] * x[i]) <= capacity; solve maximize sum(i in OBJ)(profit[i] * x[i]);"

@@ -23,8 +23,11 @@ mzn_eval <- function(modelString, solver, libpath, datafile = "") {
 #' @importFrom Rcpp sourceCpp
 #' @export mzn_parse
 #' @useDynLib rminizinc, .registration=TRUE
-#' @param modelString string representation of the MiniZinc model
-mzn_parse <- function(modelString) {
-    .Call(`_rminizinc_mzn_parse`, modelString)
+#' @param modelString string representation of the MiniZinc model.
+#' @param modelStringName the name of model string.
+#' @param mznfilename the name of model.
+#' @param dznfilename the name of the dzn file.
+mzn_parse <- function(modelString, modelStringName, mznfilename, dznfilename) {
+    .Call(`_rminizinc_mzn_parse`, modelString, modelStringName, mznfilename, dznfilename)
 }
 
