@@ -56,7 +56,6 @@ NumericVector mzn_parse(std::string modelString, std::string  modelStringName,
     case Item::II_VD:
       // decision variables or parameters
       name = items[i]->cast<VarDeclI>()->e()->id()->str().aststr()->c_str();
-      items[i]->cast<AssignI>()->cast<VarDecl>()->id()->v().str();
       if((items[i]->cast<VarDeclI>()->e()->e() == NULL &&  items[i]->cast<VarDeclI>()->e()->type().ispar()) || items[i]->cast<VarDeclI>()->e()->type().isvar()){
         Type tp = items[i]->cast<VarDeclI>()->e()->type();
         string tp_string = "";
