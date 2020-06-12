@@ -40,6 +40,6 @@ mzn_parse <- function(modelString, modelStringName, mznfilename, dznfilename) {
 #' @useDynLib rminizinc, .registration=TRUE
 #' @param solutionString solution of the model as a string representation
 sol_parse <- function(solutionString) {
-    invisible(.Call(`_rminizinc_sol_parse`, solutionString))
+    .Call(`_rminizinc_sol_parse`, solutionString)
 }
 

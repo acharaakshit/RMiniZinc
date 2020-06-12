@@ -12,7 +12,7 @@
 
 <meta name="author" content="Akshit Achara" />
 
-<meta name="date" content="2020-06-11" />
+<meta name="date" content="2020-06-13" />
 
 <title>MiniZinc Interface for R</title>
 
@@ -301,7 +301,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">MiniZinc Interface for R</h1>
 <h4 class="author">Akshit Achara</h4>
-<h4 class="date">2020-06-11</h4>
+<h4 class="date">2020-06-13</h4>
 
 
 
@@ -435,6 +435,8 @@ solve maximize 400*b + 450*c;
 <a class="sourceLine" id="cb11-4" data-line-number="4">                     <span class="dt">libpath =</span> <span class="st">&quot;/snap/minizinc/current/share/minizinc&quot;</span>,</a>
 <a class="sourceLine" id="cb11-5" data-line-number="5">                     <span class="dt">datafile =</span> dzn_path)</a></code></pre></div>
 <pre><code>## [1] &quot;x = array1d(1..3, [1, 1, 1]);\n----------\n==========\n&quot;</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1">rminizinc<span class="op">:::</span><span class="kw">sol_parse</span>(<span class="st">&quot;x = array1d(1..3, [1, 1, 1]);&quot;</span>)</a></code></pre></div>
+<pre><code>## [1] 1 1 1</code></pre>
 </div>
 
 

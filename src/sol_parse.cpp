@@ -1,10 +1,12 @@
 #include <Rcpp.h>
 #include <minizinc/parser.hh>
 
-using namespace Rcpp;
-using namespace std;
-using namespace MiniZinc;
 
+using namespace Rcpp;
+using namespace MiniZinc;
+using namespace std;
+
+#define SOL_ERROR 404
 
 //' @title parse the solution
 //' 
@@ -14,17 +16,16 @@ using namespace MiniZinc;
 //' @export sol_parse
 //' @useDynLib rminizinc, .registration=TRUE
 //' @param solutionString solution of the model as a string representation
-//' 
 // [[Rcpp::export]]
-void sol_parse(std::string solutionString) {
+NumericVector sol_parse(std::string solutionString) {
   Env* env = new Env();
-  std::vector<std::string> ip = {};
+  vector<string> ip = {};
   ostream& os = cerr;
   vector<SyntaxError> se;
   Model *model = MiniZinc::parseFromString(*env, solutionString, "",  ip, true, true, true, os, se);
   int s = (model-> size());
+  string fname;
   NumericVector retval;
-  cout << "The number of items in the model are " << s << endl;
   vector<Item*> items;
   for(int i=0; i < s; i++){
     items.push_back(model->operator[] (i));
@@ -59,12 +60,38 @@ void sol_parse(std::string solutionString) {
       case Expression::E_ARRAYLIT:
         items[i]->cast<AssignI>()->e()->cast<ArrayLit>()->getVec().vec();
         break;
-      default:;
+      case Expression::E_CALL:
+        // name of the decision variable
+        items[i]->cast<AssignI>()->e()->cast<Call>()->id().c_str();
+        for(int m = 1;m<items[i]->cast<AssignI>()->e()->cast<Call>()->n_args();m++){
+          int fntype = items[i]->cast<AssignI>()->e()->cast<Call>()->arg(m)->eid();
+          // apply switch case again 
+          if(fntype==Expression::E_ARRAYLIT){
+              //number of elements in the array
+              int vec_size = items[i]->cast<AssignI>()->e()->cast<Call>()->arg(m)->cast<ArrayLit>()->getVec().size();
+              for(int p = 0;p < vec_size; p++ ){
+                // get the expression form of each element
+                Expression *exp = items[i]->cast<AssignI>()->e()->cast<Call>()->arg(m)->cast<ArrayLit>()->getVec().operator[](p);
+                if(exp->isUnboxedInt()){
+                  retval.push_back(exp->unboxedIntToIntVal().toInt());
+                }else if(exp->isUnboxedFloatVal()){
+                  retval.push_back(exp->unboxedFloatToFloatVal().toDouble());
+                }
+              }
+          }else{
+            // to be done
+          }
+        }
+        break;
+        default:;
       //cout << "invalid variable type " << endl;
       }
     }else {
-      cout << "not a solution string";
+      retval = SOL_ERROR;
+      break;
+      // "not a solution string";
     }
   }
+  return retval;
  
 }

@@ -86,4 +86,5 @@ dzn_path = paste0(dirname(getwd()), "/mzn_test_examples/knapsack.dzn")
 rminizinc:::mzn_eval(modelString = modelString, solver = "org.gecode.gecode",
                      libpath = "/snap/minizinc/current/share/minizinc",
                      datafile = dzn_path)
+rminizinc:::sol_parse("x = array1d(1..3, [1, 1, 1]);")
 

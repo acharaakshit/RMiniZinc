@@ -34,13 +34,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // sol_parse
-void sol_parse(std::string solutionString);
+NumericVector sol_parse(std::string solutionString);
 RcppExport SEXP _rminizinc_sol_parse(SEXP solutionStringSEXP) {
 BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type solutionString(solutionStringSEXP);
-    sol_parse(solutionString);
-    return R_NilValue;
+    rcpp_result_gen = Rcpp::wrap(sol_parse(solutionString));
+    return rcpp_result_gen;
 END_RCPP
 }
 
