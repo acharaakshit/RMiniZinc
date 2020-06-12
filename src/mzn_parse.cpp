@@ -1,7 +1,6 @@
 #include <Rcpp.h>
 #include <minizinc/parser.hh>
 
-
 using namespace std;
 using namespace MiniZinc;
 
@@ -44,14 +43,12 @@ NumericVector mzn_parse(std::string modelString, std::string  modelStringName,
   int s = (model-> size());
   cout << "The number of items in the model are " << s << endl;
   vector<Item*> items;
-  MiniZinc::ItemVisitor* iv = new ItemVisitor();
   int type = 0;
   NumericVector retval = 0;
   // to store the variable names
   string name;
   for(int i=0; i < s; i++){
     items.push_back(model->operator[] (i));
-    Location lc = items[i]->loc();
     switch(items[i]->iid()){
     case Item::II_VD:
       // decision variables or parameters
