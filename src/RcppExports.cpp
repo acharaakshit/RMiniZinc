@@ -6,7 +6,7 @@
 using namespace Rcpp;
 
 // mzn_eval
-std::string mzn_eval(std::string modelString, std::string solver, std::string libpath, std::string datafile);
+NumericVector mzn_eval(std::string modelString, std::string solver, std::string libpath, std::string datafile);
 RcppExport SEXP _rminizinc_mzn_eval(SEXP modelStringSEXP, SEXP solverSEXP, SEXP libpathSEXP, SEXP datafileSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -34,7 +34,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // sol_parse
-NumericVector sol_parse(std::string solutionString);
+List sol_parse(std::string solutionString);
 RcppExport SEXP _rminizinc_sol_parse(SEXP solutionStringSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;

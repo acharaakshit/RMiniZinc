@@ -82,9 +82,12 @@ rminizinc:::mzn_parse(modelString = modelString, modelStringName = "abc.mzn", mz
 
 ## -----------------------------------------------------------------------------
 modelString="int: n; set of int: OBJ = 1..n; int: capacity; array[OBJ] of int: profit; array[OBJ] of int: size; array[OBJ] of var int: x; constraint forall(i in OBJ)(x[i] >= 0); constraint sum(i in OBJ)(size[i] * x[i]) <= capacity; solve maximize sum(i in OBJ)(profit[i] * x[i]);"
+#path of the data file
 dzn_path = paste0(dirname(getwd()), "/mzn_test_examples/knapsack.dzn")
-rminizinc:::mzn_eval(modelString = modelString, solver = "org.gecode.gecode",
+# R List object containing the solutions
+solObj <- rminizinc:::mzn_eval(modelString = modelString, solver = "org.gecode.gecode",
                      libpath = "/snap/minizinc/current/share/minizinc",
                      datafile = dzn_path)
-rminizinc:::sol_parse("x = array1d(1..3, [1, 1, 1]);")
+# get all the solutions
+print(solObj)
 
