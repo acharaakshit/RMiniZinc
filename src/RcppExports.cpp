@@ -6,7 +6,7 @@
 using namespace Rcpp;
 
 // mzn_eval
-std::string mzn_eval(std::string modelString, std::string solver, std::string libpath, std::string datafile);
+NumericVector mzn_eval(std::string modelString, std::string solver, std::string libpath, std::string datafile);
 RcppExport SEXP _rminizinc_mzn_eval(SEXP modelStringSEXP, SEXP solverSEXP, SEXP libpathSEXP, SEXP datafileSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -33,10 +33,22 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// sol_parse
+List sol_parse(std::string solutionString);
+RcppExport SEXP _rminizinc_sol_parse(SEXP solutionStringSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type solutionString(solutionStringSEXP);
+    rcpp_result_gen = Rcpp::wrap(sol_parse(solutionString));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_rminizinc_mzn_eval", (DL_FUNC) &_rminizinc_mzn_eval, 4},
     {"_rminizinc_mzn_parse", (DL_FUNC) &_rminizinc_mzn_parse, 4},
+    {"_rminizinc_sol_parse", (DL_FUNC) &_rminizinc_sol_parse, 1},
     {NULL, NULL, 0}
 };
 

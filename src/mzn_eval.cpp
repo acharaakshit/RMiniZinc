@@ -1,4 +1,5 @@
 #include <Rcpp.h>
+#include "sol_parse.h"
 #include <minizinc/solver.hh>
 
 using namespace std;
@@ -17,7 +18,7 @@ using namespace Rcpp;
 //' @param libpath the path of the library where the solver is present.
 //' @param datafile the path of the dzn file.
 // [[Rcpp::export]]
-std::string mzn_eval(std::string modelString, std::string solver, std::string libpath,
+NumericVector mzn_eval(std::string modelString, std::string solver, std::string libpath,
                      std::string datafile = ""){
   //This is under development
   std::stringstream sol_strn;
@@ -44,7 +45,7 @@ std::string mzn_eval(std::string modelString, std::string solver, std::string li
   }catch (...) {
     sol_string = "  UNKNOWN EXCEPTION." ;
   }
-  return sol_string;
+  return sol_parse(sol_string);
 }
 
 

@@ -31,3 +31,15 @@ mzn_parse <- function(modelString, modelStringName, mznfilename, dznfilename) {
     .Call(`_rminizinc_mzn_parse`, modelString, modelStringName, mznfilename, dznfilename)
 }
 
+#' @title parse the solution
+#' 
+#' @description can parse the solution of a model
+#' 
+#' @importFrom Rcpp sourceCpp
+#' @export sol_parse
+#' @useDynLib rminizinc, .registration=TRUE
+#' @param solutionString solution of the model as a string representation
+sol_parse <- function(solutionString) {
+    .Call(`_rminizinc_sol_parse`, solutionString)
+}
+

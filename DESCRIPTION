@@ -1,7 +1,7 @@
 Package: rminizinc
 Type: Package
 Title: R Interface to use MiniZinc
-Version: 1.0.0
+Version: 0.0.0.99
 Author: Akshit Achara
 Maintainer: The package maintainer <acharaakshit@gmail.com>
 Description: This package is aimed towards proving R users with an interface to MiniZinc to enable
