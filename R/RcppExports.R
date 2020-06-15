@@ -11,9 +11,8 @@
 #' @param modelString the string representation of the model to be evaluated.
 #' @param solver the name of the solver to use.
 #' @param libpath the path of the library where the solver is present.
-#' @param datafile the path of the dzn file.
-mzn_eval <- function(modelString, solver, libpath, datafile = "") {
-    .Call(`_rminizinc_mzn_eval`, modelString, solver, libpath, datafile)
+mzn_eval <- function(modelString, solver, libpath) {
+    .Call(`_rminizinc_mzn_eval`, modelString, solver, libpath)
 }
 
 #' @title MiniZinc syntax parser

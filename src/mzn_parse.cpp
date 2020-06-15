@@ -1,5 +1,6 @@
 #include <Rcpp.h>
 #include <minizinc/parser.hh>
+#include <minizinc/prettyprinter.hh>
 
 using namespace std;
 using namespace MiniZinc;
@@ -18,19 +19,18 @@ using namespace Rcpp;
 //' @param mznfilename the name of model.
 //' @param dznfilename the name of the dzn file.
 // [[Rcpp::export]]
-NumericVector mzn_parse(std::string modelString, std::string  modelStringName,
+std::string mzn_parse(std::string modelString, std::string  modelStringName,
                         std::vector<std::string> mznfilename,
                         std::vector<std::string> dznfilename){
-  
+  // create a model and parse its items (make modifications to the model -- to be done)
   Model* model;
   if(modelString.empty() && mznfilename.empty()){
-    cout << "please provide either modelString or mznfilename";
-    //return 100;
+    return "PROVIDE EITHER modelString OR mznfilename";
   }else{ 
     Env* env = new Env();
     vector<string> ip = {};
     ostream& os = cerr;
-    if(mznfilename.empty()){
+    if(!mznfilename.empty()){
       //use parse
       model = MiniZinc::parse(*env, mznfilename, dznfilename, modelString, modelStringName,
                               ip, true, true, true, os);
@@ -39,12 +39,10 @@ NumericVector mzn_parse(std::string modelString, std::string  modelStringName,
       vector<SyntaxError> se;
       model = MiniZinc::parseFromString(*env, modelString, modelStringName , ip, true, true, true, os, se);
     }}
-  
   int s = (model-> size());
   cout << "The number of items in the model are " << s << endl;
   vector<Item*> items;
   int type = 0;
-  NumericVector retval = 0;
   // to store the variable names
   string name;
   for(int i=0; i < s; i++){
@@ -109,7 +107,7 @@ NumericVector mzn_parse(std::string modelString, std::string  modelStringName,
       switch(type){
       case Expression::E_INTLIT:
         cout << "item " << name << " is an integer parameter initialization" << endl;
-        retval = items[i]->cast<VarDeclI>()->e()->e()->unboxedIntToIntVal().toInt();
+        items[i]->cast<VarDeclI>()->e()->e()->unboxedIntToIntVal().toInt();
         break;
       case Expression::E_FLOATLIT:
         cout << "item " << name << " is a float parameter initialization" << endl;
@@ -158,8 +156,12 @@ NumericVector mzn_parse(std::string modelString, std::string  modelStringName,
       //cout << "Invalid input" << endl;
     }
   }
-  //print(retval);
-  return retval;
+  // return the string representation of the model
+  stringstream strmodel;
+  Printer *p = new Printer(strmodel); 
+  p->print(model);
+  string mString = strmodel.str();
+  return mString;
 }
 
 
