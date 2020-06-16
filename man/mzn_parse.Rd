@@ -4,22 +4,12 @@
 \alias{mzn_parse}
 \title{MiniZinc syntax parser}
 \usage{
-mzn_parse(
-  modData,
-  modelString = "",
-  mznfilename = "",
-  dznfilename = "",
-  modelStringName = "abc.mzn"
-)
+mzn_parse(modelString = "", mznfilename = "", modelStringName = "abc.mzn")
 }
 \arguments{
-\item{modData}{list containing the parameter values.}
-
 \item{modelString}{string representation of the MiniZinc model.}
 
 \item{mznfilename}{the name of model.}
-
-\item{dznfilename}{the name of the dzn file.}
 
 \item{modelStringName}{the name of model string.}
 }

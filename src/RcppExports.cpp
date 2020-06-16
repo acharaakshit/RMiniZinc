@@ -6,30 +6,41 @@
 using namespace Rcpp;
 
 // mzn_eval
-NumericVector mzn_eval(std::string modelString, std::string solver, std::string libpath);
-RcppExport SEXP _rminizinc_mzn_eval(SEXP modelStringSEXP, SEXP solverSEXP, SEXP libpathSEXP) {
+NumericVector mzn_eval(std::string modelString, std::string solver, std::string libpath, std::string dznpath);
+RcppExport SEXP _rminizinc_mzn_eval(SEXP modelStringSEXP, SEXP solverSEXP, SEXP libpathSEXP, SEXP dznpathSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type modelString(modelStringSEXP);
     Rcpp::traits::input_parameter< std::string >::type solver(solverSEXP);
     Rcpp::traits::input_parameter< std::string >::type libpath(libpathSEXP);
-    rcpp_result_gen = Rcpp::wrap(mzn_eval(modelString, solver, libpath));
+    Rcpp::traits::input_parameter< std::string >::type dznpath(dznpathSEXP);
+    rcpp_result_gen = Rcpp::wrap(mzn_eval(modelString, solver, libpath, dznpath));
     return rcpp_result_gen;
 END_RCPP
 }
 // mzn_parse
-std::string mzn_parse(List modData, std::string modelString, std::string mznfilename, std::string dznfilename, std::string modelStringName);
-RcppExport SEXP _rminizinc_mzn_parse(SEXP modDataSEXP, SEXP modelStringSEXP, SEXP mznfilenameSEXP, SEXP dznfilenameSEXP, SEXP modelStringNameSEXP) {
+List mzn_parse(std::string modelString, std::string mznfilename, std::string modelStringName);
+RcppExport SEXP _rminizinc_mzn_parse(SEXP modelStringSEXP, SEXP mznfilenameSEXP, SEXP modelStringNameSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type modelString(modelStringSEXP);
+    Rcpp::traits::input_parameter< std::string >::type mznfilename(mznfilenameSEXP);
+    Rcpp::traits::input_parameter< std::string >::type modelStringName(modelStringNameSEXP);
+    rcpp_result_gen = Rcpp::wrap(mzn_parse(modelString, mznfilename, modelStringName));
+    return rcpp_result_gen;
+END_RCPP
+}
+// set_params
+std::string set_params(List modData, std::string modelString);
+RcppExport SEXP _rminizinc_set_params(SEXP modDataSEXP, SEXP modelStringSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type modData(modDataSEXP);
     Rcpp::traits::input_parameter< std::string >::type modelString(modelStringSEXP);
-    Rcpp::traits::input_parameter< std::string >::type mznfilename(mznfilenameSEXP);
-    Rcpp::traits::input_parameter< std::string >::type dznfilename(dznfilenameSEXP);
-    Rcpp::traits::input_parameter< std::string >::type modelStringName(modelStringNameSEXP);
-    rcpp_result_gen = Rcpp::wrap(mzn_parse(modData, modelString, mznfilename, dznfilename, modelStringName));
+    rcpp_result_gen = Rcpp::wrap(set_params(modData, modelString));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -46,8 +57,9 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_rminizinc_mzn_eval", (DL_FUNC) &_rminizinc_mzn_eval, 3},
-    {"_rminizinc_mzn_parse", (DL_FUNC) &_rminizinc_mzn_parse, 5},
+    {"_rminizinc_mzn_eval", (DL_FUNC) &_rminizinc_mzn_eval, 4},
+    {"_rminizinc_mzn_parse", (DL_FUNC) &_rminizinc_mzn_parse, 3},
+    {"_rminizinc_set_params", (DL_FUNC) &_rminizinc_set_params, 2},
     {"_rminizinc_sol_parse", (DL_FUNC) &_rminizinc_sol_parse, 1},
     {NULL, NULL, 0}
 };
