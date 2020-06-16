@@ -186,8 +186,8 @@ The function `mzn_eval` can be used to evaluate a MiniZinc model. A string model
 # file paths
 mzn_path = paste0(dirname(getwd()), "/mzn_test_examples/knapsack.mzn")
 dzn_path = paste0(dirname(getwd()), "/mzn_test_examples/knapsack.dzn")
-modString=rminizinc:::mzn_parse(modelString = "",modelStringName = "",
-                                  mznfilename = mzn_path, dznfilename = dzn_path)
+modString=rminizinc:::mzn_parse(mznfilename = mzn_path, dznfilename = dzn_path,
+                                modData = list())
 
 # R List object containing the solutions
 solObj <- rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gecode",
@@ -195,5 +195,26 @@ solObj <- rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gec
 # get all the solutions
 print(solObj)
 ```
-The next step is to allow the users to add variables, constraints or modify values in a MiniZinc model.
+The data can also be provided as a list of values of parameters where the names of the list are the parameter names. The order of the values should be the same as the order of declaration of parameters in the model. For now, only integer, floats, bools and 1 dimensional integer arrays are supported.
+
+```{r}
+# file path
+mzn_path = paste0(dirname(getwd()), "/mzn_test_examples/knapsack.mzn")
+# list of the data
+pVals = list(3,9,c(15,10,7),c(4,3,2))
+names(pVals) = c("n","capacity", "profit", "size")
+modString=rminizinc:::mzn_parse(modelString = "", mznfilename = mzn_path,
+                                modData = pVals)
+
+# R List object containing the solutions
+solObj <- rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gecode",
+                     libpath = "/snap/minizinc/current/share/minizinc")
+# get all the solutions
+print(solObj)
+
+```
+
+
+The next step is to allow the users to add variables, constraints,etc in a MiniZinc model.
+
 

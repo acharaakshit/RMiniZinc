@@ -79,12 +79,28 @@ knitr::include_graphics(paste0(getwd(),"/workflows/ongoing_approach.png"))
 # file paths
 mzn_path = paste0(dirname(getwd()), "/mzn_test_examples/knapsack.mzn")
 dzn_path = paste0(dirname(getwd()), "/mzn_test_examples/knapsack.dzn")
-modString=rminizinc:::mzn_parse(modelString = "",modelStringName = "",
-                                  mznfilename = mzn_path, dznfilename = dzn_path)
+modString=rminizinc:::mzn_parse(mznfilename = mzn_path, dznfilename = dzn_path,
+                                modData = list())
 
 # R List object containing the solutions
 solObj <- rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gecode",
                      libpath = "/snap/minizinc/current/share/minizinc")
 # get all the solutions
 print(solObj)
+
+## -----------------------------------------------------------------------------
+# file path
+mzn_path = paste0(dirname(getwd()), "/mzn_test_examples/knapsack.mzn")
+# list of the data
+pVals = list(3,9,c(15,10,7),c(4,3,2))
+names(pVals) = c("n","capacity", "profit", "size")
+modString=rminizinc:::mzn_parse(modelString = "", mznfilename = mzn_path,
+                                modData = pVals)
+
+# R List object containing the solutions
+solObj <- rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gecode",
+                     libpath = "/snap/minizinc/current/share/minizinc")
+# get all the solutions
+print(solObj)
+
 

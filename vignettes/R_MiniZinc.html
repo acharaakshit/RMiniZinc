@@ -12,7 +12,7 @@
 
 <meta name="author" content="Akshit Achara" />
 
-<meta name="date" content="2020-06-15" />
+<meta name="date" content="2020-06-16" />
 
 <title>MiniZinc Interface for R</title>
 
@@ -303,7 +303,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">MiniZinc Interface for R</h1>
 <h4 class="author">Akshit Achara</h4>
-<h4 class="date">2020-06-15</h4>
+<h4 class="date">2020-06-16</h4>
 
 
 
@@ -429,8 +429,8 @@ solve maximize 400*b + 450*c;
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># file paths</span></span>
 <span id="cb9-2"><a href="#cb9-2"></a>mzn_path =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">dirname</span>(<span class="kw">getwd</span>()), <span class="st">&quot;/mzn_test_examples/knapsack.mzn&quot;</span>)</span>
 <span id="cb9-3"><a href="#cb9-3"></a>dzn_path =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">dirname</span>(<span class="kw">getwd</span>()), <span class="st">&quot;/mzn_test_examples/knapsack.dzn&quot;</span>)</span>
-<span id="cb9-4"><a href="#cb9-4"></a>modString=rminizinc<span class="op">:::</span><span class="kw">mzn_parse</span>(<span class="dt">modelString =</span> <span class="st">&quot;&quot;</span>,<span class="dt">modelStringName =</span> <span class="st">&quot;&quot;</span>,</span>
-<span id="cb9-5"><a href="#cb9-5"></a>                                  <span class="dt">mznfilename =</span> mzn_path, <span class="dt">dznfilename =</span> dzn_path)</span>
+<span id="cb9-4"><a href="#cb9-4"></a>modString=rminizinc<span class="op">:::</span><span class="kw">mzn_parse</span>(<span class="dt">mznfilename =</span> mzn_path, <span class="dt">dznfilename =</span> dzn_path,</span>
+<span id="cb9-5"><a href="#cb9-5"></a>                                <span class="dt">modData =</span> <span class="kw">list</span>())</span>
 <span id="cb9-6"><a href="#cb9-6"></a></span>
 <span id="cb9-7"><a href="#cb9-7"></a><span class="co"># R List object containing the solutions</span></span>
 <span id="cb9-8"><a href="#cb9-8"></a>solObj &lt;-<span class="st"> </span>rminizinc<span class="op">:::</span><span class="kw">mzn_eval</span>(<span class="dt">modelString =</span> modString, <span class="dt">solver =</span> <span class="st">&quot;org.gecode.gecode&quot;</span>,</span>
@@ -447,7 +447,31 @@ solve maximize 400*b + 450*c;
 ## 
 ## $optimal_solution$x[[3]]
 ## [1] 1</code></pre>
-<p>The next step is to allow the users to add variables, constraints or modify values in a MiniZinc model.</p>
+<p>The data can also be provided as a list of values of parameters where the names of the list are the parameter names. The order of the values should be the same as the order of declaration of parameters in the model. For now, only integer, floats, bools and 1 dimensional integer arrays are supported.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="co"># file path</span></span>
+<span id="cb11-2"><a href="#cb11-2"></a>mzn_path =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">dirname</span>(<span class="kw">getwd</span>()), <span class="st">&quot;/mzn_test_examples/knapsack.mzn&quot;</span>)</span>
+<span id="cb11-3"><a href="#cb11-3"></a><span class="co"># list of the data</span></span>
+<span id="cb11-4"><a href="#cb11-4"></a>pVals =<span class="st"> </span><span class="kw">list</span>(<span class="dv">3</span>,<span class="dv">9</span>,<span class="kw">c</span>(<span class="dv">15</span>,<span class="dv">10</span>,<span class="dv">7</span>),<span class="kw">c</span>(<span class="dv">4</span>,<span class="dv">3</span>,<span class="dv">2</span>))</span>
+<span id="cb11-5"><a href="#cb11-5"></a><span class="kw">names</span>(pVals) =<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;n&quot;</span>,<span class="st">&quot;capacity&quot;</span>, <span class="st">&quot;profit&quot;</span>, <span class="st">&quot;size&quot;</span>)</span>
+<span id="cb11-6"><a href="#cb11-6"></a>modString=rminizinc<span class="op">:::</span><span class="kw">mzn_parse</span>(<span class="dt">modelString =</span> <span class="st">&quot;&quot;</span>, <span class="dt">mznfilename =</span> mzn_path,</span>
+<span id="cb11-7"><a href="#cb11-7"></a>                                <span class="dt">modData =</span> pVals)</span>
+<span id="cb11-8"><a href="#cb11-8"></a></span>
+<span id="cb11-9"><a href="#cb11-9"></a><span class="co"># R List object containing the solutions</span></span>
+<span id="cb11-10"><a href="#cb11-10"></a>solObj &lt;-<span class="st"> </span>rminizinc<span class="op">:::</span><span class="kw">mzn_eval</span>(<span class="dt">modelString =</span> modString, <span class="dt">solver =</span> <span class="st">&quot;org.gecode.gecode&quot;</span>,</span>
+<span id="cb11-11"><a href="#cb11-11"></a>                     <span class="dt">libpath =</span> <span class="st">&quot;/snap/minizinc/current/share/minizinc&quot;</span>)</span>
+<span id="cb11-12"><a href="#cb11-12"></a><span class="co"># get all the solutions</span></span>
+<span id="cb11-13"><a href="#cb11-13"></a><span class="kw">print</span>(solObj)</span></code></pre></div>
+<pre><code>## $optimal_solution
+## $optimal_solution$x
+## $optimal_solution$x[[1]]
+## [1] 1
+## 
+## $optimal_solution$x[[2]]
+## [1] 1
+## 
+## $optimal_solution$x[[3]]
+## [1] 1</code></pre>
+<p>The next step is to allow the users to add variables, constraints,etc in a MiniZinc model.</p>
 </div>
 
 
