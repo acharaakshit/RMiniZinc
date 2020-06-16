@@ -7,8 +7,8 @@
 mzn_parse(
   modData,
   modelString = "",
-  mznfilename = as.character(c()),
-  dznfilename = as.character(c()),
+  mznfilename = "",
+  dznfilename = "",
   modelStringName = "abc.mzn"
 )
 }
