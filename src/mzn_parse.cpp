@@ -21,33 +21,48 @@ using namespace Rcpp;
 //' @param modData list containing the parameter values.
 // [[Rcpp::export]]
 std::string mzn_parse(List modData, std::string modelString = "", 
-                      CharacterVector mznfilename = CharacterVector::create(),
-                      CharacterVector dznfilename = CharacterVector::create(), 
+                      std::string mznfilename = "",
+                      std::string dznfilename = "", 
                       std::string  modelStringName = "abc.mzn"){
   // create a model and parse its items (make modifications to the model -- to be done)
   Model* model;
-  if(modelString.empty() && mznfilename.length()==0){
-    return "PROVIDE EITHER modelString OR mznfilename";
+  if(modelString.empty() && mznfilename.empty()){
+    Rcpp::stop("PROVIDE EITHER modelString OR mznfilename");
   }else{ 
     Env* env = new Env();
     vector<string> ip = {};
-    ostream& os = cerr;
+    ostringstream os;
     if(mznfilename.length()){
       //use parse
       std::vector<std::string> datafiles; 
-      if(dznfilename.length()){
-        for (int i=0; i<dznfilename.size(); i++) {  
-          datafiles.push_back(string(dznfilename[i]));  
-        }   
+      if(dznfilename.length() > 0){
+          datafiles.push_back(dznfilename);  
       }
       std::vector<std::string> filename;
-      filename.push_back(string(mznfilename[0]));
-      model = MiniZinc::parse(*env, filename, datafiles, modelString, modelStringName,
+      filename.push_back(mznfilename);
+      try{
+        model = MiniZinc::parse(*env, filename, datafiles, modelString, modelStringName,
                               ip, true, true, true, os);
+        if(model==NULL) throw std::exception();
+      }catch(std::exception& e){
+        string parseError;
+        parseError = os.str();
+        Rcpp::stop(parseError);
+      }
     }else{
       // use parsefromString
       vector<SyntaxError> se;
-      model = MiniZinc::parseFromString(*env, modelString, modelStringName , ip, true, true, true, os, se);
+      try{
+        model = MiniZinc::parseFromString(*env, modelString, modelStringName , ip, true, true, true, os, se);
+        if(model==NULL) throw std::exception();
+        else if(se.size()){
+          Rcpp::stop(se[0].what());
+        }
+      }catch(std::exception& e){
+        string parseError;
+        parseError = os.str();
+        Rcpp::stop(parseError);
+      }
     }}
 
   // size of the model

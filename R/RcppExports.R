@@ -27,7 +27,7 @@ mzn_eval <- function(modelString, solver, libpath) {
 #' @param dznfilename the name of the dzn file.
 #' @param modelStringName the name of model string.
 #' @param modData list containing the parameter values.
-mzn_parse <- function(modData, modelString = "", mznfilename = as.character( c()), dznfilename = as.character( c()), modelStringName = "abc.mzn") {
+mzn_parse <- function(modData, modelString = "", mznfilename = "", dznfilename = "", modelStringName = "abc.mzn") {
     .Call(`_rminizinc_mzn_parse`, modData, modelString, mznfilename, dznfilename, modelStringName)
 }
 

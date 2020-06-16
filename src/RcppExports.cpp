@@ -19,15 +19,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // mzn_parse
-std::string mzn_parse(List modData, std::string modelString, CharacterVector mznfilename, CharacterVector dznfilename, std::string modelStringName);
+std::string mzn_parse(List modData, std::string modelString, std::string mznfilename, std::string dznfilename, std::string modelStringName);
 RcppExport SEXP _rminizinc_mzn_parse(SEXP modDataSEXP, SEXP modelStringSEXP, SEXP mznfilenameSEXP, SEXP dznfilenameSEXP, SEXP modelStringNameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type modData(modDataSEXP);
     Rcpp::traits::input_parameter< std::string >::type modelString(modelStringSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type mznfilename(mznfilenameSEXP);
-    Rcpp::traits::input_parameter< CharacterVector >::type dznfilename(dznfilenameSEXP);
+    Rcpp::traits::input_parameter< std::string >::type mznfilename(mznfilenameSEXP);
+    Rcpp::traits::input_parameter< std::string >::type dznfilename(dznfilenameSEXP);
     Rcpp::traits::input_parameter< std::string >::type modelStringName(modelStringNameSEXP);
     rcpp_result_gen = Rcpp::wrap(mzn_parse(modData, modelString, mznfilename, dznfilename, modelStringName));
     return rcpp_result_gen;
