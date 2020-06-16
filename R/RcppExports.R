@@ -11,8 +11,9 @@
 #' @param modelString the string representation of the model to be evaluated.
 #' @param solver the name of the solver to use.
 #' @param libpath the path of the library where the solver is present.
-mzn_eval <- function(modelString, solver, libpath) {
-    .Call(`_rminizinc_mzn_eval`, modelString, solver, libpath)
+#' @param dznpath path of the datafile to be used
+mzn_eval <- function(modelString, solver, libpath, dznpath = "") {
+    .Call(`_rminizinc_mzn_eval`, modelString, solver, libpath, dznpath)
 }
 
 #' @title MiniZinc syntax parser
@@ -24,11 +25,23 @@ mzn_eval <- function(modelString, solver, libpath) {
 #' @useDynLib rminizinc, .registration=TRUE
 #' @param modelString string representation of the MiniZinc model.
 #' @param mznfilename the name of model.
-#' @param dznfilename the name of the dzn file.
 #' @param modelStringName the name of model string.
+mzn_parse <- function(modelString = "", mznfilename = "", modelStringName = "abc.mzn") {
+    .Call(`_rminizinc_mzn_parse`, modelString, mznfilename, modelStringName)
+}
+
+#' @title assign the missing parameters to the model
+#' 
+#' @desciption the missing parameters found from parse_mzn can be assigned 
+#' in this function
+#' 
+#' @importFrom Rcpp sourceCpp
+#' @export set_params
+#' @useDynLib rminizinc, .registration=TRUE
 #' @param modData list containing the parameter values.
-mzn_parse <- function(modData, modelString = "", mznfilename = "", dznfilename = "", modelStringName = "abc.mzn") {
-    .Call(`_rminizinc_mzn_parse`, modData, modelString, mznfilename, dznfilename, modelStringName)
+#' @param modelString string representation of the MiniZinc model
+set_params <- function(modData, modelString) {
+    .Call(`_rminizinc_set_params`, modData, modelString)
 }
 
 #' @title parse the solution

@@ -4,7 +4,7 @@
 \alias{mzn_eval}
 \title{MiniZinc model evaluation}
 \usage{
-mzn_eval(modelString, solver, libpath)
+mzn_eval(modelString, solver, libpath, dznpath = "")
 }
 \arguments{
 \item{modelString}{the string representation of the model to be evaluated.}
@@ -12,6 +12,8 @@ mzn_eval(modelString, solver, libpath)
 \item{solver}{the name of the solver to use.}
 
 \item{libpath}{the path of the library where the solver is present.}
+
+\item{dznpath}{path of the datafile to be used}
 }
 \description{
 evaluates the MiniZinc model
