@@ -1,5 +1,6 @@
 #include <Rcpp.h>
 #include <minizinc/parser.hh>
+#include <minizinc/prettyprinter.hh>
 
 using namespace std;
 using namespace MiniZinc;
@@ -14,41 +15,131 @@ using namespace Rcpp;
 //' @export mzn_parse
 //' @useDynLib rminizinc, .registration=TRUE
 //' @param modelString string representation of the MiniZinc model.
-//' @param modelStringName the name of model string.
 //' @param mznfilename the name of model.
 //' @param dznfilename the name of the dzn file.
+//' @param modelStringName the name of model string.
+//' @param modData list containing the parameter values.
 // [[Rcpp::export]]
-NumericVector mzn_parse(std::string modelString, std::string  modelStringName,
-                        std::vector<std::string> mznfilename,
-                        std::vector<std::string> dznfilename){
-  
+std::string mzn_parse(List modData, std::string modelString = "", 
+                      std::string mznfilename = "",
+                      std::string dznfilename = "", 
+                      std::string  modelStringName = "abc.mzn"){
+  // create a model and parse its items (make modifications to the model -- to be done)
   Model* model;
   if(modelString.empty() && mznfilename.empty()){
-    cout << "please provide either modelString or mznfilename";
-    //return 100;
+    Rcpp::stop("PROVIDE EITHER modelString OR mznfilename");
   }else{ 
     Env* env = new Env();
     vector<string> ip = {};
-    ostream& os = cerr;
-    if(mznfilename.empty()){
+    ostringstream os;
+    if(mznfilename.length()){
       //use parse
-      model = MiniZinc::parse(*env, mznfilename, dznfilename, modelString, modelStringName,
+      std::vector<std::string> datafiles; 
+      if(dznfilename.length() > 0){
+          datafiles.push_back(dznfilename);  
+      }
+      std::vector<std::string> filename;
+      filename.push_back(mznfilename);
+      try{
+        model = MiniZinc::parse(*env, filename, datafiles, modelString, modelStringName,
                               ip, true, true, true, os);
+        if(model==NULL) throw std::exception();
+      }catch(std::exception& e){
+        string parseError;
+        parseError = os.str();
+        Rcpp::stop(parseError);
+      }
     }else{
       // use parsefromString
       vector<SyntaxError> se;
-      model = MiniZinc::parseFromString(*env, modelString, modelStringName , ip, true, true, true, os, se);
+      try{
+        model = MiniZinc::parseFromString(*env, modelString, modelStringName , ip, true, true, true, os, se);
+        if(model==NULL) throw std::exception();
+        else if(se.size()){
+          Rcpp::stop(se[0].what());
+        }
+      }catch(std::exception& e){
+        string parseError;
+        parseError = os.str();
+        Rcpp::stop(parseError);
+      }
     }}
-  
-  int s = (model-> size());
-  cout << "The number of items in the model are " << s << endl;
+
+  // size of the model
+  int s = model-> size();
+  // get all the items and the names of all the parameters and map to the item numbers
   vector<Item*> items;
+  NumericVector nameValMap; 
+  CharacterVector parNames;
+  for(int i = 0; i<s;i++){
+    items.push_back(model->operator[] (i));
+    if(items[i]->iid() == Item::II_VD){
+      if(items[i]->cast<VarDeclI>()->e()->e() == NULL && 
+         items[i]->cast<VarDeclI>()->e()->type().ispar()){
+      nameValMap.push_back(i);
+      parNames.push_back(items[i]->cast<VarDeclI>()->e()->id()->str().aststr()->c_str());
+      }
+    }
+  }
+  if(modData.length() != 0 && modData.length() != nameValMap.length()){
+    return "Provide the values for all the declared parameters";
+  }else if(modData.length()){
+    nameValMap.names() = parNames;
+    CharacterVector modDataNames = modData.names();
+    for(int i = 0; i < modData.length();i++){
+      if(modDataNames[i] == parNames[i] ){
+        VarDecl *vd = items[nameValMap[i]]->cast<VarDeclI>()->e();
+        Type tp = items[nameValMap[i]]->cast<VarDeclI>()->e()->type();
+        if(tp.isint()){ 
+          vd->e(IntLit::a(IntVal((int)modData[i])));
+        }else if(tp.isfloat()){
+          vd->e(FloatLit::a(FloatVal((float)modData[i])));
+        }else if(tp.isbool()){
+          BoolLit *bl = new BoolLit(items[nameValMap[i]]->loc(),(bool)modData[i]);
+          vd->e(bl);
+        }else if(tp.is_set()){
+          if(tp.isintset()){
+            //vector<Expression*> expVec;
+            //NumericVector setVal = modData[i];
+            //for(int it = 0;it<setVal.length();it++)
+            //  expVec.push_back(IntSetVal::a());
+            //SetLit *sl = new SetLit(items[nameValMap[i]]->loc(), expVec)
+          }else if(tp.isfloatset()){
+            
+          }else if(tp.isboolset()){
+            
+          }}else{
+            if(tp.isintarray()){
+                if(tp.dim() == 1){
+                  // 1 dimensional array
+                vector<Expression*> expVec;
+                  NumericVector arrVal= modData[i];
+                  for(int it = 0;it < arrVal.length();it++)
+                    expVec.push_back(IntLit::a(arrVal[it]));
+                  ArrayLit *al = new ArrayLit(items[nameValMap[i]]->loc(),expVec);
+                  vd->e(al);
+                }
+            }else if(tp.isintsetarray()){
+              //
+            }else if(tp.isboolarray()){
+              //
+            }else{
+              
+              if(items[i]->cast<VarDeclI>()->e()->ti()->domain() != NULL){
+                // variable has a domain
+              }else{
+                // float domain
+              }
+            }
+          }	
+      }
+    }
+  }
+  
   int type = 0;
-  NumericVector retval = 0;
   // to store the variable names
   string name;
   for(int i=0; i < s; i++){
-    items.push_back(model->operator[] (i));
     switch(items[i]->iid()){
     case Item::II_VD:
       // decision variables or parameters
@@ -61,46 +152,6 @@ NumericVector mzn_parse(std::string modelString, std::string  modelStringName,
         }else {
           tp_string = "parameter" ;
         }
-        if(tp.isint()){
-          cout << "item " << name << " is an integer " << tp_string << " declaration" << endl;
-        }else if(tp.isfloat()){
-          cout << "item " << name << " is a float " << tp_string <<  " declaration" << endl;
-        }else if(tp.isbool()){
-          cout << "item " << name << " is a bool " << tp_string << " declaration" << endl;
-        }else if(tp.is_set()){
-          if(tp.isintset()){
-            cout << "item " << name << " is a" << tp_string << " declaration for an integer set" << endl;
-          }else if(tp.isfloatset()){
-            cout << "item " << name << " is a float" <<  tp_string << " declaration for a float set" << endl;
-          }else if(tp.isboolset()){
-            cout << "item " << name << " is a bool" << tp_string << " declaration for a boolean set" << endl;
-          }}else{
-          if(tp.isintarray()){
-            cout << "item " << name << " is an " << tp_string << " declaration for an integer array" << endl;
-          }else if(tp.isintsetarray()){
-            cout << "item " << name << " is a float" <<  tp_string << " declaration for an integer set array" << endl;
-          }else if(tp.isboolarray()){
-            cout << "item " << name << " is a bool" << tp_string << " declaration for a boolean array" << endl;
-          }else{
-            
-              if(items[i]->cast<VarDeclI>()->e()->ti()->domain() != NULL){
-                // variable has a domain
-                if(items[i]->cast<VarDeclI>()->e()->ti()->domain()->cast<SetLit>()->isv() != NULL){
-                  // integer set value
-                  cout << "The maximum value of domain of " <<  name << " is: ";
-                  cout << items[i]->cast<VarDeclI>()->e()->ti()->domain()->cast<SetLit>()->isv()->max()<<  endl;
-                  cout << "The minimum value of domain of " << name << " is: ";
-                  cout << items[i]->cast<VarDeclI>()->e()->ti()->domain()->cast<SetLit>()->isv()->min()<<  endl;  
-                }else{
-                  // float set value
-                  cout << "The maximum value of domain of item " <<  name << " is: ";
-                  cout << items[i]->cast<VarDeclI>()->e()->ti()->domain()->cast<SetLit>()->fsv()->max()<<  endl;
-                  cout << "The minimum value of domain of item " << name << " is: ";
-                  cout << items[i]->cast<VarDeclI>()->e()->ti()->domain()->cast<SetLit>()->fsv()->min()<<  endl;
-                }
-            }
-          }	
-        }
         continue;
       }
       // the name of the parameters	
@@ -108,8 +159,8 @@ NumericVector mzn_parse(std::string modelString, std::string  modelStringName,
       type =  items[i]->cast<VarDeclI>()->e()->e()->eid();
       switch(type){
       case Expression::E_INTLIT:
-        cout << "item " << name << " is an integer parameter initialization" << endl;
-        retval = items[i]->cast<VarDeclI>()->e()->e()->unboxedIntToIntVal().toInt();
+        cout << "item " << name << " is an integer parameter with value: ";
+        cout << items[i]->cast<VarDeclI>()->e()->e()->unboxedIntToIntVal().toInt() << endl;
         break;
       case Expression::E_FLOATLIT:
         cout << "item " << name << " is a float parameter initialization" << endl;
@@ -158,8 +209,12 @@ NumericVector mzn_parse(std::string modelString, std::string  modelStringName,
       //cout << "Invalid input" << endl;
     }
   }
-  //print(retval);
-  return retval;
+  // return the string representation of the model
+  stringstream strmodel;
+  Printer *p = new Printer(strmodel); 
+  p->print(model);
+  string mString = strmodel.str();
+  return mString;
 }
 
 

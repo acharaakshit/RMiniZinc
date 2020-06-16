@@ -42,7 +42,6 @@ List sol_parse(std::string solutionString) {
     List thisSol;
     solutionString = solutions[nsol];
     CharacterVector varName;
-    //string varName;
     // create the model
     Env* env = new Env();
     vector<string> ip = {};
@@ -84,7 +83,20 @@ List sol_parse(std::string solutionString) {
           
           break;
         case Expression::E_ARRAYLIT:
-          items[i]->cast<AssignI>()->e()->cast<ArrayLit>()->getVec().vec();
+          if(items[i]->cast<AssignI>()->e()->cast<ArrayLit>()->getVec().size()){
+            int vec_size = items[i]->cast<AssignI>()->e()->cast<ArrayLit>()->getVec().size();
+            List ArrVec;
+            for(int p = 0;p < vec_size; p++ ){
+              // get the expression form of each element
+              Expression *exp = items[i]->cast<AssignI>()->e()->cast<ArrayLit>()->getVec().operator[](p);
+              if(exp->isUnboxedInt()){
+                ArrVec.push_back((double)exp->unboxedIntToIntVal().toInt());
+              }else if(exp->isUnboxedFloatVal()){
+                ArrVec.push_back(exp->unboxedFloatToFloatVal().toDouble());
+              }
+            }
+            thisSol.push_back(ArrVec);
+          }  
           break;
         case Expression::E_CALL:
           // name of the function
@@ -120,7 +132,6 @@ List sol_parse(std::string solutionString) {
         break;
         // "not a solution string";
       }
-      //cout << varName;
       thisSol.names() = varName;
     }
     string track_nsol = "solution:";
