@@ -11,3 +11,4 @@ strippedLib: $(SHLIB)
 all: clean
 clean:
 	rm -f $(OBJECTS.sources) $(OBJECTS.tests)
+
