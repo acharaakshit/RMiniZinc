@@ -55,7 +55,7 @@ std::string set_params(List modData, std::string modelString) {
   }
   
   nameIndexMap.names() = parNames;
-  if(modData.length() != 0 && modData.length() != nameIndexMap.length()){
+  if(modData.length() != 0 && modData.length() > nameIndexMap.length()){
     Rcpp::stop("Provide the values for exactly all the missing parameters");
   }else if(modData.length()){
     CharacterVector argParNames = modData.names();
