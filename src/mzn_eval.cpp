@@ -18,11 +18,13 @@ using namespace Rcpp;
 //' @param libpath the path of the library where the solver is present.
 //' @param dznpath path of the datafile to be used
 // [[Rcpp::export]]
-NumericVector mzn_eval(std::string modelString, std::string solver, std::string libpath,
+List mzn_eval(std::string modelString, std::string solver, std::string libpath,
                        std::string dznpath = ""){
   
   std::stringstream sol_strn;
   string sol_string;
+  if(solver != "Gecode" && solver != "org.gecode.gecode")
+    Rcpp:stop("only Gecode solver is supported for now");
   try {
     MznSolver slv(sol_strn,std::cerr);
     vector<std::string> options({"--stdlib-dir", libpath, "--solver", solver});
