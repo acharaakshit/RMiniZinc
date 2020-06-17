@@ -216,7 +216,8 @@ pVals = list(3,9,c(15,10,7),c(4,3,2))
 names(pVals) = parseObj$missingValues
 
 # set the missing parameters
-modString = rminizinc:::set_params(modData = pVals, modelString = parseObj$modelString)
+modString = rminizinc:::set_params(modData = pVals, modelString = parseObj$modelString,
+                 filename = paste0(dirname(getwd()), "/mzn_test_examples/knapsack_updated.mzn"))
 
 # R List object containing the solutions
 solObj <- rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gecode",

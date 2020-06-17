@@ -1,4 +1,5 @@
 #include <Rcpp.h>
+#include <fstream>
 #include <minizinc/parser.hh>
 #include <minizinc/prettyprinter.hh>
 
@@ -17,8 +18,10 @@ using namespace MiniZinc;
 //' @useDynLib rminizinc, .registration=TRUE
 //' @param modData list containing the parameter values.
 //' @param modelString string representation of the MiniZinc model
+//' @param filename path of the file to write the modelString
 // [[Rcpp::export]]
-std::string set_params(List modData, std::string modelString) {
+std::string set_params(List modData, std::string modelString,
+                       std::string filename = "") {
   Env* env = new Env();
   vector<string> ip = {};
   ostringstream os;
@@ -112,6 +115,13 @@ std::string set_params(List modData, std::string modelString) {
   Printer *p = new Printer(strmodel); 
   p->print(model);
   string mString = strmodel.str();
+  
+  if(!filename.empty()){
+    ofstream out(filename);
+    out << mString;
+    out.close();
+  }
+  
   return mString;
 }
 

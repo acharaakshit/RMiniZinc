@@ -33,14 +33,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // set_params
-std::string set_params(List modData, std::string modelString);
-RcppExport SEXP _rminizinc_set_params(SEXP modDataSEXP, SEXP modelStringSEXP) {
+std::string set_params(List modData, std::string modelString, std::string filename);
+RcppExport SEXP _rminizinc_set_params(SEXP modDataSEXP, SEXP modelStringSEXP, SEXP filenameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type modData(modDataSEXP);
     Rcpp::traits::input_parameter< std::string >::type modelString(modelStringSEXP);
-    rcpp_result_gen = Rcpp::wrap(set_params(modData, modelString));
+    Rcpp::traits::input_parameter< std::string >::type filename(filenameSEXP);
+    rcpp_result_gen = Rcpp::wrap(set_params(modData, modelString, filename));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -61,7 +62,7 @@ RcppExport SEXP run_testthat_tests();
 static const R_CallMethodDef CallEntries[] = {
     {"_rminizinc_mzn_eval", (DL_FUNC) &_rminizinc_mzn_eval, 4},
     {"_rminizinc_mzn_parse", (DL_FUNC) &_rminizinc_mzn_parse, 3},
-    {"_rminizinc_set_params", (DL_FUNC) &_rminizinc_set_params, 2},
+    {"_rminizinc_set_params", (DL_FUNC) &_rminizinc_set_params, 3},
     {"_rminizinc_sol_parse", (DL_FUNC) &_rminizinc_sol_parse, 1},
     {"run_testthat_tests", (DL_FUNC) &run_testthat_tests, 0},
     {NULL, NULL, 0}
