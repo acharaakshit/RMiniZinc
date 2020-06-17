@@ -6,7 +6,7 @@
 using namespace Rcpp;
 
 // mzn_eval
-NumericVector mzn_eval(std::string modelString, std::string solver, std::string libpath, std::string dznpath);
+List mzn_eval(std::string modelString, std::string solver, std::string libpath, std::string dznpath);
 RcppExport SEXP _rminizinc_mzn_eval(SEXP modelStringSEXP, SEXP solverSEXP, SEXP libpathSEXP, SEXP dznpathSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -56,11 +56,14 @@ BEGIN_RCPP
 END_RCPP
 }
 
+RcppExport SEXP run_testthat_tests();
+
 static const R_CallMethodDef CallEntries[] = {
     {"_rminizinc_mzn_eval", (DL_FUNC) &_rminizinc_mzn_eval, 4},
     {"_rminizinc_mzn_parse", (DL_FUNC) &_rminizinc_mzn_parse, 3},
     {"_rminizinc_set_params", (DL_FUNC) &_rminizinc_set_params, 2},
     {"_rminizinc_sol_parse", (DL_FUNC) &_rminizinc_sol_parse, 1},
+    {"run_testthat_tests", (DL_FUNC) &run_testthat_tests, 0},
     {NULL, NULL, 0}
 };
 
