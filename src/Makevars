@@ -6,3 +6,4 @@ PKG_LIBS=-L/usr/local/lib/libminizinc	-lmzn
 strippedLib: $(SHLIB)
 	if test -e "/usr/bin/strip"; then /usr/bin/strip --strip-debug $(SHLIB); fi
 .phony: strippedLib
+clean: rm -f *.o
