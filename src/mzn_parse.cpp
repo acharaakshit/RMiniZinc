@@ -1,6 +1,7 @@
 #include <Rcpp.h>
 #include <minizinc/parser.hh>
 #include <minizinc/prettyprinter.hh>
+#include "filetoString.h"
 
 using namespace std;
 using namespace MiniZinc;
@@ -15,53 +16,49 @@ using namespace Rcpp;
 //' @export mzn_parse
 //' @useDynLib rminizinc, .registration=TRUE
 //' @param modelString string representation of the MiniZinc model.
-//' @param mznfilename the name of model.
+//' @param mznpath the path of model mzn.
 //' @param modelStringName the name of model string.
 // [[Rcpp::export]]
 List mzn_parse(std::string modelString = "", 
-                      std::string mznfilename = "",
+                      std::string mznpath = "",
                       std::string  modelStringName = "abc.mzn"){
   // create a model and parse its items (make modifications to the model -- to be done)
   Model* model;
-  if(modelString.empty() && mznfilename.empty()){
+  if(modelString.empty() && mznpath.empty()){
     Rcpp::stop("PROVIDE EITHER modelString OR mznfilename");
-  }else{ 
+  }else if(!modelString.empty() && !mznpath.empty()){
+    Rcpp::stop("PROVIDE ONLY ONE OF modelString OR mznfilename");
+  }else if(mznpath.length()){
+      //convert to string 
+      modelString = filetoString(mznpath);
+  }
     Env* env = new Env();
     vector<string> ip = {};
     ostringstream os;
-    if(mznfilename.length()){
-      //use parse
-      std::vector<std::string> datafiles; 
-      std::vector<std::string> filename;
-      filename.push_back(mznfilename);
-      try{
-        model = MiniZinc::parse(*env, filename, datafiles, modelString, modelStringName,
-                              ip, true, true, true, os);
-        if(model==NULL) throw std::exception();
-      }catch(std::exception& e){
-        string parseError;
-        parseError = os.str();
-        Rcpp::stop(parseError);
-      }
-    }else{
-      // use parsefromString
-      vector<SyntaxError> se;
-      try{
+    vector<SyntaxError> se;
+    try{
         model = MiniZinc::parseFromString(*env, modelString, modelStringName , ip, true, true, true, os, se);
         if(model==NULL) throw std::exception();
         else if(se.size()){
-          Rcpp::stop(se[0].what());
+          string syntaxErrors;
+          for(int i = 0;i < se.size();i++){
+            syntaxErrors.append(se[i].what());
+            syntaxErrors.append("\n");
+          }
+          Rcpp::stop(syntaxErrors);
         }
-      }catch(std::exception& e){
+    }catch(std::exception& e){
         string parseError;
         parseError = os.str();
         Rcpp::stop(parseError);
       }
-    }}
   
   List retVal;
   // size of the model
   int s = model-> size();
+  if(s == 0){
+    Rcpp::stop("Empty model!");
+  }
   // get all the items and the names of all the parameters and map to the item numbers
   vector<Item*> items;
   int type = 0;
