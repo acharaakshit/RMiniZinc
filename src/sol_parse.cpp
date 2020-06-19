@@ -83,19 +83,33 @@ List sol_parse(std::string solutionString) {
           thisSol.push_back(items[i]->cast<AssignI>()->e()->cast<BoolLit>()->v());
           break;
         case Expression::E_SETLIT:
-          if(items[i]->cast<AssignI>()->e()->cast<SetLit>()->isv()!=NULL){
-            // integer set
-            int max_val =  items[i]->cast<AssignI>()->e()->cast<SetLit>()->isv()->max().toInt();
-            int min_val = items[i]->cast<AssignI>()->e()->cast<SetLit>()->isv()->min().toInt();  
-            IntegerVector setVec = {max_val, min_val}; 
-            thisSol.push_back(setVec);
-          }else{
-            // floating point set
-            float max_val =  items[i]->cast<AssignI>()->e()->cast<SetLit>()->fsv()->max().toDouble();
-            float min_val = items[i]->cast<AssignI>()->e()->cast<SetLit>()->fsv()->min().toDouble();
-            NumericVector setVec = {max_val, min_val};
-            thisSol.push_back(setVec);
-          }
+            if(items[i]->cast<AssignI>()->e()->cast<SetLit>()->isv()!= NULL){  
+              int max_val =  items[i]->cast<AssignI>()->e()->cast<SetLit>()->isv()->max().toInt();
+              int min_val = items[i]->cast<AssignI>()->e()->cast<SetLit>()->isv()->min().toInt();  
+              IntegerVector setVec = {max_val, min_val}; 
+              thisSol.push_back(setVec);
+            }else if(items[i]->cast<AssignI>()->e()->cast<SetLit>()->fsv()!=NULL){
+              float max_val =  items[i]->cast<AssignI>()->e()->cast<SetLit>()->fsv()->max().toDouble();
+              float min_val = items[i]->cast<AssignI>()->e()->cast<SetLit>()->fsv()->min().toDouble();
+              NumericVector setVec = {max_val, min_val};
+              thisSol.push_back(setVec);
+            }else{
+              ASTExprVec<Expression> expVec = items[i]->cast<AssignI>()->e()->cast<SetLit>()->v();
+              int expVec_size = expVec.size();
+              List setVec;
+              for(int p = 0; p < expVec_size; p++){
+                Expression *exp = expVec.operator[](p);
+                if(exp->isUnboxedInt()){
+                  setVec.push_back((double)exp->unboxedIntToIntVal().toInt());
+                }else if(exp->isUnboxedFloatVal()){
+                  setVec.push_back(exp->unboxedFloatToFloatVal().toDouble());
+                }else if(exp->eid() == Expression::E_BOOLLIT){
+                  setVec.push_back(exp->cast<BoolLit>()->v());
+                }
+              }
+              thisSol.push_back(setVec);
+            }
+          
           
           break;
         case Expression::E_ARRAYLIT:
@@ -149,7 +163,8 @@ List sol_parse(std::string solutionString) {
         Rcpp::stop("Solution string contains non assignments");
         break;
       }
-      thisSol.names() = varName;
+      if(thisSol.size())  thisSol.names() = varName;
+      else Rcpp::stop("Not able to parse solution-- The value is not supported yet.");
     }
     string track_nsol = "solution:";
     track_nsol.append(to_string(nsol));

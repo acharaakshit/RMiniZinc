@@ -1,8 +1,11 @@
 library(rminizinc)
 library(checkmate)
 
-# give a file name to read the mzn and write the updated mzn
-mznName = "mzn_test_examples/knapsack_0_update.mzn"
+# give a file path to read the mzn and write the updated mzn
+mznName = "mzn_test_examples/knapsack_1_update.mzn"
+
+# use alternate file
+#mznName = "mzn_test_examples/knapsack_0_update.mzn"
 
 # parse the model
 obj1 <- rminizinc:::mzn_parse(mznpath = mznName)
