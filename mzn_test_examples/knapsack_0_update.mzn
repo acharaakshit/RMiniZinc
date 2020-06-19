@@ -1,8 +1,8 @@
-int: n = 3;
+int: n;
 set of int: OBJ = 1..n;
-int: capacity = 9;
-array [OBJ] of int: profit = [15, 10, 7];
-array [OBJ] of int: size = [4, 3, 2];
+int: capacity;
+array [OBJ] of int: profit;
+array [OBJ] of int: size;
 array [OBJ] of var int: x;
 constraint forall ( i in OBJ ) ( x[i]>=0 );
 constraint sum ( i in OBJ ) ( size[i]*x[i] )<=capacity;
