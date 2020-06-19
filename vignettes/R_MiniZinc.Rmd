@@ -184,31 +184,31 @@ The function `mzn_eval` can be used to evaluate a MiniZinc model. A string model
 
 ```{r}
 # mzn file path
-mzn_path = paste0(dirname(getwd()), "/mzn_test_examples/knapsack.mzn")
+mzn_path = paste0(dirname(getwd()), "/mzn_test_examples/knapsack_0.mzn")
 
 # parse the model
-parseObj=rminizinc:::mzn_parse(mznfilename = mzn_path)
+parseObj=rminizinc:::mzn_parse(mznpath = mzn_path)
 
 # get the modelString
 modString = parseObj$modelString
 
 # dzn file path
-dzn_path = paste0(dirname(getwd()), "/mzn_test_examples/knapsack.dzn")
+dzn_path = paste0(dirname(getwd()), "/mzn_test_examples/knapsack_0.dzn")
 
 # R List object containing the solutions
 solObj <- rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gecode",
                      libpath = "/snap/minizinc/current/share/minizinc", dznpath = dzn_path)
 # get all the solutions
-print(solObj)
+print(solObj$Solutions)
 ```
 The data can also be provided as a list of values of parameters where the names of the list are the missing parameter names returned by `parse_mzn()`. For now, only integer, floats, bools and 1 dimensional integer arrays are supported. Alternatively, if the user wishes to provide a data file, it can be provided to the function `mzn_eval()`.
 
 ```{r}
 # file path
-mzn_path = paste0(dirname(getwd()), "/mzn_test_examples/knapsack.mzn")
+mzn_path = paste0(dirname(getwd()), "/mzn_test_examples/knapsack_0.mzn")
 
 # get missing parameter values
-parseObj=rminizinc:::mzn_parse( mznfilename = mzn_path)
+parseObj=rminizinc:::mzn_parse( mznpath = mzn_path)
 print(parseObj$missingValues)
 
 # list of the data
@@ -216,14 +216,13 @@ pVals = list(3,9,c(15,10,7),c(4,3,2))
 names(pVals) = parseObj$missingValues
 
 # set the missing parameters
-modString = rminizinc:::set_params(modData = pVals, modelString = parseObj$modelString,
-                 filename = paste0(dirname(getwd()), "/mzn_test_examples/knapsack_updated.mzn"))
+modString = rminizinc:::set_params(modData = pVals,modelString = parseObj$modelString)
 
 # R List object containing the solutions
 solObj <- rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gecode",
                      libpath = "/snap/minizinc/current/share/minizinc")
 # get all the solutions
-print(solObj)
+print(solObj$Solutions)
 
 ```
 
