@@ -11,5 +11,7 @@ context("Correct mzn path input tests") {
   test_that("incorrect mzn filename yeilds an error"){
     expect_error(mzn_parse("","notAfilename",""));
   }
-  
+  test_that("syntax errors yeild an error"){
+    expect_error(mzn_parse("int a = 10"));
+  }
 }

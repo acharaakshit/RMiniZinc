@@ -1,6 +1,7 @@
 #include <Rcpp.h>
-#include "sol_parse.h"
 #include <minizinc/solver.hh>
+#include "sol_parse.h"
+#include "filetoString.h"
 
 using namespace std;
 using namespace MiniZinc;
@@ -16,11 +17,23 @@ using namespace Rcpp;
 //' @param modelString the string representation of the model to be evaluated.
 //' @param solver the name of the solver to use.
 //' @param libpath the path of the library where the solver is present.
+//' @param mznpath the path of the MiniZinc model file.
 //' @param dznpath path of the datafile to be used
 // [[Rcpp::export]]
-List mzn_eval(std::string modelString, std::string solver, std::string libpath,
-                       std::string dznpath = ""){
+List mzn_eval(std::string solver, std::string libpath,std::string modelString = "", 
+                       std::string mznpath = "", std::string dznpath = ""){
   
+  if(modelString.empty() && mznpath.empty()){
+    Rcpp::stop("PROVIDE EITHER modelString OR mznfilename");
+  }else if(!modelString.empty() && !mznpath.empty()){
+    Rcpp::stop("PROVIDE ONLY ONE OF modelString OR mznfilename");
+  }else if(mznpath.length()){
+    // check file extension
+    if(!(mznpath.substr(mznpath.find_last_of(".") + 1) == "mzn" ))
+      Rcpp::stop("file extention is not mzn");
+    //convert to string 
+    modelString = filetoString(mznpath);
+  }
   std::stringstream sol_strn;
   string sol_string;
   if(solver != "Gecode" && solver != "org.gecode.gecode")
@@ -49,7 +62,11 @@ List mzn_eval(std::string modelString, std::string solver, std::string libpath,
   }catch (...) {
     Rcpp::stop("  UNKNOWN EXCEPTION.") ;
   }
-  return sol_parse(sol_string);
+  List retVal;
+  retVal.push_back(sol_string);
+  retVal.push_back(sol_parse(sol_string));
+  retVal.names() = CharacterVector({"solutionString", "Solutions"});
+  return retVal;
 }
 
 

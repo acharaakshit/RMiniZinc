@@ -109,6 +109,8 @@ List sol_parse(std::string solutionString) {
                 ArrVec.push_back((double)exp->unboxedIntToIntVal().toInt());
               }else if(exp->isUnboxedFloatVal()){
                 ArrVec.push_back(exp->unboxedFloatToFloatVal().toDouble());
+              }else if(exp->eid() == Expression::E_BOOLLIT){
+                ArrVec.push_back(exp->cast<BoolLit>()->v());
               }
             }
             thisSol.push_back(ArrVec);
@@ -132,6 +134,7 @@ List sol_parse(std::string solutionString) {
                 }else if(exp->isUnboxedFloatVal()){
                   ArrVec.push_back(exp->unboxedFloatToFloatVal().toDouble());
                 }
+                
               }
               thisSol.push_back(ArrVec);
             }else{

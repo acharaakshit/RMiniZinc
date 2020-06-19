@@ -5,43 +5,55 @@
 
 using namespace Rcpp;
 
-// mzn_eval
-List mzn_eval(std::string modelString, std::string solver, std::string libpath, std::string dznpath);
-RcppExport SEXP _rminizinc_mzn_eval(SEXP modelStringSEXP, SEXP solverSEXP, SEXP libpathSEXP, SEXP dznpathSEXP) {
+// filetoString
+std::string filetoString(std::string filepath);
+RcppExport SEXP _rminizinc_filetoString(SEXP filepathSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< std::string >::type modelString(modelStringSEXP);
+    Rcpp::traits::input_parameter< std::string >::type filepath(filepathSEXP);
+    rcpp_result_gen = Rcpp::wrap(filetoString(filepath));
+    return rcpp_result_gen;
+END_RCPP
+}
+// mzn_eval
+List mzn_eval(std::string solver, std::string libpath, std::string modelString, std::string mznpath, std::string dznpath);
+RcppExport SEXP _rminizinc_mzn_eval(SEXP solverSEXP, SEXP libpathSEXP, SEXP modelStringSEXP, SEXP mznpathSEXP, SEXP dznpathSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type solver(solverSEXP);
     Rcpp::traits::input_parameter< std::string >::type libpath(libpathSEXP);
+    Rcpp::traits::input_parameter< std::string >::type modelString(modelStringSEXP);
+    Rcpp::traits::input_parameter< std::string >::type mznpath(mznpathSEXP);
     Rcpp::traits::input_parameter< std::string >::type dznpath(dznpathSEXP);
-    rcpp_result_gen = Rcpp::wrap(mzn_eval(modelString, solver, libpath, dznpath));
+    rcpp_result_gen = Rcpp::wrap(mzn_eval(solver, libpath, modelString, mznpath, dznpath));
     return rcpp_result_gen;
 END_RCPP
 }
 // mzn_parse
-List mzn_parse(std::string modelString, std::string mznfilename, std::string modelStringName);
-RcppExport SEXP _rminizinc_mzn_parse(SEXP modelStringSEXP, SEXP mznfilenameSEXP, SEXP modelStringNameSEXP) {
+List mzn_parse(std::string modelString, std::string mznpath, std::string modelStringName);
+RcppExport SEXP _rminizinc_mzn_parse(SEXP modelStringSEXP, SEXP mznpathSEXP, SEXP modelStringNameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< std::string >::type modelString(modelStringSEXP);
-    Rcpp::traits::input_parameter< std::string >::type mznfilename(mznfilenameSEXP);
+    Rcpp::traits::input_parameter< std::string >::type mznpath(mznpathSEXP);
     Rcpp::traits::input_parameter< std::string >::type modelStringName(modelStringNameSEXP);
-    rcpp_result_gen = Rcpp::wrap(mzn_parse(modelString, mznfilename, modelStringName));
+    rcpp_result_gen = Rcpp::wrap(mzn_parse(modelString, mznpath, modelStringName));
     return rcpp_result_gen;
 END_RCPP
 }
 // set_params
-std::string set_params(List modData, std::string modelString, std::string filename);
-RcppExport SEXP _rminizinc_set_params(SEXP modDataSEXP, SEXP modelStringSEXP, SEXP filenameSEXP) {
+std::string set_params(List modData, std::string modelString, std::string mznpath);
+RcppExport SEXP _rminizinc_set_params(SEXP modDataSEXP, SEXP modelStringSEXP, SEXP mznpathSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< List >::type modData(modDataSEXP);
     Rcpp::traits::input_parameter< std::string >::type modelString(modelStringSEXP);
-    Rcpp::traits::input_parameter< std::string >::type filename(filenameSEXP);
-    rcpp_result_gen = Rcpp::wrap(set_params(modData, modelString, filename));
+    Rcpp::traits::input_parameter< std::string >::type mznpath(mznpathSEXP);
+    rcpp_result_gen = Rcpp::wrap(set_params(modData, modelString, mznpath));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -60,7 +72,8 @@ END_RCPP
 RcppExport SEXP run_testthat_tests();
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_rminizinc_mzn_eval", (DL_FUNC) &_rminizinc_mzn_eval, 4},
+    {"_rminizinc_filetoString", (DL_FUNC) &_rminizinc_filetoString, 1},
+    {"_rminizinc_mzn_eval", (DL_FUNC) &_rminizinc_mzn_eval, 5},
     {"_rminizinc_mzn_parse", (DL_FUNC) &_rminizinc_mzn_parse, 3},
     {"_rminizinc_set_params", (DL_FUNC) &_rminizinc_set_params, 3},
     {"_rminizinc_sol_parse", (DL_FUNC) &_rminizinc_sol_parse, 1},

@@ -2,6 +2,7 @@
 #include <fstream>
 #include <minizinc/parser.hh>
 #include <minizinc/prettyprinter.hh>
+#include "filetoString.h"
 
 
 using namespace std;
@@ -18,21 +19,37 @@ using namespace MiniZinc;
 //' @useDynLib rminizinc, .registration=TRUE
 //' @param modData list containing the parameter values.
 //' @param modelString string representation of the MiniZinc model
-//' @param filename path of the file to write the modelString
+//' @param mznpath path of the mzn file 
 // [[Rcpp::export]]
-std::string set_params(List modData, std::string modelString,
-                       std::string filename = "") {
+std::string set_params(List modData, std::string modelString = "",
+                       std::string mznpath = "") {
   Env* env = new Env();
   vector<string> ip = {};
   ostringstream os;
   vector<SyntaxError> se;
   Model *model;
+  if(modelString.empty() && mznpath.empty()){
+    Rcpp::stop("PROVIDE EITHER modelString OR mznfilename");
+  }else if(!modelString.empty() && !mznpath.empty()){
+    Rcpp::stop("PROVIDE ONLY ONE OF modelString OR mznfilename");
+  }else if(mznpath.length()){
+    // check file extension
+    if(!(mznpath.substr(mznpath.find_last_of(".") + 1) == "mzn" ))
+      Rcpp::stop("file extention is not mzn");
+    //convert to string 
+    modelString = filetoString(mznpath);
+  }
   try{
     string modelStringName = "model.mzn";
     model = MiniZinc::parseFromString(*env, modelString, modelStringName , ip, true, true, true, os, se);
     if(model==NULL) throw std::exception();
     else if(se.size()){
-      Rcpp::stop(se[0].what());
+      string syntaxErrors;
+      for(int i = 0;i < se.size();i++){
+        syntaxErrors.append(se[i].what());
+        syntaxErrors.append("\n");
+      }
+      Rcpp::stop(syntaxErrors);
     }
   }catch(std::exception& e){
     string parseError;
@@ -43,6 +60,9 @@ std::string set_params(List modData, std::string modelString,
   NumericVector nameIndexMap; 
   CharacterVector parNames;
   int s = model->size();
+  if(s == 0){
+    Rcpp::stop("Empty model!");
+  }
   for(int i = 0; i<s;i++){
     items.push_back(model->operator[] (i));
     if(items[i]->iid() == Item::II_VD){
@@ -59,7 +79,7 @@ std::string set_params(List modData, std::string modelString,
   
   nameIndexMap.names() = parNames;
   if(modData.length() != 0 && modData.length() > nameIndexMap.length()){
-    Rcpp::stop("Provide the values for exactly all the missing parameters");
+    Rcpp::stop("Provide the values for atleast 1 to the total number missing parameters");
   }else if(modData.length()){
     CharacterVector argParNames = modData.names();
     for(int i = 0;i< modData.length();i++){
@@ -116,8 +136,8 @@ std::string set_params(List modData, std::string modelString,
   p->print(model);
   string mString = strmodel.str();
   
-  if(!filename.empty()){
-    ofstream out(filename);
+  if(!mznpath.empty()){
+    ofstream out(mznpath);
     out << mString;
     out.close();
   }

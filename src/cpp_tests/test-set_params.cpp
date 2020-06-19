@@ -21,4 +21,11 @@ context("Correct parameters should be provided") {
     //modData.names() = Rcpp::CharacterVector({"a", "b"})
     expect_error(set_params(modData, modelString));
   }
+  test_that("both modelString and filename can't be provided"){
+    List modData;
+    modData.push_back(10);
+    expect_error(set_params(modData, "int: a =10;","abc.mzn"));
+    
+  }
+  
 }
