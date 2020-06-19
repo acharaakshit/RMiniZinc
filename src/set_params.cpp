@@ -19,7 +19,7 @@ using namespace MiniZinc;
 //' @useDynLib rminizinc, .registration=TRUE
 //' @param modData list containing the parameter values.
 //' @param modelString string representation of the MiniZinc model
-//' @param mzpath path of the mzn file 
+//' @param mznpath path of the mzn file 
 // [[Rcpp::export]]
 std::string set_params(List modData, std::string modelString = "",
                        std::string mznpath = "") {

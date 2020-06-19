@@ -226,6 +226,7 @@ print(solObj$Solutions)
 
 ```
 
+The examples of how to use these functions to solve optimization problems can be found in `mzn_test_examples`.
 
 The next step is to allow the users to add variables, constraints,etc in a MiniZinc model.
 

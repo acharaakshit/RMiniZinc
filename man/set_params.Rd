@@ -11,7 +11,7 @@ set_params(modData, modelString = "", mznpath = "")
 
 \item{modelString}{string representation of the MiniZinc model}
 
-\item{mzpath}{path of the mzn file}
+\item{mznpath}{path of the mzn file}
 }
 \description{
 assign the missing parameters to the model

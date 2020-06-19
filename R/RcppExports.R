@@ -54,7 +54,7 @@ mzn_parse <- function(modelString = "", mznpath = "", modelStringName = "abc.mzn
 #' @useDynLib rminizinc, .registration=TRUE
 #' @param modData list containing the parameter values.
 #' @param modelString string representation of the MiniZinc model
-#' @param mzpath path of the mzn file 
+#' @param mznpath path of the mzn file 
 set_params <- function(modData, modelString = "", mznpath = "") {
     .Call(`_rminizinc_set_params`, modData, modelString, mznpath)
 }
