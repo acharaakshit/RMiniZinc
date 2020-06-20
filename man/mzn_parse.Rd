@@ -4,7 +4,7 @@
 \alias{mzn_parse}
 \title{MiniZinc syntax parser}
 \usage{
-mzn_parse(modelString = "", mznpath = "", modelStringName = "abc.mzn")
+mzn_parse(modelString = "", mznpath = "", modelStringName = "mzn_parse.mzn")
 }
 \arguments{
 \item{modelString}{string representation of the MiniZinc model.}

@@ -15,7 +15,10 @@ std::string filetoString(std::string filepath) {
                            (std::istreambuf_iterator<char>() ) );
       modelString = content;
     }catch(std::exception &e){
-      Rcpp::stop(e.what());
+      string errorStr = e.what();
+      errorStr.append(": ");
+      errorStr.append(filepath);
+      Rcpp::stop(errorStr);
     }
     if(modelString.empty()) Rcpp::stop("Empty file given");
     return modelString;

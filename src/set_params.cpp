@@ -1,8 +1,8 @@
 #include <Rcpp.h>
 #include <fstream>
-#include <minizinc/parser.hh>
 #include <minizinc/prettyprinter.hh>
 #include "filetoString.h"
+#include "helper_parse.h"
 
 
 using namespace std;
@@ -23,11 +23,7 @@ using namespace MiniZinc;
 // [[Rcpp::export]]
 std::string set_params(List modData, std::string modelString = "",
                        std::string mznpath = "") {
-  Env* env = new Env();
-  vector<string> ip = {};
-  ostringstream os;
-  vector<SyntaxError> se;
-  Model *model;
+  
   if(modelString.empty() && mznpath.empty()){
     Rcpp::stop("PROVIDE EITHER modelString OR mznfilename");
   }else if(!modelString.empty() && !mznpath.empty()){
@@ -39,23 +35,9 @@ std::string set_params(List modData, std::string modelString = "",
     //convert to string 
     modelString = filetoString(mznpath);
   }
-  try{
-    string modelStringName = "model.mzn";
-    model = MiniZinc::parseFromString(*env, modelString, modelStringName , ip, true, true, true, os, se);
-    if(model==NULL) throw std::exception();
-    else if(se.size()){
-      string syntaxErrors;
-      for(int i = 0;i < se.size();i++){
-        syntaxErrors.append(se[i].what());
-        syntaxErrors.append("\n");
-      }
-      Rcpp::stop(syntaxErrors);
-    }
-  }catch(std::exception& e){
-    string parseError;
-    parseError = os.str();
-    Rcpp::stop(parseError);
-  }
+  
+  Model *model = helper_parse(modelString, "set_params.mzn");
+  
   vector<Item*> items;
   NumericVector nameIndexMap; 
   CharacterVector parNames;

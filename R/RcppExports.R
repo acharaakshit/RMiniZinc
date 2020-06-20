@@ -12,9 +12,10 @@
 #' @param solver the name of the solver to use.
 #' @param libpath the path of the library where the solver is present.
 #' @param mznpath the path of the MiniZinc model file.
-#' @param dznpath path of the datafile to be used
-mzn_eval <- function(solver, libpath, modelString = "", mznpath = "", dznpath = "") {
-    .Call(`_rminizinc_mzn_eval`, solver, libpath, modelString, mznpath, dznpath)
+#' @param dznpath path of the datafile to be used.
+#' @param all_solutions bool to specify if all solutions are specified.
+mzn_eval <- function(solver, libpath, modelString = "", mznpath = "", dznpath = "", all_solutions = TRUE) {
+    .Call(`_rminizinc_mzn_eval`, solver, libpath, modelString, mznpath, dznpath, all_solutions)
 }
 
 #' @title MiniZinc syntax parser
@@ -27,7 +28,7 @@ mzn_eval <- function(solver, libpath, modelString = "", mznpath = "", dznpath = 
 #' @param modelString string representation of the MiniZinc model.
 #' @param mznpath the path of model mzn.
 #' @param modelStringName the name of model string.
-mzn_parse <- function(modelString = "", mznpath = "", modelStringName = "abc.mzn") {
+mzn_parse <- function(modelString = "", mznpath = "", modelStringName = "mzn_parse.mzn") {
     .Call(`_rminizinc_mzn_parse`, modelString, mznpath, modelStringName)
 }
 
@@ -44,5 +45,17 @@ mzn_parse <- function(modelString = "", mznpath = "", modelStringName = "abc.mzn
 #' @param mznpath path of the mzn file 
 set_params <- function(modData, modelString = "", mznpath = "") {
     .Call(`_rminizinc_set_params`, modData, modelString, mznpath)
+}
+
+#' @title parse the solution
+#' 
+#' @description can parse the solution of a model
+#' 
+#' @importFrom Rcpp sourceCpp
+#' @export sol_parse
+#' @useDynLib rminizinc, .registration=TRUE
+#' @param solutionString solution of the model as a string representation
+sol_parse <- function(solutionString) {
+    .Call(`_rminizinc_sol_parse`, solutionString)
 }
 

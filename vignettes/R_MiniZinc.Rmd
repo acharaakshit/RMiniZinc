@@ -180,11 +180,13 @@ knitr::include_graphics(paste0(getwd(),"/workflows/ongoing_approach.png"))
 ```
 A parser function `mzn_parse` has also been implemented which can be used to detect possible syntax errors (and to modify the components of the model -- to be done later) before the MiniZinc model is evaluated. This function can either take the path of a model file path or it can take a string model and returns a list with two element namely: `modelString` which is the string representation of the model and `missingValues` which are the missing parameter values in a model.
 
+The function `set_params` can be used to set the missing parameters of the model. Any number of missing parameters can be set.
+
 The function `mzn_eval` can be used to evaluate a MiniZinc model. A string model should be passed to the function along with the solver name along with the path of the MiniZinc library where the solver to be used is present and the path of the data file (optional). Currently, only gecode solver can be used. Once the model solutions are obtained, the solutions are parsed using the function `sol_parse()` and the results are returned as a List. If the optimal solution is found the list element containing the list can be obtained using `<solution>$optimal_solution`. More features will be added later.
 
 ```{r}
 # mzn file path
-mzn_path = paste0(dirname(getwd()), "/mzn_test_examples/knapsack_0.mzn")
+mzn_path = paste0(dirname(getwd()), "/mzn_test_examples/knapsack/knapsack_0.mzn")
 
 # parse the model
 parseObj=rminizinc:::mzn_parse(mznpath = mzn_path)
@@ -193,7 +195,7 @@ parseObj=rminizinc:::mzn_parse(mznpath = mzn_path)
 modString = parseObj$modelString
 
 # dzn file path
-dzn_path = paste0(dirname(getwd()), "/mzn_test_examples/knapsack_0.dzn")
+dzn_path = paste0(dirname(getwd()), "/mzn_test_examples/knapsack/knapsack_0.dzn")
 
 # R List object containing the solutions
 solObj <- rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gecode",
@@ -201,11 +203,11 @@ solObj <- rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gec
 # get all the solutions
 print(solObj$Solutions)
 ```
-The data can also be provided as a list of values of parameters where the names of the list are the missing parameter names returned by `parse_mzn()`. For now, only integer, floats, bools and 1 dimensional integer arrays are supported. Alternatively, if the user wishes to provide a data file, it can be provided to the function `mzn_eval()`.
+The data can also be provided as a list of values of parameters where the names of the list are the missing parameter names returned by `parse_mzn()`. For now, only integer, floats, bools, 1 dimensional integer and string arrays, 2 dimensional integer arrays and integer, float and bool sets are supported. Alternatively, if the user wishes to provide a data file, it can be provided to the function `mzn_eval()`.
 
 ```{r}
 # file path
-mzn_path = paste0(dirname(getwd()), "/mzn_test_examples/knapsack_0.mzn")
+mzn_path = paste0(dirname(getwd()), "/mzn_test_examples/knapsack/knapsack_0.mzn")
 
 # get missing parameter values
 parseObj=rminizinc:::mzn_parse( mznpath = mzn_path)

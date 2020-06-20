@@ -6,8 +6,8 @@
 using namespace Rcpp;
 
 // mzn_eval
-List mzn_eval(std::string solver, std::string libpath, std::string modelString, std::string mznpath, std::string dznpath);
-RcppExport SEXP _rminizinc_mzn_eval(SEXP solverSEXP, SEXP libpathSEXP, SEXP modelStringSEXP, SEXP mznpathSEXP, SEXP dznpathSEXP) {
+List mzn_eval(std::string solver, std::string libpath, std::string modelString, std::string mznpath, std::string dznpath, bool all_solutions);
+RcppExport SEXP _rminizinc_mzn_eval(SEXP solverSEXP, SEXP libpathSEXP, SEXP modelStringSEXP, SEXP mznpathSEXP, SEXP dznpathSEXP, SEXP all_solutionsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -16,7 +16,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< std::string >::type modelString(modelStringSEXP);
     Rcpp::traits::input_parameter< std::string >::type mznpath(mznpathSEXP);
     Rcpp::traits::input_parameter< std::string >::type dznpath(dznpathSEXP);
-    rcpp_result_gen = Rcpp::wrap(mzn_eval(solver, libpath, modelString, mznpath, dznpath));
+    Rcpp::traits::input_parameter< bool >::type all_solutions(all_solutionsSEXP);
+    rcpp_result_gen = Rcpp::wrap(mzn_eval(solver, libpath, modelString, mznpath, dznpath, all_solutions));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -46,13 +47,25 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// sol_parse
+List sol_parse(std::string solutionString);
+RcppExport SEXP _rminizinc_sol_parse(SEXP solutionStringSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type solutionString(solutionStringSEXP);
+    rcpp_result_gen = Rcpp::wrap(sol_parse(solutionString));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 RcppExport SEXP run_testthat_tests();
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_rminizinc_mzn_eval", (DL_FUNC) &_rminizinc_mzn_eval, 5},
+    {"_rminizinc_mzn_eval", (DL_FUNC) &_rminizinc_mzn_eval, 6},
     {"_rminizinc_mzn_parse", (DL_FUNC) &_rminizinc_mzn_parse, 3},
     {"_rminizinc_set_params", (DL_FUNC) &_rminizinc_set_params, 3},
+    {"_rminizinc_sol_parse", (DL_FUNC) &_rminizinc_sol_parse, 1},
     {"run_testthat_tests", (DL_FUNC) &run_testthat_tests, 0},
     {NULL, NULL, 0}
 };
