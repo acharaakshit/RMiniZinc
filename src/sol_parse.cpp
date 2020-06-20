@@ -3,6 +3,7 @@
 #include <minizinc/parser.hh>
 
 
+
 using namespace Rcpp;
 using namespace MiniZinc;
 using namespace std;
@@ -30,12 +31,15 @@ List sol_parse(std::string solutionString) {
     solutionString.erase(0, pos + delimiter.length());
   }
   
+  if(solutionString.find("=====UNSATISFIABLE=====") != npos){
+    Rcpp::stop("No Solution");
+  }else if(solutionString.find("=====ERROR=====") != npos){
+    Rcpp::stop("Errored");
+  }
+  
   if(solutions.size()==0) Rcpp::stop("No solution seperator found-- incorrect solution string");
     
   int optimal_sol_flag = solutionString.find("==========") != npos ? 1:0;
-  if(solutionString.find("=====UNSATISFIABLE=====") != npos){
-    Rcpp::stop("No Solution");
-  }
   
   List retVal;
   CharacterVector nameretVal;
@@ -55,7 +59,12 @@ List sol_parse(std::string solutionString) {
       model = MiniZinc::parseFromString(*env, solutionString, "sol.mzn" , ip, true, true, true, os, se);
       if(model==NULL) throw std::exception();
       else if(se.size()){
-        Rcpp::stop(se[0].what());
+        string syntaxErrors;
+        for(int i = 0;i < se.size();i++){
+          syntaxErrors.append(se[i].what());
+          syntaxErrors.append("\n");
+        }
+        Rcpp::stop(syntaxErrors);
       }
     }catch(std::exception& e){
       string parseError;
