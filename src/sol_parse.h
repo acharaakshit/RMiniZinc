@@ -1,6 +1,4 @@
-#ifndef PKG_RMINIZINC_H
-#define PKG_RMINIZINC_H
+#include<minizinc/model.hh>
 
-Rcpp::List sol_parse(std::string solutionString);
 
-#endif
+Rcpp::List sol_parse(std::string solutionString, MiniZinc::Model *model);

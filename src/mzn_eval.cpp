@@ -1,7 +1,7 @@
 #include <Rcpp.h>
 #include <minizinc/solver.hh>
-#include "sol_parse.h"
 #include "filetoString.h"
+#include "sol_parse.h"
 
 using namespace std;
 using namespace MiniZinc;
@@ -34,6 +34,7 @@ List mzn_eval(std::string solver, std::string libpath,std::string modelString = 
     //convert to string 
     modelString = filetoString(mznpath);
   }
+  Model *model;
   std::stringstream sol_strn;
   string sol_string;
   if(solver != "Gecode" && solver != "org.gecode.gecode")
@@ -44,6 +45,12 @@ List mzn_eval(std::string solver, std::string libpath,std::string modelString = 
     if(!dznpath.empty()) options.push_back(dznpath);
     slv.run(options,modelString, "minizinc", "model.mzn");
     sol_string = sol_strn.str();
+  try{
+    model = slv.s2out.getModel();
+    if(model==NULL) throw std::exception();
+  }catch(std::exception& e){
+    Rcpp::stop("error");
+  }
   }catch (const LocationException& e) {
     string evalError = e.loc().toString();
     evalError.append(": ");
@@ -62,11 +69,12 @@ List mzn_eval(std::string solver, std::string libpath,std::string modelString = 
   }catch (...) {
     Rcpp::stop("  UNKNOWN EXCEPTION.") ;
   }
-  List retVal;
-  retVal.push_back(sol_string);
-  retVal.push_back(sol_parse(sol_string));
-  retVal.names() = CharacterVector({"solutionString", "Solutions"});
-  return retVal;
+
+  List evalretVal;
+  evalretVal.push_back(sol_string);
+  evalretVal.push_back(sol_parse(sol_string, model));
+  evalretVal.names() = CharacterVector({"sol_string", "Solutions"});
+  return evalretVal;
 }
 
 
