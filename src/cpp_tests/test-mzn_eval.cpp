@@ -37,15 +37,23 @@ context("Tests for example knapsack problems"){
     static const size_t npos = -1;
     size_t slash = Path.find_last_of("/");
     string dirPath = (slash != npos) ? Path.substr(0, slash) : Path;  
-    
-   if(dirPath.find("rminizinc.Rcheck") != npos){
+    if(dirPath.find("rminizinc.Rcheck") != npos){
+      
       slash = dirPath.find_last_of("/");
       dirPath = (slash != npos) ? dirPath.substr(0, slash) : dirPath;
       string destmzn = dirPath;
-      string destdzn = dirPath;
-      mznpath = destmzn.append("/RMiniZinc/mzn_test_examples/knapsack/knapsack_0.mzn");
-      dznpath = destdzn.append("/RMiniZinc/mzn_test_examples/knapsack/knapsack_0.dzn");
+      string destdzn =  dirPath;
+      if(dirPath.find("RMiniZinc") != npos){
+        // for travis
+        mznpath = destmzn.append("/mzn_test_examples/knapsack/knapsack_0.mzn");
+        dznpath = destdzn.append("/mzn_test_examples/knapsack/knapsack_0.dzn");
+      }else{
+        // for R CMD CHECK
+        mznpath = destmzn.append("/RMiniZinc/mzn_test_examples/knapsack/knapsack_0.mzn"); 
+        dznpath = destdzn.append("/RMiniZinc/mzn_test_examples/knapsack/knapsack_0.dzn"); 
+      }
     }else{
+      // for devtools::test()
       mznpath = "../../mzn_test_examples/knapsack/knapsack_0.mzn";
       dznpath = "../../mzn_test_examples/knapsack/knapsack_0.dzn";
     }
@@ -67,16 +75,24 @@ context("Tests for example knapsack problems"){
     static const size_t npos = -1;
     size_t slash = Path.find_last_of("/");
     string dirPath = (slash != npos) ? Path.substr(0, slash) : Path;  
-    
     if(dirPath.find("rminizinc.Rcheck") != npos){
+      
       slash = dirPath.find_last_of("/");
       dirPath = (slash != npos) ? dirPath.substr(0, slash) : dirPath;
       string destmzn = dirPath;
       string destdzn = dirPath;
-      mznpath = destmzn.append("/RMiniZinc/mzn_test_examples/knapsack/knapsack_2.mzn");
-      dznpath = destdzn.append("/RMiniZinc/mzn_test_examples/knapsack/knapsack_0.dzn");
+      if(dirPath.find("RMiniZinc") != npos){
+        // for travis
+        mznpath = destmzn.append("/mzn_test_examples/knapsack/knapsack_2(bool).mzn");
+        dznpath = destdzn.append("/mzn_test_examples/knapsack/knapsack_0.dzn");
+      }else{
+        // for R CMD CHECK
+        mznpath = destmzn.append("/RMiniZinc/mzn_test_examples/knapsack/knapsack_2(bool).mzn"); 
+        dznpath = destdzn.append("/RMiniZinc/mzn_test_examples/knapsack/knapsack_0.dzn"); 
+      }
     }else{
-      mznpath = "../../mzn_test_examples/knapsack/knapsack_2.mzn";
+      // for devtools::test()
+      mznpath = "../../mzn_test_examples/knapsack/knapsack_2(bool).mzn";
       dznpath = "../../mzn_test_examples/knapsack/knapsack_0.dzn";
     }
     
@@ -97,15 +113,23 @@ context("Tests for example knapsack problems"){
     static const size_t npos = -1;
     size_t slash = Path.find_last_of("/");
     string dirPath = (slash != npos) ? Path.substr(0, slash) : Path;  
-    
     if(dirPath.find("rminizinc.Rcheck") != npos){
+      
       slash = dirPath.find_last_of("/");
       dirPath = (slash != npos) ? dirPath.substr(0, slash) : dirPath;
       string destmzn = dirPath;
       string destdzn = dirPath;
-      mznpath = destmzn.append("/RMiniZinc/mzn_test_examples/knapsack/knapsack_3(set_concise).mzn");
-      dznpath = destdzn.append("/RMiniZinc/mzn_test_examples/knapsack/knapsack_2.dzn");
+      if(dirPath.find("RMiniZinc") != npos){
+        // for travis
+        mznpath = destmzn.append("/mzn_test_examples/knapsack/knapsack_3(set_concise).mzn");
+        dznpath = destdzn.append("/mzn_test_examples/knapsack/knapsack_2.dzn");
+      }else{
+        // for R CMD CHECK
+        mznpath = destmzn.append("/RMiniZinc/mzn_test_examples/knapsack/knapsack_3(set_concise).mzn"); 
+        dznpath = destdzn.append("/RMiniZinc/mzn_test_examples/knapsack/knapsack_2.dzn"); 
+      }
     }else{
+      // for devtools::test()
       mznpath = "../../mzn_test_examples/knapsack/knapsack_3(set_concise).mzn";
       dznpath = "../../mzn_test_examples/knapsack/knapsack_2.dzn";
     }

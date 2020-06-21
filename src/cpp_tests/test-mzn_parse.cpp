@@ -31,13 +31,20 @@ context("test if correct missing parameter values are returned"){
     static const size_t npos = -1;
     size_t slash = Path.find_last_of("/");
     string dirPath = (slash != npos) ? Path.substr(0, slash) : Path;  
-    
     if(dirPath.find("rminizinc.Rcheck") != npos){
+      
       slash = dirPath.find_last_of("/");
       dirPath = (slash != npos) ? dirPath.substr(0, slash) : dirPath;
-      string destmzn = dirPath;
-      mznpath = destmzn.append("/RMiniZinc/mzn_test_examples/knapsack/knapsack_0.mzn");
+      string dest = dirPath;
+      if(dirPath.find("RMiniZinc") != npos){
+        // for travis
+        mznpath = dest.append("/mzn_test_examples/knapsack/knapsack_0.mzn");
+      }else{
+        // for R CMD CHECK
+        mznpath = dest.append("/RMiniZinc/mzn_test_examples/knapsack/knapsack_0.mzn"); 
+      }
     }else{
+      // for devtools::test()
       mznpath = "../../mzn_test_examples/knapsack/knapsack_0.mzn";
     }
     
