@@ -3,6 +3,6 @@
 
 Rcpp::List mzn_parse(std::string modelString = "", 
                      std::string mznpath = "",
-                     std::string  modelStringName = "abc.mzn");
+                     std::string  modelStringName = "mzn_parse.mzn");
 
 #endif

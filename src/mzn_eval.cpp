@@ -18,11 +18,12 @@ using namespace Rcpp;
 //' @param solver the name of the solver to use.
 //' @param libpath the path of the library where the solver is present.
 //' @param mznpath the path of the MiniZinc model file.
-//' @param dznpath path of the datafile to be used
+//' @param dznpath path of the datafile to be used.
+//' @param all_solutions bool to specify if all solutions are specified.
 // [[Rcpp::export]]
 List mzn_eval(std::string solver, std::string libpath,std::string modelString = "", 
-                       std::string mznpath = "", std::string dznpath = ""){
-  
+                       std::string mznpath = "", std::string dznpath = "",
+                       bool all_solutions = true){
   if(modelString.empty() && mznpath.empty()){
     Rcpp::stop("PROVIDE EITHER modelString OR mznfilename");
   }else if(!modelString.empty() && !mznpath.empty()){
@@ -42,6 +43,7 @@ List mzn_eval(std::string solver, std::string libpath,std::string modelString = 
     MznSolver slv(sol_strn,std::cerr);
     vector<std::string> options({"--stdlib-dir", libpath, "--solver", solver});
     if(!dznpath.empty()) options.push_back(dznpath);
+    if(all_solutions) options.push_back("-a");
     slv.run(options,modelString, "minizinc", "model.mzn");
     sol_string = sol_strn.str();
   }catch (const LocationException& e) {

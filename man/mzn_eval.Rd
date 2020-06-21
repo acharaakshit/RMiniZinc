@@ -4,7 +4,14 @@
 \alias{mzn_eval}
 \title{MiniZinc model evaluation}
 \usage{
-mzn_eval(solver, libpath, modelString = "", mznpath = "", dznpath = "")
+mzn_eval(
+  solver,
+  libpath,
+  modelString = "",
+  mznpath = "",
+  dznpath = "",
+  all_solutions = TRUE
+)
 }
 \arguments{
 \item{solver}{the name of the solver to use.}
@@ -15,7 +22,9 @@ mzn_eval(solver, libpath, modelString = "", mznpath = "", dznpath = "")
 
 \item{mznpath}{the path of the MiniZinc model file.}
 
-\item{dznpath}{path of the datafile to be used}
+\item{dznpath}{path of the datafile to be used.}
+
+\item{all_solutions}{bool to specify if all solutions are specified.}
 }
 \description{
 evaluates the MiniZinc model

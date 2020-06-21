@@ -1,7 +1,7 @@
 #include <Rcpp.h>
-#include <minizinc/parser.hh>
 #include <minizinc/prettyprinter.hh>
 #include "filetoString.h"
+#include "helper_parse.h"
 
 using namespace std;
 using namespace MiniZinc;
@@ -21,9 +21,8 @@ using namespace Rcpp;
 // [[Rcpp::export]]
 List mzn_parse(std::string modelString = "", 
                       std::string mznpath = "",
-                      std::string  modelStringName = "abc.mzn"){
-  // create a model and parse its items (make modifications to the model -- to be done)
-  Model* model;
+                      std::string  modelStringName = "mzn_parse.mzn"){
+  
   if(modelString.empty() && mznpath.empty()){
     Rcpp::stop("PROVIDE EITHER modelString OR mznfilename");
   }else if(!modelString.empty() && !mznpath.empty()){
@@ -35,26 +34,8 @@ List mzn_parse(std::string modelString = "",
     //convert to string 
     modelString = filetoString(mznpath);
   }
-    Env* env = new Env();
-    vector<string> ip = {};
-    ostringstream os;
-    vector<SyntaxError> se;
-    try{
-        model = MiniZinc::parseFromString(*env, modelString, modelStringName , ip, true, true, true, os, se);
-        if(model==NULL) throw std::exception();
-        else if(se.size()){
-          string syntaxErrors;
-          for(int i = 0;i < se.size();i++){
-            syntaxErrors.append(se[i].what());
-            syntaxErrors.append("\n");
-          }
-          Rcpp::stop(syntaxErrors);
-        }
-    }catch(std::exception& e){
-        string parseError;
-        parseError = os.str();
-        Rcpp::stop(parseError);
-      }
+
+  Model *model = helper_parse(modelString, modelStringName);  
   
   List retVal;
   // size of the model

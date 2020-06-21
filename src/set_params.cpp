@@ -1,8 +1,8 @@
 #include <Rcpp.h>
 #include <fstream>
-#include <minizinc/parser.hh>
 #include <minizinc/prettyprinter.hh>
 #include "filetoString.h"
+#include "helper_parse.h"
 
 
 using namespace std;
@@ -23,11 +23,7 @@ using namespace MiniZinc;
 // [[Rcpp::export]]
 std::string set_params(List modData, std::string modelString = "",
                        std::string mznpath = "") {
-  Env* env = new Env();
-  vector<string> ip = {};
-  ostringstream os;
-  vector<SyntaxError> se;
-  Model *model;
+  
   if(modelString.empty() && mznpath.empty()){
     Rcpp::stop("PROVIDE EITHER modelString OR mznfilename");
   }else if(!modelString.empty() && !mznpath.empty()){
@@ -39,23 +35,9 @@ std::string set_params(List modData, std::string modelString = "",
     //convert to string 
     modelString = filetoString(mznpath);
   }
-  try{
-    string modelStringName = "model.mzn";
-    model = MiniZinc::parseFromString(*env, modelString, modelStringName , ip, true, true, true, os, se);
-    if(model==NULL) throw std::exception();
-    else if(se.size()){
-      string syntaxErrors;
-      for(int i = 0;i < se.size();i++){
-        syntaxErrors.append(se[i].what());
-        syntaxErrors.append("\n");
-      }
-      Rcpp::stop(syntaxErrors);
-    }
-  }catch(std::exception& e){
-    string parseError;
-    parseError = os.str();
-    Rcpp::stop(parseError);
-  }
+  
+  Model *model = helper_parse(modelString, "set_params.mzn");
+  
   vector<Item*> items;
   NumericVector nameIndexMap; 
   CharacterVector parNames;
@@ -102,33 +84,57 @@ std::string set_params(List modData, std::string modelString = "",
         BoolLit *bl = new BoolLit(items[nameIndexMap[index]]->loc(),(bool)modData[i]);
         vd->e(bl);
       }else if(tp.is_set()){
+        vector<Expression*> expVec;
+        NumericVector setVal = modData[i];
         if(tp.isintset()){
-          //vector<Expression*> expVec;
-          //NumericVector setVal = modData[i];
-          //for(int it = 0;it<setVal.length();it++)
-          //  expVec.push_back(IntSetVal::a());
-          //SetLit *sl = new SetLit(items[nameValMap[i]]->loc(), expVec)
+          for(int it = 0;it<setVal.length();it++)
+            expVec.push_back(IntLit::a(setVal[it]));
         }else if(tp.isfloatset()){
-          
+          for(int it = 0;it<setVal.length();it++)
+            expVec.push_back(FloatLit::a(setVal[it]));
         }else if(tp.isboolset()){
-          
-        }}else{
-          if(tp.isintarray()){
-            if(tp.dim() == 1){
-              // 1 dimensional array
-              vector<Expression*> expVec;
-              NumericVector arrVal= modData[i];
-              for(int it = 0;it < arrVal.length();it++)
-                expVec.push_back(IntLit::a(arrVal[it]));
-              ArrayLit *al = new ArrayLit(items[nameIndexMap[index]]->loc(),expVec);
-              vd->e(al);
-            }
+          for(int it = 0;it<setVal.length();it++)
+            expVec.push_back(new BoolLit(items[nameIndexMap[index]]->loc(),(bool)modData[it]));
+        }
+        SetLit *sl = new SetLit(items[nameIndexMap[i]]->loc(), expVec);
+        vd->e(sl);
+      }else{
+        vector<Expression*> expVec;
+        if(tp.dim() == 1){
+        if(tp.isintarray()){
+            // 1 dimensional integer array
+            NumericVector arrVal= modData[i];
+            for(int it = 0;it < arrVal.length();it++)
+              expVec.push_back(IntLit::a(arrVal[it]));
           }else if(tp.isintsetarray()){
-            //
+            // 1 integer array of set
           }else if(tp.isboolarray()){
-            //
+            // 1 dimensional bool array
+          }else if(tp.dim() == 1 && tp.st() == Type::ST_PLAIN && tp.ot() == Type::OT_PRESENT && tp.bt() == Type::BT_STRING){
+            // array of string
+            StringVector arrStrVal = modData[i];
+            for(int it = 0;it < arrStrVal.length();it++){
+              expVec.push_back(new StringLit(items[nameIndexMap[index]]->loc(),(string)arrStrVal[it]));   
+            }
           }
-        }	
+          // initialize constructor for 1 dimensional arrays
+          ArrayLit *al = new ArrayLit(items[nameIndexMap[index]]->loc(),expVec);
+          vd->e(al);  
+        }else if(tp.dim() == 2 && tp.st() == Type::ST_PLAIN && tp.ot()==Type::OT_PRESENT && tp.bt()==Type::BT_INT){
+            vector<vector<Expression*>> exVec;
+            List arr2dVal = modData[i];
+            if(arr2dVal.length() != tp.dim()) Rcpp::stop("2 dimensional array -- dimensions don't match");
+            for(int it = 0;it<tp.dim();it++){
+              vector<Expression*> expVec;
+              NumericVector _1dVal = arr2dVal[it];
+              for(int itt = 0;itt < _1dVal.length();itt++)
+                expVec.push_back(IntLit::a(_1dVal[itt]));
+              exVec.push_back(expVec);
+            }
+            ArrayLit *al = new ArrayLit(items[nameIndexMap[index]]->loc(),exVec);
+            vd->e(al);
+        }
+      }
     }
   }
   stringstream strmodel;
