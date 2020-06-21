@@ -2,6 +2,7 @@
 #include <Rcpp.h>
 #include "../src/sol_parse.h"
 
+
 using namespace Rcpp;
 
 context("Correct solution string") {
@@ -17,6 +18,7 @@ context("Correct solution string") {
   test_that("Unsatisfiable leads to an error"){
     expect_error(sol_parse("=====UNSATISFIABLE====="));
   }
+
   test_that("Error is also detected"){
     expect_error(sol_parse("=====ERROR====="));
   }

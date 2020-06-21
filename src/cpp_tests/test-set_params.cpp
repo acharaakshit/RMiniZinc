@@ -1,5 +1,6 @@
 #include <testthat.h>
 #include <Rcpp.h>
+#include <libgen.h>
 #include <../src/set_params.h>
 #include "../src/filetoString.h"
 
@@ -30,7 +31,21 @@ context("Correct parameters should be provided") {
 
 context("tests for optimization problems"){
   test_that("parameters are changed"){
-    string mznpath = "../../mzn_test_examples/knapsack/knapsack_0.mzn";
+    char* path = getenv("PWD");
+    string Path = (string) path;
+    string mznpath;
+    static const size_t npos = -1;
+    size_t slash = Path.find_last_of("/");
+    string dirPath = (slash != npos) ? Path.substr(0, slash) : Path;  
+    
+    if(dirPath.find("rminizinc.Rcheck") != npos){
+      slash = dirPath.find_last_of("/");
+      dirPath = (slash != npos) ? dirPath.substr(0, slash) : dirPath;
+      string destmzn = dirPath;
+      mznpath = destmzn.append("/RMiniZinc/mzn_test_examples/knapsack/knapsack_0.mzn");
+    }else{
+      mznpath = "../../mzn_test_examples/knapsack/knapsack_0.mzn";
+    }
     string modelString = filetoString(mznpath);
     List modData = (List)NumericVector({3,9});
     modData.push_back(NumericVector({15,10,7}));
