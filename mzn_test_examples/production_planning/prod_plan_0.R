@@ -19,7 +19,6 @@ rminizinc:::set_params(modData = pVals1, mznpath = mznName, modify_mzn = TRUE)
 # find the missing parameters again
 missingVals = rminizinc:::getMissingPars(mznpath = mznName)
 
-# test that the missing values are only capacity and size now
 assert(test_set_equal(missingVals, c("pname", "nresources", "capacity", "rname", "consumption")))
 
 # give values to all the missing parameters

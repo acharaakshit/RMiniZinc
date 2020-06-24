@@ -142,4 +142,79 @@ context("Tests for example knapsack problems"){
     // check if all the solutions are obtained
     expect_true(psols.size() == 1);
   }
+  
+  test_that("production planning problem can be solved"){
+    char* path = getenv("PWD");
+    string Path = (string) path;
+    string mznpath;
+    string dznpath;
+    static const size_t npos = -1;
+    size_t slash = Path.find_last_of("/");
+    string dirPath = (slash != npos) ? Path.substr(0, slash) : Path;  
+    if(dirPath.find("rminizinc.Rcheck") != npos){
+      
+      slash = dirPath.find_last_of("/");
+      dirPath = (slash != npos) ? dirPath.substr(0, slash) : dirPath;
+      string destmzn = dirPath;
+      string destdzn = dirPath;
+      if(dirPath.find("RMiniZinc") != npos){
+        // for travis
+        mznpath = destmzn.append("/mzn_test_examples/production_planning/prod_plan_0.mzn");
+        dznpath = destdzn.append("/mzn_test_examples/production_planning/prod_plan_0.dzn");
+      }else{
+        // for R CMD CHECK
+        mznpath = destmzn.append("/RMiniZinc/mzn_test_examples/production_planning/prod_plan_0.mzn"); 
+        dznpath = destdzn.append("/RMiniZinc/mzn_test_examples/production_planning/prod_plan_0.dzn"); 
+      }
+    }else{
+      // for devtools::test()
+      mznpath = "../../mzn_test_examples/production_planning/prod_plan_0.mzn";
+      dznpath = "../../mzn_test_examples/production_planning/prod_plan_0.dzn";
+    }
+    string solver = "org.gecode.gecode";
+    string libpath = "/snap/minizinc/current/share/minizinc";
+    List pres = mzn_eval(solver, libpath, "", mznpath, dznpath);
+    // check if both solution string and solutions are obtained
+    expect_true(pres.length() == 2);
+    List psols = pres["Solutions"];
+    // check if all the solutions are obtained
+    expect_true(psols.size() == 7);
+  }
+  test_that("shipping problem can be solved"){
+    char* path = getenv("PWD");
+    string Path = (string) path;
+    string mznpath;
+    string dznpath;
+    static const size_t npos = -1;
+    size_t slash = Path.find_last_of("/");
+    string dirPath = (slash != npos) ? Path.substr(0, slash) : Path;  
+    if(dirPath.find("rminizinc.Rcheck") != npos){
+      
+      slash = dirPath.find_last_of("/");
+      dirPath = (slash != npos) ? dirPath.substr(0, slash) : dirPath;
+      string destmzn = dirPath;
+      string destdzn = dirPath;
+      if(dirPath.find("RMiniZinc") != npos){
+        // for travis
+        mznpath = destmzn.append("/mzn_test_examples/shipping/shipping.mzn");
+        dznpath = destdzn.append("/mzn_test_examples/shipping/shipping.dzn");
+      }else{
+        // for R CMD CHECK
+        mznpath = destmzn.append("/RMiniZinc/mzn_test_examples/shipping/shipping.mzn"); 
+        dznpath = destdzn.append("/RMiniZinc/mzn_test_examples/shipping/shipping.dzn"); 
+      }
+    }else{
+      // for devtools::test()
+      mznpath = "../../mzn_test_examples/shipping/shipping.mzn";
+      dznpath = "../../mzn_test_examples/shipping/shipping.dzn";
+    }
+    string solver = "org.gecode.gecode";
+    string libpath = "/snap/minizinc/current/share/minizinc";
+    List pres = mzn_eval(solver, libpath, "", mznpath, dznpath);
+    // check if both solution string and solutions are obtained
+    expect_true(pres.length() == 2);
+    List psols = pres["Solutions"];
+    // check if all the solutions are obtained
+    expect_true(psols.size() == 24);
+  }
 }
