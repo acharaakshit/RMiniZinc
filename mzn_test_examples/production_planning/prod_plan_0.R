@@ -1,6 +1,3 @@
-# NOT--SUPPORTED--CURRENTLY
-
-
 library(rminizinc)
 library(checkmate)
 
@@ -8,10 +5,7 @@ library(checkmate)
 mznName = "mzn_test_examples/production_planning/prod_plan_0_update.mzn"
 
 # parse the model
-obj1 <- rminizinc:::mzn_parse(mznpath = mznName)
-
-# get the missing parameters
-missingVals = obj1$missingValues
+missingVals <- rminizinc:::getMissingPars(mznpath = mznName)
 
 print(missingVals)
 
@@ -20,35 +14,33 @@ pVals1 = list(2,c(400, 500))
 names(pVals1) = c(missingVals[1:2])
 
 # set the parameters
-rminizinc:::set_params(modData = pVals1, mznpath = mznName)
+rminizinc:::set_params(modData = pVals1, mznpath = mznName, modify_mzn = TRUE)
 
 # find the missing parameters again
-obj2 = rminizinc:::mzn_parse(mznpath = mznName)
-
-print(obj2$missingValues)
+missingVals = rminizinc:::getMissingPars(mznpath = mznName)
 
 # test that the missing values are only capacity and size now
-assert(test_set_equal(obj2$missingValues, c("pname", "nresources", "capacity", "rname", "consumption")))
+assert(test_set_equal(missingVals, c("pname", "nresources", "capacity", "rname", "consumption")))
 
 # give values to all the missing parameters
 pVals2 = list(c("banana-cake", "chocolate-cake"),5, c(4000, 6, 2000, 500, 500))
-names(pVals2) = obj2$missingValues[1:3]
+names(pVals2) = missingVals[1:3]
 
-rminizinc:::set_params(modData = pVals2, mznpath = mznName)
+rminizinc:::set_params(modData = pVals2, mznpath = mznName, modify_mzn = TRUE)
 
 # check if there are any missing parameters
-obj3 = rminizinc:::mzn_parse(mznpath = mznName)
+missingVals = rminizinc::getMissingPars(mznpath = mznName)
 
-assert(test_set_equal(obj3$missingValues, c("rname", "consumption")))
+assert(test_set_equal(missingVals, c("rname", "consumption")))
 
 pVals3 = list(c("flour","banana","sugar","butter","cocoa"), list(c(250, 2, 75, 100, 0), c(200, 0, 150, 150, 75)))
-names(pVals3) = obj3$missingValues
+names(pVals3) = missingVals
 
-modString = rminizinc:::set_params(modData = pVals3, mznpath = mznName)
+modString = rminizinc:::set_params(modData = pVals3, mznpath = mznName, modify_mzn = TRUE)
 
-obj4 = rminizinc:::mzn_parse(mznpath = mznName)
+missingVals = rminizinc:::getMissingPars(mznpath = mznName)
 
-assert_true(length(obj4$missingValues) == 0)
+assert_true(length(missingVals) == 0)
 
 # get the solutions
 solution = rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gecode",
