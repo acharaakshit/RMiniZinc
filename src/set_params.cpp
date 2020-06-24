@@ -122,12 +122,12 @@ std::string set_params(List modData, std::string modelString = "",
           ArrayLit *al = new ArrayLit(items[nameIndexMap[index]]->loc(),expVec);
           vd->e(al);  
         }else if(tp.dim() == 2 && tp.st() == Type::ST_PLAIN && tp.ot()==Type::OT_PRESENT && tp.bt()==Type::BT_INT){
+            // set two dimensional array values
             vector<vector<Expression*>> exVec;
-            List arr2dVal = modData[i];
-            if(arr2dVal.length() != tp.dim()) Rcpp::stop("2 dimensional array -- dimensions don't match");
-            for(int it = 0;it<tp.dim();it++){
+            NumericMatrix arr2dVal = modData[i];
+            for(int it = 0;it<arr2dVal.rows();it++){
               vector<Expression*> expVec;
-              NumericVector _1dVal = arr2dVal[it];
+              NumericVector _1dVal = arr2dVal(it, _);
               for(int itt = 0;itt < _1dVal.length();itt++)
                 expVec.push_back(IntLit::a(_1dVal[itt]));
               exVec.push_back(expVec);

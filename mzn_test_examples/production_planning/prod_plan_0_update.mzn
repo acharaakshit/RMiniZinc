@@ -22,4 +22,3 @@ constraint forall ( r in Resources ) (
     used[r]<=capacity[r] 
 );
 solve maximize sum ( p in Products ) ( profit[p]*produce[p] );
-

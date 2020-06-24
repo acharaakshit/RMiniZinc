@@ -33,7 +33,9 @@ missingVals = rminizinc::getMissingPars(mznpath = mznName)
 
 assert(test_set_equal(missingVals, c("rname", "consumption")))
 
-pVals3 = list(c("flour","banana","sugar","butter","cocoa"), list(c(250, 2, 75, 100, 0), c(200, 0, 150, 150, 75)))
+# use matrix for providing values to 2d arrays
+pVals3 = list(c("flour","banana","sugar","butter","cocoa"), 
+              matrix(c(250, 2, 75, 100, 0, 200, 0, 150, 150, 75), nrow = 2, ncol = 5, byrow = TRUE))
 names(pVals3) = missingVals
 
 modString = rminizinc:::set_params(modData = pVals3, mznpath = mznName, modify_mzn = TRUE)
