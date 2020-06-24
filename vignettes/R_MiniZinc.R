@@ -99,15 +99,15 @@ print(solObj$Solutions)
 mzn_path = paste0(dirname(getwd()), "/mzn_test_examples/knapsack/knapsack_0.mzn")
 
 # get missing parameter values
-parseObj=rminizinc:::mzn_parse( mznpath = mzn_path)
-print(parseObj$missingValues)
+missingVals=rminizinc:::getMissingPars( mznpath = mzn_path)
+print(missingVals)
 
 # list of the data
 pVals = list(3,9,c(15,10,7),c(4,3,2))
-names(pVals) = parseObj$missingValues
+names(pVals) = missingVals
 
 # set the missing parameters
-modString = rminizinc:::set_params(modData = pVals,modelString = parseObj$modelString)
+modString = rminizinc:::set_params(modData = pVals,mznpath = mzn_path, modify_mzn = FALSE)
 
 # R List object containing the solutions
 solObj <- rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gecode",

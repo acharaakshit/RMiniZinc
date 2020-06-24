@@ -178,9 +178,10 @@ The next approach is to use the MiniZinc C++ API. This involves giving the MiniZ
 ```{r Workflow 2, echo=FALSE, out.width = '100%'}
 knitr::include_graphics(paste0(getwd(),"/workflows/ongoing_approach.png"))
 ```
-A parser function `mzn_parse` has also been implemented which can be used to detect possible syntax errors (and to modify the components of the model -- to be done later) before the MiniZinc model is evaluated. This function can either take the path of a model file path or it can take a string model and returns a list with two element namely: `modelString` which is the string representation of the model and `missingValues` which are the missing parameter values in a model.
+A parser function `mzn_parse` has also been implemented which can be used to detect possible syntax errors (and to modify the components of the model -- to be done later) before the MiniZinc model is evaluated. This function can either take the path of a model file path or it can take a string model and returns a list with five elements namely: `modelString` which is the string representation of the model and `Parameters` which are the parameter names, `decisionVariables` which are the decision variables of 
+a model, `Constraints` which are the constraints of a model, `SolveType` which contains the information about the solve type of the problem and ode.
 
-The function `set_params` can be used to set the missing parameters of the model. Any number of missing parameters can be set.
+The function `set_params` can be used to set the missing parameters of the model. Any number of missing parameters can be set. The missing parameters can be obtained using `getMissingPars()`. 
 
 The function `mzn_eval` can be used to evaluate a MiniZinc model. A string model should be passed to the function along with the solver name along with the path of the MiniZinc library where the solver to be used is present and the path of the data file (optional). Currently, only gecode solver can be used. Once the model solutions are obtained, the solutions are parsed using the function `sol_parse()` and the results are returned as a List. If the optimal solution is found the list element containing the list can be obtained using `<solution>$optimal_solution`. More features will be added later.
 
@@ -210,15 +211,15 @@ The data can also be provided as a list of values of parameters where the names 
 mzn_path = paste0(dirname(getwd()), "/mzn_test_examples/knapsack/knapsack_0.mzn")
 
 # get missing parameter values
-parseObj=rminizinc:::mzn_parse( mznpath = mzn_path)
-print(parseObj$missingValues)
+missingVals=rminizinc:::getMissingPars( mznpath = mzn_path)
+print(missingVals)
 
 # list of the data
 pVals = list(3,9,c(15,10,7),c(4,3,2))
-names(pVals) = parseObj$missingValues
+names(pVals) = missingVals
 
 # set the missing parameters
-modString = rminizinc:::set_params(modData = pVals,modelString = parseObj$modelString)
+modString = rminizinc:::set_params(modData = pVals,mznpath = mzn_path, modify_mzn = FALSE)
 
 # R List object containing the solutions
 solObj <- rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gecode",

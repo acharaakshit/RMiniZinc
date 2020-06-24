@@ -3,6 +3,7 @@
 export(array_checks)
 export(constraint)
 export(filetoString)
+export(getMissingPars)
 export(get_expression)
 export(model)
 export(mzn_eval)
