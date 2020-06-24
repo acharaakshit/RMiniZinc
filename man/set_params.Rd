@@ -4,14 +4,16 @@
 \alias{set_params}
 \title{assign the missing parameters to the model}
 \usage{
-set_params(modData, modelString = "", mznpath = "")
+set_params(modData, modelString = "", mznpath = "", modify_mzn = FALSE)
 }
 \arguments{
 \item{modData}{list containing the parameter values.}
 
 \item{modelString}{string representation of the MiniZinc model}
 
-\item{mznpath}{path of the mzn file}
+\item{mznpath}{path of the mzn file to read the model}
+
+\item{modify_mzn}{if the user wants to modify the mzn parameters.}
 }
 \description{
 assign the missing parameters to the model

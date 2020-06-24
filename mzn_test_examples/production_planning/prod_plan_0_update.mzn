@@ -1,14 +1,12 @@
-int: nproducts = 2;
+int: nproducts;
 set of int: Products = 1..nproducts;
-array [Products] of int: profit = [400, 500];
-array [Products] of string: pname = ["banana-cake", "chocolate-cake"];
-int: nresources = 5;
+array [Products] of int: profit;
+array [Products] of string: pname;
+int: nresources;
 set of int: Resources = 1..nresources;
-array [Resources] of int: capacity = [4000, 6, 2000, 500, 500];
-array [Resources] of string: rname = ["flour", "banana", "sugar", "butter", 
-    "cocoa"];
-array [Products, Resources] of int: consumption = [| 250, 2, 75, 100, 0 | 
-                                                     200, 0, 150, 150, 75 |];
+array [Resources] of int: capacity;
+array [Resources] of string: rname;
+array [Products, Resources] of int: consumption;
 constraint assert(forall ( r in Resources, p in Products ) ( 
     consumption[p, r]>=0 
 ), "Error: negative consumption");

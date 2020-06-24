@@ -19,10 +19,11 @@ using namespace MiniZinc;
 //' @useDynLib rminizinc, .registration=TRUE
 //' @param modData list containing the parameter values.
 //' @param modelString string representation of the MiniZinc model
-//' @param mznpath path of the mzn file 
+//' @param mznpath path of the mzn file to read the model
+//' @param modify_mzn if the user wants to modify the mzn parameters.
 // [[Rcpp::export]]
 std::string set_params(List modData, std::string modelString = "",
-                       std::string mznpath = "") {
+                       std::string mznpath = "", bool modify_mzn = false) {
   
   if(modelString.empty() && mznpath.empty()){
     Rcpp::stop("PROVIDE EITHER modelString OR mznfilename");
@@ -142,7 +143,7 @@ std::string set_params(List modData, std::string modelString = "",
   p->print(model);
   string mString = strmodel.str();
   
-  if(!mznpath.empty()){
+  if(!mznpath.empty() && modify_mzn){
     ofstream out(mznpath);
     out << mString;
     out.close();

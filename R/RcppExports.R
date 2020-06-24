@@ -14,6 +14,20 @@ filetoString <- function(filepath) {
     .Call(`_rminizinc_filetoString`, filepath)
 }
 
+#' @title get missing parameters
+#' 
+#' @description get the names of missing parameters in a model
+#' 
+#' @importFrom Rcpp sourceCpp
+#' @export getMissingPars
+#' @useDynLib rminizinc, .registration=TRUE
+#' @param modelString the string representation of a MiniZinc model
+#' @param mznpath the path of the MiniZinc model mzn file
+#' @param modelStringName the custom name of the mzn string
+getMissingPars <- function(modelString = "", mznpath = "", modelStringName = "missing_pars.mzn") {
+    .Call(`_rminizinc_getMissingPars`, modelString, mznpath, modelStringName)
+}
+
 #' @title MiniZinc model evaluation
 #' 
 #' @description evaluates the MiniZinc model
@@ -55,9 +69,10 @@ mzn_parse <- function(modelString = "", mznpath = "", modelStringName = "mzn_par
 #' @useDynLib rminizinc, .registration=TRUE
 #' @param modData list containing the parameter values.
 #' @param modelString string representation of the MiniZinc model
-#' @param mznpath path of the mzn file 
-set_params <- function(modData, modelString = "", mznpath = "") {
-    .Call(`_rminizinc_set_params`, modData, modelString, mznpath)
+#' @param mznpath path of the mzn file to read the model
+#' @param modify_mzn if the user wants to modify the mzn parameters.
+set_params <- function(modData, modelString = "", mznpath = "", modify_mzn = FALSE) {
+    .Call(`_rminizinc_set_params`, modData, modelString, mznpath, modify_mzn)
 }
 
 #' @title parse the solution

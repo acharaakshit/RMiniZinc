@@ -2,6 +2,7 @@
 #include <minizinc/prettyprinter.hh>
 #include "filetoString.h"
 #include "helper_parse.h"
+#include "expVarNames.h"
 
 using namespace std;
 using namespace MiniZinc;
@@ -47,31 +48,90 @@ List mzn_parse(std::string modelString = "",
   vector<Item*> items;
   int type = 0;
   // to store the missing parameter names
-  CharacterVector missingPars;
+  CharacterVector parameters;
+  // to store the decision variable names
+  CharacterVector decisionVars;
+  // to store the variables involved in the constraints
+  List constraints;
+  List constraintVars;
+  int constraintCount = 0;
+  // to store the solvetype of the problem
+  List objective;
   for(int i=0; i < s; i++){
     items.push_back(model->operator[] (i));
     if(items[i]->iid() == Item::II_VD){
+      string name = items[i]->cast<VarDeclI>()->e()->id()->str().aststr()->c_str();
       // decision variables or parameters
-     if(items[i]->cast<VarDeclI>()->e()->e() == NULL &&  items[i]->cast<VarDeclI>()->e()->type().ispar()){
-        // uninitialized parameter
-        string name = items[i]->cast<VarDeclI>()->e()->id()->str().aststr()->c_str();  
-        missingPars.push_back(name);
+     if(items[i]->cast<VarDeclI>()->e()->type().ispar()){
+        //parameter
+        parameters.push_back(name);
+     }else if(items[i]->cast<VarDeclI>()->e()->type().isvar()){
+       //decision variables
+       decisionVars.push_back(name);
+     }
+    }else if(items[i]->iid() == Item::II_CON){
+      // constraint
+      Expression *cExp = items[i]->cast<ConstraintI>()->e();
+      vector<string> cstNames;
+      expVarNames(cExp, cstNames);
+      constraintVars.push_back(cstNames);
+      constraintCount++;
+    }else if(items[i]->iid() == Item::II_SOL){
+      // satisfaction, minimization or maximization problem
+      SolveI *ci = items[i]->cast<SolveI>();
+      string objectiv;
+      vector<string> cstNames;
+      Expression *optimizeExp =  ci->e();
+      if(ci->st() == SolveI::ST_SAT){
+        objectiv = "satisfy";
+      }else {
+        if(ci->st() == SolveI::ST_MIN){
+          objectiv = "miniminze";
+        }else{
+          objectiv = "maximize";
         }
-    }else if (items[i]->iid() == Item::II_ASN){
-       int index = missingPars.offset(items[i]->cast<AssignI>()->id().str());
-       missingPars.erase(index);
+        try{
+          expVarNames(ci->e(), cstNames);
+        }catch(std::exception &e){
+          Rcpp::stop(e.what());
+        }
+      }
+      objective.push_back(objectiv);
+      objective.names() = CharacterVector({"SolveType"});
+      if(cstNames.size()){
+        objective.push_back(cstNames); 
+        objective.names() = CharacterVector({"SolveType", "VarsIncluded"});
+      }
+        
     }
   }
-    
-  retVal.push_back(missingPars);  
+  // push the missing parameter names  
+  retVal.push_back(parameters);
+  //push the decision variable names
+  retVal.push_back(decisionVars);
+  // push the constraint information
+  constraints.push_back(constraintCount);
+  // name the constraint vars based on the number of constraints
+  CharacterVector constraintNoTrack;
+  for(int i = 0; i< constraintCount;i++){
+    string c = "constraint: ";
+    string cNo = c.append(to_string(i));
+    constraintNoTrack.push_back(cNo);
+  }
+  constraintVars.names() = constraintNoTrack;
+  constraints.push_back(constraintVars);
+  constraints.names() = CharacterVector({"noOfConstraints", "varsInvolved"});
+  retVal.push_back(constraints);
+  // push the objective of the problem
+  retVal.push_back(objective);
   // return the string representation of the model
   stringstream strmodel;
   Printer *p = new Printer(strmodel); 
   p->print(model);
-  CharacterVector mString;
-  mString.push_back(strmodel.str());
+  string mString = strmodel.str();
   retVal.push_back(mString);
-  retVal.names() = CharacterVector({"missingValues", "modelString"});
+  retVal.names() = CharacterVector({"Parameters","decisionVariables",
+                      "Constraints", "SolveType", "modelString"});
   return retVal;
 }
 
