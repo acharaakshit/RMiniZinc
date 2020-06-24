@@ -36,8 +36,3 @@ constraint forall (r in Resources) (
 
 % Maximize profit
 solve maximize sum (p in Products) (profit[p]*produce[p]);
-
-output [ show(pname[p]) ++ " = " ++ show(produce[p]) ++ ";\n" |
-         p in Products ] ++
-       [ show(rname[r]) ++ " = " ++ show(used[r]) ++ ";\n" |
-         r in Resources ];

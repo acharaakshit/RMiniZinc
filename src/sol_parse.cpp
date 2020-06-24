@@ -58,25 +58,22 @@ List sol_parse(std::string solutionString) {
       if(isAssignment){
         varName.push_back(items[i]->cast<AssignI>()->id().str());
         int type = items[i]->cast<AssignI>()->e()->eid();
-        switch(type){
-        case Expression::E_INTLIT:
+        if(type==Expression::E_INTLIT){
           thisSol.push_back(items[i]->cast<AssignI>()->e()->cast<IntLit>()->v().toInt());
-          break;
-        case Expression::E_FLOATLIT:
-          thisSol.push_back(items[i]->cast<AssignI>()->e()->cast<FloatLit>()->v().toDouble());
-          break;
-        case Expression::E_BOOLLIT:
-          thisSol.push_back(items[i]->cast<AssignI>()->e()->cast<BoolLit>()->v());
-          break;
-        case Expression::E_SETLIT:
+        }else if(type==Expression::E_FLOATLIT){
+          thisSol.push_back(items[i]->cast<AssignI>()->e()->cast<FloatLit>()->v().toDouble()); 
+        }else if(type==Expression::E_BOOLLIT){
+          thisSol.push_back(items[i]->cast<AssignI>()->e()->cast<BoolLit>()->v()); 
+        }else if(type==Expression::E_SETLIT){
+          SetLit *sl = items[i]->cast<AssignI>()->e()->cast<SetLit>();
           if(items[i]->cast<AssignI>()->e()->cast<SetLit>()->isv()!= NULL){  
-            int max_val =  items[i]->cast<AssignI>()->e()->cast<SetLit>()->isv()->max().toInt();
-            int min_val = items[i]->cast<AssignI>()->e()->cast<SetLit>()->isv()->min().toInt();  
+            int max_val = sl->isv()->max().toInt();
+            int min_val = sl->isv()->min().toInt();  
             IntegerVector setVec = {max_val, min_val}; 
             thisSol.push_back(setVec);
           }else if(items[i]->cast<AssignI>()->e()->cast<SetLit>()->fsv()!=NULL){
-            float max_val =  items[i]->cast<AssignI>()->e()->cast<SetLit>()->fsv()->max().toDouble();
-            float min_val = items[i]->cast<AssignI>()->e()->cast<SetLit>()->fsv()->min().toDouble();
+            float max_val =  sl->fsv()->max().toDouble();
+            float min_val =  sl->fsv()->min().toDouble();
             NumericVector setVec = {max_val, min_val};
             thisSol.push_back(setVec);
           }else{
@@ -94,16 +91,15 @@ List sol_parse(std::string solutionString) {
               }
             }
             thisSol.push_back(setVec);
-          }
-          
-          break;
-        case Expression::E_ARRAYLIT:
-          if(items[i]->cast<AssignI>()->e()->cast<ArrayLit>()->getVec().size()){
-            int vec_size = items[i]->cast<AssignI>()->e()->cast<ArrayLit>()->getVec().size();
+          } 
+        }else if(type == Expression::E_ARRAYLIT){
+          ArrayLit *al = items[i]->cast<AssignI>()->e()->cast<ArrayLit>();
+          if(al->getVec().size()){
+            int vec_size = al->getVec().size();
             List ArrVec;
             for(int p = 0;p < vec_size; p++ ){
               // get the expression form of each element
-              Expression *exp = items[i]->cast<AssignI>()->e()->cast<ArrayLit>()->getVec().operator[](p);
+              Expression *exp = al->getVec().operator[](p);
               if(exp->isUnboxedInt()){
                 ArrVec.push_back((double)exp->unboxedIntToIntVal().toInt());
               }else if(exp->isUnboxedFloatVal()){
@@ -113,40 +109,55 @@ List sol_parse(std::string solutionString) {
               }
             }
             thisSol.push_back(ArrVec);
-          }  
-          break;
-        case Expression::E_CALL:
+          }   
+        }else if(type == Expression::E_CALL){
+          Call *cl = items[i]->cast<AssignI>()->e()->cast<Call>();
           // name of the function
-          // items[i]->cast<AssignI>()->e()->cast<Call>()->id().c_str(); 
-          for(int m = 1;m<items[i]->cast<AssignI>()->e()->cast<Call>()->n_args();m++){
-            int fntype = items[i]->cast<AssignI>()->e()->cast<Call>()->arg(m)->eid();
+          string fnName = cl->id().c_str();
+          NumericVector dimVec;
+          for(int m = 0;m<cl->n_args();m++){
+            int fntype = cl->arg(m)->eid();
             // apply switch case again 
             if(fntype==Expression::E_ARRAYLIT){
               //number of elements in the array
-              int vec_size = items[i]->cast<AssignI>()->e()->cast<Call>()->arg(m)->cast<ArrayLit>()->getVec().size();
-              List ArrVec;
+              int vec_size = cl->arg(m)->cast<ArrayLit>()->getVec().size();
+              List ArrVec; 
               for(int p = 0;p < vec_size; p++ ){
                 // get the expression form of each element
-                Expression *exp = items[i]->cast<AssignI>()->e()->cast<Call>()->arg(m)->cast<ArrayLit>()->getVec().operator[](p);
+                Expression *exp = cl->arg(m)->cast<ArrayLit>()->getVec().operator[](p);
                 if(exp->isUnboxedInt()){
                   ArrVec.push_back((double)exp->unboxedIntToIntVal().toInt());
                 }else if(exp->isUnboxedFloatVal()){
                   ArrVec.push_back(exp->unboxedFloatToFloatVal().toDouble());
                 }
-                
+              }
+              if(dimVec.length()==2){
+                if(dimVec[0]*dimVec[1] != vec_size){
+                  Rcpp:stop("Incorrect dimensions for array2d");
+                } 
+                ArrVec.attr("dim") = Dimension(dimVec[0], dimVec[1]);
+              }else if(dimVec.length()>2){
+                Rcpp::stop("More than 2d arrays not supported yet!");
               }
               thisSol.push_back(ArrVec);
+            }else if(fntype == Expression::E_SETLIT){
+              SetLit *sl = cl->arg(m)->cast<SetLit>();
+              if(sl->isv()!= NULL){  
+                int max_val =  sl->isv()->max().toInt();
+                int min_val = sl->isv()->min().toInt();  
+                // dimensions will be stored as 0 to max_val-min_val+1
+                dimVec.push_back(max_val-min_val+1);
+              }else{
+                Rcpp::stop("Not working -- not integer set range"); 
+              }
             }else{
               Rcpp::stop("function call not supported");
             }
           }
-          break;
-        default:
+        }else
           Rcpp::stop("This assignment is not supported yet");
-        }
       }else {
         Rcpp::stop("Solution string contains non assignments");
-        break;
       }
       thisSol.names() = varName;
     }
