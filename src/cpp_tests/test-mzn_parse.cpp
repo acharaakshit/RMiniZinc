@@ -55,8 +55,8 @@ context("test if correct missing parameter values are returned"){
     
     //parameter checks
     vector<string> pars = parseVal["Parameters"];
-    vector<string> cmpWith = {"n", "capacity", "profit", "size"};
-    expect_true(std::equal(pars.begin(), pars.end(), pars.begin()));
+    vector<string> cmpWith = {"n", "OBJ", "capacity", "profit", "size"};
+    expect_true(std::equal(pars.begin(), pars.end(), cmpWith.begin()));
     
     // decision variable checks
     vector<string> vars = parseVal["decisionVariables"];
@@ -121,7 +121,7 @@ context("test if correct missing parameter values are returned"){
     //parameter checks
     vector<string> pars = parseVal["Parameters"];
     vector<string> cmpWith = {"n", "capacity", "profit", "size"};
-    expect_true(std::equal(pars.begin(), pars.end(), pars.begin()));
+    expect_true(std::equal(pars.begin(), pars.end(), cmpWith.begin()));
     
     // decision variable checks
     vector<string> vars = parseVal["decisionVariables"];
@@ -181,8 +181,8 @@ context("test if correct missing parameter values are returned"){
     
     //parameter checks
     vector<string> pars = parseVal["Parameters"];
-    vector<string> cmpWith = {"n", "capacity", "profit", "size"};
-    expect_true(std::equal(pars.begin(), pars.end(), pars.begin()));
+    vector<string> cmpWith = {"n", "OBJ", "capacity", "profit", "size"};
+    expect_true(std::equal(pars.begin(), pars.end(), cmpWith.begin()));
     
     // decision variable checks
     vector<string> vars = parseVal["decisionVariables"];
