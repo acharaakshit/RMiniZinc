@@ -183,7 +183,7 @@ a model, `Constraints` which are the constraints of a model, `SolveType` which c
 
 The function `set_params` can be used to set the missing parameters of the model. Any number of missing parameters can be set. The missing parameters can be obtained using `getMissingPars()`. 
 
-The function `mzn_eval` can be used to evaluate a MiniZinc model. A string model should be passed to the function along with the solver name along with the path of the MiniZinc library where the solver to be used is present and the path of the data file (optional). Currently, only gecode solver can be used. Once the model solutions are obtained, the solutions are parsed using the function `sol_parse()` and the results are returned as a List. If the optimal solution is found the list element containing the list can be obtained using `<solution>$optimal_solution`. More features will be added later.
+The function `mzn_eval` can be used to evaluate a MiniZinc model. A string model should be passed to the function along with the solver name along with the path of the MiniZinc library where the solver to be used is present and the path of the data file (optional). Currently, only gecode solver can be used. Once the model solutions are obtained, the solutions are parsed using the function `sol_parse()` and the results are returned as a List. If the solutions are not parsed, the errors are returned along with the solution string. If the optimal solution is found the list element containing the list can be obtained using `<solution>$optimal_solution`. More features will be added later.
 
 ```{r}
 # mzn file path
@@ -231,7 +231,7 @@ print(solObj$Solutions)
 
 The examples of how to use these functions to solve optimization problems can be found in `mzn_test_examples`.
 
-NOTE: Please don't include output formatting in the mzn files or the solutions will not be parsed properly.
+NOTE: Please don't include output formatting in the mzn files or the solutions might not be parsed properly.
 
 The next step is to allow the users to add variables, constraints,etc in a MiniZinc model.
 
