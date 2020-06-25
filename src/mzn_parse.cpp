@@ -97,10 +97,10 @@ List mzn_parse(std::string modelString = "",
         }
       }
       objective.push_back(objectiv);
-      objective.names() = CharacterVector({"SolveType"});
+      objective.names() = CharacterVector({"objective"});
       if(cstNames.size()){
         objective.push_back(cstNames); 
-        objective.names() = CharacterVector({"SolveType", "VarsIncluded"});
+        objective.names() = CharacterVector({"objective", "varsInvolved"});
       }
         
     }
