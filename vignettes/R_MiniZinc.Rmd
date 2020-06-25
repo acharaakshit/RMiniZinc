@@ -73,7 +73,7 @@ Satisfaction problems produce all the solutions that satify the constraints wher
 An example of how to specify the objective is shown below:
 
 ```{r}
-obj <- objective$new(type_of_problem = "satisfy")
+obj = objective$new(type_of_problem = "satisfy")
 ```
 
 
@@ -130,7 +130,7 @@ Now, we have created the model and have set up MiniZinc on our system. The next 
 The information about result class and how to use it correctly can be found using `?results`. We wish to get all the solutions of the problem so we will set `all_solutions` to `TRUE`
 
 ```{r}
-solution <- results$new(model = m, result_type = "R6", all_solutions = TRUE)
+solution = results$new(model = m, result_type = "R6", all_solutions = TRUE)
 # show the solution
 print(solution$result$optimal_solution)
 ```
@@ -199,7 +199,7 @@ modString = parseObj$modelString
 dzn_path = paste0(dirname(getwd()), "/mzn_test_examples/knapsack/knapsack_0.dzn")
 
 # R List object containing the solutions
-solObj <- rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gecode",
+solObj = rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gecode",
                      libpath = "/snap/minizinc/current/share/minizinc", dznpath = dzn_path)
 # get all the solutions
 print(solObj$Solutions)
@@ -222,7 +222,7 @@ names(pVals) = missingVals
 modString = rminizinc:::set_params(modData = pVals,mznpath = mzn_path, modify_mzn = FALSE)
 
 # R List object containing the solutions
-solObj <- rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gecode",
+solObj = rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gecode",
                      libpath = "/snap/minizinc/current/share/minizinc")
 # get all the solutions
 print(solObj$Solutions)

@@ -10,7 +10,7 @@
 #' @export
 
 
-parsetoR6 <- R6Class("parsetoR6",
+parsetoR6 = R6Class("parsetoR6",
                      public = list(
                        #' @field optimal_solution
                        #' stores the optimal solution. NULL if solution not found

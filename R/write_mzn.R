@@ -8,7 +8,7 @@
 #' @param model an object of the model class.
 #' @param mzn the path of temporary model.
 
-write_mzn <- function(model, mzn){
+write_mzn = function(model, mzn){
     code = ""
     
     if(!testNull(model$parameters)){
@@ -26,7 +26,7 @@ write_mzn <- function(model, mzn){
             # enum
             if(!is.null(parameters[[i]]$value)){
               # if the enum has a value
-              enum_values <- paste(parameters[[i]]$value, collapse=", ")
+              enum_values = paste(parameters[[i]]$value, collapse=", ")
               sprintf("%s%s: %s = {%s};\n", code, parameters[[i]]$type,
                       parameters[[i]]$get_name(), enum_values)
             }else{
@@ -44,7 +44,7 @@ write_mzn <- function(model, mzn){
                         parameters[[i]]$get_name(), parameters[[i]]$value["l"], parameters[[i]]$value["u"] )
               }else{
                 # set literals
-                set_values <- paste0(parameters[[i]]$value, collapse = ",")
+                set_values = paste0(parameters[[i]]$value, collapse = ",")
                 sprintf("%s%s of %s: %s = {%s};\n", code, parameters[[i]]$type, parameters[[i]]$sub_type,
                         parameters[[i]]$get_name(), set_values)
                 }
@@ -57,19 +57,19 @@ write_mzn <- function(model, mzn){
             # array
             assert_choice(parameters[[i]]$type, "array")
             # value
-            array_values <- as.vector(parameters[[i]]$value)
+            array_values = as.vector(parameters[[i]]$value)
             # the dimensions
-            n <- length(dim(parameters[[i]]$value))
+            n = length(dim(parameters[[i]]$value))
             
             if(test_null(parameters[[i]]$array_index)){
               # if array index is not given
-              dim_sizes <- paste0("1..", dim(parameters[[i]]$value), collapse = ", ")
+              dim_sizes = paste0("1..", dim(parameters[[i]]$value), collapse = ", ")
               # indices 
-              array_indices  <- dim_sizes
+              array_indices  = dim_sizes
               
             }else{
               # if array index is given
-              indices_n_dims <- sapply(parameters[[i]]$array_index, function(x) 
+              indices_n_dims = sapply(parameters[[i]]$array_index, function(x) 
                 if(all.equal(names(x),c("l","u"))){
                   # integer range
                   list(array_indices = paste0(x["l"],"..",x["u"]), 
@@ -110,7 +110,7 @@ write_mzn <- function(model, mzn){
                          decisions[[i]]$get_name())  
         }else{
           # array
-          indices_n_dims <- sapply(decisions[[i]]$array_index, function(x) 
+          indices_n_dims = sapply(decisions[[i]]$array_index, function(x) 
             if(all.equal(names(x),c("l","u"))){
               # integer range
               list(array_indices = paste0(x["l"],"..",x["u"]))

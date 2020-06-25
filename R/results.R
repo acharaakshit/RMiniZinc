@@ -8,7 +8,7 @@
 #' @export
 
 
-results <- R6Class("results",
+results = R6Class("results",
                    public = list(
                    #' @field mzn
                    #' temporary file for writing a model

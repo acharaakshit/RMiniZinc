@@ -347,7 +347,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <div id="objective" class="section level2">
 <h2>Objective</h2>
 <p>The constraint programming problem can be of three types, namely: Satisfaction , Minimization and Maximization. Satisfaction problems produce all the solutions that satify the constraints whereas minimization and maximization problems produce the solution which minimizes and maximizes the given arithmetic expression. An example of how to specify the objective is shown below:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>obj &lt;-<span class="st"> </span>objective<span class="op">$</span><span class="kw">new</span>(<span class="dt">type_of_problem =</span> <span class="st">&quot;satisfy&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>obj =<span class="st"> </span>objective<span class="op">$</span><span class="kw">new</span>(<span class="dt">type_of_problem =</span> <span class="st">&quot;satisfy&quot;</span>)</span></code></pre></div>
 </div>
 <div id="models" class="section level2">
 <h2>Models</h2>
@@ -393,7 +393,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb4-38"><a href="#cb4-38"></a>m =<span class="st"> </span>model<span class="op">$</span><span class="kw">new</span>(<span class="dt">decision =</span> vars, <span class="dt">constraints =</span> constr, </span>
 <span id="cb4-39"><a href="#cb4-39"></a>              <span class="dt">objective =</span> objective_of_problem)</span></code></pre></div>
 <p>Now, we have created the model and have set up MiniZinc on our system. The next step is to evaluate the results. The information about result class and how to use it correctly can be found using <code>?results</code>. We wish to get all the solutions of the problem so we will set <code>all_solutions</code> to <code>TRUE</code></p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>solution &lt;-<span class="st"> </span>results<span class="op">$</span><span class="kw">new</span>(<span class="dt">model =</span> m, <span class="dt">result_type =</span> <span class="st">&quot;R6&quot;</span>, <span class="dt">all_solutions =</span> <span class="ot">TRUE</span>)</span>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>solution =<span class="st"> </span>results<span class="op">$</span><span class="kw">new</span>(<span class="dt">model =</span> m, <span class="dt">result_type =</span> <span class="st">&quot;R6&quot;</span>, <span class="dt">all_solutions =</span> <span class="ot">TRUE</span>)</span>
 <span id="cb5-2"><a href="#cb5-2"></a><span class="co"># show the solution</span></span>
 <span id="cb5-3"><a href="#cb5-3"></a><span class="kw">print</span>(solution<span class="op">$</span>result<span class="op">$</span>optimal_solution)</span></code></pre></div>
 <pre><code>## $b
@@ -440,7 +440,7 @@ solve maximize 400*b + 450*c;
 <span id="cb9-11"><a href="#cb9-11"></a>dzn_path =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">dirname</span>(<span class="kw">getwd</span>()), <span class="st">&quot;/mzn_test_examples/knapsack/knapsack_0.dzn&quot;</span>)</span>
 <span id="cb9-12"><a href="#cb9-12"></a></span>
 <span id="cb9-13"><a href="#cb9-13"></a><span class="co"># R List object containing the solutions</span></span>
-<span id="cb9-14"><a href="#cb9-14"></a>solObj &lt;-<span class="st"> </span>rminizinc<span class="op">:::</span><span class="kw">mzn_eval</span>(<span class="dt">modelString =</span> modString, <span class="dt">solver =</span> <span class="st">&quot;org.gecode.gecode&quot;</span>,</span>
+<span id="cb9-14"><a href="#cb9-14"></a>solObj =<span class="st"> </span>rminizinc<span class="op">:::</span><span class="kw">mzn_eval</span>(<span class="dt">modelString =</span> modString, <span class="dt">solver =</span> <span class="st">&quot;org.gecode.gecode&quot;</span>,</span>
 <span id="cb9-15"><a href="#cb9-15"></a>                     <span class="dt">libpath =</span> <span class="st">&quot;/snap/minizinc/current/share/minizinc&quot;</span>, <span class="dt">dznpath =</span> dzn_path)</span>
 <span id="cb9-16"><a href="#cb9-16"></a><span class="co"># get all the solutions</span></span>
 <span id="cb9-17"><a href="#cb9-17"></a><span class="kw">print</span>(solObj<span class="op">$</span>Solutions)</span></code></pre></div>
@@ -548,7 +548,7 @@ solve maximize 400*b + 450*c;
 <span id="cb13-6"><a href="#cb13-6"></a>modString =<span class="st"> </span>rminizinc<span class="op">:::</span><span class="kw">set_params</span>(<span class="dt">modData =</span> pVals,<span class="dt">mznpath =</span> mzn_path, <span class="dt">modify_mzn =</span> <span class="ot">FALSE</span>)</span>
 <span id="cb13-7"><a href="#cb13-7"></a></span>
 <span id="cb13-8"><a href="#cb13-8"></a><span class="co"># R List object containing the solutions</span></span>
-<span id="cb13-9"><a href="#cb13-9"></a>solObj &lt;-<span class="st"> </span>rminizinc<span class="op">:::</span><span class="kw">mzn_eval</span>(<span class="dt">modelString =</span> modString, <span class="dt">solver =</span> <span class="st">&quot;org.gecode.gecode&quot;</span>,</span>
+<span id="cb13-9"><a href="#cb13-9"></a>solObj =<span class="st"> </span>rminizinc<span class="op">:::</span><span class="kw">mzn_eval</span>(<span class="dt">modelString =</span> modString, <span class="dt">solver =</span> <span class="st">&quot;org.gecode.gecode&quot;</span>,</span>
 <span id="cb13-10"><a href="#cb13-10"></a>                     <span class="dt">libpath =</span> <span class="st">&quot;/snap/minizinc/current/share/minizinc&quot;</span>)</span>
 <span id="cb13-11"><a href="#cb13-11"></a><span class="co"># get all the solutions</span></span>
 <span id="cb13-12"><a href="#cb13-12"></a><span class="kw">print</span>(solObj<span class="op">$</span>Solutions)</span></code></pre></div>

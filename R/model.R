@@ -9,8 +9,7 @@
 #' 
 #' @export
 
-
-model <- R6Class("model", 
+model = R6Class("model", 
                  public = list(
                  #' @field parameters
                  #' vector of parameter \code{\link{variable}} of the model

@@ -11,7 +11,7 @@
 #' 
 #' @export
 
-objective <- R6Class("objective",
+objective = R6Class("objective",
                            public = list(
                              #' @field type_of_problem
                              #' mention the type of problem

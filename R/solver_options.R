@@ -12,17 +12,17 @@
 #' @param threads integer specifying the number of threads to use. 1 by default.
 #' @param timeout time in milis (integer) specifying the timeout limit. NA by default.
 
-solver_options <- function(model, solver = "Gecode", all_solutions = FALSE, statistics = FALSE, keep_files = FALSE,
+solver_options = function(model, solver = "Gecode", all_solutions = FALSE, statistics = FALSE, keep_files = FALSE,
                            threads = 1, timeout = NA){
   assert_choice(solver, .globals$solvers)
   str_options = paste0("--solver ", solver," ")
-  if(all_solutions){ str_options <- paste0(str_options, "-a ") }
-  if(statistics) {str_options <- paste0(str_options, "-s ")}
-  if(keep_files){str_options <- paste0(str_options, "-k ")}
-  if(threads > 1){str_options <- paste0(str_options, "-p ", threads," ")}
+  if(all_solutions){ str_options = paste0(str_options, "-a ") }
+  if(statistics) {str_options = paste0(str_options, "-s ")}
+  if(keep_files){str_options = paste0(str_options, "-k ")}
+  if(threads > 1){str_options = paste0(str_options, "-p ", threads," ")}
   
   timeout_str  = " "
   if(!is.na(timeout)) { timeout_str = paste0(' --fzn-flags /"-time ', timeout   , '/" ')}
-  command_str <- paste0("minizinc ", str_options, model, timeout_str)
+  command_str = paste0("minizinc ", str_options, model, timeout_str)
   return(command_str)  
 }

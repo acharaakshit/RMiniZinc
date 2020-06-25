@@ -6,9 +6,7 @@
 #' @import R6
 #' @export
 
-
-
-get_expression <- R6Class("get_expression",
+get_expression = R6Class("get_expression",
                          public = list(
                            #' @description the function to store an expression
                            #' @param variables the variables involved in the expression in order

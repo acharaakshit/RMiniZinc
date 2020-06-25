@@ -6,7 +6,7 @@ mznName = "mzn_test_examples/knapsack/knapsack_1_update.mzn"
 #mznName = "mzn_test_examples/knapsack/knapsack_0_update.mzn"
 
 # parse the model
-missingVals <- rminizinc:::getMissingPars(mznpath = mznName)
+missingVals = rminizinc:::getMissingPars(mznpath = mznName)
 
 # give values to some of the parameters
 pVals1 = list(3,9)
