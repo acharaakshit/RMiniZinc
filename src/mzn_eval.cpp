@@ -64,10 +64,17 @@ List mzn_eval(std::string solver, std::string libpath,std::string modelString = 
   }catch (...) {
     Rcpp::stop("  UNKNOWN EXCEPTION.") ;
   }
+  
   List retVal;
   retVal.push_back(sol_string);
-  retVal.push_back(sol_parse(sol_string));
-  retVal.names() = CharacterVector({"solutionString", "Solutions"});
+  
+  try{
+    retVal.push_back(sol_parse(sol_string));
+    retVal.names() = CharacterVector({"solutionString", "Solutions"});
+  }catch(std::exception &e){
+    retVal.push_back(e.what());
+    retVal.names() = CharacterVector({"solutionString", "solutionParseError"});
+  }
   return retVal;
 }
 
