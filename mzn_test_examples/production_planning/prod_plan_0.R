@@ -5,7 +5,7 @@ library(checkmate)
 mznName = "mzn_test_examples/production_planning/prod_plan_0_update.mzn"
 
 # parse the model
-missingVals <- rminizinc:::getMissingPars(mznpath = mznName)
+missingVals = rminizinc:::getMissingPars(mznpath = mznName)
 
 print(missingVals)
 
