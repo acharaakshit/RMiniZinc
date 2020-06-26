@@ -121,23 +121,32 @@ std::string set_params(List modData, std::string modelString = "",
           // initialize constructor for 1 dimensional arrays
           ArrayLit *al = new ArrayLit(items[nameIndexMap[index]]->loc(),expVec);
           vd->e(al);  
-        }else if(tp.dim() == 2 && tp.st() == Type::ST_PLAIN && tp.ot()==Type::OT_PRESENT && tp.bt()==Type::BT_INT){
+        }else if(tp.dim() == 2 && tp.st() == Type::ST_PLAIN && tp.ot()==Type::OT_PRESENT){
             // set two dimensional array values
-            vector<vector<Expression*>> exVec;
-            NumericMatrix arr2dVal = modData[i];
-            for(int it = 0;it<arr2dVal.rows();it++){
-              vector<Expression*> expVec;
-              NumericVector _1dVal = arr2dVal(it, _);
-              for(int itt = 0;itt < _1dVal.length();itt++)
-                expVec.push_back(IntLit::a(_1dVal[itt]));
-              exVec.push_back(expVec);
-            }
-            ArrayLit *al = new ArrayLit(items[nameIndexMap[index]]->loc(),exVec);
-            vd->e(al);
+             vector<vector<Expression*>> exVec;
+             NumericMatrix arr2dVal = modData[i];
+             for(int it = 0;it<arr2dVal.rows();it++){
+               vector<Expression*> expVec;
+               NumericVector _1dVal = arr2dVal(it, _);
+               for(int itt = 0;itt < _1dVal.length();itt++)
+                 if(tp.bt()==Type::BT_INT )
+                    expVec.push_back(IntLit::a(_1dVal[itt]));
+                 else if(tp.bt()==Type::BT_FLOAT)
+                   expVec.push_back(FloatLit::a(_1dVal[itt]));
+                 else if(tp.bt() == Type::BT_UNKNOWN)
+                   // needs to be handled properly
+                   expVec.push_back(IntLit::a(_1dVal[itt]));
+               exVec.push_back(expVec);
+             }
+             ArrayLit *al = new ArrayLit(items[nameIndexMap[index]]->loc(),exVec);
+             vd->e(al); 
+          }else{
+             Rcpp::stop("Parameter can't be set --  not supported");
+           }
         }
       }
     }
-  }
+  
   stringstream strmodel;
   Printer *p = new Printer(strmodel); 
   p->print(model);

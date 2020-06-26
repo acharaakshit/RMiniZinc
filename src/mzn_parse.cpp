@@ -57,6 +57,13 @@ List mzn_parse(std::string modelString = "",
   int constraintCount = 0;
   // to store the solvetype of the problem
   List objective;
+  // to store the names of included mzn files
+  CharacterVector includeItems;
+  // to store the information about functions used 
+  List all_fnInfo;
+  List fnNamesnVars;
+  int fnCount = 0;
+  
   for(int i=0; i < s; i++){
     items.push_back(model->operator[] (i));
     if(items[i]->iid() == Item::II_VD){
@@ -86,7 +93,7 @@ List mzn_parse(std::string modelString = "",
         objectiv = "satisfy";
       }else {
         if(ci->st() == SolveI::ST_MIN){
-          objectiv = "miniminze";
+          objectiv = "minimize";
         }else{
           objectiv = "maximize";
         }
@@ -103,12 +110,36 @@ List mzn_parse(std::string modelString = "",
         objective.names() = CharacterVector({"objective", "varsInvolved"});
       }
         
+    }else if(items[i]->iid() == Item::II_FUN ){
+      FunctionI *fi = items[i]->cast<FunctionI>();
+      fnNamesnVars.push_back(fi->id().c_str());
+      vector<string> nmes;
+      expVarNames(fi->e(), nmes);
+      List fnVars;
+      fnVars.push_back(nmes);
+      fnNamesnVars.push_back(fnVars);
+      fnNamesnVars.names() = CharacterVector({"fnName", "varsInvolved"});
+      fnCount++;
+    }else if(items[i]->iid() == Item::II_INC){
+      IncludeI *ii = items[i]->cast<IncludeI>();
+      includeItems.push_back(ii->f().c_str());
+    }else if(items[i]->iid() == Item::II_OUT){
+      Rcpp::warning("The model includes output formatting -- make sure it is correct MiniZinc syntax");
+    }else{
+      //cout << "element not identified or supported yet";
     }
   }
-  // push the missing parameter names  
-  retVal.push_back(parameters);
+  
+  // to store the names of the return Value list
+  CharacterVector retValNames;
+  // push the missing parameter names 
+  if(parameters.length()){
+    retVal.push_back(parameters);
+    retValNames.push_back("Parameters");
+  }
   //push the decision variable names
   retVal.push_back(decisionVars);
+  retValNames.push_back("decisionVariables");
   // push the constraint information
   constraints.push_back(constraintCount);
   // name the constraint vars based on the number of constraints
@@ -122,16 +153,40 @@ List mzn_parse(std::string modelString = "",
   constraints.push_back(constraintVars);
   constraints.names() = CharacterVector({"noOfConstraints", "varsInvolved"});
   retVal.push_back(constraints);
-  // push the objective of the problem
+  retValNames.push_back("Constraints");
+  // push the solveType information of the problem
   retVal.push_back(objective);
+  retValNames.push_back("SolveType");
+  // push the used functions information
+  if(fnNamesnVars.length()){
+    all_fnInfo.push_back(fnCount);
+    List fnInfo;
+    CharacterVector functionNoTrack;
+    for(int i = 0; i < fnCount; i++){
+      string f = "function: ";
+      string fNo = f.append(to_string(i));
+      functionNoTrack.push_back(fNo);
+    }
+    fnInfo.push_back(fnNamesnVars);
+    fnInfo.names() = functionNoTrack;
+    all_fnInfo.push_back(fnInfo);
+    all_fnInfo.names() = CharacterVector({"noOfFunctions", "functionDetails"});
+    retVal.push_back(all_fnInfo);
+    retValNames.push_back("functionInformation");
+  }
+  // push the names of included mzn files
+  if(includeItems.length()){
+    retVal.push_back(includeItems);
+    retValNames.push_back("Includes");
+  }
   // return the string representation of the model
   stringstream strmodel;
   Printer *p = new Printer(strmodel); 
   p->print(model);
   string mString = strmodel.str();
   retVal.push_back(mString);
-  retVal.names() = CharacterVector({"Parameters","decisionVariables",
-                      "Constraints", "SolveType", "modelString"});
+  retValNames.push_back("modelString");
+  retVal.names() = retValNames;
   return retVal;
 }
 
