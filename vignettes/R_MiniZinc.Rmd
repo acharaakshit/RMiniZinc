@@ -13,7 +13,7 @@ vignette: >
 
 ## Introduction
 
-MiniZinc is a free and open-source constraint modeling language. Constraint satisfaction and discrete optimization problems can be formulated in a high-level modeling language. Models are compiled into an intermediate representation that is understood by a wide range of solvers. MiniZinc itself provides several solvers, for instance GeoCode. The existing packages in R are not powerful enough to solve even mid-sized problems in combinatorial optimization
+MiniZinc is a free and open-source constraint modeling language. Constraint satisfaction and discrete optimization problems can be formulated in a high-level modeling language. Models are compiled into an intermediate representation that is understood by a wide range of solvers. MiniZinc itself provides several solvers, for instance GeCode. The existing packages in R are not powerful enough to solve even mid-sized problems in combinatorial optimization
 
 There are implementations of an Interface to MiniZinc in Python like MiniZinc Python and pymzn and JMiniZinc for Java but such an interface does not exist for R.
 
