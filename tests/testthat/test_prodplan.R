@@ -2,14 +2,14 @@ library(stringr)
 
 test_that("workflow is implemented correctly",{
   # for devtools::test()
-  mznName = "../../mzn_test_examples/production_planning/prod_plan_0_update.mzn"
+  mznName = "../../mzn_examples/production_planning/prod_plan_0_update.mzn"
   
   if(str_detect(getwd(), c("rminizinc.Rcheck")) && !str_detect(getwd(), c("RMiniZinc"))){
     # for R CMD CHECK
-    mznName = paste0(dirname(dirname(dirname(getwd()))), "/RMiniZinc/mzn_test_examples/production_planning/prod_plan_0_update.mzn")
+    mznName = paste0(dirname(dirname(dirname(getwd()))), "/RMiniZinc/mzn_examples/production_planning/prod_plan_0_update.mzn")
   }else if(str_detect(getwd(), c("rminizinc.Rcheck")) && str_detect(getwd(), c("RMiniZinc"))){
     # for travis build
-    mznName = paste0(dirname(dirname(dirname(getwd()))), "/mzn_test_examples/production_planning/prod_plan_0_update.mzn") 
+    mznName = paste0(dirname(dirname(dirname(getwd()))), "/mzn_examples/production_planning/prod_plan_0_update.mzn") 
   }
     
   parseObj = mzn_parse(mznpath = mznName)

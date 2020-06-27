@@ -2,14 +2,14 @@ library(stringr)
 
 test_that("jobshop problems are solved without issues",{
   # for devtools::test()
-  mznName = "../../mzn_test_examples/jobshop/jobshop_0.mzn"
+  mznName = "../../mzn_examples/jobshop/jobshop_0.mzn"
   
   if(str_detect(getwd(), c("rminizinc.Rcheck")) && !str_detect(getwd(), c("RMiniZinc"))){
     # for R CMD CHECK
-    mznName = paste0(dirname(dirname(dirname(getwd()))), "/RMiniZinc/mzn_test_examples/jobshop/jobshop_0.mzn")
+    mznName = paste0(dirname(dirname(dirname(getwd()))), "/RMiniZinc/mzn_examples/jobshop/jobshop_0.mzn")
   }else if(str_detect(getwd(), c("rminizinc.Rcheck")) && str_detect(getwd(), c("RMiniZinc"))){
     # for travis build
-    mznName = paste0(dirname(dirname(dirname(getwd()))), "/mzn_test_examples/jobshop/jobshop_0.mzn") 
+    mznName = paste0(dirname(dirname(dirname(getwd()))), "/mzn_examples/jobshop/jobshop_0.mzn") 
   }
   
   parseInfo <- mzn_parse(mznpath = mznName)

@@ -1,6 +1,6 @@
 library(rminizinc)
 
-mznName = "mzn_test_examples/jobshop/jobshop_2.mzn" 
+mznName = "mzn_examples/jobshop/jobshop_2.mzn" 
 
 parseInfo <- mzn_parse(mznpath = mznName)
 
