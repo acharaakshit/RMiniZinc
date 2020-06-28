@@ -77,7 +77,7 @@ knitr::include_graphics(paste0(getwd(),"/workflows/ongoing_approach.png"))
 
 ## -----------------------------------------------------------------------------
 # mzn file path
-mzn_path = paste0(dirname(getwd()), "/mzn_test_examples/knapsack/knapsack_0.mzn")
+mzn_path = paste0(dirname(getwd()), "/mzn_examples/knapsack/knapsack_0.mzn")
 
 # parse the model
 parseObj=rminizinc:::mzn_parse(mznpath = mzn_path)
@@ -86,7 +86,7 @@ parseObj=rminizinc:::mzn_parse(mznpath = mzn_path)
 modString = parseObj$modelString
 
 # dzn file path
-dzn_path = paste0(dirname(getwd()), "/mzn_test_examples/knapsack/knapsack_0.dzn")
+dzn_path = paste0(dirname(getwd()), "/mzn_examples/knapsack/knapsack_0.dzn")
 
 # R List object containing the solutions
 solObj = rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gecode",
@@ -96,7 +96,7 @@ print(solObj$Solutions)
 
 ## -----------------------------------------------------------------------------
 # file path
-mzn_path = paste0(dirname(getwd()), "/mzn_test_examples/knapsack/knapsack_0.mzn")
+mzn_path = paste0(dirname(getwd()), "/mzn_examples/knapsack/knapsack_0.mzn")
 
 # get missing parameter values
 missingVals=rminizinc:::getMissingPars( mznpath = mzn_path)

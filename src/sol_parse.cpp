@@ -30,12 +30,14 @@ List sol_parse(std::string solutionString) {
     solutionString.erase(0, pos + delimiter.length());
   }
   
-  if(solutions.size()==0) Rcpp::stop("No solution seperator found-- incorrect solution string");
-  
-  int optimal_sol_flag = solutionString.find("==========") != npos ? 1:0;
   if(solutionString.find("=====UNSATISFIABLE=====") != npos){
     Rcpp::stop("No Solution");
   }
+  
+  if(solutions.size()==0) Rcpp::stop("No solution seperator found-- incorrect solution string");
+  
+  int optimal_sol_flag = solutionString.find("==========") != npos ? 1:0;
+  
   
   List retVal;
   CharacterVector nameretVal;
@@ -66,18 +68,18 @@ List sol_parse(std::string solutionString) {
           thisSol.push_back(items[i]->cast<AssignI>()->e()->cast<BoolLit>()->v()); 
         }else if(type==Expression::E_SETLIT){
           SetLit *sl = items[i]->cast<AssignI>()->e()->cast<SetLit>();
-          if(items[i]->cast<AssignI>()->e()->cast<SetLit>()->isv()!= NULL){  
+          if(sl->isv()!= NULL){  
             int max_val = sl->isv()->max().toInt();
             int min_val = sl->isv()->min().toInt();  
             IntegerVector setVec = {max_val, min_val}; 
             thisSol.push_back(setVec);
-          }else if(items[i]->cast<AssignI>()->e()->cast<SetLit>()->fsv()!=NULL){
+          }else if(sl->fsv()!=NULL){
             float max_val =  sl->fsv()->max().toDouble();
             float min_val =  sl->fsv()->min().toDouble();
             NumericVector setVec = {max_val, min_val};
             thisSol.push_back(setVec);
           }else{
-            ASTExprVec<Expression> expVec = items[i]->cast<AssignI>()->e()->cast<SetLit>()->v();
+            ASTExprVec<Expression> expVec = sl->v();
             int expVec_size = expVec.size();
             List setVec;
             for(int p = 0; p < expVec_size; p++){
@@ -129,6 +131,38 @@ List sol_parse(std::string solutionString) {
                   ArrVec.push_back((double)exp->unboxedIntToIntVal().toInt());
                 }else if(exp->isUnboxedFloatVal()){
                   ArrVec.push_back(exp->unboxedFloatToFloatVal().toDouble());
+                }else if(exp->eid() == Expression::E_SETLIT){
+                  SetLit *sl = exp->cast<SetLit>();
+                  if(sl->isv()!= NULL){  
+                    int max_val = sl->isv()->max().toInt();
+                    int min_val = sl->isv()->min().toInt();  
+                    IntegerVector setVec = {max_val, min_val}; 
+                    ArrVec.push_back(setVec);
+                  }else if(sl->fsv()!=NULL){
+                    float max_val =  sl->fsv()->max().toDouble();
+                    float min_val =  sl->fsv()->min().toDouble();
+                    NumericVector setVec = {max_val, min_val};
+                    ArrVec.push_back(setVec);
+                  }else{
+                    ASTExprVec<Expression> expVec = sl->v();
+                    int expVec_size = expVec.size();
+                    List setVec;
+                    for(int p = 0; p < expVec_size; p++){
+                      Expression *exp = expVec.operator[](p);
+                      if(exp->isUnboxedInt()){
+                        setVec.push_back((double)exp->unboxedIntToIntVal().toInt());
+                      }else if(exp->isUnboxedFloatVal()){
+                        setVec.push_back(exp->unboxedFloatToFloatVal().toDouble());
+                      }else if(exp->eid() == Expression::E_BOOLLIT){
+                        setVec.push_back(exp->cast<BoolLit>()->v());
+                      }
+                    }
+                    ArrVec.push_back(setVec);
+                  } 
+                }else if(exp->eid() == Expression::E_BOOLLIT){
+                    ArrVec.push_back(exp->cast<BoolLit>()->v());
+                }else{
+                  Rcpp::stop("Array elements can't be parsed");
                 }
               }
               if(dimVec.length()==2){
