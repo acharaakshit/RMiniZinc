@@ -41,11 +41,24 @@ void expVarNames(MiniZinc::Expression *exp, vector<string> &cstNames){
   }else if(ExpressionID == Expression::E_ID){
     string vName = exp->cast<Id>()->str().c_str();
     cstNames.push_back(vName);
-  }else if(ExpressionID == Expression::E_INTLIT){
-    // do nothing
+  }else if(ExpressionID == Expression::E_INTLIT || ExpressionID == Expression::E_FLOATLIT
+             || ExpressionID == Expression::E_BOOLLIT){
+    // do nothing -- it's a value
   }else if(ExpressionID == Expression::E_ARRAYACCESS){
     expVarNames(exp->cast<ArrayAccess>()->v(), cstNames);
+    const ASTExprVec<Expression> astExp = exp->cast<ArrayAccess>()->idx();
+    int size = astExp.size();
+    for(int i = 0;i < size; i++){
+      Expression *iExp = astExp.operator[](i);
+      expVarNames(iExp, cstNames);
+    }
   }else{
+    //string wString = to_string(ExpressionID);
+    //wString.append(" not supported");
+    //Rcpp::warning(wString);
     // cout << ExpressionID << " ID" << endl; -- will be supported later
   }
+  // remove duplicates 
+  std::sort(cstNames.begin(), cstNames.end());
+  cstNames.erase(std::unique(cstNames.begin(), cstNames.end()), cstNames.end());
 }

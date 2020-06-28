@@ -69,12 +69,12 @@ context("test if correct missing parameter values are returned"){
     expect_true(cstrVars.length() == 2);
     
     vector<string> cstvNames = cstrVars[0];
-    vector<string> compareWith = {"OBJ", "x"};
+    vector<string> compareWith = {"OBJ","i", "x"};
     expect_true(cstvNames.size() == compareWith.size());
     expect_true(std::equal(cstvNames.begin(), cstvNames.end(), compareWith.begin()));
     
     vector<string> cstvNames1 = cstrVars[1];
-    vector<string> compareWith1 = {"OBJ", "size", "x", "capacity"};
+    vector<string> compareWith1 = {"OBJ", "capacity", "i", "size", "x"};
     expect_true(std::equal(cstvNames1.begin(), cstvNames1.end(), compareWith1.begin()));
     
     //solve type checks
@@ -85,7 +85,7 @@ context("test if correct missing parameter values are returned"){
     else{
       expect_true(st.length() == 2);
       CharacterVector slvNames = st[1];
-      vector<string> compareWith = {"OBJ", "profit", "x" };
+      vector<string> compareWith = {"OBJ", "i", "profit", "x" };
       expect_true(std::equal(slvNames.begin(), slvNames.end(), compareWith.begin()));
     }
     }
@@ -133,7 +133,7 @@ context("test if correct missing parameter values are returned"){
     expect_true(cstrVars.length() == 1);
     
     vector<string> cstvNames = cstrVars[0];
-    vector<string> compareWith = {"n", "size", "x", "capacity"};
+    vector<string> compareWith = {"capacity", "i", "n", "size", "x"};
     expect_true(cstvNames.size() == compareWith.size());
     expect_true(std::equal(cstvNames.begin(), cstvNames.end(), compareWith.begin()));
     
@@ -145,7 +145,7 @@ context("test if correct missing parameter values are returned"){
     else{
       expect_true(st.length() == 2);
       CharacterVector slvNames = st[1];
-      vector<string> compareWith = {"n", "profit", "x" };
+      vector<string> compareWith = {"i", "n", "profit", "x" };
       expect_true(std::equal(slvNames.begin(), slvNames.end(), compareWith.begin()));
     }
   }    
@@ -194,7 +194,7 @@ context("test if correct missing parameter values are returned"){
     expect_true(cstrVars.length() == 1);
     
     vector<string> cstvNames = cstrVars[0];
-    vector<string> compareWith = {"x", "size", "capacity"};
+    vector<string> compareWith = {"capacity", "i", "size", "x"};
     expect_true(cstvNames.size() == compareWith.size());
     expect_true(std::equal(cstvNames.begin(), cstvNames.end(), compareWith.begin()));
     
@@ -206,7 +206,7 @@ context("test if correct missing parameter values are returned"){
     else{
       expect_true(st.length() == 2);
       CharacterVector slvNames = st[1];
-      vector<string> compareWith = {"x", "profit" };
+      vector<string> compareWith = {"i", "profit", "x"};
       expect_true(std::equal(slvNames.begin(), slvNames.end(), compareWith.begin()));
     }
   }
