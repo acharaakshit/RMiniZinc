@@ -229,7 +229,7 @@ print(solObj$Solutions)
 
 ```
 
-The examples of how to use these functions to solve optimization problems can be found in `mzn_examples`.
+The examples of how to use these functions to solve optimization problems can be found in `mzn_examples` which are taken from [minizinc-examples](https://github.com/MiniZinc/minizinc-examples).
 
 NOTE: Please don't include output formatting in the mzn files or the solutions might not be parsed properly.
 
