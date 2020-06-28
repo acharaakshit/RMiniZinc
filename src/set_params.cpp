@@ -109,6 +109,11 @@ std::string set_params(List modData, std::string modelString = "",
               expVec.push_back(IntLit::a(arrVal[it]));
           }else if(tp.isintsetarray()){
             // 1 integer array of set
+          }else if(tp.dim() == 1 && tp.st() == Type::ST_PLAIN && tp.ot() == Type::OT_PRESENT && tp.bt() == Type::BT_UNKNOWN){
+            // array index is not a value but a variable
+            NumericVector arrVal= modData[i];
+            for(int it = 0;it < arrVal.length();it++)
+              expVec.push_back(IntLit::a(arrVal[it]));
           }else if(tp.isboolarray()){
             // 1 dimensional bool array
           }else if(tp.dim() == 1 && tp.st() == Type::ST_PLAIN && tp.ot() == Type::OT_PRESENT && tp.bt() == Type::BT_STRING){

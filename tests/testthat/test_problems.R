@@ -17,14 +17,15 @@ test_that("jobshop problems are solved without issues",{
   expect_equal(parseInfo$decisionVariables, c("s", "makespan"))
   expect_length(parseInfo$Constraints, 2)
   expect_equal(parseInfo$Constraints$noOfConstraints, 2)
-  expect_equal(parseInfo$Constraints$varsInvolved$`constraint: 0`, c("JOB", "m", "s", "d", "s"))
-  expect_equal(parseInfo$Constraints$varsInvolved$`constraint: 1`, c("JOB", "TASK", "s", "d", "s", "d"))
+  expect_equal(parseInfo$Constraints$varsInvolved$`constraint: 0`, c("JOB", "d", "j", "m", "s", "t"))
+  expect_equal(parseInfo$Constraints$varsInvolved$`constraint: 1`, c("JOB", "TASK", "d", "j1", "j2",
+                                                                     "s", "t1", "t2"))
   expect_equal(parseInfo$SolveType$objective, "minimize");
   expect_equal(parseInfo$SolveType$varsInvolved, "makespan")
   expect_equal(parseInfo$functionInformation$noOfFunctions, 1)
   expect_equal(parseInfo$functionInformation$functionDetails$`function: 0`$fnName, "nonoverlap")
   expect_equal(parseInfo$functionInformation$functionDetails$`function: 0`$varsInvolved[[1]], 
-               c("s1", "d1", "s2", "s2", "d2", "s1"))
+               c("d1", "d2", "s1", "s2"))
   
   missingPars = getMissingPars(mznpath = mznName)
   expect_equal(missingPars, c("n", "m", "d", "mc"))
@@ -54,7 +55,6 @@ test_that("production planning problems are solved",{
   }
   
   parseObj = mzn_parse(mznpath = mznName)
-  
   # check if correct parameters are parsed 
   expect_equal(parseObj$Parameters, c("nproducts", "Products", "profit", "pname", "nresources",
                                       "Resources", "capacity", "rname", "consumption", "mproducts"))
@@ -65,18 +65,18 @@ test_that("production planning problems are solved",{
   
   expect_length(parseObj$Constraints$varsInvolved,2)
   
-  expect_length(parseObj$Constraints$varsInvolved$'constraint: 0',3)
-  
   #check if correct constraints are parse
-  expect_equal(parseObj$Constraints$varsInvolved$'constraint: 0', c("Resources", "Products", "consumption"))
+  expect_equal(parseObj$Constraints$varsInvolved$'constraint: 0', c("Products", "Resources", "consumption",
+                                                                    "p", "r"))
   
-  expect_equal(parseObj$Constraints$varsInvolved$'constraint: 1', c("Resources", "used", "Products",
-                                                                    "consumption", "produce", "used", "capacity"))
+  expect_equal(parseObj$Constraints$varsInvolved$'constraint: 1', c("Products", "Resources", "capacity", 
+                                                                    "consumption", "p", "produce",
+                                                                    "r", "used" ))
   
   # check if solve type and variables in the maximization or minimization expression are correct
   expect_equal(parseObj$SolveType$objective, "maximize")
   
-  expect_equal(parseObj$SolveType$varsInvolved, c("Products", "profit", "produce"))
+  expect_equal(parseObj$SolveType$varsInvolved, c("Products", "p", "produce", "profit"))
   
   # get the names of missing parameters
   missingNames = getMissingPars(mznpath = mznName)
@@ -123,7 +123,7 @@ test_that("assignment problems are solved", {
   expect_equal(parseObj$Constraints$varsInvolved$`constraint: 0`, c("task", "worker"))
   expect_equal(parseObj$Includes, "inverse.mzn")
   expect_equal(parseObj$SolveType$objective, "maximize")
-  expect_equal(parseObj$SolveType$varsInvolved, c("COD", "profit"))
+  expect_equal(parseObj$SolveType$varsInvolved, c("COD", "profit", "task", "w"))
   
   missingPars = getMissingPars(mznpath = mznName)
   expect_equal(missingPars, c("n", "m", "profit"))
@@ -139,3 +139,80 @@ test_that("assignment problems are solved", {
   expect_equal(solution$Solutions$optimal_solution$task, list(4,1,2,3))
   expect_equal(solution$Solutions$optimal_solution$worker, list(2, 3, 4, 1))
 })
+
+test_that("line travelling salesman problems can be solved", {
+  # for devtools::test()
+  mznName = "../../mzn_examples/linetsp/ltsp.mzn"
+  
+  if(str_detect(getwd(), c("rminizinc.Rcheck")) && !str_detect(getwd(), c("RMiniZinc"))){
+    # for R CMD CHECK
+    mznName = paste0(dirname(dirname(dirname(getwd()))), "/RMiniZinc/mzn_examples/linetsp/ltsp.mzn")
+  }else if(str_detect(getwd(), c("rminizinc.Rcheck")) && str_detect(getwd(), c("RMiniZinc"))){
+    # for travis build
+    mznName = paste0(dirname(dirname(dirname(getwd()))), "/mzn_examples/linetsp/ltsp.mzn") 
+  }
+  
+  parseObj = mzn_parse(mznpath = mznName)
+  expect_equal(parseObj$Parameters, c("n", "CITY", "POS", "coord", "m", "PREC", "left", "right"))
+  expect_equal(parseObj$decisionVariables, c("order", "city"))
+  expect_equal(parseObj$Constraints$noOfConstraints, 2)
+  expect_equal(parseObj$Constraints$varsInvolved$`constraint: 0`, c("city", "order"))
+  expect_equal(parseObj$Constraints$varsInvolved$`constraint: 1`, c("PREC", "i", "left", "order", "right"))
+  expect_equal(parseObj$SolveType$objective, "minimize")
+  expect_equal(parseObj$SolveType$varsInvolved, c("city", "coord", "i", "n"))
+  expect_equal(parseObj$Includes, "inverse.mzn")
+  
+  missingPars = getMissingPars(mznpath = mznName)
+  
+  pVals = list(8, c(-7, -4, -2, 0, 1, 6, 9, 12), 7, c(3, 7, 8, 3, 2, 1, 4),
+               c(1, 2, 4, 6, 5, 7, 2))
+  names(pVals) = missingPars
+  
+  modString = set_params(modData = pVals, mznpath = mznName, modify_mzn = FALSE)
+  
+  solution = mzn_eval(modelString = modString, solver = "org.gecode.gecode",
+                      libpath = "/snap/minizinc/current/share/minizinc")
+  
+  expect_equal(solution$Solutions$optimal_solution$order, list(2, 7, 1, 6, 8, 5, 4, 3))
+  expect_equal(solution$Solutions$optimal_solution$city, list(3, 1, 8, 7, 6, 4, 2, 5))
+  
+})
+
+test_that("crazy problems can be solved", {
+  # for devtools::test()
+  mznName = "../../mzn_examples/crazy_sets/crazy_sets.mzn"
+  
+  if(str_detect(getwd(), c("rminizinc.Rcheck")) && !str_detect(getwd(), c("RMiniZinc"))){
+    # for R CMD CHECK
+    mznName = paste0(dirname(dirname(dirname(getwd()))), "/RMiniZinc/mzn_examples/crazy_sets/crazy_sets.mzn")
+  }else if(str_detect(getwd(), c("rminizinc.Rcheck")) && str_detect(getwd(), c("RMiniZinc"))){
+    # for travis build
+    mznName = paste0(dirname(dirname(dirname(getwd()))), "/mzn_examples/crazy_sets/crazy_sets.mzn") 
+  }
+  
+  parseObj = mzn_parse(mznpath = mznName)
+  expect_equal(parseObj$Parameters, c("n", "NUMBER", "c", "m"))
+  expect_equal(parseObj$decisionVariables, c("s", "x"))
+  expect_equal(parseObj$Constraints$noOfConstraints, 5)
+  expect_equal(parseObj$Constraints$varsInvolved$`constraint: 0`, c("i", "j", "k", "m", "s"))
+  expect_equal(parseObj$Constraints$varsInvolved$`constraint: 1`, c("c", "i", "j", "m", "x"))
+  expect_equal(parseObj$Constraints$varsInvolved$`constraint: 2`, c("c", "i", "j", "m", "x"))
+  expect_equal(parseObj$Constraints$varsInvolved$`constraint: 3`, c("NUMBER", "c",
+                                                                    "i", "j", "m", "o", "s", "x"))
+  expect_equal(parseObj$Constraints$varsInvolved$`constraint: 4`, c("c", "i", "j", "m", "s", "x"))
+  
+  expect_equal(parseObj$SolveType$objective, "satisfy")
+ 
+  missingPars = getMissingPars(mznpath = mznName)
+  
+  pVals = list(10, 4, 4)
+  names(pVals) = missingPars
+  
+  modString = set_params(modData = pVals, mznpath = mznName, modify_mzn = FALSE)
+  
+  solution = mzn_eval(modelString = modString, solver = "org.gecode.gecode",
+                      libpath = "/snap/minizinc/current/share/minizinc",
+                      all_solutions = FALSE)
+  
+})
+
