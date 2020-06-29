@@ -2,9 +2,9 @@ library(rminizinc)
 library(checkmate)
 
 # give a file path to read the mzn and write the updated mzn
-mznName = "mzn_test_examples/knapsack/knapsack_4_update.mzn"
-# mznName = "mzn_test_examples/knapsack/knapsack_2_update.mzn"
-# mznName = "mzn_test_examples/knapsack/knapsack_3_update.mzn"
+mznName = "mzn_examples/knapsack/knapsack_4_update.mzn"
+# mznName = "mzn_examples/knapsack/knapsack_2_update.mzn"
+# mznName = "mzn_examples/knapsack/knapsack_3_update.mzn"
 
 # parse the model
 missingVals = rminizinc:::getMissingPars(mznpath = mznName)

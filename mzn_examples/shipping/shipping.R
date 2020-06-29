@@ -2,8 +2,7 @@ library(rminizinc)
 library(checkmate)
 
 # path of mzn
-mzn_path = "mzn_test_examples/shipping/shipping_update.mzn"
-dzn_path = "mzn_test_examples/shipping/shipping.dzn"
+mzn_path = "mzn_examples/shipping/shipping_update.mzn"
 
 missingVals = rminizinc::getMissingPars(mznpath = mzn_path )
 

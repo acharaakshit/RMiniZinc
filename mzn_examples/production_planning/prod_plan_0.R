@@ -2,7 +2,7 @@ library(rminizinc)
 library(checkmate)
 
 # give a file path to read the mzn and write the updated mzn
-mznName = "mzn_test_examples/production_planning/prod_plan_0_update.mzn"
+mznName = "mzn_examples/production_planning/prod_plan_0_update.mzn"
 
 # parse the model
 missingVals = rminizinc:::getMissingPars(mznpath = mznName)

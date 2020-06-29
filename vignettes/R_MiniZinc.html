@@ -12,7 +12,7 @@
 
 <meta name="author" content="Akshit Achara" />
 
-<meta name="date" content="2020-06-25" />
+<meta name="date" content="2020-06-28" />
 
 <title>MiniZinc Interface for R</title>
 
@@ -303,13 +303,13 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">MiniZinc Interface for R</h1>
 <h4 class="author">Akshit Achara</h4>
-<h4 class="date">2020-06-25</h4>
+<h4 class="date">2020-06-28</h4>
 
 
 
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>MiniZinc is a free and open-source constraint modeling language. Constraint satisfaction and discrete optimization problems can be formulated in a high-level modeling language. Models are compiled into an intermediate representation that is understood by a wide range of solvers. MiniZinc itself provides several solvers, for instance GeoCode. The existing packages in R are not powerful enough to solve even mid-sized problems in combinatorial optimization</p>
+<p>MiniZinc is a free and open-source constraint modeling language. Constraint satisfaction and discrete optimization problems can be formulated in a high-level modeling language. Models are compiled into an intermediate representation that is understood by a wide range of solvers. MiniZinc itself provides several solvers, for instance GeCode. The existing packages in R are not powerful enough to solve even mid-sized problems in combinatorial optimization</p>
 <p>There are implementations of an Interface to MiniZinc in Python like MiniZinc Python and pymzn and JMiniZinc for Java but such an interface does not exist for R.</p>
 <p>This package provides an implementation of a very simple and easy to use interface for R that will help R users to solve optimization problems that can’t be solved with R currently.</p>
 <p>It’s important to understand R6 classes before getting into the details. If you are not comfortable with R6, please go through this <a href="https://adv-r.hadley.nz/r6.html">tutorial</a>.</p>
@@ -428,7 +428,7 @@ solve maximize 400*b + 450*c;
 <p>The function <code>set_params</code> can be used to set the missing parameters of the model. Any number of missing parameters can be set. The missing parameters can be obtained using <code>getMissingPars()</code>.</p>
 <p>The function <code>mzn_eval</code> can be used to evaluate a MiniZinc model. A string model should be passed to the function along with the solver name along with the path of the MiniZinc library where the solver to be used is present and the path of the data file (optional). Currently, only gecode solver can be used. Once the model solutions are obtained, the solutions are parsed using the function <code>sol_parse()</code> and the results are returned as a List. If the solutions are not parsed, the errors are returned along with the solution string. If the optimal solution is found the list element containing the list can be obtained using <code>&lt;solution&gt;$optimal_solution</code>. More features will be added later.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># mzn file path</span></span>
-<span id="cb9-2"><a href="#cb9-2"></a>mzn_path =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">dirname</span>(<span class="kw">getwd</span>()), <span class="st">&quot;/mzn_test_examples/knapsack/knapsack_0.mzn&quot;</span>)</span>
+<span id="cb9-2"><a href="#cb9-2"></a>mzn_path =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">dirname</span>(<span class="kw">getwd</span>()), <span class="st">&quot;/mzn_examples/knapsack/knapsack_0.mzn&quot;</span>)</span>
 <span id="cb9-3"><a href="#cb9-3"></a></span>
 <span id="cb9-4"><a href="#cb9-4"></a><span class="co"># parse the model</span></span>
 <span id="cb9-5"><a href="#cb9-5"></a>parseObj=rminizinc<span class="op">:::</span><span class="kw">mzn_parse</span>(<span class="dt">mznpath =</span> mzn_path)</span>
@@ -437,7 +437,7 @@ solve maximize 400*b + 450*c;
 <span id="cb9-8"><a href="#cb9-8"></a>modString =<span class="st"> </span>parseObj<span class="op">$</span>modelString</span>
 <span id="cb9-9"><a href="#cb9-9"></a></span>
 <span id="cb9-10"><a href="#cb9-10"></a><span class="co"># dzn file path</span></span>
-<span id="cb9-11"><a href="#cb9-11"></a>dzn_path =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">dirname</span>(<span class="kw">getwd</span>()), <span class="st">&quot;/mzn_test_examples/knapsack/knapsack_0.dzn&quot;</span>)</span>
+<span id="cb9-11"><a href="#cb9-11"></a>dzn_path =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">dirname</span>(<span class="kw">getwd</span>()), <span class="st">&quot;/mzn_examples/knapsack/knapsack_0.dzn&quot;</span>)</span>
 <span id="cb9-12"><a href="#cb9-12"></a></span>
 <span id="cb9-13"><a href="#cb9-13"></a><span class="co"># R List object containing the solutions</span></span>
 <span id="cb9-14"><a href="#cb9-14"></a>solObj =<span class="st"> </span>rminizinc<span class="op">:::</span><span class="kw">mzn_eval</span>(<span class="dt">modelString =</span> modString, <span class="dt">solver =</span> <span class="st">&quot;org.gecode.gecode&quot;</span>,</span>
@@ -534,7 +534,7 @@ solve maximize 400*b + 450*c;
 ## [1] 1</code></pre>
 <p>The data can also be provided as a list of values of parameters where the names of the list are the missing parameter names returned by <code>parse_mzn()</code>. For now, only integer, floats, bools, 1 dimensional integer and string arrays, 2 dimensional integer arrays and integer, float and bool sets are supported. Alternatively, if the user wishes to provide a data file, it can be provided to the function <code>mzn_eval()</code>.</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="co"># file path</span></span>
-<span id="cb11-2"><a href="#cb11-2"></a>mzn_path =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">dirname</span>(<span class="kw">getwd</span>()), <span class="st">&quot;/mzn_test_examples/knapsack/knapsack_0.mzn&quot;</span>)</span>
+<span id="cb11-2"><a href="#cb11-2"></a>mzn_path =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">dirname</span>(<span class="kw">getwd</span>()), <span class="st">&quot;/mzn_examples/knapsack/knapsack_0.mzn&quot;</span>)</span>
 <span id="cb11-3"><a href="#cb11-3"></a></span>
 <span id="cb11-4"><a href="#cb11-4"></a><span class="co"># get missing parameter values</span></span>
 <span id="cb11-5"><a href="#cb11-5"></a>missingVals=rminizinc<span class="op">:::</span><span class="kw">getMissingPars</span>( <span class="dt">mznpath =</span> mzn_path)</span>
@@ -640,7 +640,7 @@ solve maximize 400*b + 450*c;
 ## 
 ## $optimal_solution$x[[3]]
 ## [1] 1</code></pre>
-<p>The examples of how to use these functions to solve optimization problems can be found in <code>mzn_test_examples</code>.</p>
+<p>The examples of how to use these functions to solve optimization problems can be found in <code>mzn_examples</code> which are taken from <a href="https://github.com/MiniZinc/minizinc-examples">minizinc-examples</a>.</p>
 <p>NOTE: Please don’t include output formatting in the mzn files or the solutions might not be parsed properly.</p>
 <p>The next step is to allow the users to add variables, constraints,etc in a MiniZinc model.</p>
 </div>
