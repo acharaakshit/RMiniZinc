@@ -1,0 +1,12 @@
+include "alldifferent.mzn";
+include "table.mzn";
+int: n = 10;
+int: nedges = 34;
+set of int: N = 1..n;
+array [1..n] of var N: x;
+array [1..nedges, 1..2] of N: G;
+constraint alldifferent(x);
+constraint x[1]==1;
+constraint forall ( i in 1..n-1 ) ( table([x[i], x[i+1]], G) );
+constraint table([x[n], 1], G);
+solve satisfy;
