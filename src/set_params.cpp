@@ -63,7 +63,10 @@ std::string set_params(List modData, std::string modelString = "",
   nameIndexMap.names() = parNames;
   if(modData.length() == 0 || modData.length() > nameIndexMap.length()){
     Rcpp::stop("Provide the values for atleast 1 to the total number missing parameters");
-  }else if(modData.length()){
+  }else{
+    if(Rf_isNull(modData.names())){
+      Rcpp::stop("Please provide names for the values");
+    }
     CharacterVector argParNames = modData.names();
     for(int i = 0;i< modData.length();i++){
       if(!nameIndexMap.containsElementNamed(argParNames[i])){
@@ -99,58 +102,56 @@ std::string set_params(List modData, std::string modelString = "",
         }
         SetLit *sl = new SetLit(items[nameIndexMap[i]]->loc(), expVec);
         vd->e(sl);
-      }else{
+      }else if(tp.dim() >= 1  && !tp.is_set()){
+        // arrays of all dimensions
+        vector<Expression*> callVec;
+        string arrayfnName = "array";
+        arrayfnName.append(to_string(tp.dim()));
+        arrayfnName.append("d");
+        
+        TypeInst *nti = items[nameIndexMap[index]]->cast<VarDeclI>()->e()->ti();
+        ASTExprVec<TypeInst> index_ti = nti->ranges();
+        int noIndex = index_ti.size();
+        for( int k = 0; k<noIndex; k++){
+          Expression *ind_exp = index_ti.operator[](k);
+          callVec.push_back(ind_exp);
+        }
         vector<Expression*> expVec;
-        if(tp.dim() == 1){
-        if(tp.isintarray()){
+        if(tp.st() == Type::ST_PLAIN && tp.ot() == Type::OT_PRESENT && tp.bt() == Type::BT_INT){
             // 1 dimensional integer array
             NumericVector arrVal= modData[i];
             for(int it = 0;it < arrVal.length();it++)
               expVec.push_back(IntLit::a(arrVal[it]));
-          }else if(tp.isintsetarray()){
-            // 1 integer array of set
-          }else if(tp.dim() == 1 && tp.st() == Type::ST_PLAIN && tp.ot() == Type::OT_PRESENT && tp.bt() == Type::BT_UNKNOWN){
+        }else if(tp.st() == Type::ST_PLAIN && tp.ot() == Type::OT_PRESENT && tp.bt() == Type::BT_UNKNOWN){
             // array index is not a value but a variable
             NumericVector arrVal= modData[i];
             for(int it = 0;it < arrVal.length();it++)
               expVec.push_back(IntLit::a(arrVal[it]));
-          }else if(tp.isboolarray()){
+          }else if(tp.st() == Type::ST_PLAIN && tp.ot() == Type::OT_PRESENT && tp.bt() == Type::BT_BOOL){
             // 1 dimensional bool array
-          }else if(tp.dim() == 1 && tp.st() == Type::ST_PLAIN && tp.ot() == Type::OT_PRESENT && tp.bt() == Type::BT_STRING){
+          }else if(tp.st() == Type::ST_PLAIN && tp.ot() == Type::OT_PRESENT && tp.bt() == Type::BT_STRING){
             // array of string
             StringVector arrStrVal = modData[i];
             for(int it = 0;it < arrStrVal.length();it++){
               expVec.push_back(new StringLit(items[nameIndexMap[index]]->loc(),(string)arrStrVal[it]));   
             }
           }
-          // initialize constructor for 1 dimensional arrays
           ArrayLit *al = new ArrayLit(items[nameIndexMap[index]]->loc(),expVec);
-          vd->e(al);  
-        }else if(tp.dim() == 2 && tp.st() == Type::ST_PLAIN && tp.ot()==Type::OT_PRESENT){
-            // set two dimensional array values
-             vector<vector<Expression*>> exVec;
-             NumericMatrix arr2dVal = modData[i];
-             for(int it = 0;it<arr2dVal.rows();it++){
-               vector<Expression*> expVec;
-               NumericVector _1dVal = arr2dVal(it, _);
-               for(int itt = 0;itt < _1dVal.length();itt++)
-                 if(tp.bt()==Type::BT_INT )
-                    expVec.push_back(IntLit::a(_1dVal[itt]));
-                 else if(tp.bt()==Type::BT_FLOAT)
-                   expVec.push_back(FloatLit::a(_1dVal[itt]));
-                 else if(tp.bt() == Type::BT_UNKNOWN)
-                   // needs to be handled properly
-                   expVec.push_back(IntLit::a(_1dVal[itt]));
-               exVec.push_back(expVec);
-             }
-             ArrayLit *al = new ArrayLit(items[nameIndexMap[index]]->loc(),exVec);
-             vd->e(al); 
+          // initialize constructor for 1 dimensional arrays
+          if(callVec.size()){
+            callVec.push_back(al);
+            Call *ncall = new Call(items[nameIndexMap[index]]->loc(),arrayfnName, callVec);
+            vd->e(ncall);     
           }else{
+            // index sets not available 
+            Rcpp::stop("Array index not found");
+          }
+      }else{
              Rcpp::stop("Parameter can't be set --  not supported");
            }
         }
       }
-    }
+    
   
   stringstream strmodel;
   Printer *p = new Printer(strmodel); 
@@ -161,6 +162,8 @@ std::string set_params(List modData, std::string modelString = "",
     ofstream out(mznpath);
     out << mString;
     out.close();
+  }else if(modify_mzn){
+    Rcpp::warning("no file given to modify");
   }
   
   return mString;

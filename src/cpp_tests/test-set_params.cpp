@@ -101,7 +101,6 @@ context("tests for optimization problems"){
     modData.push_back(CharacterVector({"banana-cake", "chocolate-cake"}));
     modData.push_back(CharacterVector({"flour","banana","sugar","butter","cocoa"}));
     NumericVector consumption = {250, 2, 75, 100, 0, 200, 0, 150, 150, 75};
-    consumption.attr("dim") = Dimension(2,5);
     modData.push_back(consumption);
     modData.names() = CharacterVector({"nproducts", "nresources", "profit", "capacity", "pname", "rname", "consumption"});
     // set the parameters and get the updated string
