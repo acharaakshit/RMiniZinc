@@ -30,8 +30,8 @@ test_that("jobshop problems are solved without issues",{
   missingPars = getMissingPars(mznpath = mznName)
   expect_equal(missingPars, c("n", "m", "d", "mc"))
   
-  pVals = list(3, 4, matrix(c(3,3,4,4,4,3,2,2,3,3,3,4), nrow = 3, ncol = 4, byrow = TRUE),
-               matrix(c(1,2,3,4,1,3,2,4,4,2,1,3), nrow=3, ncol=4, byrow = TRUE))
+  pVals = list(3, 4, c(3,3,4,4,4,3,2,2,3,3,3,4),
+               c(1,2,3,4,1,3,2,4,4,2,1,3))
   names(pVals) = missingPars
   
   modString = set_params(modData = pVals, mznpath = mznName, modify_mzn = FALSE)
@@ -84,11 +84,11 @@ test_that("production planning problems are solved",{
   # set the values of these missing parameters
   pVals = list(2,c(400, 500), c("banana-cake", "chocolate-cake"), 5, c(4000, 6, 2000, 500, 500),
                c("flour","banana","sugar","butter","cocoa"), 
-               matrix(c(250, 2, 75, 100, 0, 200, 0, 150, 150, 75), nrow = 2, ncol = 5, byrow = TRUE))
+               c(250, 2, 75, 100, 0, 200, 0, 150, 150, 75))
   
   names(pVals) = missingNames
   
-  modString = set_params(modData = pVals, mznpath= mznName)
+  modString = set_params(modData = pVals, mznpath= mznName, modify_mzn = FALSE)
   
   expect_length(getMissingPars(modelString = modString), 0)
   
@@ -128,7 +128,7 @@ test_that("assignment problems are solved", {
   missingPars = getMissingPars(mznpath = mznName)
   expect_equal(missingPars, c("n", "m", "profit"))
   
-  pVals = list(4, 4, matrix(c(7, 1, 3, 4, 8, 2, 5, 1, 4, 3, 7, 2, 3, 1, 6, 3), nrow = 4, ncol = 4, byrow = TRUE))
+  pVals = list(4, 4, c(7, 1, 3, 4, 8, 2, 5, 1, 4, 3, 7, 2, 3, 1, 6, 3))
   names(pVals) = missingPars
   
   modString = set_params(modData = pVals, mznpath = mznName, modify_mzn = FALSE)
