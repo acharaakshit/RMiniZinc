@@ -124,22 +124,31 @@ objective_of_problem  = objective$new(type_of_problem = "maximize",
 # create the model
 m = model$new(decision = vars, constraints = constr, 
               objective = objective_of_problem)
+
 ```
 
 Now, we have created the model and have set up MiniZinc on our system. The next step is to evaluate the results.
-The information about result class and how to use it correctly can be found using `?results`. We wish to get all the solutions of the problem so we will set `all_solutions` to `TRUE`
+
+The function `mzn_eval` can be used to evaluate a MiniZinc model. A string model should be passed to the function along with the solver name along with the path of the MiniZinc library where the solver to be used is present and the path of the data file (optional). Currently, only gecode solver can be used. Once the model solutions are obtained, the solutions are parsed using the function `sol_parse()` and the results are returned as a List. If the solutions are not parsed, the errors are returned along with the solution string. If the optimal solution is found the list element containing the list can be obtained using `<solution>$optimal_solution`.
 
 ```{r}
-solution = results$new(model = m, result_type = "R6", all_solutions = TRUE)
-# show the solution
-print(solution$result$optimal_solution)
+
+mzn_file = tempfile(fileext = ".mzn")
+rminizinc::write_mzn(model = m, mzn_file)
+
+# R List object containing the solutions
+sol = rminizinc:::mzn_eval(mznpath = mzn_file, solver = "org.gecode.gecode",
+                     libpath = "/snap/minizinc/current/share/minizinc")
+
+# get all the solutions
+print(sol$Solutions)
 ```
-The results can be obtained as strings or R6 objects. The R6 object has three attributes namely: `solutions`, `best_solution` and `optimal_solution` which contain all the solutions, the best solution found and the optimal solution respectively
+
 
 
 ```{r,echo=FALSE}
 # remove the temporary model file 
-file.remove(solution$mzn)
+file.remove(mzn_file)
 ```
 
 A Minizinc implementation of the same problem is given below:
@@ -183,7 +192,6 @@ a model, `Constraints` which are the constraints of a model, `SolveType` which c
 
 The function `set_params` can be used to set the missing parameters of the model. Any number of missing parameters can be set. The missing parameters can be obtained using `getMissingPars()`. 
 
-The function `mzn_eval` can be used to evaluate a MiniZinc model. A string model should be passed to the function along with the solver name along with the path of the MiniZinc library where the solver to be used is present and the path of the data file (optional). Currently, only gecode solver can be used. Once the model solutions are obtained, the solutions are parsed using the function `sol_parse()` and the results are returned as a List. If the solutions are not parsed, the errors are returned along with the solution string. If the optimal solution is found the list element containing the list can be obtained using `<solution>$optimal_solution`. More features will be added later.
 
 ```{r}
 # mzn file path
