@@ -60,14 +60,22 @@ objective_of_problem  = objective$new(type_of_problem = "maximize",
 m = model$new(decision = vars, constraints = constr, 
               objective = objective_of_problem)
 
+
 ## -----------------------------------------------------------------------------
-solution = results$new(model = m, result_type = "R6", all_solutions = TRUE)
-# show the solution
-print(solution$result$optimal_solution)
+
+mzn_file = tempfile(fileext = ".mzn")
+rminizinc::write_mzn(model = m, mzn_file)
+
+# R List object containing the solutions
+sol = rminizinc:::mzn_eval(mznpath = mzn_file, solver = "org.gecode.gecode",
+                     libpath = "/snap/minizinc/current/share/minizinc")
+
+# get all the solutions
+print(sol$Solutions)
 
 ## ----echo=FALSE---------------------------------------------------------------
 # remove the temporary model file 
-file.remove(solution$mzn)
+file.remove(mzn_file)
 
 ## ----Workflow 1, echo=FALSE, out.width = '100%'-------------------------------
 knitr::include_graphics(paste0(getwd(),"/workflows/first_approach.png"))
