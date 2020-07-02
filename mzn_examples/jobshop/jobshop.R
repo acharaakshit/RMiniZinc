@@ -6,8 +6,8 @@ parseInfo <- mzn_parse(mznpath = mznName)
 
 missingPars = getMissingPars(mznpath = mznName)
 
-pVals = list(3, 4, matrix(c(3,3,4,4,4,3,2,2,3,3,3,4), nrow = 3, ncol = 4, byrow = TRUE),
-             matrix(c(1,2,3,4,1,3,2,4,4,2,1,3), nrow=3, ncol=4, byrow = TRUE))
+pVals = list(3, 4, c(3,3,4,4,4,3,2,2,3,3,3,4),
+             c(1,2,3,4,1,3,2,4,4,2,1,3))
 names(pVals) = missingPars
 
 modString = set_params(modData = pVals, mznpath = mznName, modify_mzn = FALSE)

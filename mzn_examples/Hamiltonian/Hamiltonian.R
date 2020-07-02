@@ -1,8 +1,8 @@
 library(rminizinc)
 
-getMissingPars(mznpath = "mzn_examples/Hamiltonian//Hamiltonian.mzn")
+getMissingPars(mznpath = "mzn_examples/Hamiltonian/Hamiltonian.mzn")
 
-pVals = list(G = matrix(c(1, 7,  1, 8,  1, 9,  1,10,
+pVals = list(G = c(1, 7,  1, 8,  1, 9,  1,10,
                           2, 3,  2, 9,  2,10,
                           3, 2,  3, 4,  3, 5,  3, 9,
                           4, 3,  4, 5,  4, 6,
@@ -11,7 +11,7 @@ pVals = list(G = matrix(c(1, 7,  1, 8,  1, 9,  1,10,
                           7, 6,  7, 8,  7, 1,
                           8, 7,  8, 1,
                           9, 1,  9, 2,  9, 3,  9, 6,  9,10,
-                          10, 1,  10, 2,  10, 9), nrow = 34, ncol = 2, byrow = TRUE))
+                          10, 1,  10, 2,  10, 9))
 
 modString = set_params(modData = pVals, mznpath = "mzn_examples/Hamiltonian/Hamiltonian.mzn", modify_mzn = FALSE)
 
