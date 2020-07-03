@@ -40,20 +40,31 @@ Rcpp::CharacterVector getMissingPars(std::string modelString="",
   }
   
   CharacterVector missingPars;
+  NumericVector indexPars;
   vector<Item*> items;
+  
   for(int i=0; i < s; i++){
     items.push_back(model->operator[] (i));
+    
     if(items[i]->iid() == Item::II_VD){
       string name = items[i]->cast<VarDeclI>()->e()->id()->str().aststr()->c_str();
       // decision variables or parameters
       if(items[i]->cast<VarDeclI>()->e()->e() == NULL &&  items[i]->cast<VarDeclI>()->e()->type().ispar()){
         // uninitialized parameter
+        indexPars.push_back(i);
         missingPars.push_back(name);
+        indexPars.names() = missingPars;
       }
-    }else if (items[i]->iid() == Item::II_ASN){
+    }else if(items[i]->iid() == Item::II_ASN){
       // assignment of the parameters
-      int index = missingPars.offset(items[i]->cast<AssignI>()->id().str());
-      missingPars.erase(index);
+      int index;
+      try{
+        index  = indexPars.offset(items[i]->cast<AssignI>()->id().str()); 
+        indexPars.erase(index);
+        missingPars.erase(index);
+      }catch(std::exception &e){
+        Rcpp::stop(e.what());
+      }
     }
   }    
     return missingPars;
