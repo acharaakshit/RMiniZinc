@@ -33,6 +33,14 @@ List sol_parse(std::string solutionString) {
   
   if(solutionString.find("=====UNSATISFIABLE=====") != npos){
     Rcpp::stop("No Solution");
+  }else if(solutionString.find("=====ERROR=====") != npos){
+    Rcpp::stop("Errored");
+  }else if(solutionString.find("=====UNKNOWN=====") != npos){
+    Rcpp::stop("Unknown solution");
+  }else if(solutionString.find("=====UNBOUNDED=====") != npos){
+    Rcpp::stop("Unbounded solution");
+  }else if(solutionString.find("=====UNSATorUNBOUNDED=====") != npos){
+    Rcpp::stop("Unsatisfiable or Unbounded solution");
   }
   
   if(solutions.size()==0) Rcpp::stop("No solution seperator found-- incorrect solution string");
