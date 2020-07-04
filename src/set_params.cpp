@@ -129,6 +129,9 @@ std::string set_params(List modData, std::string modelString = "",
               expVec.push_back(IntLit::a(arrVal[it]));
           }else if(tp.st() == Type::ST_PLAIN && tp.ot() == Type::OT_PRESENT && tp.bt() == Type::BT_BOOL){
             // 1 dimensional bool array
+            LogicalVector arrVal= modData[i];
+            for(int it = 0;it < arrVal.length();it++)
+              expVec.push_back(new BoolLit(items[nameIndexMap[index]]->loc(), arrVal[it]));
           }else if(tp.st() == Type::ST_PLAIN && tp.ot() == Type::OT_PRESENT && tp.bt() == Type::BT_STRING){
             // array of string
             StringVector arrStrVal = modData[i];
