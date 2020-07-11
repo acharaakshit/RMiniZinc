@@ -30,162 +30,153 @@ Please make sure to install MiniZinc on your operating system and also ensure th
 
 There are two types of variables in MiniZinc -- decision variables and parameters. 
 
-The data types of variables can be single types i.e integers (int), floating point numbers (float), Booleans (bool) and strings (string) but strings are only used in output formatting so they won't be used as data types and collections i.e sets, enums and arrays (upto 5 dimensional arrays).
+The data types of variables can be single types i.e integers (int), floating point numbers (float), Booleans (bool) and strings (string) and collections i.e sets, enums and arrays (upto 5 dimensional arrays).
 
-Parameter is used to specify a parameter in a given problem and they are assigned a fixed value.
+Parameter is used to specify a parameter in a given problem and they are assigned a fixed value or expression.
 
-Decision variables are the unknowns that Minizinc model is finding solutions for. We do not need to give them a value, but instead we give them a domain of possible values. Sometimes expressions involving other variables and paramters are also assigned to decision variables. Decision variables need to satisfy a set of constraints which form the core of the problem. 
+Decision variables are the unknowns that Minizinc model is finding solutions for. We do not need to give them a value, but instead we give them a domain of possible values. Sometimes expressions involving other variables and parameters are also assigned to decision variables. Decision variables need to satisfy a set of constraints which form the core of the problem. 
 
 Here are examples of how we can create parameters and decision variables.
 
 ```{r}
 library(rminizinc)
-# declare an array parameter (only dimensions upto 5 are allowed)
-par = variable$new(type = "array", kind = "parameter", sub_type = "int", value = array(1:50, c(10,10,10,10,10)))
-# declare a floating point decision variable with a domain of (0,1)
-dec = variable$new(type = "float", kind = "decision", domain = c(0, 1))
+
+# create the variable and parameter declarations
+
+par1_name = Id$new(ID = "n")
+par_dt = Int$new(value = 4)
+par_tp = Type$new(base_type = "INT", kind = "parameter")
+par1 = VarDecl$new(expression = par_dt, type = par_tp, id = par1_name)
+# create the Item 1
+item1 = VarDeclItem$new(decl = par1)
+
+par2_name = Id$new(ID = "OBJ")
+sv = SetVal$new(val = c(l = 1, u=3))
+par2_dt = Set$new(setVal = sv)
+par2_tp = Type$new(base_type = "INT", kind = "parameter", dim = 1, set_type = TRUE)
+par2 = VarDecl$new(type = par2_tp, expression = par2_dt, id = par2_name)
+# create the item 2
+item2 = VarDeclItem$new(decl = par2)
+
+par3_name = Id$new(ID = "capacity")
+par3_tp = Type$new(base_type = "INT", kind = "parameter")
+par3 = VarDecl$new(type = par3_tp, id = par3_name)
+# create the item 3
+item3 = VarDeclItem$new(decl = par3)
+
+par4_name = Id$new(ID = "profit")
+par4_tp = Type$new(base_type = "INT", type_inst = TypeInst$new(Id$new(ID = "OBJ")), kind = "parameter", dim = 1)
+par4 = VarDecl$new(type = par4_tp, id = par4_name)
+# create the item 4
+item4 = VarDeclItem$new(decl = par4)
+
+par5_name = Id$new(ID = "size")
+par5_tp = Type$new(base_type = "INT", type_inst = TypeInst$new(Id$new(ID = "OBJ")), kind = "parameter", dim = 1)
+par5 = VarDecl$new(type = par5_tp, id = par5_name)
+# create the item 5
+item5 = VarDeclItem$new(decl = par5)
+
+par6_name = Id$new(ID = "x")
+par6_tp = Type$new(base_type = "INT", kind = "decision", type_inst = TypeInst$new(Id$new(ID = "OBJ")), dim = 1)
+par6 = VarDecl$new(type = par6_tp, id = par6_name)
+#create the item 6
+item6 = VarDeclItem$new(decl = par6)
 ```
 
-More information on variable is available in `?variable`. Currently only integer, float or boolean arrays are supported and only integer indices can be used.
+# Constraints
 
-## Constraints
-
-Constraints specify the Boolean expressions that decision variables must satisfy. Examples of such constraints are given below. 
+Create constraints
 
 ```{r}
-par = variable$new(type = "float", kind = "parameter", value = 3)
-# decision variables can be declared without a domain also
-var1 = variable$new(type = "float", kind = "decision")
-var2 = variable$new(type = "float", kind = "decision", domain = c(0, par$value))
-# get the LHS expression of the constraint
-LHS_expr = get_expression$new(variables = c(var1,var2), arithmetic_operator = "+" )
-# get the right hand side expression of the constraint
-RHS_expr = get_expression$new(variables = c(var1,var2), arithmetic_operator = "*" )
-constr = constraint$new(operator = ">=", LHS_expression = LHS_expr, RHS_expression = RHS_expr)
+gen_forall = list(Generator$new(IN = Id$new(ID = "OBJ")))
+bop1 = Binop$new(lhs_expression = ArrayAccess$new(id = Id$new("x"), index = Id$new("i")), binop = ">=", 
+                                        rhs_expression =    Int$new(value = 0))
+Comp1 = Comprehension$new(generators = gen_forall, expression = bop1)
+cl1 = Call$new(fn_id = Id$new("forall"),lExp = list(Comp1))
+# item7 
+item7 = ConstraintItem$new(expression = cl1)
+item7$c_str()
+
+gen_sum = list(Generator$new(IN = Id$new(ID = "OBJ")))
+bop2 = Binop$new(lhs_expression = ArrayAccess$new(id = Id$new("size"), index = Id$new("i")), binop = "*", 
+                                      rhs_expression = ArrayAccess$new(id = Id$new("x") ,index = Id$new("i")))
+Comp2 = Comprehension$new(generators = gen_sum, expression = bop2)
+cl2 = Call$new(fn_id = Id$new(ID = "sum"),lExp = list(Comp2))
+bop3 = Binop$new(lhs_expression = cl2, binop = "<=", rhs_expression = Id$new(ID = "capacity"))
+# item8
+item8 = ConstraintItem$new(expression = bop3)
 ```
 
-For now, this package can only support constraints which involve arithmetic operators only. The utility to use inbuilt functions and loops like 'forall' and 'exists' will be provided soon.
 
-## Objective
+# Solve Type
 
 The constraint programming problem can be of three types, namely: Satisfaction , Minimization and Maximization.
-Satisfaction problems produce all the solutions that satify the constraints whereas minimization and maximization problems produce the solution which minimizes and maximizes the given arithmetic expression.
-An example of how to specify the objective is shown below:
-
-```{r}
-obj = objective$new(type_of_problem = "satisfy")
-```
-
-
-## Models
-
-The components mentioned above can be combined to create a MiniZinc model. The demonstration of the same is given below:
-
-Here is a model for determining how many banana and chocolate cakes to bake for the
-school fete.
-
-```{r}
-# decision variables
-
-# number of bananas
-v1 = variable$new(type = "int", kind = "decision", domain = c(0, 100), 
-                  name = "b")
-# number pf cakes
-v2 = variable$new(type = "int", kind = "decision", domain = c(0, 100), 
-                  name = "c")
-
-
-vars = c(v1, v2)
-
-# constraints
-c1 = constraint$new(operator = "<=", LHS_expr = get_expression$new(variables = c(250,v1,200,v2),
-                                                          arithmetic_operator = c("*","+","*")), 
-                                                RHS_expr = get_expression$new(variables = 4000))
-c2 = constraint$new(operator = "<=", LHS_expr = get_expression$new(variables = c(2, v1),
-                                                          arithmetic_operator = "*"), 
-                                                RHS_expr = get_expression$new(variables = 6))
-c3 = constraint$new(operator = "<=", LHS_expr = get_expression$new(variables = c(75,v1,150,v2),
-                                                          arithmetic_operator = c("*","+","*")), 
-                                     RHS_expr = get_expression$new(variables = 2000))
-c4 = constraint$new(operator = "<=", LHS_expr = get_expression$new(variables = c(100,v1,150,v2),
-                                                          arithmetic_operator = c("*","+","*")), 
-                                     RHS_expr = get_expression$new(variables = 500))
-c5 = constraint$new(operator = "<=", LHS_expr = get_expression$new(variables = c(75, v2),
-                                                          arithmetic_operator = "*"), 
-                                                RHS_expr = get_expression$new(variables = 500))
-
-
-constr = c(c1, c2, c3, c4, c5)
-
-objective_of_problem  = objective$new(type_of_problem = "maximize", 
-                                      arithmetic_expression = get_expression$new(variables = c(400,v1,450,v2),
-                                                                        arithmetic_operator = c("*","+","*")))
-
-# create the model
-m = model$new(decision = vars, constraints = constr, 
-              objective = objective_of_problem)
-
-```
-
-Now, we have created the model and have set up MiniZinc on our system. The next step is to evaluate the results.
-
-The function `mzn_eval` can be used to evaluate a MiniZinc model. A string model should be passed to the function along with the solver name along with the path of the MiniZinc library where the solver to be used is present and the path of the data file (optional). Currently, only gecode solver can be used. Once the model solutions are obtained, the solutions are parsed using the function `sol_parse()` and the results are returned as a List. If the solutions are not parsed, the errors are returned along with the solution string. If the optimal solution is found the list element containing the list can be obtained using `<solution>$optimal_solution`.
+Satisfaction problems produce all the solutions that satisfy the constraints whereas minimization and maximization problems produce the solution which minimizes and maximizes the given arithmetic expression.
+An example is shown below:
 
 ```{r}
 
-mzn_file = tempfile(fileext = ".mzn")
-rminizinc::write_mzn(model = m, mzn_file)
+gen_sum = list(Generator$new(IN = Id$new(ID = "OBJ")))
 
-# R List object containing the solutions
-sol = rminizinc:::mzn_eval(mznpath = mzn_file, solver = "org.gecode.gecode",
-                     libpath = "/snap/minizinc/current/share/minizinc")
+bop4 = Binop$new(lhs_expression = ArrayAccess$new(id = Id$new("profit"),index = Id$new("i")), 
+                      binop = "*", rhs_expression = ArrayAccess$new(id = Id$new("x"), index = Id$new("i")))
 
-# get all the solutions
-print(sol$Solutions)
+Comp3 = Comprehension$new(generators = gen_sum, expression = bop4)
+
+cl3 = Call$new(fn_id = Id$new("sum"),lExp = list(Comp3))
+# item9
+item9 = SolveItem$new(solve_type = "maximize", expression = cl3)
+```
+#' Create the model
+
+Combine all the items to create a MiniZinc model
+```{r}
+items  = c(item1, item2, item3, item4, item5, item6, item7, item8, item9)
+mod = Model$new(items = items)
+modString = mod$mzn_string()
 ```
 
+# Solve the model
 
+Solve the model using the Rcpp functions that are using the MiniZinc.
 
-```{r,echo=FALSE}
-# remove the temporary model file 
-file.remove(mzn_file)
+```{r}
+dzn_path = paste0(dirname(getwd()), "/mzn_examples/knapsack/knapsack_0.dzn")
+sol = rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gecode",
+                      libpath = "/snap/minizinc/current/share/minizinc", dznpath = dzn_path)
 ```
+
 
 A Minizinc implementation of the same problem is given below:
 
 ```{minizinc}
 
-% Baking cakes for the school fete
-var 0..100: b; % no. of banana cakes
-var 0..100: c; % no. of chocolate cakes
-% flour
-constraint 250*b + 200*c <= 4000;
-% bananas
-constraint 2*b <= 6;
-% sugar
-constraint 75*b + 150*c <= 2000;
-% butter
-constraint 100*b + 150*c <= 500;
-% cocoa
-constraint 75*c <= 500;
-% maximize our profit
-solve maximize 400*b + 450*c;
+int: n; % number of objects
+set of int: OBJ = 1..n;
+int: capacity;
+array[OBJ] of int: profit;
+array[OBJ] of int: size;
+
+array[OBJ] of var int: x; % how many of each object
+
+constraint forall(i in OBJ)(x[i] >= 0);
+constraint sum(i in OBJ)(size[i] * x[i]) <= capacity;
+solve maximize sum(i in OBJ)(profit[i] * x[i]);
 
 ```
-
 
 Now, that the basic structure of the problem is clear, we can create functions for solving different constraint programming problems.
 
 The workflow of the approach used above is given below:
 ```{r Workflow 1, echo=FALSE, out.width = '100%'}
-knitr::include_graphics(paste0(getwd(),"/workflows/first_approach.png"))
+knitr::include_graphics(paste0(getwd(),"/workflows/write_model.png"))
 ```
 
 This approach is helpful for R users who have little understanding of MiniZinc.
 
 The next approach is to use the MiniZinc C++ API. This involves giving the MiniZinc model to the Rcpp function, evaluate the results and return them back to R. The workflow can be seen below:
 ```{r Workflow 2, echo=FALSE, out.width = '100%'}
-knitr::include_graphics(paste0(getwd(),"/workflows/ongoing_approach.png"))
+knitr::include_graphics(paste0(getwd(),"/workflows/API.png"))
 ```
 A parser function `mzn_parse` has also been implemented which can be used to detect possible syntax errors (and to modify the components of the model -- to be done later) before the MiniZinc model is evaluated. This function can either take the path of a model file path or it can take a string model and returns a list with five elements namely: `modelString` which is the string representation of the model and `Parameters` which are the parameter names, `decisionVariables` which are the decision variables of 
 a model, `Constraints` which are the constraints of a model, `SolveType` which contains the information about the solve type of the problem and ode.
