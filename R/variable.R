@@ -73,6 +73,7 @@ VarDecl <- R6Class("VarDecl",
 #' 
 #' @export
 VarDeclItem = R6Class("VarDeclItem",
+                      inherit = Item,
                       public = list(
                         #' @description constructor
                         #' @param decl the declaration expression object
@@ -106,6 +107,11 @@ VarDeclItem = R6Class("VarDeclItem",
                             }else{
                               return(sprintf("array[%s] of var %s: %s;", access_id, t, id))
                             }  
+                          }else if(private$.decl$type()$ndim() == 1 && private$.decl$type()$isSet()){
+                            val = private$.decl$e()$v()$isv()
+                            if(private$.decl$isPar()){
+                              return(sprintf("set of %s: %s = %s..%s;", t, id, val[["l"]], val[["u"]]))
+                            }
                           }
                           if(private$.decl$isPar()){
                             return(paste0(t, ": ", id, ";")) 

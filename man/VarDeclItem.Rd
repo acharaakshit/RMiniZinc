@@ -6,6 +6,9 @@
 \description{
 Declaration items in the model
 }
+\section{Super class}{
+\code{\link[rminizinc:Item]{rminizinc::Item}} -> \code{VarDeclItem}
+}
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
@@ -28,6 +31,12 @@ Declaration items in the model
 \item \href{#method-c_str}{\code{VarDeclItem$c_str()}}
 \item \href{#method-clone}{\code{VarDeclItem$clone()}}
 }
+}
+\if{html}{
+\out{<details open ><summary>Inherited methods</summary>}
+\itemize{
+}
+\out{</details>}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}

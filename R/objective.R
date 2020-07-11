@@ -12,6 +12,7 @@
 #' @export
 
 SolveItem = R6Class("SolveType",
+                    inherit = Item,
                            public = list(
                              #' @description 
                              #' create an instance of specify_problem class
@@ -36,6 +37,34 @@ SolveItem = R6Class("SolveType",
                              },
                              st = function(){
                                return(private$.st)
+                             },
+                             #' @description to string method
+                             c_str = function(){
+                               if(private$.st == "satisfy"){
+                                 return(sprintf("solve satisfy;"))
+                               }else{
+                                 mainExp = private$.exp
+                                 if(testR6(mainExp, "Call")){
+                                   cl = mainExp
+                                   fnId  = cl$id()$id()
+                                   iExp = cl$e_i(1)
+                                   iterate = ''
+                                   if(testR6(iExp, "Comprehension")){
+                                     iter = 'i'
+                                     iterate = iExp$gen_i(1)$In()$id()
+                                   }
+                                   cExp = iExp$e()
+                                   lId = cExp$lhs()$id()$id()
+                                   lAcc = cExp$lhs()$index()$id()
+                                   operator = cExp$op()
+                                   rId = cExp$rhs()$id()$id()
+                                   rAcc = cExp$rhs()$index()$id()
+                                   print(rAcc)
+                                   return(sprintf("solve %s %s(%s in %s)(%s[%s] %s %s[%s]);", private$.st,
+                                                  fnId, iter, iterate, lId,lAcc, operator, rId, rAcc))
+                                 }  
+                               }
+                               
                              }
                              ),
                           private = list(

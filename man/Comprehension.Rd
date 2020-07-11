@@ -12,18 +12,18 @@ create a Comprehension
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{generators}}{a vector of generators}
+\item{\code{.generators}}{a vector of generators}
 
-\item{\code{expression}}{the comprehension expression}
+\item{\code{.expression}}{the comprehension expression}
 }
 \if{html}{\out{</div>}}
 }
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
-\item{\code{generators}}{a vector of generators}
+\item{\code{.generators}}{a vector of generators}
 
-\item{\code{expression}}{the comprehension expression}
+\item{\code{.expression}}{the comprehension expression}
 }
 \if{html}{\out{</div>}}
 }
@@ -31,6 +31,9 @@ create a Comprehension
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{Comprehension$new()}}
+\item \href{#method-ngens}{\code{Comprehension$ngens()}}
+\item \href{#method-gen_i}{\code{Comprehension$gen_i()}}
+\item \href{#method-e}{\code{Comprehension$e()}}
 \item \href{#method-clone}{\code{Comprehension$clone()}}
 }
 }
@@ -58,6 +61,43 @@ constructor
 }
 \if{html}{\out{</div>}}
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-ngens"></a>}}
+\if{latex}{\out{\hypertarget{method-ngens}{}}}
+\subsection{Method \code{ngens()}}{
+get the number of generators
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Comprehension$ngens()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-gen_i"></a>}}
+\if{latex}{\out{\hypertarget{method-gen_i}{}}}
+\subsection{Method \code{gen_i()}}{
+get the ith generator expression
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Comprehension$gen_i(i)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{i}}{index}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-e"></a>}}
+\if{latex}{\out{\hypertarget{method-e}{}}}
+\subsection{Method \code{e()}}{
+get the expression
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Comprehension$e()}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}

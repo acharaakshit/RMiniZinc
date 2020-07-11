@@ -11,7 +11,7 @@ par1 = VarDecl$new(expression = par_dt, type = par_tp, id = par1_name)
 item1 = VarDeclItem$new(decl = par1)
 
 par2_name = Id$new(ID = "OBJ")
-sv = SetVal$new(val = c(l = 1, u=4))
+sv = SetVal$new(val = c(l = 1, u=3))
 par2_dt = Set$new(setVal = sv)
 par2_tp = Type$new(base_type = "INT", kind = "parameter", dim = 1, set_type = TRUE)
 par2 = VarDecl$new(type = par2_tp, expression = par2_dt, id = par2_name)
@@ -19,7 +19,7 @@ par2 = VarDecl$new(type = par2_tp, expression = par2_dt, id = par2_name)
 item2 = VarDeclItem$new(decl = par2)
 
 par3_name = Id$new(ID = "capacity")
-par3_tp = Type$new(base_type = "INT", kind = "parameter",type_inst = TypeInst$new(Id$new(ID = "OBJ")),  dim = 1)
+par3_tp = Type$new(base_type = "INT", kind = "parameter")
 par3 = VarDecl$new(type = par3_tp, id = par3_name)
 # create the item 3
 item3 = VarDeclItem$new(decl = par3)
@@ -44,14 +44,17 @@ item6 = VarDeclItem$new(decl = par6)
 
 ## -----------------------------------------------------------------------------
 gen_forall = list(Generator$new(IN = Id$new(ID = "OBJ")))
-bop1 = Binop$new(lhs_expression = Id$new(ID = "x"),binop = ">=", rhs_expression = Int$new(value = 0))
+bop1 = Binop$new(lhs_expression = ArrayAccess$new(id = Id$new("x"), index = Id$new("i")), binop = ">=", 
+                                        rhs_expression =    Int$new(value = 0))
 Comp1 = Comprehension$new(generators = gen_forall, expression = bop1)
 cl1 = Call$new(fn_id = Id$new("forall"),lExp = list(Comp1))
 # item7 
 item7 = ConstraintItem$new(expression = cl1)
+item7$c_str()
 
 gen_sum = list(Generator$new(IN = Id$new(ID = "OBJ")))
-bop2 = Binop$new(lhs_expression = Id$new(ID = "size"), binop = "*", rhs_expression = Id$new(ID = "x"))
+bop2 = Binop$new(lhs_expression = ArrayAccess$new(id = Id$new("size"), index = Id$new("i")), binop = "*", 
+                                      rhs_expression = ArrayAccess$new(id = Id$new("x") ,index = Id$new("i")))
 Comp2 = Comprehension$new(generators = gen_sum, expression = bop2)
 cl2 = Call$new(fn_id = Id$new(ID = "sum"),lExp = list(Comp2))
 bop3 = Binop$new(lhs_expression = cl2, binop = "<=", rhs_expression = Id$new(ID = "capacity"))
@@ -59,17 +62,33 @@ bop3 = Binop$new(lhs_expression = cl2, binop = "<=", rhs_expression = Id$new(ID 
 item8 = ConstraintItem$new(expression = bop3)
 
 ## -----------------------------------------------------------------------------
+
 gen_sum = list(Generator$new(IN = Id$new(ID = "OBJ")))
-bop4 = Binop$new(lhs_expression = Id$new(ID = "profit"), binop = "*", rhs_expression = Id$new(ID = "x"))
+
+bop4 = Binop$new(lhs_expression = ArrayAccess$new(id = Id$new("profit"),index = Id$new("i")), 
+                      binop = "*", rhs_expression = ArrayAccess$new(id = Id$new("x"), index = Id$new("i")))
+
 Comp3 = Comprehension$new(generators = gen_sum, expression = bop4)
+
+cl3 = Call$new(fn_id = Id$new("sum"),lExp = list(Comp3))
 # item9
-solveType = SolveItem$new(solve_type = "maximize", expression = Comp3)
+item9 = SolveItem$new(solve_type = "maximize", expression = cl3)
+
+## -----------------------------------------------------------------------------
+items  = c(item1, item2, item3, item4, item5, item6, item7, item8, item9)
+mod = Model$new(items = items)
+modString = mod$mzn_string()
+
+## -----------------------------------------------------------------------------
+dzn_path = paste0(dirname(getwd()), "/mzn_examples/knapsack/knapsack_0.dzn")
+sol = rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gecode",
+                      libpath = "/snap/minizinc/current/share/minizinc", dznpath = dzn_path)
 
 ## ----Workflow 1, echo=FALSE, out.width = '100%'-------------------------------
-knitr::include_graphics(paste0(getwd(),"/workflows/first_approach.png"))
+knitr::include_graphics(paste0(getwd(),"/workflows/write_model.png"))
 
 ## ----Workflow 2, echo=FALSE, out.width = '100%'-------------------------------
-knitr::include_graphics(paste0(getwd(),"/workflows/ongoing_approach.png"))
+knitr::include_graphics(paste0(getwd(),"/workflows/API.png"))
 
 ## -----------------------------------------------------------------------------
 # mzn file path

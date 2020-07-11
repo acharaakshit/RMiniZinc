@@ -15,6 +15,8 @@ function calls in MiniZinc
 \item{\code{.id}}{the function id}
 
 \item{\code{.lExp}}{list of expressions}
+
+\item{\code{.nargs}}{number of arguments to the call}
 }
 \if{html}{\out{</div>}}
 }
@@ -24,6 +26,8 @@ function calls in MiniZinc
 \item{\code{.id}}{the function id}
 
 \item{\code{.lExp}}{list of expressions}
+
+\item{\code{.nargs}}{number of arguments to the call}
 }
 \if{html}{\out{</div>}}
 }
@@ -32,6 +36,8 @@ function calls in MiniZinc
 \itemize{
 \item \href{#method-new}{\code{Call$new()}}
 \item \href{#method-id}{\code{Call$id()}}
+\item \href{#method-nargs}{\code{Call$nargs()}}
+\item \href{#method-e_i}{\code{Call$e_i()}}
 \item \href{#method-clone}{\code{Call$clone()}}
 }
 }
@@ -69,6 +75,33 @@ the function id object
 \if{html}{\out{<div class="r">}}\preformatted{Call$id()}\if{html}{\out{</div>}}
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-nargs"></a>}}
+\if{latex}{\out{\hypertarget{method-nargs}{}}}
+\subsection{Method \code{nargs()}}{
+get the number of arguments
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Call$nargs()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-e_i"></a>}}
+\if{latex}{\out{\hypertarget{method-e_i}{}}}
+\subsection{Method \code{e_i()}}{
+get the expression based on index
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Call$e_i(i)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{i}}{index}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}

@@ -7,14 +7,24 @@
 This is a class that will be used to specify whether the optimization problem is a satisfaction,
 minimization or maximization problem
 }
+\section{Super class}{
+\code{\link[rminizinc:Item]{rminizinc::Item}} -> \code{SolveType}
+}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{SolveItem$new()}}
 \item \href{#method-e}{\code{SolveItem$e()}}
 \item \href{#method-st}{\code{SolveItem$st()}}
+\item \href{#method-c_str}{\code{SolveItem$c_str()}}
 \item \href{#method-clone}{\code{SolveItem$clone()}}
 }
+}
+\if{html}{
+\out{<details open ><summary>Inherited methods</summary>}
+\itemize{
+}
+\out{</details>}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}
@@ -51,6 +61,16 @@ return the expression
 \subsection{Method \code{st()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{SolveItem$st()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-c_str"></a>}}
+\if{latex}{\out{\hypertarget{method-c_str}{}}}
+\subsection{Method \code{c_str()}}{
+to string method
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SolveItem$c_str()}\if{html}{\out{</div>}}
 }
 
 }

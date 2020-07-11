@@ -6,7 +6,7 @@
 #' @export
 Expression = R6Class("Expression",
                          public = list(
-                           #' @description constructor of an abstract class
+                           #' @description constructor
                            initialize = function(){
                              stop(paste(RSmisc::getR6Class(self), "can't be initialized."))  
                            }
@@ -85,6 +85,7 @@ Set = R6Class("Set",
                 #' @param setVal the set value
                 initialize = function(setVal){
                   assertR6(setVal, "SetVal")
+                  private$.setVal = setVal 
                 },
                 #' @description return the value
                 v = function(){
@@ -127,6 +128,44 @@ Array = R6Class("Array",
                    #' object of class expression
                    value = NULL
                  ))
+
+#' @title Array Access class
+#' 
+#' @description create ArrayAccess elements
+#' 
+#' @import R6
+#' @import checkmate
+#' 
+#' @export
+ArrayAccess = R6Class("ArrayAccess",
+                      inherit = Expression,
+                      public = list(
+                        #' @description constructor
+                        #' @param id the name of element
+                        #' @param index the array indices
+                        initialize =  function(id, index){
+                          assertR6(id, "Id")
+                          private$.id = id
+                          assertR6(index, "Id")
+                          private$.index = index
+                        },
+                        id = function(){
+                          return(private$.id)
+                        },
+                        index = function(){
+                          return(private$.index)
+                        }
+                      ),
+                      private = list(
+                        #' @field .id
+                        #' the id of array
+                        .id = NULL,
+                        #' @field .index
+                        #' index of the array
+                        .index = NULL
+                      )
+                      )
+
 #' @title Generator class
 #' 
 #' @description create a generator
@@ -147,6 +186,14 @@ Generator = R6Class("Generator",
                             private$.in = IN
                          else if(!is.null(where))
                            private$where = where
+                       },
+                       #' @description get the in expression
+                       In = function(){
+                         return(private$.in)
+                       },
+                       #' @description get the where expression
+                       where = function(){
+                         return(private$.where)
                        }
                      ),
                      private = list(
@@ -172,18 +219,31 @@ Comprehension = R6Class("Comprehension",
                            #' @param expression inside the comprehension
                            initialize = function(generators, expression){
                              assert_list(generators, "Generator")
-                             private$generators = generators
+                             private$.generators = generators
                              assertR6(expression, "Expression")
-                             private$expression = expression
+                             private$.expression = expression
+                           },
+                           #' @description get the number of generators
+                           ngens = function(){
+                             return(length(private.generators))
+                           },
+                           #' @description get the ith generator expression
+                           #' @param i index
+                           gen_i = function(i){
+                             return(private$.generators[[i]])
+                           },
+                           #' @description get the expression
+                           e = function(){
+                             return(private$.expression)
                            }
                          ),
                          private = list(
-                           #' @field generators
+                           #' @field .generators
                            #' a vector of generators
-                           generators = NULL,
-                           #' @field expression
+                           .generators = NULL,
+                           #' @field .expression
                            #' the comprehension expression
-                           expression = NULL
+                           .expression = NULL
                          ))
 
 #' @title Binop class
@@ -305,10 +365,21 @@ Call = R6Class("Call",
                    assertR6(fn_id, "Id")
                    private$.id = fn_id
                    assert_list(lExp, "Expression")
+                   private$.lExp = lExp
                  },
                  #' @description the function id object
                  id =  function(){
                    return(private$.id)
+                 },
+                 #' @description get the number of arguments
+                 nargs = function(){
+                   return(private$.nargs)
+                 },
+                 #' @description get the expression based on index
+                 #' @param i index 
+                 e_i = function(i){
+                   assert_true(!test_null(private$.lExp[[i]]))
+                   return(private$.lExp[[i]])
                  }
                ),
                private = list(
@@ -317,5 +388,8 @@ Call = R6Class("Call",
                  .id = NULL,
                  #' @field .lExp
                  #' list of expressions
-                 .lExp = NULL
+                 .lExp = NULL,
+                 #' @field .nargs
+                 #' number of arguments to the call
+                 .nargs = NULL
                ))

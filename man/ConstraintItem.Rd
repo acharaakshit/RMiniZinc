@@ -6,6 +6,9 @@
 \description{
 Constraint is a class to describe Minizinc constraints on decision variables.
 }
+\section{Super class}{
+\code{\link[rminizinc:Item]{rminizinc::Item}} -> \code{ConstraintItem}
+}
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
@@ -25,8 +28,15 @@ Constraint is a class to describe Minizinc constraints on decision variables.
 \itemize{
 \item \href{#method-new}{\code{ConstraintItem$new()}}
 \item \href{#method-e}{\code{ConstraintItem$e()}}
+\item \href{#method-c_str}{\code{ConstraintItem$c_str()}}
 \item \href{#method-clone}{\code{ConstraintItem$clone()}}
 }
+}
+\if{html}{
+\out{<details open ><summary>Inherited methods</summary>}
+\itemize{
+}
+\out{</details>}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}
@@ -52,6 +62,16 @@ Creates a new instance of Constraint class.
 return the constraint expression
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ConstraintItem$e()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-c_str"></a>}}
+\if{latex}{\out{\hypertarget{method-c_str}{}}}
+\subsection{Method \code{c_str()}}{
+serialize to MiniZinc syntax
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ConstraintItem$c_str()}\if{html}{\out{</div>}}
 }
 
 }
