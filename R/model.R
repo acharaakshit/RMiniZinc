@@ -11,36 +11,31 @@
 
 model = R6Class("model", 
                  public = list(
-                 #' @field parameters
-                 #' vector of parameter \code{\link{variable}} of the model
-                 parameters = NULL,
-                 #' @field  decisions
-                 #' vector of decision \code{\link{variable}} of the model
-                 decisions = NULL,
-                 #' @field constraints
-                 #' vector of \code{\link{constraint}} of the model
-                 constraints = NULL,
-                 #' @field objective
-                 #' \code{\link{objective}} of the problem
-                 objective = NULL,
                  #' @description create a new instance of model class
-                 #' @param parameters parameters of the model 
-                 #' @param decisions decision variables of the model
+                 #' @param decls variable declarations of the model 
                  #' @param constraints constraints of the model
                  #' @param objective  type of the problem
-                 initialize = function(parameters = NULL, decisions, constraints, objective){
+                 initialize = function(decls, constraints, objective){
                    
-                   assert(test_null(parameters), 
-                          all(lapply(parameters, function(x) if(x$kind == "parameter"){TRUE})), combine = "or")
-                   self$parameters = parameters
+                   assert_list(decls, "VarDeclItem")
+                   private$.decls = decls
                    
-                   assert_list(decisions, "variable")
-                   self$decisions = decisions
+                   assert_list(constraints, "ConstraintItem")
+                   private$.constraints =  constraints
                    
-                   assert_list(constraints, "constraint")
-                   self$constraints =  constraints
-                   
-                   assert_class(objective, "objective")
-                   self$objective = objective
+                   assertR6(objective, "SolveItem")
+                   private$.solve_type = objective
                  }
-                 ))
+                 ),
+                private = list(
+                  #' @field parameters
+                  #' vector of variable declarations of the model
+                  .decls = NULL,
+                  #' @field constraints
+                  #' vector of constraint items of the model
+                  .constraints = NULL,
+                  #' @field objective
+                  #' solve type of the problem
+                  .solve_type = NULL
+                )
+                )

@@ -10,13 +10,22 @@ new_decision_var, new_constraint and specify_problem.
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{parameters}}{vector of parameter \code{\link{variable}} of the model}
+\item{\code{parameters}}{vector of variable declarations of the model}
 
-\item{\code{decisions}}{vector of decision \code{\link{variable}} of the model}
+\item{\code{constraints}}{vector of constraint items of the model}
 
-\item{\code{constraints}}{vector of \code{\link{constraint}} of the model}
+\item{\code{objective}}{solve type of the problem}
+}
+\if{html}{\out{</div>}}
+}
+\section{Active bindings}{
+\if{html}{\out{<div class="r6-active-bindings">}}
+\describe{
+\item{\code{parameters}}{vector of variable declarations of the model}
 
-\item{\code{objective}}{\code{\link{objective}} of the problem}
+\item{\code{constraints}}{vector of constraint items of the model}
+
+\item{\code{objective}}{solve type of the problem}
 }
 \if{html}{\out{</div>}}
 }
@@ -33,15 +42,13 @@ new_decision_var, new_constraint and specify_problem.
 \subsection{Method \code{new()}}{
 create a new instance of model class
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{model$new(parameters = NULL, decisions, constraints, objective)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{model$new(decls, constraints, objective)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{parameters}}{parameters of the model}
-
-\item{\code{decisions}}{decision variables of the model}
+\item{\code{decls}}{variable declarations of the model}
 
 \item{\code{constraints}}{constraints of the model}
 
