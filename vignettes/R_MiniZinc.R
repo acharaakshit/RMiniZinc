@@ -13,31 +13,31 @@ item1 = VarDeclItem$new(decl = par1)
 par2_name = Id$new(ID = "OBJ")
 sv = SetVal$new(val = c(l = 1, u=4))
 par2_dt = Set$new(setVal = sv)
-par2_tp = Type$new(base_type = "INT", kind = "parameter")
+par2_tp = Type$new(base_type = "INT", kind = "parameter", dim = 1, set_type = TRUE)
 par2 = VarDecl$new(type = par2_tp, expression = par2_dt, id = par2_name)
 # create the item 2
 item2 = VarDeclItem$new(decl = par2)
 
 par3_name = Id$new(ID = "capacity")
-par3_tp = Type$new(base_type = "INT", kind = "parameter")
+par3_tp = Type$new(base_type = "INT", kind = "parameter",type_inst = TypeInst$new(Id$new(ID = "OBJ")),  dim = 1)
 par3 = VarDecl$new(type = par3_tp, id = par3_name)
 # create the item 3
 item3 = VarDeclItem$new(decl = par3)
 
 par4_name = Id$new(ID = "profit")
-par4_tp = Type$new(base_type = "INT", type_inst = TypeInst$new(Id$new(ID = "OBJ")), kind = "parameter")
+par4_tp = Type$new(base_type = "INT", type_inst = TypeInst$new(Id$new(ID = "OBJ")), kind = "parameter", dim = 1)
 par4 = VarDecl$new(type = par4_tp, id = par4_name)
 # create the item 4
 item4 = VarDeclItem$new(decl = par4)
 
 par5_name = Id$new(ID = "size")
-par5_tp = Type$new(base_type = "INT", type_inst = TypeInst$new(indexExprVec = Id$new(ID = "OBJ")), kind = "parameter")
+par5_tp = Type$new(base_type = "INT", type_inst = TypeInst$new(Id$new(ID = "OBJ")), kind = "parameter", dim = 1)
 par5 = VarDecl$new(type = par5_tp, id = par5_name)
 # create the item 5
 item5 = VarDeclItem$new(decl = par5)
 
 par6_name = Id$new(ID = "x")
-par6_tp = Type$new(base_type = "INT", kind = "decision", type_inst = TypeInst$new(indexExprVec = Id$new(ID = "OBJ")))
+par6_tp = Type$new(base_type = "INT", kind = "decision", type_inst = TypeInst$new(Id$new(ID = "OBJ")), dim = 1)
 par6 = VarDecl$new(type = par6_tp, id = par6_name)
 #create the item 6
 item6 = VarDeclItem$new(decl = par6)
@@ -46,14 +46,15 @@ item6 = VarDeclItem$new(decl = par6)
 gen_forall = list(Generator$new(IN = Id$new(ID = "OBJ")))
 bop1 = Binop$new(lhs_expression = Id$new(ID = "x"),binop = ">=", rhs_expression = Int$new(value = 0))
 Comp1 = Comprehension$new(generators = gen_forall, expression = bop1)
+cl1 = Call$new(fn_id = Id$new("forall"),lExp = list(Comp1))
 # item7 
-item7 = ConstraintItem$new(expression = Comp1)
+item7 = ConstraintItem$new(expression = cl1)
 
 gen_sum = list(Generator$new(IN = Id$new(ID = "OBJ")))
 bop2 = Binop$new(lhs_expression = Id$new(ID = "size"), binop = "*", rhs_expression = Id$new(ID = "x"))
 Comp2 = Comprehension$new(generators = gen_sum, expression = bop2)
-bop3 = Binop$new(lhs_expression = Comp2, binop = "<=", rhs_expression = Id$new(ID = "capacity"))
-
+cl2 = Call$new(fn_id = Id$new(ID = "sum"),lExp = list(Comp2))
+bop3 = Binop$new(lhs_expression = cl2, binop = "<=", rhs_expression = Id$new(ID = "capacity"))
 # item8
 item8 = ConstraintItem$new(expression = bop3)
 

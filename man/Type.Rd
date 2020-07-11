@@ -16,6 +16,8 @@ the type information of the class
 \item{\code{.dim}}{the number of dimensions}
 
 \item{\code{.typeInst}}{the type instantiation}
+
+\item{\code{.st}}{set or plain}
 }
 \if{html}{\out{</div>}}
 }
@@ -29,6 +31,8 @@ the type information of the class
 \item{\code{.dim}}{the number of dimensions}
 
 \item{\code{.typeInst}}{the type instantiation}
+
+\item{\code{.st}}{set or plain}
 }
 \if{html}{\out{</div>}}
 }
@@ -39,6 +43,8 @@ the type information of the class
 \item \href{#method-bt}{\code{Type$bt()}}
 \item \href{#method-kind}{\code{Type$kind()}}
 \item \href{#method-ti}{\code{Type$ti()}}
+\item \href{#method-ndim}{\code{Type$ndim()}}
+\item \href{#method-isSet}{\code{Type$isSet()}}
 \item \href{#method-clone}{\code{Type$clone()}}
 }
 }
@@ -48,7 +54,7 @@ the type information of the class
 \subsection{Method \code{new()}}{
 constructor
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Type$new(base_type, kind, type_inst = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Type$new(base_type, kind, type_inst = NULL, dim = 0, set_type = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -59,6 +65,10 @@ constructor
 \item{\code{kind}}{parameter or decision}
 
 \item{\code{type_inst}}{indices or domain}
+
+\item{\code{dim}}{the number of dimensions}
+
+\item{\code{set_type}}{set or plain}
 }
 \if{html}{\out{</div>}}
 }
@@ -89,6 +99,26 @@ return the kind
 \subsection{Method \code{ti()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Type$ti()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-ndim"></a>}}
+\if{latex}{\out{\hypertarget{method-ndim}{}}}
+\subsection{Method \code{ndim()}}{
+return the number of dimensions
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Type$ndim()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-isSet"></a>}}
+\if{latex}{\out{\hypertarget{method-isSet}{}}}
+\subsection{Method \code{isSet()}}{
+return if set or not
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Type$isSet()}\if{html}{\out{</div>}}
 }
 
 }

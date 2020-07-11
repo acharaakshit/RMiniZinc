@@ -35,10 +35,11 @@ Converts a data type into a variable declaration
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{VarDecl$new()}}
-\item \href{#method-get_id}{\code{VarDecl$get_id()}}
+\item \href{#method-id}{\code{VarDecl$id()}}
 \item \href{#method-isPar}{\code{VarDecl$isPar()}}
 \item \href{#method-isVar}{\code{VarDecl$isVar()}}
 \item \href{#method-e}{\code{VarDecl$e()}}
+\item \href{#method-type}{\code{VarDecl$type()}}
 \item \href{#method-clone}{\code{VarDecl$clone()}}
 }
 }
@@ -72,12 +73,12 @@ initialize the VarDecl constructor
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_id"></a>}}
-\if{latex}{\out{\hypertarget{method-get_id}{}}}
-\subsection{Method \code{get_id()}}{
-
+\if{html}{\out{<a id="method-id"></a>}}
+\if{latex}{\out{\hypertarget{method-id}{}}}
+\subsection{Method \code{id()}}{
+the identifier
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{VarDecl$get_id()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{VarDecl$id()}\if{html}{\out{</div>}}
 }
 
 }
@@ -108,6 +109,16 @@ check if it's a decision variable
 return the initialization expression
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{VarDecl$e()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-type"></a>}}
+\if{latex}{\out{\hypertarget{method-type}{}}}
+\subsection{Method \code{type()}}{
+type of the variable declaration
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{VarDecl$type()}\if{html}{\out{</div>}}
 }
 
 }

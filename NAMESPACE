@@ -2,6 +2,7 @@
 
 export(Array)
 export(Binop)
+export(Call)
 export(Comprehension)
 export(ConstraintItem)
 export(Expression)

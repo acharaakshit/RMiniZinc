@@ -50,6 +50,11 @@ void expVarNames(MiniZinc::Expression *exp, vector<string> &cstNames){
       Expression *iExp = astExp.operator[](i);
       expVarNames(iExp, cstNames);
     }
+  }else if(ExpressionID == Expression::E_CALL){
+    Call *cl = exp->cast<Call>();
+    for(int m = 0;m<cl->n_args();m++){
+      expVarNames(cl->arg(m), cstNames);
+    }
   }else{
     //string wString = to_string(ExpressionID);
     //wString.append(" not supported");

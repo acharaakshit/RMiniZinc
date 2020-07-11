@@ -22,12 +22,12 @@ VarDecl <- R6Class("VarDecl",
                          private$.expression  =  expression 
                        }
                        assertR6(id, "Id")
-                       private$id = id
+                       private$.id = id
                      },
                     #' @description 
-                    #' 
-                    get_id = function(){
-                      return (private$id)
+                    #' the identifier
+                    id = function(){
+                      return (private$.id)
                     },
                     #' @description check if it's a parameter
                     isPar = function(){
@@ -46,6 +46,10 @@ VarDecl <- R6Class("VarDecl",
                     #' @description return the initialization expression
                     e = function(){
                       return(private$.expression)
+                    },
+                    #' @description type of the variable declaration
+                    type = function(){
+                      return(private$.type)
                     }
                    ),
                    private = list(
@@ -54,7 +58,7 @@ VarDecl <- R6Class("VarDecl",
                      .type = NULL,
                      #' @field id
                      #' name of the variable
-                     id = NULL,
+                     .id = NULL,
                      #' @field .expression
                      #' the initialization expression
                      .expression = NULL
@@ -79,6 +83,35 @@ VarDeclItem = R6Class("VarDeclItem",
                         #' @description get the declaration expression object
                         e = function(){
                           return(private$.decl)
+                        },
+                        #' @description convert the declaration to String
+                        c_str = function(){
+                          id = private$.decl$id()$id()
+                          bt = private$.decl$type()$bt()
+                          if(bt == "INT"){
+                            t = "int"
+                          }
+                          if(private$.decl$type()$ndim() == 1 && !private$.decl$type()$isSet()){
+                            # one dimensional array
+                            access_id = ''
+                            if(!is.null(private$.decl$type()$ti())){
+                              ti = private$.decl$type()$ti()
+                              ind = ti$ranges()
+                              if(testR6(ind,"Id")){
+                                access_id = ind$id()
+                              }
+                            }
+                            if(private$.decl$isPar()){
+                              return(sprintf("array[%s] of %s: %s;", access_id, t, id)) 
+                            }else{
+                              return(sprintf("array[%s] of var %s: %s;", access_id, t, id))
+                            }  
+                          }
+                          if(private$.decl$isPar()){
+                            return(paste0(t, ": ", id, ";")) 
+                          }else{
+                            return(paste0("var ", t, ": ", id, ";"))
+                          }
                         }
                       ),
                       private = list(

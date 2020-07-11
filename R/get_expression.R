@@ -286,3 +286,36 @@ TypeInst = R6Class("TypeInst",
                      #' the index expression
                      .indExpr = NULL
                    ))
+
+#' @title Call class
+#' 
+#' @description function calls in MiniZinc
+#' 
+#' @import R6
+#' @import checkmate
+#' 
+#' @export
+Call = R6Class("Call",
+               inherit = Expression,
+               public = list(
+                 #' @description constructor
+                 #' @param fn_id the function id
+                 #' @param lExp the list of expressions
+                 initialize =  function(fn_id, lExp){
+                   assertR6(fn_id, "Id")
+                   private$.id = fn_id
+                   assert_list(lExp, "Expression")
+                 },
+                 #' @description the function id object
+                 id =  function(){
+                   return(private$.id)
+                 }
+               ),
+               private = list(
+                 #' @field .id
+                 #' the function id
+                 .id = NULL,
+                 #' @field .lExp
+                 #' list of expressions
+                 .lExp = NULL
+               ))

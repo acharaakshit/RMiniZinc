@@ -25,6 +25,7 @@ Declaration items in the model
 \itemize{
 \item \href{#method-new}{\code{VarDeclItem$new()}}
 \item \href{#method-e}{\code{VarDeclItem$e()}}
+\item \href{#method-c_str}{\code{VarDeclItem$c_str()}}
 \item \href{#method-clone}{\code{VarDeclItem$clone()}}
 }
 }
@@ -52,6 +53,16 @@ constructor
 get the declaration expression object
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{VarDeclItem$e()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-c_str"></a>}}
+\if{latex}{\out{\hypertarget{method-c_str}{}}}
+\subsection{Method \code{c_str()}}{
+convert the declaration to String
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{VarDeclItem$c_str()}\if{html}{\out{</div>}}
 }
 
 }

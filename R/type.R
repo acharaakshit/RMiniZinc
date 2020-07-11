@@ -13,7 +13,9 @@ Type = R6Class("Type",
                  #' @param base_type the base type 
                  #' @param kind parameter or decision
                  #' @param type_inst indices or domain 
-                 initialize =  function(base_type, kind, type_inst = NULL){
+                 #' @param dim the number of dimensions
+                 #' @param set_type set or plain
+                 initialize =  function(base_type, kind, type_inst = NULL, dim = 0, set_type = FALSE){
                    assert_choice(base_type, .globals$Type$baseTypes)
                    assert_choice(kind, .globals$Type$kinds)
                    private$.bt = base_type
@@ -21,6 +23,10 @@ Type = R6Class("Type",
                    if(testR6(type_inst, "TypeInst")){
                      private$.typeInst = type_inst
                    }
+                   assert_true(dim >= 0 && dim <=6)
+                   private$.dim = dim
+                   assert_logical(set_type)
+                   private$.st = set_type 
                  },
                  #' @description  return the base type
                  bt = function(){
@@ -32,6 +38,14 @@ Type = R6Class("Type",
                  },
                  ti = function(){
                    return(private$.typeInst)
+                 },
+                 #' @description return the number of dimensions
+                 ndim = function(){
+                   return(private$.dim)
+                 },
+                 #' @description return if set or not
+                 isSet = function(){
+                   return(private$.st)
                  }
                  
                ),
@@ -47,5 +61,8 @@ Type = R6Class("Type",
                  .dim = 7,
                  #' @field .typeInst
                  #' the type instantiation
-                 .typeInst = NULL
+                 .typeInst = NULL,
+                 #' @field .st
+                 #' set or plain
+                 .st = NULL
                ))
