@@ -1,68 +1,288 @@
-#' function to generate an expression 
-#' @description 
-#' This class can be used to store an expression. A simple expression consists of variables and
+#' @title function to generate an expression 
+#' @description This class can be used to store an expression. A simple expression consists of variables and
 #' operators. The data structure to be chosen for storing expressions is yet to be decided.
 #' 
 #' @import R6
 #' @export
-
-get_expression = R6Class("get_expression",
+Expression = R6Class("Expression",
                          public = list(
-                           #' @description the function to store an expression
-                           #' @param variables the variables involved in the expression in order
-                           #' @param arithmetic_operator the arithmetic operators involved in the function
-                           initialize = function(variables, arithmetic_operator = NULL){
-                             
-                             if(!testNull(arithmetic_operator)){
-                             
-                               
-                               assert(all(arithmetic_operator %in% .globals$allowed_arithmetic_operators))
-                               
-                               
-                             assert_choice(length(arithmetic_operator), length(variables) - 1)
-                             
-                             expr = ""
-                             
-                             for(x in seq(1,length(variables),1)){
-                               
-                               assert(test_r6(variables[[x]], "variable" ),
-                                      test_number(variables[[x]]),
-                                      combine = "or")
-                               
-                               if(test_r6(variables[[x]], "variable" )){
-                                if(x == length(variables)){
-                                  expr = paste0(expr,variables[[x]]$get_name())
-                                }else{
-                                  expr = paste0(expr,variables[[x]]$get_name(), arithmetic_operator[[x]])
-                                }
-                               }else{
-                                 if(x == length(variables)){
-                                   expr = paste0(expr,variables[[x]])
-                                 }else{
-                                   expr = paste0(expr,variables[[x]], arithmetic_operator[[x]])
-                                 }
-                               }
-                             }
-                             }else{
-                               assert(test_r6(variables, "variable"), test_number(variables), combine = "or")
-                               if(test_r6(variables, "variable")){
-                                  expr = variables$get_name()
-                               }else{
-                                 expr = as.character(variables)
-                               }
-                             }
-                             
-                            private$.expr = expr
-                          },
-                          #' @description
-                          #' Returns the required expression
-                          get_expr = function() {
-                            return(private$.expr)
-                          }
-                           ),
+                           #' @description constructor of an abstract class
+                           initialize = function(){
+                             stop(paste(RSmisc::getR6Class(self), "can't be initialized."))  
+                           }
+                         ))
+
+#' @title create an integer 
+#' 
+#' @description create an integer in MiniZinc
+#' 
+#' @import R6 
+#' @import checkmate
+#' 
+#' @export
+Int = R6Class("Int", 
+               inherit = Expression,
+               public = list(
+                 #' @description constructor for an int literal
+                 #' @param value the value of the integer
+                 initialize =  function(value){
+                   assert_true(value - floor(value) == 0)
+                   private$value = value 
+                 },
+                 #' @description get the integer value
+                 getIntVal = function(){
+                   return (private$value)
+                 }
+               ),
+               private = list(
+                 #' @field value
+                 #' object of class expression
+                 value = NULL
+               ))
+
+#' @title create a float 
+#' 
+#' @description 
+#' create an float in MiniZinc
+#' 
+#' @import R6 
+#' @import checkmate
+#' @export
+Float = R6Class("Float", 
+                inherit = Expression,
+                public = list(
+                 
+                 #' @description constructor for an int literal
+                 #' @param value the value of the integer
+                 initialize =  function(value){
+                   assert_true(is.numeric(value))
+                   private$value = value 
+                 },
+                 #' @description get the integer value
+                 getFloatVal = function(){
+                   return (private$value)
+                 }
+               ),
+               private = list(
+                 #' @field .value
+                 #' object of class expression
+                 value = NULL
+               ))
+
+#' @title create a set
+#' 
+#' @description 
+#' create a set in MiniZinc
+#' 
+#' @import R6
+#' @import checkmate
+#' 
+#' @export
+Set = R6Class("Set",
+              inherit = Expression,
+              public = list(
+                #' @description constuctor
+                #' @param setVal the set value
+                initialize = function(setVal){
+                  assertR6(setVal, "SetVal")
+                },
+                #' @description return the value
+                v = function(){
+                  return(private$.setVal)
+                }
+              ),
+              private = list(
+                #' @field .setVal
+                #' the value of the set
+                .setVal = NULL
+              ))
+
+#' @title create an array 
+#' 
+#' @description 
+#' create an array in MiniZinc
+#' 
+#' @import R6 
+#' @import checkmate
+#' @export
+
+Array = R6Class("Array", 
+                inherit = Expression,
+                public = list(
+                   
+                   #' @description constructor for an int literal
+                   #' @param exprVec the value of the integer
+                   initialize =  function(exprVec){
+                     assert_list(exprVec, "Expression")
+                     private$value = value 
+                   },
+                   #' @description get the integer value
+                   dims = function(){
+                     # only supporting 1 dimensional arrays as of now
+                     return (1)
+                   }
+                 ),
+                 private = list(
+                   #' @field value
+                   #' object of class expression
+                   value = NULL
+                 ))
+#' @title Generator class
+#' 
+#' @description create a generator
+#' @import R6
+#' @import checkmate
+#' @export 
+Generator = R6Class("Generator",
+                    inherit = Expression,
+                     public = list(
+                       #' @description constructor
+                       #' @param IN the in expression of generator
+                       #' @param where the where expression of generator
+                       initialize = function(IN = NULL, where = NULL){
+                         assert(testR6(IN, "Expression"),
+                                  testR6(where, "Expression"),
+                                combine = "or")
+                         if(!is.null(IN))
+                            private$.in = IN
+                         else if(!is.null(where))
+                           private$where = where
+                       }
+                     ),
+                     private = list(
+                       #' @field .in
+                       #' in expression
+                       .in = NULL,
+                       #' @field where
+                       #' where expression
+                       .where = NULL
+                     ))
+
+#' @title Comprehension class
+#' 
+#' @description create a Comprehension
+#' @import R6
+#' @import checkmate
+#' @export 
+Comprehension = R6Class("Comprehension",
+                        inherit = Expression,
+                         public = list(
+                           #' @description constructor
+                           #' @param generators generators of the expression
+                           #' @param expression inside the comprehension
+                           initialize = function(generators, expression){
+                             assert_list(generators, "Generator")
+                             private$generators = generators
+                             assertR6(expression, "Expression")
+                             private$expression = expression
+                           }
+                         ),
                          private = list(
-                           #' @field expr
-                           #' the generated expression from the inputs
-                           .expr = NULL
-                         )
-                         )
+                           #' @field generators
+                           #' a vector of generators
+                           generators = NULL,
+                           #' @field expression
+                           #' the comprehension expression
+                           expression = NULL
+                         ))
+
+#' @title Binop class
+#' 
+#' @description create a binary operator expression
+#' @import R6
+#' @import checkmate
+#' @export 
+Binop = R6Class("Binop",
+                inherit = Expression,
+                 public = list(
+                   #' @description constructor
+                   #' @param lhs_expression the left hand side expression
+                   #' @param binop the binary operator to be used
+                   #' @param rhs_expression the right hand side expression
+                   initialize  = function(lhs_expression, binop, rhs_expression){
+                        assertR6(lhs_expression, "Expression")
+                        assertR6(rhs_expression, "Expression")
+                        assert_choice(binop, .globals$binopTypes)
+                        private$.lhs_exp = lhs_expression
+                        private$.rhs_exp = rhs_expression
+                        private$.op = binop
+                    },
+                   #' @description return the lhs expression
+                   lhs =  function(){
+                     return(private$.lhs_exp)
+                   },
+                   #' @description return the rhs expression
+                   rhs = function(){
+                     return(private$.rhs_exp)
+                   },
+                   #' @description return the operator
+                   op =  function(){
+                     return(private$.op)
+                   }
+                   
+                 ),
+                private = list(
+                  #' @field .lhs_exp
+                  #' the left hand side expression
+                  .lhs_exp = NULL,
+                  #' @field .rhs_exp
+                  #' the right hand side expression
+                  .rhs_exp = NULL,
+                  #' @field .op
+                  #' the operator
+                  .op = NULL
+                ))
+
+#' @title Id class
+#' 
+#' @description create a new Id in MiniZinc
+#' @import R6
+#' @import checkmate
+#' @export 
+Id  = R6Class("Id",
+              inherit = Expression,
+              public = list(
+                #' @description constructor
+                #' @param ID id to be created
+                initialize = function(ID){
+                  assert_string(ID)
+                  private$.id = ID
+                },
+                #' @description get the string identifier
+                id = function(){
+                  return(private$.id)
+                }
+              ),
+              private = list(
+                #' @field .id
+                #' the string identifier
+                .id = NULL
+              ))
+
+#' @title TypeInst class
+#' 
+#' @description type instantiation with indices, etc.
+#' 
+#' @import R6
+#' @import checkmate
+#' 
+#' @export
+TypeInst = R6Class("TypeInst",
+                   inherit = Expression,
+                   public = list(
+                     #' @description constuctor
+                     #' @param indexExprVec the expression vector of indices
+                     initialize = function(indexExprVec){
+                       assertR6(indexExprVec, "Expression")
+                       private$.indExpr = indexExprVec
+                     },
+                     #' @description return the index expression vector
+                     ranges = function(){
+                       return(private$.indExpr)
+                     }
+                   ),
+                   private = list(
+                     #' @field .indExpr
+                     #' the index expression
+                     .indExpr = NULL
+                   ))
