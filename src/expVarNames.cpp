@@ -7,9 +7,8 @@ using namespace std;
 
 void expVarNames(MiniZinc::Expression *exp, vector<string> &cstNames){
   int ExpressionID = exp->eid();
+  
   if(ExpressionID == Expression::E_COMP){
-    if(exp->cast<Comprehension>()->e()==NULL)
-      Rcpp::stop("No comprehension expression found");
     int n_genrtrs =  exp->cast<Comprehension>()->n_generators();
     for(int i = 0; i<n_genrtrs;i++){
         Expression *inExp = exp->cast<Comprehension>()->in(i);
@@ -19,9 +18,8 @@ void expVarNames(MiniZinc::Expression *exp, vector<string> &cstNames){
         }else if(whereExp != NULL){
           expVarNames(exp->cast<Comprehension>()->where(i), cstNames); 
         }else{
-          //no in or where expression found
+          Rcpp::stop("no in or where expression found");
         }
-         
     }
     expVarNames(exp->cast<Comprehension>()->e(), cstNames);
   }else if(ExpressionID == Expression::E_CALL){
@@ -51,6 +49,11 @@ void expVarNames(MiniZinc::Expression *exp, vector<string> &cstNames){
     for(int i = 0;i < size; i++){
       Expression *iExp = astExp.operator[](i);
       expVarNames(iExp, cstNames);
+    }
+  }else if(ExpressionID == Expression::E_CALL){
+    Call *cl = exp->cast<Call>();
+    for(int m = 0;m<cl->n_args();m++){
+      expVarNames(cl->arg(m), cstNames);
     }
   }else{
     //string wString = to_string(ExpressionID);

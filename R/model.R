@@ -1,46 +1,54 @@
-#' @title minizinc model class
+#' @title MiniZinc Model class
 #' 
 #' @description 
-#' This class will take all the objects required to create a MiniZinc model namely, new_param,
-#' new_decision_var, new_constraint and specify_problem. 
+#' This class will take all the objects required to create a MiniZinc model.
 #' 
 #' @import R6
 #' @import checkmate
 #' 
 #' @export
 
-model = R6Class("model", 
+Model = R6Class("Model", 
                  public = list(
-                 #' @field parameters
-                 #' vector of parameter \code{\link{variable}} of the model
-                 parameters = NULL,
-                 #' @field  decisions
-                 #' vector of decision \code{\link{variable}} of the model
-                 decisions = NULL,
-                 #' @field constraints
-                 #' vector of \code{\link{constraint}} of the model
-                 constraints = NULL,
-                 #' @field objective
-                 #' \code{\link{objective}} of the problem
-                 objective = NULL,
                  #' @description create a new instance of model class
-                 #' @param parameters parameters of the model 
-                 #' @param decisions decision variables of the model
-                 #' @param constraints constraints of the model
-                 #' @param objective  type of the problem
-                 initialize = function(parameters = NULL, decisions, constraints, objective){
-                   
-                   assert(test_null(parameters), 
-                          all(lapply(parameters, function(x) if(x$kind == "parameter"){TRUE})), combine = "or")
-                   self$parameters = parameters
-                   
-                   assert_list(decisions, "variable")
-                   self$decisions = decisions
-                   
-                   assert_list(constraints, "constraint")
-                   self$constraints =  constraints
-                   
-                   assert_class(objective, "objective")
-                   self$objective = objective
+                 #' @param items all items of the model 
+                 initialize = function(items){
+                   assert_list(items, "Item")
+                   private$.items = items
+                 },
+                 #' @description get the item using index
+                 #' @param i index
+                 item_i = function(i){
+                   return(private$.items[[i]])
+                 },
+                 #' @description get the string representation of the model
+                 mzn_string = function(){
+                   mzn_str = ''
+                   for( i in seq(1,length(private$.items),1)) {
+                     mzn_str = paste0(mzn_str, private$.items[[i]]$c_str(), "\n")
+                   }
+                   return(mzn_str)
+                 } 
+                 ),
+                private = list(
+                  #' @field parameters
+                  #' vector of variable declarations of the model
+                 .items = NULL
+                )
+                )
+
+#' @title Item class
+#' 
+#' @description abstract class for all items of MiniZinc
+#' 
+#' @import R6
+#' @import checkmate
+#' 
+#' @export
+Item = R6Class("Item",
+               public = list(
+                 #' @description constructor
+                 initialize = function(){
+                   stop(paste(RSmisc::getR6Class(self), "can't be initialized."))  
                  }
-                 ))
+               ))
