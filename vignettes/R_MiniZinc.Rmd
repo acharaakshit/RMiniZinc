@@ -106,6 +106,10 @@ item8 = ConstraintItem$new(expression = bop3)
 
 # Solve Type
 
+The constraint programming problem can be of three types, namely: Satisfaction , Minimization and Maximization.
+Satisfaction problems produce all the solutions that satify the constraints whereas minimization and maximization problems produce the solution which minimizes and maximizes the given arithmetic expression.
+An example is shown below:
+
 ```{r}
 gen_sum = list(Generator$new(IN = Id$new(ID = "OBJ")))
 bop4 = Binop$new(lhs_expression = Id$new(ID = "profit"), binop = "*", rhs_expression = Id$new(ID = "x"))
