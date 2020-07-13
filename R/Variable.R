@@ -1,7 +1,7 @@
 #' @title class for variable declaration
 #' 
 #' @description 
-#' Converts a data type into a variable declaration
+#' Contains different fields to create a variable declaration
 #' 
 #' @import R6 
 #' @import checkmate

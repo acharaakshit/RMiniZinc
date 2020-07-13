@@ -1,6 +1,6 @@
 #' @title Type class
 #' 
-#' @description the type information of the class
+#' @description the information of different data types
 #' 
 #' @import R6
 #' @import checkmate

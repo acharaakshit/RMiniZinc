@@ -37,7 +37,7 @@ Model = R6Class("Model",
                 )
                 )
 
-#' @title Item class
+#' @title Item class (Abstract)
 #' 
 #' @description abstract class for all items of MiniZinc
 #' 
