@@ -2,7 +2,7 @@
 % Please edit documentation in R/Model.R
 \name{Item}
 \alias{Item}
-\title{Item class}
+\title{Item class (Abstract)}
 \description{
 abstract class for all items of MiniZinc
 }

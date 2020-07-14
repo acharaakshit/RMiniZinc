@@ -12,7 +12,6 @@ SetVal = R6Class("SetVal",
                   #' @param val
                   initialize = function(val){
                     if(all(names(val) == c("l","u"))){
-                      # int set val or float set val
                       if(val[['l']] - floor(val[['l']]) == 0 && val[['u']] - floor(val[['u']]) == 0){
                         # int set val
                         private$.isv = val

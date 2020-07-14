@@ -15,6 +15,8 @@ create a generator
 \item{\code{.in}}{in expression}
 
 \item{\code{where}}{where expression}
+
+\item{\code{.iter_id}}{the iterator id}
 }
 \if{html}{\out{</div>}}
 }
@@ -24,6 +26,8 @@ create a generator
 \item{\code{.in}}{in expression}
 
 \item{\code{where}}{where expression}
+
+\item{\code{.iter_id}}{the iterator id}
 }
 \if{html}{\out{</div>}}
 }
@@ -33,6 +37,7 @@ create a generator
 \item \href{#method-new}{\code{Generator$new()}}
 \item \href{#method-In}{\code{Generator$In()}}
 \item \href{#method-where}{\code{Generator$where()}}
+\item \href{#method-iter_id}{\code{Generator$iter_id()}}
 \item \href{#method-clone}{\code{Generator$clone()}}
 }
 }
@@ -48,7 +53,7 @@ create a generator
 \subsection{Method \code{new()}}{
 constructor
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Generator$new(IN = NULL, where = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Generator$new(IN = NULL, where = NULL, iterator = "i")}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -57,6 +62,8 @@ constructor
 \item{\code{IN}}{the in expression of generator}
 
 \item{\code{where}}{the where expression of generator}
+
+\item{\code{the}}{name of the iterator}
 }
 \if{html}{\out{</div>}}
 }
@@ -78,6 +85,16 @@ get the in expression
 get the where expression
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Generator$where()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-iter_id"></a>}}
+\if{latex}{\out{\hypertarget{method-iter_id}{}}}
+\subsection{Method \code{iter_id()}}{
+get the iterator id
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Generator$iter_id()}\if{html}{\out{</div>}}
 }
 
 }

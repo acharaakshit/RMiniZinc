@@ -177,10 +177,14 @@ Generator = R6Class("Generator",
                        #' @description constructor
                        #' @param IN the in expression of generator
                        #' @param where the where expression of generator
-                       initialize = function(IN = NULL, where = NULL){
+                       #' @param the name of the iterator
+                       initialize = function(IN = NULL, where = NULL, iterator = "i"){
                          assert(testR6(IN, "Expression"),
                                   testR6(where, "Expression"),
                                 combine = "or")
+                         assert_string(iterator)
+                         private$.iter_id = Id$new(iterator)
+
                          if(!is.null(IN))
                             private$.in = IN
                          else if(!is.null(where))
@@ -193,6 +197,10 @@ Generator = R6Class("Generator",
                        #' @description get the where expression
                        where = function(){
                          return(private$.where)
+                       },
+                       #' @description get the iterator id
+                       iter_id = function(){
+                         return(private$.iter_id)
                        }
                      ),
                      private = list(
@@ -201,7 +209,10 @@ Generator = R6Class("Generator",
                        .in = NULL,
                        #' @field where
                        #' where expression
-                       .where = NULL
+                       .where = NULL,
+                       #' @field .iter_id
+                       #' the iterator id
+                       .iter_id = NULL
                      ))
 
 #' @title Comprehension class
@@ -292,12 +303,11 @@ Binop = R6Class("Binop",
                   .op = NULL
                 ))
 
-#' @title Id class
+#' @title Id class (not exposed to the user)
 #' 
 #' @description create a new Id in MiniZinc
 #' @import R6
 #' @import checkmate
-#' @export 
 Id  = R6Class("Id",
               inherit = Expression,
               public = list(
@@ -361,8 +371,8 @@ Call = R6Class("Call",
                  #' @param fn_id the function id
                  #' @param lExp the list of expressions
                  initialize =  function(fn_id, lExp){
-                   assertR6(fn_id, "Id")
-                   private$.id = fn_id
+                   assert_string(fn_id)
+                   private$.id = Id$new(fn_id)
                    assert_list(lExp, "Expression")
                    private$.lExp = lExp
                  },

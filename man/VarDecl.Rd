@@ -4,7 +4,7 @@
 \alias{VarDecl}
 \title{class for variable declaration}
 \description{
-Converts a data type into a variable declaration
+Contains different fields to create a variable declaration
 }
 \section{Super class}{
 \code{\link[rminizinc:Expression]{rminizinc::Expression}} -> \code{VarDecl}
