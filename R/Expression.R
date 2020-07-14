@@ -340,20 +340,48 @@ TypeInst = R6Class("TypeInst",
                    inherit = Expression,
                    public = list(
                      #' @description constuctor
+                     #' @param type type of declaration
                      #' @param indexExprVec the expression vector of indices
-                     initialize = function(indexExprVec){
-                       assertR6(indexExprVec, "Expression")
+                     #' @param domain the domain of decision variables
+                     initialize = function(type, indexExprVec = NULL, domain = NULL){
+                       assertR6(type, "Type")
+                       private$.type = type 
+                       assert_true(testR6(indexExprVec, "Expression") || test_null(indexExprVec))
                        private$.indExpr = indexExprVec
+                       assert_true(testR6(domain, "SetVal") || test_null(domain))
+                       private$.domain = domain
                      },
+                     #' @description return the domain
+                     domain = function(){
+                       return(private$.domain)
+                     }, 
                      #' @description return the index expression vector
                      ranges = function(){
                        return(private$.indExpr)
+                     },
+                     #' @description check if it's an array
+                     isArray = function(){
+                       if(dim>=1 && private$.type$isSet() == FALSE){
+                          return(TRUE)
+                       }
+                       return(FALSE)
+                     },
+                     #' @description return the type information
+                     type = function(){
+                       return(private$.type)
                      }
+                       
                    ),
                    private = list(
                      #' @field .indExpr
                      #' the index expression
-                     .indExpr = NULL
+                     .indExpr = NULL,
+                     #' @field .domain
+                     #' the domain of possible values to be taken
+                     .domain = NULL,
+                     #' @field .type
+                     #' the type information
+                     .type = NULL
                    ))
 
 #' @title Call class

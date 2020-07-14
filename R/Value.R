@@ -12,10 +12,33 @@ SetVal = R6Class("SetVal",
                   #' @param val
                   initialize = function(val){
                     if(all(names(val) == c("l","u"))){
-                      if(val[['l']] - floor(val[['l']]) == 0 && val[['u']] - floor(val[['u']]) == 0){
-                        # int set val
+                      # int set val
+                      assert_true((testR6(val[['l']]) || test_numeric(val[['l']])) &&
+                                    testR6(val[['u']]) || test_numeric(val[['u']]))
+                      
+                      if(test_numeric(val[['l']]) && test_numeric(val[['u']])){
+                        assert(val[['l']] - floor(val[['l']]) == 0 && val[['u']] - floor(val[['u']]) == 0)
                         private$.isv = val
+                      }else if(testR6(val[['l']], "VarDecl") && test_numeric(val[['u']])){
+                        assert_true(val[['l']]$ti()$type()$ndim() == 0 &&
+                                      val[['l']]$ti()$type()$bt() == "INT")
+                        private$.isv = c( l = val[['l']]$id(), u = val[['u']])
+                        assert(val[['u']] - floor(val[['u']]) == 0)
+                      }else if(test_numeric(val[['l']]) && testR6(val[['u']], "VarDecl")){
+                        assert(val[['l']] - floor(val[['l']]) == 0)
+                        assert_true(val[['u']]$ti()$type()$ndim() == 0 &&
+                                      val[['u']]$ti()$type()$bt() == "INT")
+                        private$.isv = c( l = val[['l']], u = val[['u']]$id())
+                      }else if(testR6(val[['l']], "VarDecl") && testR6(val[['u']], "VarDecl")){
+                        assert_true(val[['u']]$ti()$type()$ndim() == 0 &&
+                                      val[['u']]$ti()$type()$bt() == "INT")
+                        assert_true(val[['l']]$ti()$type()$ndim() == 0 &&
+                                      val[['l']]$ti()$type()$bt() == "INT")
+                        private$.isv = c( l = val[['l']]$id(), u = val[['u']]$id())
+                      }else{
+                        stop("not supported")
                       }
+                      
                     }
                   },
                   #' @description return the int set value

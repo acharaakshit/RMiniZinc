@@ -15,9 +15,9 @@ VarDecl <- R6Class("VarDecl",
                      #' @param expression the object of a data type in MiniZinc. NULL by default
                      #' @param kind parameter or decision
                      #' @param id the id/name of the declared variable
-                     initialize = function(type, expression = NULL, id){
-                       assertR6(type, "Type")
-                       private$.type = type
+                     initialize = function(expression = NULL, id, type_inst){
+                       assertR6(type_inst, "TypeInst")
+                       private$.ti = type_inst
                        if(testR6(expression, "Expression")){
                          private$.expression  =  expression 
                        }
@@ -31,14 +31,14 @@ VarDecl <- R6Class("VarDecl",
                     },
                     #' @description check if it's a parameter
                     isPar = function(){
-                      if(private$.type$kind() == "parameter"){
+                      if(private$.ti$type()$kind() == "parameter"){
                         return (TRUE)
                       }
                       return(FALSE)
                     },
                     #' @description check if it's a decision variable
                     isVar = function(){
-                      if(private$.type$kind() == "variable"){
+                      if(private$.ti$type()$kind() == "variable"){
                         return (TRUE)
                       }
                       return(FALSE)
@@ -48,14 +48,14 @@ VarDecl <- R6Class("VarDecl",
                       return(private$.expression)
                     },
                     #' @description type of the variable declaration
-                    type = function(){
-                      return(private$.type)
+                    ti = function(){
+                      return(private$.ti)
                     }
                    ),
                    private = list(
-                     #' @field .type
-                     #' type information
-                     .type = NULL,
+                     #' @field .ti
+                     #' type instantiation information
+                     .ti = NULL,
                      #' @field id
                      #' name of the variable
                      .id = NULL,
@@ -88,29 +88,27 @@ VarDeclItem = R6Class("VarDeclItem",
                         #' @description convert the declaration to String
                         c_str = function(){
                           id = private$.decl$id()$id()
-                          bt = private$.decl$type()$bt()
+                          bt = private$.decl$ti()$type()$bt()
                           if(bt == "INT"){
                             t = "int"
                           }
-                          if(private$.decl$type()$ndim() == 1 && !private$.decl$type()$isSet()){
+                          if(private$.decl$ti()$type()$ndim() == 1 && !private$.decl$ti()$type()$isSet()){
                             # one dimensional array
                             access_id = ''
-                            if(!is.null(private$.decl$type()$ti())){
-                              ti = private$.decl$type()$ti()
-                              ind = ti$ranges()
-                              if(testR6(ind,"Id")){
+                            ti = private$.decl$ti()
+                            ind = ti$ranges()
+                            if(testR6(ind,"Id")){
                                 access_id = ind$id()
-                              }
                             }
                             if(private$.decl$isPar()){
                               return(sprintf("array[%s] of %s: %s;", access_id, t, id)) 
                             }else{
                               return(sprintf("array[%s] of var %s: %s;", access_id, t, id))
                             }  
-                          }else if(private$.decl$type()$ndim() == 1 && private$.decl$type()$isSet()){
+                          }else if(private$.decl$ti()$type()$ndim() == 1 && private$.decl$ti()$type()$isSet()){
                             val = private$.decl$e()$v()$isv()
                             if(private$.decl$isPar()){
-                              return(sprintf("set of %s: %s = %s..%s;", t, id, val[["l"]], val[["u"]]))
+                              return(sprintf("set of %s: %s = %s..%s;", t, id, val[["l"]], val[["u"]]$id()))
                             }
                           }
                           if(private$.decl$isPar()){

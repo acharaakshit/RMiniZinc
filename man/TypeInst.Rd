@@ -13,6 +13,10 @@ type instantiation with indices, etc.
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
 \item{\code{.indExpr}}{the index expression}
+
+\item{\code{.domain}}{the domain of possible values to be taken}
+
+\item{\code{.type}}{the type information}
 }
 \if{html}{\out{</div>}}
 }
@@ -20,6 +24,10 @@ type instantiation with indices, etc.
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
 \item{\code{.indExpr}}{the index expression}
+
+\item{\code{.domain}}{the domain of possible values to be taken}
+
+\item{\code{.type}}{the type information}
 }
 \if{html}{\out{</div>}}
 }
@@ -27,7 +35,10 @@ type instantiation with indices, etc.
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{TypeInst$new()}}
+\item \href{#method-domain}{\code{TypeInst$domain()}}
 \item \href{#method-ranges}{\code{TypeInst$ranges()}}
+\item \href{#method-isArray}{\code{TypeInst$isArray()}}
+\item \href{#method-type}{\code{TypeInst$type()}}
 \item \href{#method-clone}{\code{TypeInst$clone()}}
 }
 }
@@ -43,16 +54,30 @@ type instantiation with indices, etc.
 \subsection{Method \code{new()}}{
 constuctor
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TypeInst$new(indexExprVec)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{TypeInst$new(type, indexExprVec = NULL, domain = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
+\item{\code{type}}{type of declaration}
+
 \item{\code{indexExprVec}}{the expression vector of indices}
+
+\item{\code{domain}}{the domain of decision variables}
 }
 \if{html}{\out{</div>}}
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-domain"></a>}}
+\if{latex}{\out{\hypertarget{method-domain}{}}}
+\subsection{Method \code{domain()}}{
+return the domain
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{TypeInst$domain()}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ranges"></a>}}
@@ -61,6 +86,26 @@ constuctor
 return the index expression vector
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{TypeInst$ranges()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-isArray"></a>}}
+\if{latex}{\out{\hypertarget{method-isArray}{}}}
+\subsection{Method \code{isArray()}}{
+check if it's an array
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{TypeInst$isArray()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-type"></a>}}
+\if{latex}{\out{\hypertarget{method-type}{}}}
+\subsection{Method \code{type()}}{
+return the type information
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{TypeInst$type()}\if{html}{\out{</div>}}
 }
 
 }

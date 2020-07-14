@@ -13,11 +13,8 @@ the information of different data types
 
 \item{\code{.kind}}{parameter or decision}
 
-\item{\code{.dim}}{the number of dimensions}
-
-\item{\code{.typeInst}}{the type instantiation}
-
-\item{\code{.st}}{set or plain}
+\item{\code{.dim}}{the number of dimensions
+set or plain}
 }
 \if{html}{\out{</div>}}
 }
@@ -28,11 +25,8 @@ the information of different data types
 
 \item{\code{.kind}}{parameter or decision}
 
-\item{\code{.dim}}{the number of dimensions}
-
-\item{\code{.typeInst}}{the type instantiation}
-
-\item{\code{.st}}{set or plain}
+\item{\code{.dim}}{the number of dimensions
+set or plain}
 }
 \if{html}{\out{</div>}}
 }
@@ -42,7 +36,6 @@ the information of different data types
 \item \href{#method-new}{\code{Type$new()}}
 \item \href{#method-bt}{\code{Type$bt()}}
 \item \href{#method-kind}{\code{Type$kind()}}
-\item \href{#method-ti}{\code{Type$ti()}}
 \item \href{#method-ndim}{\code{Type$ndim()}}
 \item \href{#method-isSet}{\code{Type$isSet()}}
 \item \href{#method-clone}{\code{Type$clone()}}
@@ -54,7 +47,7 @@ the information of different data types
 \subsection{Method \code{new()}}{
 constructor
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Type$new(base_type, kind, type_inst = NULL, dim = 0, set_type = FALSE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Type$new(base_type, kind, dim = 0, set_type = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -63,8 +56,6 @@ constructor
 \item{\code{base_type}}{the base type}
 
 \item{\code{kind}}{parameter or decision}
-
-\item{\code{type_inst}}{indices or domain}
 
 \item{\code{dim}}{the number of dimensions}
 
@@ -90,15 +81,6 @@ return the base type
 return the kind
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Type$kind()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-ti"></a>}}
-\if{latex}{\out{\hypertarget{method-ti}{}}}
-\subsection{Method \code{ti()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Type$ti()}\if{html}{\out{</div>}}
 }
 
 }
