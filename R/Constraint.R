@@ -35,7 +35,7 @@ ConstraintItem = R6Class("ConstraintItem",
                            iExp = cl$e_i(1)
                            iterate = ''
                            if(testR6(iExp, "Comprehension")){
-                             iter = 'i'
+                             iter = iExp$gen_i(1)$iter_id()$id()
                              iterate = iExp$gen_i(1)$In()$id()
                            }
                            cExp = iExp$e()
@@ -57,7 +57,7 @@ ConstraintItem = R6Class("ConstraintItem",
                            iExp = cl$e_i(1)
                            iterate = ''
                            if(testR6(iExp, "Comprehension")){
-                               iter = 'i'
+                               iter = iExp$gen_i(1)$iter_id()$id()
                                iterate = iExp$gen_i(1)$In()$id()
                            }
                             cExp = iExp$e()

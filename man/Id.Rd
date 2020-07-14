@@ -2,7 +2,7 @@
 % Please edit documentation in R/Expression.R
 \name{Id}
 \alias{Id}
-\title{Id class}
+\title{Id class (not exposed to the user)}
 \description{
 create a new Id in MiniZinc
 }

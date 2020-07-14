@@ -4,8 +4,7 @@
 \alias{Expression}
 \title{function to generate an expression}
 \description{
-This class can be used to store an expression. A simple expression consists of variables and
-operators. The data structure to be chosen for storing expressions is yet to be decided.
+This class can be used to represent an expression.
 }
 \section{Methods}{
 \subsection{Public methods}{

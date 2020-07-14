@@ -21,8 +21,8 @@ VarDecl <- R6Class("VarDecl",
                        if(testR6(expression, "Expression")){
                          private$.expression  =  expression 
                        }
-                       assertR6(id, "Id")
-                       private$.id = id
+                       assert_string(id)
+                       private$.id = Id$new(id)
                      },
                     #' @description 
                     #' the identifier
