@@ -8,7 +8,6 @@ knitr::include_graphics(paste0(getwd(),"/workflows/ExpressionUml.png"))
 library(rminizinc)
 
 # create the variable and parameter declarations
-
 par_ti = TypeInst$new(Type$new(base_type = "INT", kind = "parameter"))
 par1 = VarDecl$new(id = "n", par_ti, type_inst = par_ti)
 # create the Item 1
@@ -41,6 +40,7 @@ item5 = VarDeclItem$new(decl = par5)
 par6_ti = TypeInst$new(Type$new(base_type = "INT", kind = "decision", dim = 1),
                    indexExprVec = par2$id())
 par6 = VarDecl$new(type = par6_ti, id = "x")
+
 #create the item 6
 item6 = VarDeclItem$new(decl = par6)
 

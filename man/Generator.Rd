@@ -63,8 +63,6 @@ constructor
 
 \item{\code{where}}{the where expression of generator}
 
-\item{\code{iterator}}{the iterator for traversing}
-
 \item{\code{the}}{name of the iterator}
 }
 \if{html}{\out{</div>}}

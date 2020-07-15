@@ -180,7 +180,6 @@ Generator = R6Class("Generator",
                        #' @param IN the in expression of generator
                        #' @param where the where expression of generator
                        #' @param the name of the iterator
-                       #' @param iterator the iterator for traversing
                        initialize = function(IN = NULL, where = NULL, iterator = "i"){
                          assert(testR6(IN, "Expression"),
                                   testR6(where, "Expression"),
