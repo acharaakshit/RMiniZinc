@@ -65,6 +65,7 @@ constructor
 \if{html}{\out{<a id="method-id"></a>}}
 \if{latex}{\out{\hypertarget{method-id}{}}}
 \subsection{Method \code{id()}}{
+return the array access id
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ArrayAccess$id()}\if{html}{\out{</div>}}
 }
@@ -74,6 +75,7 @@ constructor
 \if{html}{\out{<a id="method-index"></a>}}
 \if{latex}{\out{\hypertarget{method-index}{}}}
 \subsection{Method \code{index()}}{
+return the index id
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ArrayAccess$index()}\if{html}{\out{</div>}}
 }

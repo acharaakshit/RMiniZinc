@@ -26,17 +26,17 @@ Int = R6Class("Int",
                  #' @param value the value of the integer
                  initialize =  function(value){
                    assertR6(value, "IntVal")
-                   private$value = value 
+                   private$.value = value 
                  },
                  #' @description get the integer value
                  getIntVal = function(){
-                   return (private$value)
+                   return (private$.value)
                  }
                ),
                private = list(
-                 #' @field value
+                 #' @field .value
                  #' object of class expression
-                 value = NULL
+                 .value = NULL
                ))
 
 #' @title create a float 
@@ -55,17 +55,17 @@ Float = R6Class("Float",
                  #' @param value the value of the integer
                  initialize =  function(value){
                    assertR6(value, "FloatVal")
-                   private$value = value 
+                   private$.value = value 
                  },
                  #' @description get the integer value
                  getFloatVal = function(){
-                   return (private$value)
+                   return (private$.value)
                  }
                ),
                private = list(
                  #' @field .value
                  #' object of class expression
-                 value = NULL
+                 .value = NULL
                ))
 
 #' @title create a set
@@ -148,9 +148,11 @@ ArrayAccess = R6Class("ArrayAccess",
                           assertR6(index, "Id")
                           private$.index = index
                         },
+                        #' @description  return the array access id
                         id = function(){
                           return(private$.id)
                         },
+                        #' @description return the index id
                         index = function(){
                           return(private$.index)
                         }
@@ -178,6 +180,7 @@ Generator = R6Class("Generator",
                        #' @param IN the in expression of generator
                        #' @param where the where expression of generator
                        #' @param the name of the iterator
+                       #' @param iterator the iterator for traversing
                        initialize = function(IN = NULL, where = NULL, iterator = "i"){
                          assert(testR6(IN, "Expression"),
                                   testR6(where, "Expression"),

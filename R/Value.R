@@ -9,7 +9,7 @@
 SetVal = R6Class("SetVal",
                  public = list(
                   #' @description  constructor
-                  #' @param val
+                  #' @param val set value to be assigned
                   initialize = function(val){
                     if(all(names(val) == c("l","u"))){
                       # int set val
@@ -69,7 +69,7 @@ SetVal = R6Class("SetVal",
 IntVal =  R6Class("IntVal",
                   public = list(
                     #' @description constructor
-                    #' @param val
+                    #' @param val int value to be assigned
                     initialize = function(val){
                       assert_numeric(val)
                       assert_true(val - floor(val) == 0)
@@ -92,10 +92,12 @@ IntVal =  R6Class("IntVal",
 #' 
 #' @import R6
 #' @import checkmate
+#' 
+#' @export
 FloatVal = R6Class("FloatVal",
                    public = list(
                      #' @description constructor
-                     #' @param val float literal val
+                     #' @param val float value to be assigned
                      initialize = function(val){
                        assert_numeric(val)
                        private$.val = val

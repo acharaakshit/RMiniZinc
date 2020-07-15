@@ -12,14 +12,14 @@ Declaration items in the model
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{.declExpression}}{}
+\item{\code{.declExpression}}{the declaration expression}
 }
 \if{html}{\out{</div>}}
 }
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
-\item{\code{.declExpression}}{}
+\item{\code{.declExpression}}{the declaration expression}
 }
 \if{html}{\out{</div>}}
 }

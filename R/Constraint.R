@@ -25,6 +25,7 @@ ConstraintItem = R6Class("ConstraintItem",
                        },
                        #' @description serialize to MiniZinc syntax
                        c_str = function(){
+                         # currently only one knapsack problem can be solved
                          mainExp = private$.expression
                          if(testR6(mainExp, "Binop")){
                            bop = private$.expression

@@ -37,6 +37,13 @@ constructor
 \if{html}{\out{<div class="r">}}\preformatted{IntVal$new(val)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{val}}{int value to be assigned}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-v"></a>}}

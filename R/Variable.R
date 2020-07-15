@@ -7,7 +7,7 @@
 #' @import checkmate
 #' 
 #' @export
-VarDecl <- R6Class("VarDecl",
+VarDecl = R6Class("VarDecl",
                    inherit = Expression,
                    public = list(
                      #' @description initialize the VarDecl constructor
@@ -120,7 +120,7 @@ VarDeclItem = R6Class("VarDeclItem",
                       ),
                       private = list(
                         #' @field .declExpression 
-                        #' @description the declaration expression
+                        #' the declaration expression
                         .decl = NULL
                       )
                     )

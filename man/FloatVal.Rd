@@ -40,7 +40,7 @@ constructor
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{val}}{float literal val}
+\item{\code{val}}{float value to be assigned}
 }
 \if{html}{\out{</div>}}
 }
