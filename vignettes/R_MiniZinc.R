@@ -9,9 +9,8 @@ library(rminizinc)
 
 # create the variable and parameter declarations
 
-par_dt = Int$new(value = 4)
 par_ti = TypeInst$new(Type$new(base_type = "INT", kind = "parameter"))
-par1 = VarDecl$new(expression = par_dt, id = "n", par_ti)
+par1 = VarDecl$new(id = "n", par_ti, type_inst = par_ti)
 # create the Item 1
 item1 = VarDeclItem$new(decl = par1)
 
@@ -48,9 +47,9 @@ item6 = VarDeclItem$new(decl = par6)
 ## -----------------------------------------------------------------------------
 # generator
 gen_forall = Generator$new(IN = par2$id(), iterator = "i")
-# binary ooperator expression
+# binary operator expression
 bop1 = Binop$new(lhs_expression = ArrayAccess$new(id = par6$id(), index = gen_forall$iter_id()), binop = ">=", 
-                                        rhs_expression =    Int$new(value = 0))
+                                        rhs_expression =    Int$new(value = IntVal$new(0)))
 # comprehension
 Comp1 = Comprehension$new(generators = list(gen_forall), expression = bop1)
 # forall function call

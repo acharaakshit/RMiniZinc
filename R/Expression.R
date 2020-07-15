@@ -25,7 +25,7 @@ Int = R6Class("Int",
                  #' @description constructor for an int literal
                  #' @param value the value of the integer
                  initialize =  function(value){
-                   assert_true(value - floor(value) == 0)
+                   assertR6(value, "IntVal")
                    private$value = value 
                  },
                  #' @description get the integer value
@@ -54,7 +54,7 @@ Float = R6Class("Float",
                  #' @description constructor for an int literal
                  #' @param value the value of the integer
                  initialize =  function(value){
-                   assert_true(is.numeric(value))
+                   assertR6(value, "FloatVal")
                    private$value = value 
                  },
                  #' @description get the integer value
@@ -123,9 +123,9 @@ Array = R6Class("Array",
                    }
                  ),
                  private = list(
-                   #' @field value
+                   #' @field .value
                    #' object of class expression
-                   value = NULL
+                   .value = NULL
                  ))
 
 #' @title Array Access class
@@ -347,6 +347,9 @@ TypeInst = R6Class("TypeInst",
                        assertR6(type, "Type")
                        private$.type = type 
                        assert_true(testR6(indexExprVec, "Expression") || test_null(indexExprVec))
+                       if(testR6(indexExprVec, "Expression")){
+                         assert_false(type$isSet())
+                       }
                        private$.indExpr = indexExprVec
                        assert_true(testR6(domain, "SetVal") || test_null(domain))
                        private$.domain = domain

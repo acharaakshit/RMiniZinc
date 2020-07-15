@@ -64,7 +64,7 @@ ConstraintItem = R6Class("ConstraintItem",
                             lId = cExp$lhs()$id()$id()
                             lAcc = cExp$lhs()$index()$id()
                             operator = cExp$op()
-                            rId = cExp$rhs()$getIntVal()
+                            rId = cExp$rhs()$getIntVal()$v()
                             return(sprintf("constraint %s(%s in %s)(%s[%s] %s %s);",fnId, iter, iterate,
                                            lId,lAcc, operator, rId))
                             }

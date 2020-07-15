@@ -58,3 +58,55 @@ SetVal = R6Class("SetVal",
                    #' the float set value
                    .fsv = NULL
                  ))
+
+#' @title IntVal class
+#' 
+#' @description create an Integer Value in MiniZinc
+#' 
+#' @import R6
+#' @import checkmate
+#' @export
+IntVal =  R6Class("IntVal",
+                  public = list(
+                    #' @description constructor
+                    #' @param val
+                    initialize = function(val){
+                      assert_numeric(val)
+                      assert_true(val - floor(val) == 0)
+                      private$.val = val
+                    },
+                    #' @description return the value
+                    v = function(){
+                      return(private$.val)
+                    }
+                  ),
+                  private = list(
+                    #' @field .val
+                    #' the integer value
+                    .val = NULL
+                  ))
+
+#' @title FloatVal class
+#' 
+#' @description create a Float Value in MiniZinc
+#' 
+#' @import R6
+#' @import checkmate
+FloatVal = R6Class("FloatVal",
+                   public = list(
+                     #' @description constructor
+                     #' @param val float literal val
+                     initialize = function(val){
+                       assert_numeric(val)
+                       private$.val = val
+                     },
+                     #' @description return the value
+                     v = function(){
+                       return(private$.val)
+                     }
+                   ),
+                   private = list(
+                     #' @field .val
+                     #' the integer value
+                     .val = NULL
+                   ))
