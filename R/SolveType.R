@@ -59,7 +59,6 @@ SolveItem = R6Class("SolveType",
                                    operator = cExp$op()
                                    rId = cExp$rhs()$id()$id()
                                    rAcc = cExp$rhs()$index()$id()
-                                   print(rAcc)
                                    return(sprintf("solve %s %s(%s in %s)(%s[%s] %s %s[%s]);", private$.st,
                                                   fnId, iter, iterate, lId,lAcc, operator, rId, rAcc))
                                  }  

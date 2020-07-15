@@ -25,18 +25,18 @@ Int = R6Class("Int",
                  #' @description constructor for an int literal
                  #' @param value the value of the integer
                  initialize =  function(value){
-                   assert_true(value - floor(value) == 0)
-                   private$value = value 
+                   assertR6(value, "IntVal")
+                   private$.value = value 
                  },
                  #' @description get the integer value
                  getIntVal = function(){
-                   return (private$value)
+                   return (private$.value)
                  }
                ),
                private = list(
-                 #' @field value
+                 #' @field .value
                  #' object of class expression
-                 value = NULL
+                 .value = NULL
                ))
 
 #' @title create a float 
@@ -54,18 +54,18 @@ Float = R6Class("Float",
                  #' @description constructor for an int literal
                  #' @param value the value of the integer
                  initialize =  function(value){
-                   assert_true(is.numeric(value))
-                   private$value = value 
+                   assertR6(value, "FloatVal")
+                   private$.value = value 
                  },
                  #' @description get the integer value
                  getFloatVal = function(){
-                   return (private$value)
+                   return (private$.value)
                  }
                ),
                private = list(
                  #' @field .value
                  #' object of class expression
-                 value = NULL
+                 .value = NULL
                ))
 
 #' @title create a set
@@ -123,9 +123,9 @@ Array = R6Class("Array",
                    }
                  ),
                  private = list(
-                   #' @field value
+                   #' @field .value
                    #' object of class expression
-                   value = NULL
+                   .value = NULL
                  ))
 
 #' @title Array Access class
@@ -148,9 +148,11 @@ ArrayAccess = R6Class("ArrayAccess",
                           assertR6(index, "Id")
                           private$.index = index
                         },
+                        #' @description  return the array access id
                         id = function(){
                           return(private$.id)
                         },
+                        #' @description return the index id
                         index = function(){
                           return(private$.index)
                         }
@@ -340,20 +342,51 @@ TypeInst = R6Class("TypeInst",
                    inherit = Expression,
                    public = list(
                      #' @description constuctor
+                     #' @param type type of declaration
                      #' @param indexExprVec the expression vector of indices
-                     initialize = function(indexExprVec){
-                       assertR6(indexExprVec, "Expression")
+                     #' @param domain the domain of decision variables
+                     initialize = function(type, indexExprVec = NULL, domain = NULL){
+                       assertR6(type, "Type")
+                       private$.type = type 
+                       assert_true(testR6(indexExprVec, "Expression") || test_null(indexExprVec))
+                       if(testR6(indexExprVec, "Expression")){
+                         assert_false(type$isSet())
+                       }
                        private$.indExpr = indexExprVec
+                       assert_true(testR6(domain, "SetVal") || test_null(domain))
+                       private$.domain = domain
                      },
+                     #' @description return the domain
+                     domain = function(){
+                       return(private$.domain)
+                     }, 
                      #' @description return the index expression vector
                      ranges = function(){
                        return(private$.indExpr)
+                     },
+                     #' @description check if it's an array
+                     isArray = function(){
+                       if(dim>=1 && private$.type$isSet() == FALSE){
+                          return(TRUE)
+                       }
+                       return(FALSE)
+                     },
+                     #' @description return the type information
+                     type = function(){
+                       return(private$.type)
                      }
+                       
                    ),
                    private = list(
                      #' @field .indExpr
                      #' the index expression
-                     .indExpr = NULL
+                     .indExpr = NULL,
+                     #' @field .domain
+                     #' the domain of possible values to be taken
+                     .domain = NULL,
+                     #' @field .type
+                     #' the type information
+                     .type = NULL
                    ))
 
 #' @title Call class

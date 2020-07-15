@@ -36,60 +36,84 @@ Parameter is used to specify a parameter in a given problem and they are assigne
 
 Decision variables are the unknowns that Minizinc model is finding solutions for. We do not need to give them a value, but instead we give them a domain of possible values. Sometimes expressions involving other variables and parameters are also assigned to decision variables. Decision variables need to satisfy a set of constraints which form the core of the problem. 
 
+To create a variable declaration one needs to understand the elements of R6 classes that will be used to create the variables.
+
+The class `VarDecl` can be represented as:
+
+```{r VarDecl UML, echo=FALSE, out.width = '30%'}
+knitr::include_graphics(paste0(getwd(),"/workflows/VarDecl.png"))
+```
+
+The type information of the declaration is stored in an object of class Type which holds information like base type, number of dimensions, etc. The type instantiation is stored in an object of TypeInst class which contains the type information as well as the index or domain in case the variable is an array or decision variable with domain respectively. The value assigned to the variable declaration is stored in an object of sub classes of super class Expression that can be Int, Float, Array, or other Expression sub classes that result in a value of corresponding type.
+
+The UML diagram of Expression class can be seen below:
+```{r Expression UML, echo=FALSE, out.width = '80%'}
+knitr::include_graphics(paste0(getwd(),"/workflows/ExpressionUml.png"))
+```
+
 Here are examples of how we can create parameters and decision variables.
 
 ```{r}
 library(rminizinc)
 
 # create the variable and parameter declarations
-
-par_dt = Int$new(value = 4)
-par_tp = Type$new(base_type = "INT", kind = "parameter")
-par1 = VarDecl$new(expression = par_dt, type = par_tp, id = "n")
+par_ti = TypeInst$new(Type$new(base_type = "INT", kind = "parameter"))
+par1 = VarDecl$new(id = "n", par_ti, type_inst = par_ti)
 # create the Item 1
 item1 = VarDeclItem$new(decl = par1)
 
-sv = SetVal$new(val = c(l = 1, u=3))
+sv = SetVal$new(val = c(l = 1, u=par1))
 par2_dt = Set$new(setVal = sv)
-par2_tp = Type$new(base_type = "INT", kind = "parameter", dim = 1, set_type = TRUE)
-par2 = VarDecl$new(type = par2_tp, expression = par2_dt, id = "OBJ")
+par2_ti = TypeInst$new(Type$new(base_type = "INT", kind = "parameter", dim = 1, set_type = TRUE))
+par2 = VarDecl$new(type_inst = par2_ti, expression = par2_dt, id = "OBJ")
 # create the item 2
 item2 = VarDeclItem$new(decl = par2)
 
-par3_tp = Type$new(base_type = "INT", kind = "parameter")
-par3 = VarDecl$new(type = par3_tp, id = "capacity")
+par3_ti = TypeInst$new(Type$new(base_type = "INT", kind = "parameter"))
+par3 = VarDecl$new(type_inst = par3_ti, id = "capacity")
 # create the item 3
 item3 = VarDeclItem$new(decl = par3)
 
-par4_tp = Type$new(base_type = "INT", type_inst = TypeInst$new(par2$id()), kind = "parameter", dim = 1)
-par4 = VarDecl$new(type = par4_tp, id = "profit")
+par4_ti = TypeInst$new(Type$new(base_type = "INT", kind = "parameter", dim = 1),
+                   indexExprVec = par2$id())
+par4 = VarDecl$new(type_inst = par4_ti, id = "profit")
 # create the item 4
 item4 = VarDeclItem$new(decl = par4)
 
-par5_tp = Type$new(base_type = "INT", type_inst = TypeInst$new(par2$id()), kind = "parameter", dim = 1)
-par5 = VarDecl$new(type = par5_tp, id = "size")
+par5_ti = TypeInst$new(Type$new(base_type = "INT", kind = "parameter", dim = 1),
+                   indexExprVec = par2$id())
+par5 = VarDecl$new(type = par5_ti, id = "size")
 # create the item 5
 item5 = VarDeclItem$new(decl = par5)
 
-par6_tp = Type$new(base_type = "INT", kind = "decision", type_inst = TypeInst$new(par2$id()), dim = 1)
-par6 = VarDecl$new(type = par6_tp, id = "x")
+par6_ti = TypeInst$new(Type$new(base_type = "INT", kind = "decision", dim = 1),
+                   indexExprVec = par2$id())
+par6 = VarDecl$new(type = par6_ti, id = "x")
+
 #create the item 6
 item6 = VarDeclItem$new(decl = par6)
 ```
 
-# Constraints
+## Constraints
 
-Create constraints
+Constraints are defined on the decision variables to restrict the range of values that they can take. They can also be thought of as the rules of a problem.
+
+Constraints can be created using different R6 sub classes of the super class Expression. In this example Generator, Binop, Comprehension and Call classes have been used. These classes take in the elements required to create an expression that will be used as a constraint. More information can be found using `?<class Name>`
+
+Create constraints:
 
 ```{r}
+# generator
 gen_forall = Generator$new(IN = par2$id(), iterator = "i")
+# binary operator expression
 bop1 = Binop$new(lhs_expression = ArrayAccess$new(id = par6$id(), index = gen_forall$iter_id()), binop = ">=", 
-                                        rhs_expression =    Int$new(value = 0))
+                                        rhs_expression =    Int$new(value = IntVal$new(0)))
+# comprehension
 Comp1 = Comprehension$new(generators = list(gen_forall), expression = bop1)
+# forall function call
 cl1 = Call$new(fn_id = "forall", lExp = list(Comp1))
 # item7 
 item7 = ConstraintItem$new(expression = cl1)
-item7$c_str()
 
 gen_sum = Generator$new(IN = par2$id(), iterator = "i")
 bop2 = Binop$new(lhs_expression = ArrayAccess$new(id = par5$id(), index = gen_sum$iter_id()), binop = "*", 
@@ -102,10 +126,11 @@ item8 = ConstraintItem$new(expression = bop3)
 ```
 
 
-# Solve Type
+## Solve Type
 
 The constraint programming problem can be of three types, namely: Satisfaction , Minimization and Maximization.
 Satisfaction problems produce all the solutions that satisfy the constraints whereas minimization and maximization problems produce the solution which minimizes and maximizes the given arithmetic expression.
+
 An example is shown below:
 
 ```{r}
@@ -122,7 +147,15 @@ cl3 = Call$new(fn_id = "sum", lExp = list(Comp3))
 # item9
 item9 = SolveItem$new(solve_type = "maximize", expression = cl3)
 ```
-#' Create the model
+
+## Create the model
+
+Currently only three types of items can be created in a MiniZinc model namely: Variable Declarations, Constraints and Solve Items. The model is created by combining these items.
+
+The UML diagram is shown below:
+```{r Model UML, echo=FALSE, out.width = '70%'}
+knitr::include_graphics(paste0(getwd(),"/workflows/ItemUml.png"))
+```
 
 Combine all the items to create a MiniZinc model
 ```{r}
@@ -131,7 +164,7 @@ mod = Model$new(items = items)
 modString = mod$mzn_string()
 ```
 
-# Solve the model
+## Solve the model
 
 Solve the model using the Rcpp functions that are using the MiniZinc.
 
@@ -159,6 +192,8 @@ constraint sum(i in OBJ)(size[i] * x[i]) <= capacity;
 solve maximize sum(i in OBJ)(profit[i] * x[i]);
 
 ```
+
+Currently only the knapsack problem specified above can be created using the current implementation. More problems will be supported soon.
 
 Now, that the basic structure of the problem is clear, we can create functions for solving different constraint programming problems.
 

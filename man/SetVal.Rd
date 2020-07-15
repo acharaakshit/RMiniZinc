@@ -42,6 +42,13 @@ constructor
 \if{html}{\out{<div class="r">}}\preformatted{SetVal$new(val)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{val}}{set value to be assigned}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-isv"></a>}}

@@ -25,6 +25,7 @@ ConstraintItem = R6Class("ConstraintItem",
                        },
                        #' @description serialize to MiniZinc syntax
                        c_str = function(){
+                         # currently only one knapsack problem can be solved
                          mainExp = private$.expression
                          if(testR6(mainExp, "Binop")){
                            bop = private$.expression
@@ -64,7 +65,7 @@ ConstraintItem = R6Class("ConstraintItem",
                             lId = cExp$lhs()$id()$id()
                             lAcc = cExp$lhs()$index()$id()
                             operator = cExp$op()
-                            rId = cExp$rhs()$getIntVal()
+                            rId = cExp$rhs()$getIntVal()$v()
                             return(sprintf("constraint %s(%s in %s)(%s[%s] %s %s);",fnId, iter, iterate,
                                            lId,lAcc, operator, rId))
                             }

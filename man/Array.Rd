@@ -12,14 +12,14 @@ create an array in MiniZinc
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{value}}{object of class expression}
+\item{\code{.value}}{object of class expression}
 }
 \if{html}{\out{</div>}}
 }
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
-\item{\code{value}}{object of class expression}
+\item{\code{.value}}{object of class expression}
 }
 \if{html}{\out{</div>}}
 }

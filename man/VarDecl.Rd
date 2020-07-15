@@ -12,7 +12,7 @@ Contains different fields to create a variable declaration
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{.type}}{type information}
+\item{\code{.ti}}{type instantiation information}
 
 \item{\code{id}}{name of the variable}
 
@@ -23,7 +23,7 @@ Contains different fields to create a variable declaration
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
-\item{\code{.type}}{type information}
+\item{\code{.ti}}{type instantiation information}
 
 \item{\code{id}}{name of the variable}
 
@@ -39,7 +39,7 @@ Contains different fields to create a variable declaration
 \item \href{#method-isPar}{\code{VarDecl$isPar()}}
 \item \href{#method-isVar}{\code{VarDecl$isVar()}}
 \item \href{#method-e}{\code{VarDecl$e()}}
-\item \href{#method-type}{\code{VarDecl$type()}}
+\item \href{#method-ti}{\code{VarDecl$ti()}}
 \item \href{#method-clone}{\code{VarDecl$clone()}}
 }
 }
@@ -55,17 +55,17 @@ Contains different fields to create a variable declaration
 \subsection{Method \code{new()}}{
 initialize the VarDecl constructor
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{VarDecl$new(type, expression = NULL, id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{VarDecl$new(expression = NULL, id, type_inst)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{type}}{the type object}
-
 \item{\code{expression}}{the object of a data type in MiniZinc. NULL by default}
 
 \item{\code{id}}{the id/name of the declared variable}
+
+\item{\code{type}}{the type object}
 
 \item{\code{kind}}{parameter or decision}
 }
@@ -113,12 +113,12 @@ return the initialization expression
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-type"></a>}}
-\if{latex}{\out{\hypertarget{method-type}{}}}
-\subsection{Method \code{type()}}{
+\if{html}{\out{<a id="method-ti"></a>}}
+\if{latex}{\out{\hypertarget{method-ti}{}}}
+\subsection{Method \code{ti()}}{
 type of the variable declaration
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{VarDecl$type()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{VarDecl$ti()}\if{html}{\out{</div>}}
 }
 
 }
