@@ -181,7 +181,7 @@ Generator = R6Class("Generator",
                        #' @param where the where expression of generator
                        #' @param the name of the iterator
                        initialize = function(IN = NULL, where = NULL, iterator = "i"){
-                         assert(testR6(IN, "Expression"),
+                         assert(test_true(testR6(IN, "SetVal") || testR6(IN, "Id")),
                                   testR6(where, "Expression"),
                                 combine = "or")
                          assert_string(iterator)
@@ -348,12 +348,10 @@ TypeInst = R6Class("TypeInst",
                      initialize = function(type, indexExprVec = NULL, domain = NULL){
                        assertR6(type, "Type")
                        private$.type = type 
-                       assert_true(testR6(indexExprVec, "Expression") || test_null(indexExprVec))
-                       if(testR6(indexExprVec, "Expression")){
-                         assert_false(type$isSet())
-                       }
+                       assert_true(testR6(indexExprVec, "Id") || test_null(indexExprVec) ||
+                                   testR6(indexExprVec, "SetVal"))
                        private$.indExpr = indexExprVec
-                       assert_true(testR6(domain, "SetVal") || test_null(domain))
+                       assert_true(testR6(domain, "Id") || test_null(domain) || testR6(domain, "SetVal"))
                        private$.domain = domain
                      },
                      #' @description return the domain

@@ -13,8 +13,8 @@ SetVal = R6Class("SetVal",
                   initialize = function(val){
                     if(all(names(val) == c("l","u"))){
                       # int set val
-                      assert_true((testR6(val[['l']]) || test_numeric(val[['l']])) &&
-                                    testR6(val[['u']]) || test_numeric(val[['u']]))
+                      assert_true((testR6(val[['l']], "VarDecl") || test_numeric(val[['l']])) &&
+                                    testR6(val[['u']], "VarDecl") || test_numeric(val[['u']]))
                       
                       if(test_numeric(val[['l']]) && test_numeric(val[['u']])){
                         assert(val[['l']] - floor(val[['l']]) == 0 && val[['u']] - floor(val[['u']]) == 0)

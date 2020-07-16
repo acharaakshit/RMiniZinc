@@ -50,8 +50,20 @@ SolveItem = R6Class("SolveType",
                                    iExp = cl$e_i(1)
                                    iterate = ''
                                    if(testR6(iExp, "Comprehension")){
-                                     iter = 'i'
-                                     iterate = iExp$gen_i(1)$In()$id()
+                                       iter = iExp$gen_i(1)$iter_id()$id()
+                                       iterate = ''
+                                       if(testR6(iExp$gen_i(1)$In(), "Id")){
+                                         iterate = iExp$gen_i(1)$In()$id()  
+                                       }else if(testR6(iExp$gen_i(1)$In(), "SetVal")){
+                                         if(test_numeric(iExp$gen_i(1)$In()$isv()[['l']]) &&
+                                            testR6(iExp$gen_i(1)$In()$isv()[['u']], "Id")){
+                                           iterate = paste0(iExp$gen_i(1)$In()$isv()[['l']],"..",iExp$gen_i(1)$In()$isv()[['u']]$id())
+                                         }else{
+                                           stop('Not supported')
+                                         }
+                                       }else{
+                                         stop("Incorrect Expression")
+                                       }
                                    }
                                    cExp = iExp$e()
                                    lId = cExp$lhs()$id()$id()
@@ -64,7 +76,7 @@ SolveItem = R6Class("SolveType",
                                  }  
                                }
                                
-                             }
+                               }
                              ),
                           private = list(
                             #' @description .exp

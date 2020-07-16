@@ -99,10 +99,29 @@ VarDeclItem = R6Class("VarDeclItem",
                             ind = ti$ranges()
                             if(testR6(ind,"Id")){
                                 access_id = ind$id()
+                            }else if(testR6(ind, "SetVal")){
+                              if(test_numeric(ind$isv()[['l']]) && testR6(ind$isv()[['u']], "Id")){
+                                access_id = paste0(ind$isv()[['l']],"..", ind$isv()[['u']]$id())  
+                              }else{
+                                stop('Not supported')
+                              }
+                            }else{
+                              stop('Incorrect expression')
                             }
                             if(private$.decl$isPar()){
                               return(sprintf("array[%s] of %s: %s;", access_id, t, id)) 
                             }else{
+                              dom = ''
+                              if(testR6(ti$domain(), "SetVal")){
+                                if(test_numeric(ti$domain()$isv()[['l']]) && test_numeric(ti$domain()$isv()[['u']])){
+                                  dom = paste0(ti$domain()$isv()[['l']],"..", ti$domain()$isv()[['u']])  
+                                }else{
+                                  stop('Not supported')
+                                }
+                              }
+                              if(dom != ''){
+                                return(sprintf("array[%s] of var %s: %s;", access_id, dom, id))
+                              }
                               return(sprintf("array[%s] of var %s: %s;", access_id, t, id))
                             }  
                           }else if(private$.decl$ti()$type()$ndim() == 1 && private$.decl$ti()$type()$isSet()){
