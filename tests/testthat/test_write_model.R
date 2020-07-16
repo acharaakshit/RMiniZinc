@@ -102,4 +102,19 @@ test_that("'knapsack problems can be created",{
   # check the value of the solutions
   expect_equal(sol$Solutions$optimal_solution$x, list(1,1,1))
   
+  # check if parsed model is same 
+  parsedModel = rminizinc:::mzn_parse(modelString = modString)
+  # check if parsed string is the same
+  expect_equal(modString, parsedModel$modelString)
+  #parameters
+  expect_equal(parsedModel$Parameters, c("n", "OBJ", "capacity", "profit", "size"))
+  #decision Variables
+  expect_equal(parsedModel$decisionVariables, "x")
+  #Constraints
+  expect_equal(parsedModel$Constraints$noOfConstraints, 2)
+  expect_equal(parsedModel$Constraints$varsInvolved$`constraint: 0`, c("OBJ","i", "x"))
+  expect_equal(parsedModel$Constraints$varsInvolved$`constraint: 1`, c("OBJ", "capacity", "i", "size", "x"))
+  #Solve Items
+  expect_equal(parsedModel$SolveType$objective, "maximize")
+  expect_equal(parsedModel$SolveType$varsInvolved, c( "OBJ", "i", "profit", "x"))
 })
