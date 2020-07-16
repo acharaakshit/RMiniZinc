@@ -181,7 +181,7 @@ Generator = R6Class("Generator",
                        #' @param where the where expression of generator
                        #' @param the name of the iterator
                        initialize = function(IN = NULL, where = NULL, iterator = "i"){
-                         assert(testR6(IN, "Expression"),
+                         assert(test_true(testR6(IN, "SetVal") || testR6(IN, "Id")),
                                   testR6(where, "Expression"),
                                 combine = "or")
                          assert_string(iterator)

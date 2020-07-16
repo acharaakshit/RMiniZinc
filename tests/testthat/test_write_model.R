@@ -118,3 +118,83 @@ test_that("'knapsack problems can be created",{
   expect_equal(parsedModel$SolveType$objective, "maximize")
   expect_equal(parsedModel$SolveType$varsInvolved, c( "OBJ", "i", "profit", "x"))
 })
+
+test_that("knapsack_1 problem can also be created and solved", {
+  library(rminizinc)
+  
+  # create the variable and parameter declarations
+  par_ti = TypeInst$new(Type$new(base_type = "INT", kind = "parameter"))
+  par1 = VarDecl$new(id = "n", par_ti, type_inst = par_ti)
+  # create the Item 1
+  item1 = VarDeclItem$new(decl = par1)
+  
+  par2_ti = TypeInst$new(Type$new(base_type = "INT", kind = "parameter"))
+  par2 = VarDecl$new(type_inst = par2_ti, id = "capacity")
+  # create the item 3
+  item2 = VarDeclItem$new(decl = par2)
+  
+  par3_ti = TypeInst$new(Type$new(base_type = "INT", kind = "parameter", dim = 1),
+                         indexExprVec = SetVal$new(c(l = 1, u = par1)))
+  par3 = VarDecl$new(type_inst = par3_ti, id = "profit")
+  # create the item 4
+  item3 = VarDeclItem$new(decl = par3)
+  
+  par4_ti = TypeInst$new(Type$new(base_type = "INT", kind = "parameter", dim = 1),
+                         indexExprVec = SetVal$new(c(l = 1, u = par1)))
+  par4 = VarDecl$new(type = par4_ti, id = "size")
+  # create the item 5
+  item4 = VarDeclItem$new(decl = par4)
+  
+  par5_ti = TypeInst$new(Type$new(base_type = "INT", kind = "decision", dim = 1),
+                         indexExprVec = SetVal$new(c(l = 1, u = par1)),
+                         domain = SetVal$new(val = c(l=0, u=1)))
+  par5 = VarDecl$new(type = par5_ti, id = "x")
+  
+  #create the item 6
+  item5 = VarDeclItem$new(decl = par5)
+  
+  gen_sum = Generator$new(IN = SetVal$new(c(l = 1, u = par1)), iterator = "i")
+  bop2 = Binop$new(lhs_expression = ArrayAccess$new(id = par4$id(), index = gen_sum$iter_id()), binop = "*", 
+                   rhs_expression = ArrayAccess$new(id = par5$id() ,index = gen_sum$iter_id()))
+  Comp2 = Comprehension$new(generators = list(gen_sum), expression = bop2)
+  cl2 = Call$new(fn_id = "sum", lExp = list(Comp2))
+  bop3 = Binop$new(lhs_expression = cl2, binop = "<=", rhs_expression = par2$id())
+  # item8
+  item6 = ConstraintItem$new(expression = bop3)
+  
+  gen_sum = Generator$new(IN = SetVal$new(c(l = 1, u = par1)), iterator = "i")
+  
+  bop4 = Binop$new(lhs_expression = ArrayAccess$new(id = par3$id(),index = gen_sum$iter_id()), 
+                   binop = "*", rhs_expression = ArrayAccess$new(id = par5$id(), index = gen_sum$iter_id()))
+  
+  Comp3 = Comprehension$new(generators = list(gen_sum), expression = bop4)
+  
+  cl3 = Call$new(fn_id = "sum", lExp = list(Comp3))
+  
+  # item9
+  item7 = SolveItem$new(solve_type = "maximize", expression = cl3)
+  
+  items  = c(item1, item2, item3, item4, item5, item6, item7)
+  mod = Model$new(items = items)
+  modString = mod$mzn_string()
+  
+  missingValues = rminizinc::getMissingPars(modelString = modString)
+  expect_equal(missingValues, c("n", "capacity", "profit", "size"))
+  
+  # list of the data
+  pVals = list(3,9,c(15,10,7),c(4,3,2))
+  names(pVals) = missingValues
+  
+  # set the missing parameters
+  modString = rminizinc:::set_params(modData = pVals,modelString = modString, modify_mzn = FALSE)
+  
+  # check that no parameters are missing now
+  missingValues = rminizinc::getMissingPars(modelString = modString)
+  expect_equal(length(missingValues), 0)
+  
+  # R List object containing the solutions
+  solObj = rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gecode",
+                                libpath = "/snap/minizinc/current/share/minizinc")
+  # get all the solutions
+  print(solObj$Solutions)
+})
