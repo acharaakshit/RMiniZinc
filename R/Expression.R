@@ -237,7 +237,7 @@ Comprehension = R6Class("Comprehension",
                            },
                            #' @description get the number of generators
                            ngens = function(){
-                             return(length(private.generators))
+                             return(length(private$.generators))
                            },
                            #' @description get the ith generator expression
                            #' @param i index

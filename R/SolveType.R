@@ -44,39 +44,9 @@ SolveItem = R6Class("SolveType",
                                  return(sprintf("solve satisfy;"))
                                }else{
                                  mainExp = private$.exp
-                                 if(testR6(mainExp, "Call")){
-                                   cl = mainExp
-                                   fnId  = cl$id()$id()
-                                   iExp = cl$e_i(1)
-                                   iterate = ''
-                                   if(testR6(iExp, "Comprehension")){
-                                       iter = iExp$gen_i(1)$iter_id()$id()
-                                       iterate = ''
-                                       if(testR6(iExp$gen_i(1)$In(), "Id")){
-                                         iterate = iExp$gen_i(1)$In()$id()  
-                                       }else if(testR6(iExp$gen_i(1)$In(), "SetVal")){
-                                         if(test_numeric(iExp$gen_i(1)$In()$isv()[['l']]) &&
-                                            testR6(iExp$gen_i(1)$In()$isv()[['u']], "Id")){
-                                           iterate = paste0(iExp$gen_i(1)$In()$isv()[['l']],"..",iExp$gen_i(1)$In()$isv()[['u']]$id())
-                                         }else{
-                                           stop('Not supported')
-                                         }
-                                       }else{
-                                         stop("Incorrect Expression")
-                                       }
-                                   }
-                                   cExp = iExp$e()
-                                   lId = cExp$lhs()$id()$id()
-                                   lAcc = cExp$lhs()$index()$id()
-                                   operator = cExp$op()
-                                   rId = cExp$rhs()$id()$id()
-                                   rAcc = cExp$rhs()$index()$id()
-                                   return(sprintf("solve %s %s(%s in %s)(%s[%s] %s %s[%s]);", private$.st,
-                                                  fnId, iter, iterate, lId,lAcc, operator, rId, rAcc))
-                                 }  
+                                 return(sprintf("solve %s %s;", private$.st, helper_serialize(mainExp)))
                                }
-                               
-                               }
+                             }
                              ),
                           private = list(
                             #' @description .exp
