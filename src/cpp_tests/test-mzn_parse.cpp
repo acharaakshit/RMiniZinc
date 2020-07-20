@@ -51,40 +51,43 @@ context("test if correct missing parameter values are returned"){
     List parseVal = mzn_parse("",mznpath);
     
     // all the fields are present
-    expect_true(parseVal.length() == 5);
+    expect_true(parseVal.length() == 4);
     
     //parameter checks
-    vector<string> pars = parseVal["Parameters"];
-    vector<string> cmpWith = {"n", "OBJ", "capacity", "profit", "size"};
-    expect_true(std::equal(pars.begin(), pars.end(), cmpWith.begin()));
+    List pars = parseVal["Variables"];
+    vector<string> vNames;
+    for(int i = 0;i<pars.length();i++){
+      string decl = "decl";
+      decl.append(to_string(i+1));
+      List vDetails = pars[decl];
+      vNames.push_back(vDetails["name"]);
+    }
     
-    // decision variable checks
-    vector<string> vars = parseVal["decisionVariables"];
-    expect_true(vars[0] == "x");
+    vector<string> cmpWith = {"n", "OBJ", "capacity", "profit", "size", "x"};
+    expect_true(std::equal(vNames.begin(), vNames.end(), cmpWith.begin()));
     
     // constraint checks
     List constraints = parseVal["Constraints"];
-    List cstrVars = constraints["varsInvolved"];
-    // number of constraints
-    expect_true(cstrVars.length() == 2);
+    List cDetails = constraints["constraint1"];
+    vector<string>  cstvNames = cDetails["varsInvolved"];
     
-    vector<string> cstvNames = cstrVars[0];
     vector<string> compareWith = {"OBJ","i", "x"};
     expect_true(cstvNames.size() == compareWith.size());
     expect_true(std::equal(cstvNames.begin(), cstvNames.end(), compareWith.begin()));
     
-    vector<string> cstvNames1 = cstrVars[1];
-    vector<string> compareWith1 = {"OBJ", "capacity", "i", "size", "x"};
-    expect_true(std::equal(cstvNames1.begin(), cstvNames1.end(), compareWith1.begin()));
+    List cDetails2 = constraints["constraint2"];
+    vector<string>  cstvNames2 = cDetails2["varsInvolved"];
+    vector<string> compareWith2 = {"OBJ", "capacity", "i", "size", "x"};
+    expect_true(std::equal(cstvNames2.begin(), cstvNames2.end(), compareWith2.begin()));
     
     //solve type checks
     List st = parseVal["SolveType"];
     string objective = st[0];
     if(objective == "satisfy")
-      expect_true(st.length() == 1);
-    else{
       expect_true(st.length() == 2);
-      CharacterVector slvNames = st[1];
+    else{
+      expect_true(st.length() == 3);
+      CharacterVector slvNames = st[2];
       vector<string> compareWith = {"OBJ", "i", "profit", "x" };
       expect_true(std::equal(slvNames.begin(), slvNames.end(), compareWith.begin()));
     }
@@ -116,23 +119,26 @@ context("test if correct missing parameter values are returned"){
     List parseVal = mzn_parse("",mznpath);
     
     // all the fields are present
-    expect_true(parseVal.length() == 5);
+    expect_true(parseVal.length() == 4);
     
     //parameter checks
-    vector<string> pars = parseVal["Parameters"];
-    vector<string> cmpWith = {"n", "capacity", "profit", "size"};
-    expect_true(std::equal(pars.begin(), pars.end(), cmpWith.begin()));
+    List pars = parseVal["Variables"];
+    vector<string> vNames;
+    for(int i = 0;i<pars.length();i++){
+      string decl = "decl";
+      decl.append(to_string(i+1));
+      List vDetails = pars[decl];
+      vNames.push_back(vDetails["name"]);
+    }
     
-    // decision variable checks
-    vector<string> vars = parseVal["decisionVariables"];
-    expect_true(vars[0] == "x");
+    vector<string> cmpWith = {"n", "capacity", "profit", "size", "x"};
+    expect_true(std::equal(vNames.begin(), vNames.end(), cmpWith.begin()));
     
     // constraint checks
     List constraints = parseVal["Constraints"];
-    List cstrVars = constraints["varsInvolved"];
-    expect_true(cstrVars.length() == 1);
-    
-    vector<string> cstvNames = cstrVars[0];
+    List cDetails = constraints["constraint1"];
+    vector<string>  cstvNames = cDetails["varsInvolved"];
+  
     vector<string> compareWith = {"capacity", "i", "n", "size", "x"};
     expect_true(cstvNames.size() == compareWith.size());
     expect_true(std::equal(cstvNames.begin(), cstvNames.end(), compareWith.begin()));
@@ -141,10 +147,10 @@ context("test if correct missing parameter values are returned"){
     List st = parseVal["SolveType"];
     string objective = st[0];
     if(objective == "satisfy")
-      expect_true(st.length() == 1); 
+      expect_true(st.length() == 2); 
     else{
-      expect_true(st.length() == 2);
-      CharacterVector slvNames = st[1];
+      expect_true(st.length() == 3);
+      CharacterVector slvNames = st[2];
       vector<string> compareWith = {"i", "n", "profit", "x" };
       expect_true(std::equal(slvNames.begin(), slvNames.end(), compareWith.begin()));
     }
@@ -177,23 +183,26 @@ context("test if correct missing parameter values are returned"){
     List parseVal = mzn_parse("",mznpath);
     
     // all the fields are present
-    expect_true(parseVal.length() == 5);
+    expect_true(parseVal.length() == 4);
     
     //parameter checks
-    vector<string> pars = parseVal["Parameters"];
-    vector<string> cmpWith = {"n", "OBJ", "capacity", "profit", "size"};
-    expect_true(std::equal(pars.begin(), pars.end(), cmpWith.begin()));
+    List pars = parseVal["Variables"];
+    vector<string> vNames;
+    for(int i = 0;i<pars.length();i++){
+      string decl = "decl";
+      decl.append(to_string(i+1));
+      List vDetails = pars[decl];
+      vNames.push_back(vDetails["name"]);
+    }
     
-    // decision variable checks
-    vector<string> vars = parseVal["decisionVariables"];
-    expect_true(vars[0] == "x");
+    vector<string> cmpWith = {"n", "OBJ", "capacity", "profit", "size", "x"};
+    expect_true(std::equal(vNames.begin(), vNames.end(), cmpWith.begin()));
     
     // constraint checks
     List constraints = parseVal["Constraints"];
-    List cstrVars = constraints["varsInvolved"];
-    expect_true(cstrVars.length() == 1);
+    List cDetails = constraints["constraint1"];
+    vector<string>  cstvNames = cDetails["varsInvolved"];
     
-    vector<string> cstvNames = cstrVars[0];
     vector<string> compareWith = {"capacity", "i", "size", "x"};
     expect_true(cstvNames.size() == compareWith.size());
     expect_true(std::equal(cstvNames.begin(), cstvNames.end(), compareWith.begin()));
@@ -204,8 +213,8 @@ context("test if correct missing parameter values are returned"){
     if(objective == "satisfy")
       expect_true(st.length() == 1); 
     else{
-      expect_true(st.length() == 2);
-      CharacterVector slvNames = st[1];
+      expect_true(st.length() == 3);
+      CharacterVector slvNames = st[2];
       vector<string> compareWith = {"i", "profit", "x"};
       expect_true(std::equal(slvNames.begin(), slvNames.end(), compareWith.begin()));
     }

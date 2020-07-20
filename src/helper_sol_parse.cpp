@@ -8,24 +8,26 @@ using namespace std;
 
 void helper_sol_parse(MiniZinc::Expression *sExp,  Rcpp::List &thisSol){
   
-  int type = sExp->eid();
-  if(type==Expression::E_INTLIT){
+  int dataType = sExp->eid();
+  if(dataType==Expression::E_INTLIT){
     thisSol.push_back(sExp->cast<IntLit>()->v().toInt());
-  }else if(type==Expression::E_FLOATLIT){
+  }else if(dataType==Expression::E_FLOATLIT){
     thisSol.push_back(sExp->cast<FloatLit>()->v().toDouble()); 
-  }else if(type==Expression::E_BOOLLIT){
+  }else if(dataType==Expression::E_BOOLLIT){
     thisSol.push_back(sExp->cast<BoolLit>()->v()); 
-  }else if(type==Expression::E_SETLIT){
+  }else if(dataType==Expression::E_SETLIT){
     SetLit *sl = sExp->cast<SetLit>();
     if(sl->isv()!= NULL){  
       int max_val = sl->isv()->max().toInt();
       int min_val = sl->isv()->min().toInt();  
       IntegerVector setVec = {max_val, min_val}; 
+      setVec.names() = CharacterVector({"max", "min"});
       thisSol.push_back(setVec);
     }else if(sl->fsv()!=NULL){
       float max_val =  sl->fsv()->max().toDouble();
       float min_val =  sl->fsv()->min().toDouble();
       NumericVector setVec = {max_val, min_val};
+      setVec.names() = CharacterVector({"max", "min"});
       thisSol.push_back(setVec);
     }else{
       ASTExprVec<Expression> expVec = sl->v();
@@ -37,7 +39,7 @@ void helper_sol_parse(MiniZinc::Expression *sExp,  Rcpp::List &thisSol){
       }
       thisSol.push_back(setVec);
     } 
-  }else if(type == Expression::E_ARRAYLIT){
+  }else if(dataType == Expression::E_ARRAYLIT){
     ArrayLit *al = sExp->cast<ArrayLit>();
     if(al->getVec().size()){
       int vec_size = al->getVec().size();
@@ -49,7 +51,7 @@ void helper_sol_parse(MiniZinc::Expression *sExp,  Rcpp::List &thisSol){
       }
       thisSol.push_back(ArrVec);
     }   
-  }else if(type == Expression::E_CALL){
+  }else if(dataType == Expression::E_CALL){
     Call *cl = sExp->cast<Call>();
     // name of the function
     string fnName = cl->id().c_str();

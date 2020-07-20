@@ -106,14 +106,17 @@ test_that("'knapsack problems can be created",{
   parsedModel = rminizinc:::mzn_parse(modelString = modString)
   # check if parsed string is the same
   expect_equal(modString, parsedModel$modelString)
-  #parameters
-  expect_equal(parsedModel$Parameters, c("n", "OBJ", "capacity", "profit", "size"))
-  #decision Variables
-  expect_equal(parsedModel$decisionVariables, "x")
+  expect_equal(length(parsedModel$Variables), 6)
+  nVars = length(parsedModel$Variables)
+  v = c()
+  for(i in seq(1, nVars, 1)){
+    nDecl = as.symbol(paste0("decl",i))
+    v = c(v, parsedModel$Variables[[nDecl]][["name"]])
+  }
+  expect_equal(v, c("n", "OBJ", "capacity", "profit", "size", "x"))
   #Constraints
-  expect_equal(parsedModel$Constraints$noOfConstraints, 2)
-  expect_equal(parsedModel$Constraints$varsInvolved$`constraint: 0`, c("OBJ","i", "x"))
-  expect_equal(parsedModel$Constraints$varsInvolved$`constraint: 1`, c("OBJ", "capacity", "i", "size", "x"))
+  expect_equal(parsedModel$Constraints$constraint1$varsInvolved, c("OBJ","i", "x"))
+  expect_equal(parsedModel$Constraints$constraint2$varsInvolved, c("OBJ", "capacity", "i", "size", "x"))
   #Solve Items
   expect_equal(parsedModel$SolveType$objective, "maximize")
   expect_equal(parsedModel$SolveType$varsInvolved, c( "OBJ", "i", "profit", "x"))
@@ -195,6 +198,4 @@ test_that("knapsack_1 problem can also be created and solved", {
   # R List object containing the solutions
   solObj = rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gecode",
                                 libpath = "/snap/minizinc/current/share/minizinc")
-  # get all the solutions
-  print(solObj$Solutions)
 })
