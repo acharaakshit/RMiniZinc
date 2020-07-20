@@ -5,6 +5,21 @@
 
 using namespace Rcpp;
 
+// deleteItem
+std::string deleteItem(int itemNo, std::string modelString, std::string mznpath, std::string modelStringName, bool updateMZN);
+RcppExport SEXP _rminizinc_deleteItem(SEXP itemNoSEXP, SEXP modelStringSEXP, SEXP mznpathSEXP, SEXP modelStringNameSEXP, SEXP updateMZNSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type itemNo(itemNoSEXP);
+    Rcpp::traits::input_parameter< std::string >::type modelString(modelStringSEXP);
+    Rcpp::traits::input_parameter< std::string >::type mznpath(mznpathSEXP);
+    Rcpp::traits::input_parameter< std::string >::type modelStringName(modelStringNameSEXP);
+    Rcpp::traits::input_parameter< bool >::type updateMZN(updateMZNSEXP);
+    rcpp_result_gen = Rcpp::wrap(deleteItem(itemNo, modelString, mznpath, modelStringName, updateMZN));
+    return rcpp_result_gen;
+END_RCPP
+}
 // filetoString
 std::string filetoString(std::string filepath);
 RcppExport SEXP _rminizinc_filetoString(SEXP filepathSEXP) {
@@ -87,6 +102,7 @@ END_RCPP
 RcppExport SEXP run_testthat_tests();
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_rminizinc_deleteItem", (DL_FUNC) &_rminizinc_deleteItem, 5},
     {"_rminizinc_filetoString", (DL_FUNC) &_rminizinc_filetoString, 1},
     {"_rminizinc_getMissingPars", (DL_FUNC) &_rminizinc_getMissingPars, 3},
     {"_rminizinc_mzn_eval", (DL_FUNC) &_rminizinc_mzn_eval, 6},
