@@ -140,3 +140,21 @@ solObj = rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.geco
 print(solObj$Solutions)
 
 
+## -----------------------------------------------------------------------------
+# file path
+mzn_path = paste0(dirname(getwd()), "/mzn_examples/knapsack/knapsack_0.mzn")
+
+# parse the model
+parseObj=rminizinc:::mzn_parse(mznpath = mzn_path)
+
+print("The original model:")
+cat(parseObj$modelString)
+
+# delete the first variable declaration
+item_number  = parseObj$Variables$decl1$itemNo
+
+# delete the item but don't update the mzn
+print("The updated model string is:")
+cat(deleteItem(itemNo = item_number, mznpath = mzn_path, updateMZN = FALSE))
+
+
