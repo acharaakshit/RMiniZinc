@@ -208,8 +208,8 @@ The next approach is to use the MiniZinc C++ API. This involves giving the MiniZ
 ```{r Workflow 2, echo=FALSE, out.width = '100%'}
 knitr::include_graphics(paste0(getwd(),"/workflows/API.png"))
 ```
-A parser function `mzn_parse` has also been implemented which can be used to detect possible syntax errors (and to modify the components of the model -- to be done later) before the MiniZinc model is evaluated. This function can either take the path of a model file path or it can take a string model and returns a list with five elements namely: `modelString` which is the string representation of the model and `Parameters` which are the parameter names, `decisionVariables` which are the decision variables of 
-a model, `Constraints` which are the constraints of a model, `SolveType` which contains the information about the solve type of the problem and ode.
+
+A parser function `mzn_parse` has also been implemented which can be used to detect possible syntax errors (and to modify the components of the model -- to be done later) before the MiniZinc model is evaluated. This function can either take the path of a model file path or it can take a string model and returns a list with different elements like: `modelString` which is the string representation of the model and `Variables` which are the variable declaration details, `Constraints` which are the constraint details of a model, `SolveType` which contains the information about the solve type of the problem and also returns the function information and information about the included mzn files. Each component (Variable Declarations, Constraints, Solve Items, Include Items and Functions) in a MiniZinc model is considered as an item. The itemNo for each element is also returned.
 
 The function `set_params` can be used to set the missing parameters of the model. Any number of missing parameters can be set. The missing parameters can be obtained using `getMissingPars()`. 
 
@@ -262,6 +262,27 @@ Some examples of how to use these functions to solve optimization problems can b
 
 NOTE: Please don't include output formatting in the mzn files or the solutions might not be parsed properly.
 
-The next step is to allow the users to add variables, constraints,etc in a MiniZinc model.
+The next step is to allow the users to modify a MiniZinc model.
+
+The items/components in a model can be deleted using the function `deleteItem()`. The details about the function and its arguments can be seen using `?deleteItem`. The itemNo returned by `mzn_parse()` for each component can be used to delete the required component.The update string representation after deleting the item is returned. The demonstration of how to use this function is shown below:
+
+```{r}
+# file path
+mzn_path = paste0(dirname(getwd()), "/mzn_examples/knapsack/knapsack_0.mzn")
+
+# parse the model
+parseObj=rminizinc:::mzn_parse(mznpath = mzn_path)
+
+print("The original model:")
+cat(parseObj$modelString)
+
+# delete the first variable declaration
+item_number  = parseObj$Variables$decl1$itemNo
+
+# delete the item but don't update the mzn
+print("The updated model string is:")
+cat(deleteItem(itemNo = item_number, mznpath = mzn_path, updateMZN = FALSE))
+
+```
 
 
