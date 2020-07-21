@@ -12,7 +12,7 @@
 
 <meta name="author" content="Akshit Achara" />
 
-<meta name="date" content="2020-07-20" />
+<meta name="date" content="2020-07-21" />
 
 <title>MiniZinc Interface for R</title>
 
@@ -303,7 +303,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">MiniZinc Interface for R</h1>
 <h4 class="author">Akshit Achara</h4>
-<h4 class="date">2020-07-20</h4>
+<h4 class="date">2020-07-21</h4>
 
 
 
@@ -691,6 +691,39 @@ solve maximize sum(i in OBJ)(profit[i] * x[i]);
 ## int: capacity;
 ## array [OBJ] of int: profit;
 ## array [OBJ] of int: size;
+## array [OBJ] of var int: x;
+## constraint forall ( i in OBJ ) ( x[i]&gt;=0 );
+## constraint sum ( i in OBJ ) ( size[i]*x[i] )&lt;=capacity;
+## solve maximize sum ( i in OBJ ) ( profit[i]*x[i] );</code></pre>
+<p>The domain of a variable can be modified using the function <code>modifyDomain</code>. The item number of the variable whose domain is to be changed needs to be supplied along with the values to be modified. Domains of type Set name and integer or float ranges can be set currently.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="co"># file path</span></span>
+<span id="cb21-2"><a href="#cb21-2"></a>mzn_path =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">dirname</span>(<span class="kw">getwd</span>()), <span class="st">&quot;/mzn_examples/knapsack/knapsack_0.mzn&quot;</span>)</span>
+<span id="cb21-3"><a href="#cb21-3"></a></span>
+<span id="cb21-4"><a href="#cb21-4"></a><span class="co"># parse the model</span></span>
+<span id="cb21-5"><a href="#cb21-5"></a>parseObj=rminizinc<span class="op">:::</span><span class="kw">mzn_parse</span>(<span class="dt">mznpath =</span> mzn_path)</span>
+<span id="cb21-6"><a href="#cb21-6"></a></span>
+<span id="cb21-7"><a href="#cb21-7"></a><span class="kw">print</span>(<span class="st">&quot;The original model:&quot;</span>)</span></code></pre></div>
+<pre><code>## [1] &quot;The original model:&quot;</code></pre>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="kw">cat</span>(parseObj<span class="op">$</span>modelString)</span></code></pre></div>
+<pre><code>## int: n;
+## set of int: OBJ = 1..n;
+## int: capacity;
+## array [OBJ] of int: profit;
+## array [OBJ] of int: size;
+## array [OBJ] of var int: x;
+## constraint forall ( i in OBJ ) ( x[i]&gt;=0 );
+## constraint sum ( i in OBJ ) ( size[i]*x[i] )&lt;=capacity;
+## solve maximize sum ( i in OBJ ) ( profit[i]*x[i] );</code></pre>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="co"># modify the fifth variable domain</span></span>
+<span id="cb25-2"><a href="#cb25-2"></a>item_number  =<span class="st"> </span>parseObj<span class="op">$</span>Variables<span class="op">$</span>decl5<span class="op">$</span>itemNo</span>
+<span id="cb25-3"><a href="#cb25-3"></a><span class="kw">print</span>(<span class="st">&quot;The updated model string is:&quot;</span>)</span></code></pre></div>
+<pre><code>## [1] &quot;The updated model string is:&quot;</code></pre>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="kw">cat</span>(<span class="kw">modifyDomain</span>(<span class="dt">ItemNo =</span> item_number, <span class="dt">NumericSetVal =</span> <span class="kw">c</span>(<span class="dt">max =</span> <span class="dv">2</span>, <span class="dt">min =</span> <span class="dv">1</span>), <span class="dt">mznpath =</span> mzn_path))</span></code></pre></div>
+<pre><code>## int: n;
+## set of int: OBJ = 1..n;
+## int: capacity;
+## array [OBJ] of int: profit;
+## array [OBJ] of 1..2: size;
 ## array [OBJ] of var int: x;
 ## constraint forall ( i in OBJ ) ( x[i]&gt;=0 );
 ## constraint sum ( i in OBJ ) ( size[i]*x[i] )&lt;=capacity;

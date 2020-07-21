@@ -44,6 +44,22 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// modifyDomain
+std::string modifyDomain(int ItemNo, Rcpp::Nullable<Rcpp::NumericVector> NumericSetVal, int IdItem, std::string modelString, std::string mznpath, bool modify_mzn);
+RcppExport SEXP _rminizinc_modifyDomain(SEXP ItemNoSEXP, SEXP NumericSetValSEXP, SEXP IdItemSEXP, SEXP modelStringSEXP, SEXP mznpathSEXP, SEXP modify_mznSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type ItemNo(ItemNoSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::NumericVector> >::type NumericSetVal(NumericSetValSEXP);
+    Rcpp::traits::input_parameter< int >::type IdItem(IdItemSEXP);
+    Rcpp::traits::input_parameter< std::string >::type modelString(modelStringSEXP);
+    Rcpp::traits::input_parameter< std::string >::type mznpath(mznpathSEXP);
+    Rcpp::traits::input_parameter< bool >::type modify_mzn(modify_mznSEXP);
+    rcpp_result_gen = Rcpp::wrap(modifyDomain(ItemNo, NumericSetVal, IdItem, modelString, mznpath, modify_mzn));
+    return rcpp_result_gen;
+END_RCPP
+}
 // mzn_eval
 List mzn_eval(std::string solver, std::string libpath, std::string modelString, std::string mznpath, std::string dznpath, bool all_solutions);
 RcppExport SEXP _rminizinc_mzn_eval(SEXP solverSEXP, SEXP libpathSEXP, SEXP modelStringSEXP, SEXP mznpathSEXP, SEXP dznpathSEXP, SEXP all_solutionsSEXP) {
@@ -105,6 +121,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_rminizinc_deleteItem", (DL_FUNC) &_rminizinc_deleteItem, 5},
     {"_rminizinc_filetoString", (DL_FUNC) &_rminizinc_filetoString, 1},
     {"_rminizinc_getMissingPars", (DL_FUNC) &_rminizinc_getMissingPars, 3},
+    {"_rminizinc_modifyDomain", (DL_FUNC) &_rminizinc_modifyDomain, 6},
     {"_rminizinc_mzn_eval", (DL_FUNC) &_rminizinc_mzn_eval, 6},
     {"_rminizinc_mzn_parse", (DL_FUNC) &_rminizinc_mzn_parse, 3},
     {"_rminizinc_set_params", (DL_FUNC) &_rminizinc_set_params, 4},

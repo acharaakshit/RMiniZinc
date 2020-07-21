@@ -45,6 +45,24 @@ getMissingPars <- function(modelString = "", mznpath = "", modelStringName = "mi
     .Call(`_rminizinc_getMissingPars`, modelString, mznpath, modelStringName)
 }
 
+#' @title update the variable domain
+#' 
+#' @desciption assign the new domain of the variable.
+#' 
+#' @importFrom Rcpp sourceCpp
+#' @export modifyDomain
+#' @useDynLib rminizinc, .registration=TRUE
+#' @param ItemNo the item number of the variable whose domain is to be updated.
+#' @param NumericSetVal list containing the numeric set values. (should be strcitly
+#' of the form c(max = r_value, min = l_value))
+#' @param IdItem the name of the set variable to be assigned as the set value.
+#' @param modelString string representation of the MiniZinc model
+#' @param mznpath path of the mzn file to read the model
+#' @param modify_mzn if the user wants to modify the mzn parameters.
+modifyDomain <- function(ItemNo, NumericSetVal = NULL, IdItem = -1L, modelString = "", mznpath = "", modify_mzn = FALSE) {
+    .Call(`_rminizinc_modifyDomain`, ItemNo, NumericSetVal, IdItem, modelString, mznpath, modify_mzn)
+}
+
 #' @title MiniZinc model evaluation
 #' 
 #' @description evaluates the MiniZinc model

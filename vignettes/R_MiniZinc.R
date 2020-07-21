@@ -158,3 +158,19 @@ print("The updated model string is:")
 cat(deleteItem(itemNo = item_number, mznpath = mzn_path, updateMZN = FALSE))
 
 
+## -----------------------------------------------------------------------------
+# file path
+mzn_path = paste0(dirname(getwd()), "/mzn_examples/knapsack/knapsack_0.mzn")
+
+# parse the model
+parseObj=rminizinc:::mzn_parse(mznpath = mzn_path)
+
+print("The original model:")
+cat(parseObj$modelString)
+
+# modify the fifth variable domain
+item_number  = parseObj$Variables$decl5$itemNo
+print("The updated model string is:")
+cat(modifyDomain(ItemNo = item_number, NumericSetVal = c(max = 2, min = 1), mznpath = mzn_path))
+
+

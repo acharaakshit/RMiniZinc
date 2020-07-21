@@ -286,3 +286,21 @@ cat(deleteItem(itemNo = item_number, mznpath = mzn_path, updateMZN = FALSE))
 ```
 
 
+The domain of a variable can be modified using the function `modifyDomain`. The item number of the variable whose domain is to be changed needs to be supplied along with the values to be modified. Domains of type Set name and integer or float ranges can be set currently. 
+
+```{r}
+# file path
+mzn_path = paste0(dirname(getwd()), "/mzn_examples/knapsack/knapsack_0.mzn")
+
+# parse the model
+parseObj=rminizinc:::mzn_parse(mznpath = mzn_path)
+
+print("The original model:")
+cat(parseObj$modelString)
+
+# modify the fifth variable domain
+item_number  = parseObj$Variables$decl5$itemNo
+print("The updated model string is:")
+cat(modifyDomain(ItemNo = item_number, NumericSetVal = c(max = 2, min = 1), mznpath = mzn_path))
+
+```
