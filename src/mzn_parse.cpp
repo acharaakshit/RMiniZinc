@@ -1,7 +1,7 @@
 #include <Rcpp.h>
 #include <minizinc/ast.hh>
 #include <minizinc/prettyprinter.hh>
-#include "filetoString.h"
+#include "pathStringcheck.h"
 #include "helper_parse.h"
 #include "helper_sol_parse.h"
 #include "expVarNames.h"
@@ -26,19 +26,9 @@ List mzn_parse(std::string modelString = "",
                       std::string mznpath = "",
                       std::string  modelStringName = "mzn_parse.mzn"){
   
-  if(modelString.empty() && mznpath.empty()){
-    Rcpp::stop("PROVIDE EITHER modelString OR mznfilename");
-  }else if(!modelString.empty() && !mznpath.empty()){
-    Rcpp::stop("PROVIDE ONLY ONE OF modelString OR mznfilename");
-  }else if(mznpath.length()){
-    // check file extension
-    if(!(mznpath.substr(mznpath.find_last_of(".") + 1) == "mzn" ))
-      Rcpp::stop("file extention is not mzn");
-    //convert to string 
-    modelString = filetoString(mznpath);
-  }
-
-  Model *model = helper_parse(modelString, modelStringName);  
+  modelString  = pathStringcheck(modelString, mznpath);
+  Model *model = helper_parse(modelString, modelStringName);
+  
   
   List retVal;
   // size of the model

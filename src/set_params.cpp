@@ -1,7 +1,7 @@
 #include <Rcpp.h>
 #include <fstream>
 #include <minizinc/prettyprinter.hh>
-#include "filetoString.h"
+#include "pathStringcheck.h"
 #include "helper_parse.h"
 
 
@@ -25,19 +25,8 @@ using namespace MiniZinc;
 std::string set_params(List modData, std::string modelString = "",
                        std::string mznpath = "", bool modify_mzn = false) {
   
-  if(modelString.empty() && mznpath.empty()){
-    Rcpp::stop("PROVIDE EITHER modelString OR mznfilename");
-  }else if(!modelString.empty() && !mznpath.empty()){
-    Rcpp::stop("PROVIDE ONLY ONE OF modelString OR mznfilename");
-  }else if(mznpath.length()){
-    // check file extension
-    if(!(mznpath.substr(mznpath.find_last_of(".") + 1) == "mzn" ))
-      Rcpp::stop("file extention is not mzn");
-    //convert to string 
-    modelString = filetoString(mznpath);
-  }
-  
-  Model *model = helper_parse(modelString, "set_params.mzn");
+  modelString  = pathStringcheck(modelString, mznpath);
+  Model *model = helper_parse(modelString,  "set_params.mzn");
   
   vector<Item*> items;
   NumericVector nameIndexMap; 

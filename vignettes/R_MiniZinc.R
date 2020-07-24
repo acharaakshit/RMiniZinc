@@ -160,7 +160,7 @@ cat(deleteItem(itemNo = item_number, mznpath = mzn_path, updateMZN = FALSE))
 
 ## -----------------------------------------------------------------------------
 # file path
-mzn_path = paste0(dirname(getwd()), "/mzn_examples/knapsack/knapsack_0.mzn")
+mzn_path = paste0(dirname(getwd()), "/mzn_examples/knapsack/knapsack_1.mzn")
 
 # parse the model
 parseObj=rminizinc:::mzn_parse(mznpath = mzn_path)
@@ -171,6 +171,6 @@ cat(parseObj$modelString)
 # modify the fifth variable domain
 item_number  = parseObj$Variables$decl5$itemNo
 print("The updated model string is:")
-cat(modifyDomain(ItemNo = item_number, NumericSetVal = c(max = 2, min = 1), mznpath = mzn_path))
+cat(modifyDomainId(ItemNo = item_number, maxIdItem = 0, mznpath = mzn_path))
 
 

@@ -2,7 +2,7 @@
 #include <minizinc/ast.hh>
 #include <minizinc/prettyprinter.hh>
 #include <minizinc/exception.hh>
-#include "filetoString.h"
+#include "pathStringcheck.h"
 #include "helper_parse.h"
 
 using namespace std;
@@ -30,18 +30,7 @@ std::string deleteItem(int itemNo,
                 std::string  modelStringName = "deleteItem.mzn",
                 bool updateMZN = false){
   
-  if(modelString.empty() && mznpath.empty()){
-    Rcpp::stop("PROVIDE EITHER modelString OR mznfilename");
-  }else if(!modelString.empty() && !mznpath.empty()){
-    Rcpp::stop("PROVIDE ONLY ONE OF modelString OR mznfilename");
-  }else if(mznpath.length()){
-    // check file extension
-    if(!(mznpath.substr(mznpath.find_last_of(".") + 1) == "mzn" ))
-      Rcpp::stop("file extention is not mzn");
-    //convert to string 
-    modelString = filetoString(mznpath);
-  }
-  
+  modelString = pathStringcheck(modelString, mznpath);
   Model *model = helper_parse(modelString, modelStringName);  
   
   if(itemNo >= model->size() || itemNo < 0)  Rcpp::stop("item number is out of bounds");
