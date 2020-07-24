@@ -282,9 +282,7 @@ item_number  = parseObj$Variables$decl1$itemNo
 # delete the item but don't update the mzn
 print("The updated model string is:")
 cat(deleteItem(itemNo = item_number, mznpath = mzn_path, updateMZN = FALSE))
-
 ```
-
 
 The domain of a variable can be modified using the function `modifyDomain`. The item number of the variable whose domain is to be changed needs to be supplied along with the values to be modified. Domains of type Set name and integer or float ranges can be set currently. 
 

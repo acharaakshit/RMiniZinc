@@ -199,3 +199,4 @@ test_that("knapsack_1 problem can also be created and solved", {
   solObj = rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gecode",
                                 libpath = "/snap/minizinc/current/share/minizinc")
 })
+

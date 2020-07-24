@@ -157,7 +157,6 @@ item_number  = parseObj$Variables$decl1$itemNo
 print("The updated model string is:")
 cat(deleteItem(itemNo = item_number, mznpath = mzn_path, updateMZN = FALSE))
 
-
 ## -----------------------------------------------------------------------------
 # file path
 mzn_path = paste0(dirname(getwd()), "/mzn_examples/knapsack/knapsack_1.mzn")
