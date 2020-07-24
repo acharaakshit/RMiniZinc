@@ -47,20 +47,38 @@ getMissingPars <- function(modelString = "", mznpath = "", modelStringName = "mi
 
 #' @title update the variable domain
 #' 
-#' @desciption assign the new domain of the variable.
-#' 
+#' @desciption assign the new Id to min or max values of the domain
+#' (Only for min..max operations).
 #' @importFrom Rcpp sourceCpp
-#' @export modifyDomain
+#' @export modifyDomainId
 #' @useDynLib rminizinc, .registration=TRUE
 #' @param ItemNo the item number of the variable whose domain is to be updated.
-#' @param NumericSetVal list containing the numeric set values. (should be strcitly
-#' of the form c(max = r_value, min = l_value))
-#' @param IdItem the name of the set variable to be assigned as the set value.
+#' @param maxIdItem item number of the variable to be assigned as the max domain value.
+#' @param minIdItem item number of the variable to be assigned as the min domain value.
+#' @param replaceIdItem item number of the variable to be assigned as the new domain value.
 #' @param modelString string representation of the MiniZinc model
 #' @param mznpath path of the mzn file to read the model
 #' @param modify_mzn if the user wants to modify the mzn parameters.
-modifyDomain <- function(ItemNo, NumericSetVal = NULL, IdItem = -1L, modelString = "", mznpath = "", modify_mzn = FALSE) {
-    .Call(`_rminizinc_modifyDomain`, ItemNo, NumericSetVal, IdItem, modelString, mznpath, modify_mzn)
+modifyDomainId <- function(ItemNo, maxIdItem = -1L, minIdItem = -1L, replaceIdItem = -1L, modelString = "", mznpath = "", modify_mzn = FALSE) {
+    .Call(`_rminizinc_modifyDomainId`, ItemNo, maxIdItem, minIdItem, replaceIdItem, modelString, mznpath, modify_mzn)
+}
+
+#' @title rcpp question
+#' 
+#' @desciption test if exceptions occur
+#' @importFrom Rcpp sourceCpp
+#' @export modifyDomainSetVal
+#' @useDynLib rminizinc, .registration=TRUE
+#' @param ItemNo the item number of the variable whose domain is to be updated.
+#' @param imax maximum integer value of the int set variable domain.
+#' @param imin minimum integer value of the int set variable domain.
+#' @param fmin miminum float value of the float set variable domain.
+#' @param fmax maximum float value of the float set variable domain.
+#' @param modelString string representation of the MiniZinc model
+#' @param mznpath path of the mzn file to read the model
+#' @param modify_mzn if the user wants to modify the mzn parameters.
+modifyDomainSetVal <- function(ItemNo, imax = NULL, imin = NULL, fmin = NULL, fmax = NULL, modelString = "", mznpath = "", modify_mzn = FALSE) {
+    .Call(`_rminizinc_modifyDomainSetVal`, ItemNo, imax, imin, fmin, fmax, modelString, mznpath, modify_mzn)
 }
 
 #' @title MiniZinc model evaluation
