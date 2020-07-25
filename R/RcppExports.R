@@ -99,6 +99,26 @@ modifyDomainFnCall <- function(ItemNo, minIdItem = -1L, maxIdItem = -1L, minFnNa
     .Call(`_rminizinc_modifyDomainFnCall`, ItemNo, minIdItem, maxIdItem, minFnName, maxFnName, modelString, mznpath, modify_mzn)
 }
 
+#' @title Modify domain using constants
+#' 
+#' @desciption Add, subtract, multiply or divide constants from domain expressions.
+#' @importFrom Rcpp sourceCpp
+#' @export modifyDomainAO
+#' @useDynLib rminizinc, .registration=TRUE
+#' @param ItemNo the item number of the variable whose domain is to be updated.
+#' @param minVal value to add/subtract/multiply/divide to min in domains of type min..max.
+#' @param maxVal value to add/subtract/multiply/divide to max in domains of type min..max.
+#' @param Val value to add/subract/multiply/divide to any expression of domain.
+#' @param OPmin string which specifies the operator to be used with minVal.(PLUS, MINUS,MOD,DIV,MULT) 
+#' @param OPmax string which specifies the operator to be used with maxVal.(PLUS, MINUS,MOD,DIV,MULT) 
+#' @param OP string which specifies the operator to be used with Val.(PLUS, MINUS,MOD,DIV,MULT) 
+#' @param modelString string representation of the MiniZinc model
+#' @param mznpath path of the mzn file to read the model
+#' @param modify_mzn if the user wants to modify the mzn parameters.
+modifyDomainAO <- function(ItemNo, minVal = NULL, maxVal = NULL, Val = NULL, OPmin = "", OPmax = "", OP = "", modelString = "", mznpath = "", modify_mzn = FALSE) {
+    .Call(`_rminizinc_modifyDomainAO`, ItemNo, minVal, maxVal, Val, OPmin, OPmax, OP, modelString, mznpath, modify_mzn)
+}
+
 #' @title MiniZinc model evaluation
 #' 
 #' @description evaluates the MiniZinc model

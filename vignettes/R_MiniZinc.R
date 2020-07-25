@@ -158,18 +158,35 @@ print("The updated model string is:")
 cat(deleteItem(itemNo = item_number, mznpath = mzn_path, updateMZN = FALSE))
 
 ## -----------------------------------------------------------------------------
-# file path
-mzn_path = paste0(dirname(getwd()), "/mzn_examples/knapsack/knapsack_1.mzn")
 
-# parse the model
-parseObj=rminizinc:::mzn_parse(mznpath = mzn_path)
+# model string
+modString = "array [1..n] of var 0..n: x;"
 
-print("The original model:")
-cat(parseObj$modelString)
-
-# modify the fifth variable domain
-item_number  = parseObj$Variables$decl5$itemNo
 print("The updated model string is:")
-cat(modifyDomainId(ItemNo = item_number, maxIdItem = 0, mznpath = mzn_path))
+cat(modifyDomainId(ItemNo = 0, maxIdItem = 0, modelString = modString))
+
+
+## -----------------------------------------------------------------------------
+# model string
+modString = "array [1..n] of var 0..n: x;"
+
+print("The updated model string is:")
+cat(modifyDomainSetVal(ItemNo = 0, imax = 2, imin = 0, modelString = modString))
+
+
+## -----------------------------------------------------------------------------
+# model string
+modString = "array [1..n] of var 0..n: x;"
+
+print("The updated model string is:")
+cat(modifyDomainFnCall(ItemNo = 0, maxIdItem = 0 ,maxFnName = "max", modelString = modString))
+
+
+## -----------------------------------------------------------------------------
+# model string
+modString = "array [1..n] of var 0..n: x;"
+
+print("The updated model string is:")
+cat(modifyDomainAO(ItemNo = 0, minVal = 1, maxVal = 1 ,OPmax ='MULT', OPmin = "MULT", modelString = modString))
 
 
