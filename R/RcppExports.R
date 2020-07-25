@@ -63,9 +63,9 @@ modifyDomainId <- function(ItemNo, maxIdItem = -1L, minIdItem = -1L, replaceIdIt
     .Call(`_rminizinc_modifyDomainId`, ItemNo, maxIdItem, minIdItem, replaceIdItem, modelString, mznpath, modify_mzn)
 }
 
-#' @title rcpp question
+#' @title Modify domain of type set 
 #' 
-#' @desciption test if exceptions occur
+#' @desciption Assign integer or float values to domains which are of type min..max
 #' @importFrom Rcpp sourceCpp
 #' @export modifyDomainSetVal
 #' @useDynLib rminizinc, .registration=TRUE
@@ -79,6 +79,24 @@ modifyDomainId <- function(ItemNo, maxIdItem = -1L, minIdItem = -1L, replaceIdIt
 #' @param modify_mzn if the user wants to modify the mzn parameters.
 modifyDomainSetVal <- function(ItemNo, imax = NULL, imin = NULL, fmin = NULL, fmax = NULL, modelString = "", mznpath = "", modify_mzn = FALSE) {
     .Call(`_rminizinc_modifyDomainSetVal`, ItemNo, imax, imin, fmin, fmax, modelString, mznpath, modify_mzn)
+}
+
+#' @title Modify domain function calls
+#' 
+#' @desciption Assign max(Id) or min(Id) function calls to domains.
+#' @importFrom Rcpp sourceCpp
+#' @export modifyDomainFnCall
+#' @useDynLib rminizinc, .registration=TRUE
+#' @param ItemNo the item number of the variable whose domain is to be updated.
+#' @param minFnName Name of the function to be used for the min ID in min..max.
+#' @param maxFnName Name of the function to be used for the max ID in min..max.
+#' @param minIdItem min Id item number in domains of type min..max.
+#' @param maxIdItem max Id item number in domains of type min..max.
+#' @param modelString string representation of the MiniZinc model
+#' @param mznpath path of the mzn file to read the model
+#' @param modify_mzn if the user wants to modify the mzn parameters.
+modifyDomainFnCall <- function(ItemNo, minIdItem = -1L, maxIdItem = -1L, minFnName = "", maxFnName = "", modelString = "", mznpath = "", modify_mzn = FALSE) {
+    .Call(`_rminizinc_modifyDomainFnCall`, ItemNo, minIdItem, maxIdItem, minFnName, maxFnName, modelString, mznpath, modify_mzn)
 }
 
 #' @title MiniZinc model evaluation

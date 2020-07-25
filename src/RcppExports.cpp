@@ -79,6 +79,24 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// modifyDomainFnCall
+std::string modifyDomainFnCall(int ItemNo, int minIdItem, int maxIdItem, std::string minFnName, std::string maxFnName, std::string modelString, std::string mznpath, bool modify_mzn);
+RcppExport SEXP _rminizinc_modifyDomainFnCall(SEXP ItemNoSEXP, SEXP minIdItemSEXP, SEXP maxIdItemSEXP, SEXP minFnNameSEXP, SEXP maxFnNameSEXP, SEXP modelStringSEXP, SEXP mznpathSEXP, SEXP modify_mznSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type ItemNo(ItemNoSEXP);
+    Rcpp::traits::input_parameter< int >::type minIdItem(minIdItemSEXP);
+    Rcpp::traits::input_parameter< int >::type maxIdItem(maxIdItemSEXP);
+    Rcpp::traits::input_parameter< std::string >::type minFnName(minFnNameSEXP);
+    Rcpp::traits::input_parameter< std::string >::type maxFnName(maxFnNameSEXP);
+    Rcpp::traits::input_parameter< std::string >::type modelString(modelStringSEXP);
+    Rcpp::traits::input_parameter< std::string >::type mznpath(mznpathSEXP);
+    Rcpp::traits::input_parameter< bool >::type modify_mzn(modify_mznSEXP);
+    rcpp_result_gen = Rcpp::wrap(modifyDomainFnCall(ItemNo, minIdItem, maxIdItem, minFnName, maxFnName, modelString, mznpath, modify_mzn));
+    return rcpp_result_gen;
+END_RCPP
+}
 // mzn_eval
 List mzn_eval(std::string solver, std::string libpath, std::string modelString, std::string mznpath, std::string dznpath, bool all_solutions);
 RcppExport SEXP _rminizinc_mzn_eval(SEXP solverSEXP, SEXP libpathSEXP, SEXP modelStringSEXP, SEXP mznpathSEXP, SEXP dznpathSEXP, SEXP all_solutionsSEXP) {
@@ -142,6 +160,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_rminizinc_getMissingPars", (DL_FUNC) &_rminizinc_getMissingPars, 3},
     {"_rminizinc_modifyDomainId", (DL_FUNC) &_rminizinc_modifyDomainId, 7},
     {"_rminizinc_modifyDomainSetVal", (DL_FUNC) &_rminizinc_modifyDomainSetVal, 8},
+    {"_rminizinc_modifyDomainFnCall", (DL_FUNC) &_rminizinc_modifyDomainFnCall, 8},
     {"_rminizinc_mzn_eval", (DL_FUNC) &_rminizinc_mzn_eval, 6},
     {"_rminizinc_mzn_parse", (DL_FUNC) &_rminizinc_mzn_parse, 3},
     {"_rminizinc_set_params", (DL_FUNC) &_rminizinc_set_params, 4},

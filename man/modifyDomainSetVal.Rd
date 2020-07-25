@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{modifyDomainSetVal}
 \alias{modifyDomainSetVal}
-\title{rcpp question}
+\title{Modify domain of type set}
 \usage{
 modifyDomainSetVal(
   ItemNo,
@@ -33,5 +33,5 @@ modifyDomainSetVal(
 \item{modify_mzn}{if the user wants to modify the mzn parameters.}
 }
 \description{
-rcpp question
+Modify domain of type set
 }

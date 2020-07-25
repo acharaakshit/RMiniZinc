@@ -46,8 +46,7 @@ std::string modifyDomainId(int ItemNo, int maxIdItem = -1, int minIdItem = -1,
       Rcpp::stop("The specified Item doesn't have a domain");
     }else if(vd->ti()->domain()->eid() != Expression::E_BINOP && vd->ti()->domain()->eid() != Expression::E_SETLIT){
       Rcpp:stop("This function is only applicable to binary operator expressions or set literals like min..max");
-    }
-    else if(maxIdItem == -1 && minIdItem == -1 && replaceIdItem == -1){
+    }else if(maxIdItem == -1 && minIdItem == -1 && replaceIdItem == -1){
       Rcpp::stop("Supply at least one of maxIdItem, minIdItem or replaceIdItem");
     }else if(maxIdItem == -1 && minIdItem != -1 && replaceIdItem == -1){
       Item *dit = model->operator[](minIdItem);
@@ -137,9 +136,9 @@ std::string modifyDomainId(int ItemNo, int maxIdItem = -1, int minIdItem = -1,
 }
 
 
-//' @title rcpp question
+//' @title Modify domain of type set 
 //' 
-//' @desciption test if exceptions occur
+//' @desciption Assign integer or float values to domains which are of type min..max
 //' @importFrom Rcpp sourceCpp
 //' @export modifyDomainSetVal
 //' @useDynLib rminizinc, .registration=TRUE
@@ -156,7 +155,6 @@ std::string modifyDomainSetVal(int ItemNo, Nullable<int> imax = R_NilValue,
                                Nullable<int> imin = R_NilValue, Nullable<double> fmin = R_NilValue,
                              Nullable<double> fmax = R_NilValue, std::string modelString = "",
                              std::string mznpath = "", bool modify_mzn = false) {
-  // do nothing
   modelString = pathStringcheck(modelString, mznpath);
   Model *model = helper_parse(modelString, "modifyDomainId.mzn");
   
@@ -167,7 +165,7 @@ std::string modifyDomainSetVal(int ItemNo, Nullable<int> imax = R_NilValue,
   
   if(vd->ti()->domain() == NULL){
     Rcpp::stop("The domain of the given item is NULL");
-  }else if(vd->ti()->domain()->eid() != Expression::E_SETLIT){
+  }else if(vd->ti()->domain()->eid() != Expression::E_BINOP){
     Rcpp::stop("The domain is not a set literal i.e it's not of the form minNum..maxNum");
   }else if(imin.isNull() && imax.isNull() && fmin.isNull() && fmax.isNull()) {
     Rcpp::stop("Please provide one of imin, imax, fmin or fmax");
@@ -244,3 +242,123 @@ std::string modifyDomainSetVal(int ItemNo, Nullable<int> imax = R_NilValue,
   return mString;
 }
 
+
+//' @title Modify domain function calls
+//' 
+//' @desciption Assign max(Id) or min(Id) function calls to domains.
+//' @importFrom Rcpp sourceCpp
+//' @export modifyDomainFnCall
+//' @useDynLib rminizinc, .registration=TRUE
+//' @param ItemNo the item number of the variable whose domain is to be updated.
+//' @param minFnName Name of the function to be used for the min ID in min..max.
+//' @param maxFnName Name of the function to be used for the max ID in min..max.
+//' @param minIdItem min Id item number in domains of type min..max.
+//' @param maxIdItem max Id item number in domains of type min..max.
+//' @param modelString string representation of the MiniZinc model
+//' @param mznpath path of the mzn file to read the model
+//' @param modify_mzn if the user wants to modify the mzn parameters.
+// [[Rcpp::export]]
+std::string modifyDomainFnCall(int ItemNo, int minIdItem = -1,
+                                int maxIdItem = -1, 
+                                std::string minFnName = "",
+                                std::string maxFnName = "",
+                                std::string modelString = "",
+                                std::string mznpath = "", bool modify_mzn = false){
+  
+  modelString = pathStringcheck(modelString, mznpath);
+  Model *model = helper_parse(modelString, "modifyDomainId.mzn");
+  
+  if(ItemNo >= model->size() || ItemNo < 0)  Rcpp::stop("item number is out of bounds");
+  Item *it = model->operator[](ItemNo);
+  
+  if(maxIdItem != -1) if(maxIdItem >= model->size() || maxIdItem < 0)  Rcpp::stop("maxItemId is out of bounds");
+  if(minIdItem != -1) if(minIdItem >= model->size() || minIdItem < 0)  Rcpp::stop("minItemId is out of bounds");
+  
+  if(it->iid() != Item::II_VD) Rcpp::stop("Given item number is not a variable declaration");
+  VarDecl *vd =  it->cast<VarDeclI>()->e();
+  
+  if(vd->ti()->domain() == NULL){
+    Rcpp::stop("The domain of the given item is NULL");
+  }else if(vd->ti()->domain()->eid() != Expression::E_BINOP){
+    Rcpp::stop("The domain is not a binary ..  operation");
+  }else if(minIdItem == -1 && maxIdItem == -1) {
+    Rcpp::stop("Please provide one of minIdItem or maxIdItem");
+  }else if(minIdItem != -1 && maxIdItem == -1){
+    if(minFnName.empty()) Rcpp::stop("Please provide the function to be used");
+    Item *minItem = model->operator[](minIdItem);
+    if(minItem->iid() != Item::II_VD)
+      Rcpp::stop("The minIdItem is not a variable declaration");
+    Expression *idExp = minItem->cast<VarDeclI>()->e()->id();
+    vector<Expression*> fnExp ={idExp};
+    try{
+      Expression *clExp = new Call(it->loc(), 
+                                   minFnName, fnExp);
+      BinOp *biExp = vd->ti()->domain()->cast<BinOp>();
+      Expression *nbiExp = new BinOp(it->loc(), clExp, BinOpType::BOT_DOTDOT, biExp->rhs());
+      vd->ti()->domain(nbiExp);
+    }catch(MiniZinc::Exception &e){
+      Rcpp::stop(e.what());
+    }catch(...){
+      Rcpp::stop("unknown exception!");
+    }
+  }else if(minIdItem == -1 && maxIdItem != -1){
+    if(maxFnName.empty()) Rcpp::stop("Please provide the function to be used");
+    Item *maxItem = model->operator[](maxIdItem);
+    if(maxItem->iid() != Item::II_VD)
+      Rcpp::stop("The minIdItem is not a variable declaration");
+    Expression *idExp = maxItem->cast<VarDeclI>()->e()->id();
+    vector<Expression*> fnExp = {idExp};
+    try{
+      Expression *clExp = new Call(it->loc(), 
+                                   maxFnName, fnExp);
+      BinOp *biExp = vd->ti()->domain()->cast<BinOp>();
+      Expression *nbiExp = new BinOp(it->loc(), biExp->lhs(), BinOpType::BOT_DOTDOT, clExp);
+      vd->ti()->domain(nbiExp);
+    }catch(MiniZinc::Exception &e){
+      Rcpp::stop(e.what());
+    }catch(...){
+      Rcpp::stop("unknown exception!");
+    }
+  }else{
+    if(minFnName.empty()) Rcpp::stop("Please provide the function to be used");
+    Item *minItem = model->operator[](minIdItem);
+    Rcpp::stop("Not supported currently");
+    if(minItem->iid() != Item::II_VD)
+      Rcpp::stop("The minIdItem is not a variable declaration");
+    if(maxFnName.empty()) Rcpp::stop("Please provide the function to be used");
+    Item *maxItem = model->operator[](maxIdItem);
+    if(maxItem->iid() != Item::II_VD)
+      Rcpp::stop("The minIdItem is not a variable declaration");
+    Expression *minidExp = minItem->cast<VarDeclI>()->e()->id();
+    Expression *maxidExp = maxItem->cast<VarDeclI>()->e()->id();
+    vector<Expression*> fnminExp = {minidExp};
+    vector<Expression*> fnmaxExp = {maxidExp};
+    try{
+      Expression *clminExp = new Call(it->loc(), 
+                                      minFnName, fnminExp);
+      Expression *clmaxExp = new Call(it->loc(), 
+                                   maxFnName, fnmaxExp);
+      BinOp *biExp = vd->ti()->domain()->cast<BinOp>();
+      Expression *nbiExp = new BinOp(it->loc(), clminExp, BinOpType::BOT_DOTDOT, clmaxExp);
+      vd->ti()->domain(nbiExp);
+    }catch(MiniZinc::Exception &e){
+      Rcpp::stop(e.what());
+    }catch(...){
+      Rcpp::stop("unknown exception!");
+    }
+    
+  }
+  stringstream strmodel;
+  Printer *p = new Printer(strmodel); 
+  p->print(model);
+  string mString = strmodel.str();
+  
+  if(!mznpath.empty() && modify_mzn){
+    ofstream out(mznpath);
+    out << mString;
+    out.close();
+  }else if(modify_mzn){
+    Rcpp::warning("no file given to modify");
+  }
+  return mString;
+}

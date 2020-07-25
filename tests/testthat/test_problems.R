@@ -1,5 +1,11 @@
 library(stringr)
 
+test_that("type compatibility is detected correctly",{
+  expect_error(set_params(modData = 1, modify_mzn = "A"))
+  expect_error(mzn_parse(mznpath = 1))
+  expect_error(deleteItem(itemNo = 'a'))
+})
+
 test_that("jobshop problems are solved without issues",{
   # for devtools::test()
   mznName = "../../mzn_examples/jobshop/jobshop_0.mzn"
