@@ -70,7 +70,7 @@ std::string modifyDomainId(int ItemNo, int maxIdItem = -1, int minIdItem = -1,
       Item *dit = model->operator[](minIdItem);
       if(dit->iid() != Item::II_VD) Rcpp::stop("minIdItem not a variable declaration");
       Type tp = dit->cast<VarDeclI>()->e()->type();
-      //if(!tp.is_set()) Rcpp::warning("The supplied ItemId is not of a set variable");
+      if(!tp.is_set()) Rcpp::warning("The supplied ItemId is not of a set variable");
       Expression *minLhs  = dit->cast<VarDeclI>()->e()->id();
       Expression *dExp = vd->ti()->domain();
       Expression *ndExp; 
@@ -93,7 +93,7 @@ std::string modifyDomainId(int ItemNo, int maxIdItem = -1, int minIdItem = -1,
       Item *dit = model->operator[](maxIdItem);
       if(dit->iid() != Item::II_VD) Rcpp::stop("maxIdItem not a variable declaration");
       Type tp = dit->cast<VarDeclI>()->e()->type();
-      //if(!tp.is_set()) Rcpp::warning("The supplied ItemId is not of a set variable");
+      if(!tp.is_set()) Rcpp::warning("The supplied ItemId is not of a set variable");
       Expression *maxRhs  = dit->cast<VarDeclI>()->e()->id();
       Expression *dExp = vd->ti()->domain();
       Expression *ndExp; 
@@ -476,6 +476,7 @@ std:: string modifyDomainAO(int ItemNo, SEXP minVal = R_NilValue,
         Expression*ndExp = bo;
         vd->ti()->domain(ndExp);
       }else if (itp.bt() == Type::BT_INT || itp.bt() == Type::BT_UNKNOWN){
+        if(itp.bt() == Type::BT_UNKNOWN) Rcpp::warning("The data type of the variable is not mentioned, casting to int.");
         int imin = Rcpp::as<int>(minVal);
         if(dExp->eid() != Expression::E_BINOP) Rcpp::stop("domain is not a .. binary operator");
         BinOp *bo = dExp->cast<BinOp>();
@@ -499,6 +500,7 @@ std:: string modifyDomainAO(int ItemNo, SEXP minVal = R_NilValue,
         Expression*ndExp = bo;
         vd->ti()->domain(ndExp);
       }else if (itp.bt() == Type::BT_INT || itp.bt() == Type::BT_UNKNOWN){
+        if(itp.bt() == Type::BT_UNKNOWN) Rcpp::warning("The data type of the variable is not mentioned, casting to int.");
         int imax = Rcpp::as<int>(maxVal);
         if(dExp->eid() != Expression::E_BINOP) Rcpp::stop("domain is not a .. binary operator");
         BinOp *bo = dExp->cast<BinOp>();
@@ -527,6 +529,7 @@ std:: string modifyDomainAO(int ItemNo, SEXP minVal = R_NilValue,
         Expression*ndExp = bo;
         vd->ti()->domain(ndExp);
       }else if (itp.bt() == Type::BT_INT || itp.bt() == Type::BT_UNKNOWN){
+        if(itp.bt() == Type::BT_UNKNOWN) Rcpp::warning("The data type of the variable is not mentioned, casting to int.");
         int imax = Rcpp::as<int>(maxVal);
         int imin = Rcpp::as<int>(minVal);
         if(dExp->eid() != Expression::E_BINOP) Rcpp::stop("domain is not a .. binary operator");
@@ -549,6 +552,7 @@ std:: string modifyDomainAO(int ItemNo, SEXP minVal = R_NilValue,
         Expression  *ndExp = new BinOp(it->loc(), dExp, op, FloatLit::a(val));
         vd->ti()->domain(ndExp);
       }else if (itp.bt() == Type::BT_INT || itp.bt() == Type::BT_UNKNOWN){
+        if(itp.bt() == Type::BT_UNKNOWN) Rcpp::warning("The data type of the variable is not mentioned, casting to int.");
         int val = Rcpp::as<int>(Val);
         Expression  *ndExp = new BinOp(it->loc(), dExp, op, IntLit::a(val));
         vd->ti()->domain(ndExp);

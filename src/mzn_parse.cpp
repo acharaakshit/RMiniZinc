@@ -234,7 +234,7 @@ List mzn_parse(std::string modelString = "",
   }
   // to store the names of the return Value list
   CharacterVector retValNames;
-  if(variables.length() <= 0) Rcpp::stop("No variables found!");
+  if(variables.length() == 0) Rcpp::warning("No variables found!");
   CharacterVector varVecNames;
   for(int i = 0; i < variables.length(); i++){
     string v = "decl";
@@ -245,7 +245,7 @@ List mzn_parse(std::string modelString = "",
   retVal.push_back(variables);
   retValNames.push_back("Variables");
   
-  if(constraintCount <= 0)   Rcpp::stop("No constraints found!");
+  if(constraintCount == 0)   Rcpp::warning("No constraints found!");
   CharacterVector constraintNames; 
   // push the constraint information
   for(int i = 0; i< constraintCount;i++){
@@ -258,6 +258,7 @@ List mzn_parse(std::string modelString = "",
   retValNames.push_back("Constraints");
   
   // push the solveType information of the problem
+  if(objective.length() == 0) Rcpp::warning("No solve item found");
   retVal.push_back(objective);
   retValNames.push_back("SolveType");
   
