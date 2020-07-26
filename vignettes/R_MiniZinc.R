@@ -140,3 +140,53 @@ solObj = rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.geco
 print(solObj$Solutions)
 
 
+## -----------------------------------------------------------------------------
+# file path
+mzn_path = paste0(dirname(getwd()), "/mzn_examples/knapsack/knapsack_0.mzn")
+
+# parse the model
+parseObj=rminizinc:::mzn_parse(mznpath = mzn_path)
+
+print("The original model:")
+cat(parseObj$modelString)
+
+# delete the first variable declaration
+item_number  = parseObj$Variables$decl1$itemNo
+
+# delete the item but don't update the mzn
+print("The updated model string is:")
+cat(deleteItem(itemNo = item_number, mznpath = mzn_path, updateMZN = FALSE))
+
+## -----------------------------------------------------------------------------
+
+# model string
+modString = "int: n; array [1..n] of var 0..1: testVar;"
+
+print("The updated model string is:")
+cat(modifyDomainId(ItemNo = 1, maxIdItem = 0, modelString = modString))
+
+
+## -----------------------------------------------------------------------------
+# model string
+modString = "int: n; array [1..n] of var 0..1: testVar;"
+
+print("The updated model string is:")
+cat(modifyDomainSetVal(ItemNo = 1, imax = 2, imin = 0, modelString = modString))
+
+
+## -----------------------------------------------------------------------------
+# model string
+modString = "int: n; array [1..n] of var 0..1: testVar;"
+
+print("The updated model string is:")
+cat(modifyDomainFnCall(ItemNo = 1, maxIdItem = 0 ,maxFnName = "max", modelString = modString))
+
+
+## -----------------------------------------------------------------------------
+# model string
+modString = "set of int: n; array [1..n] of var 0..n: testVar;"
+
+print("The updated model string is:")
+cat(modifyDomainAO(ItemNo = 1, minVal = 1, maxVal = 1 ,OPmax ='MULT', OPmin = "MULT", modelString = modString))
+
+

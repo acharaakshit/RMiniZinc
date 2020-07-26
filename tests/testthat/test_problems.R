@@ -1,5 +1,11 @@
 library(stringr)
 
+test_that("type compatibility is detected correctly",{
+  expect_error(set_params(modData = 1, modify_mzn = "A"))
+  expect_error(mzn_parse(mznpath = 1))
+  expect_error(deleteItem(itemNo = 'a'))
+})
+
 test_that("jobshop problems are solved without issues",{
   # for devtools::test()
   mznName = "../../mzn_examples/jobshop/jobshop_0.mzn"
@@ -13,18 +19,23 @@ test_that("jobshop problems are solved without issues",{
   }
   
   parseInfo <- mzn_parse(mznpath = mznName)
-  expect_equal(parseInfo$Parameters, c("n", "JOB", "m", "MACH", "TASK", "d", "mc", "maxt"))
-  expect_equal(parseInfo$decisionVariables, c("s", "makespan"))
+  expect_equal(length(parseInfo$Variables), 10)
+  nVars = length(parseInfo$Variables)
+  v = c()
+  for(i in seq(1, nVars, 1)){
+    nDecl = as.symbol(paste0("decl",i))
+    v = c(v, parseInfo$Variables[[nDecl]][["name"]])
+  }
+  expect_equal(v, c("n", "JOB", "m", "MACH", "TASK", "d", "mc", "maxt", "s", "makespan"))
+
   expect_length(parseInfo$Constraints, 2)
-  expect_equal(parseInfo$Constraints$noOfConstraints, 2)
-  expect_equal(parseInfo$Constraints$varsInvolved$`constraint: 0`, c("JOB", "d", "j", "m", "s", "t"))
-  expect_equal(parseInfo$Constraints$varsInvolved$`constraint: 1`, c("JOB", "TASK", "d", "j1", "j2",
+  expect_equal(parseInfo$Constraints$constraint1$varsInvolved, c("JOB", "d", "j", "m", "s", "t"))
+  expect_equal(parseInfo$Constraints$constraint2$varsInvolved, c("JOB", "TASK", "d", "j1", "j2",
                                                                      "s", "t1", "t2"))
   expect_equal(parseInfo$SolveType$objective, "minimize");
   expect_equal(parseInfo$SolveType$varsInvolved, "makespan")
-  expect_equal(parseInfo$functionInformation$noOfFunctions, 1)
-  expect_equal(parseInfo$functionInformation$functionDetails$`function: 0`$fnName, "nonoverlap")
-  expect_equal(parseInfo$functionInformation$functionDetails$`function: 0`$varsInvolved[[1]], 
+  expect_equal(parseInfo$FunctionItems$function1$fnName, "nonoverlap")
+  expect_equal(parseInfo$FunctionItems$function1$varsInvolved, 
                c("d1", "d2", "s1", "s2"))
   
   missingPars = getMissingPars(mznpath = mznName)
@@ -55,21 +66,25 @@ test_that("production planning problems are solved",{
   }
   
   parseObj = mzn_parse(mznpath = mznName)
-  # check if correct parameters are parsed 
-  expect_equal(parseObj$Parameters, c("nproducts", "Products", "profit", "pname", "nresources",
-                                      "Resources", "capacity", "rname", "consumption", "mproducts"))
-  # check if correct decision variables are parsed
-  expect_equal(parseObj$decisionVariables, c("produce", "used"))
+  expect_equal(length(parseObj$Variables), 12)
+  nVars = length(parseObj$Variables)
+  v = c()
+  # check if correct variables are parsed 
+  for(i in seq(1, nVars, 1)){
+    nDecl = as.symbol(paste0("decl",i))
+    v = c(v, parseObj$Variables[[nDecl]][["name"]])
+  }
+  expect_equal(v, c("nproducts", "Products", "profit", "pname", "nresources",
+                    "Resources", "capacity", "rname", "consumption", "mproducts",
+                    "produce", "used"))
   
   expect_length(parseObj$Constraints,2)
-  
-  expect_length(parseObj$Constraints$varsInvolved,2)
-  
+
   #check if correct constraints are parse
-  expect_equal(parseObj$Constraints$varsInvolved$'constraint: 0', c("Products", "Resources", "consumption",
+  expect_equal(parseObj$Constraints$constraint1$varsInvolved, c("Products", "Resources", "consumption",
                                                                     "p", "r"))
   
-  expect_equal(parseObj$Constraints$varsInvolved$'constraint: 1', c("Products", "Resources", "capacity", 
+  expect_equal(parseObj$Constraints$constraint2$varsInvolved, c("Products", "Resources", "capacity", 
                                                                     "consumption", "p", "produce",
                                                                     "r", "used" ))
   
@@ -79,14 +94,14 @@ test_that("production planning problems are solved",{
   expect_equal(parseObj$SolveType$varsInvolved, c("Products", "p", "produce", "profit"))
   
   # get the names of missing parameters
-  missingNames = getMissingPars(mznpath = mznName)
+  missingnames = getMissingPars(mznpath = mznName)
   
   # set the values of these missing parameters
   pVals = list(2,c(400, 500), c("banana-cake", "chocolate-cake"), 5, c(4000, 6, 2000, 500, 500),
                c("flour","banana","sugar","butter","cocoa"), 
                c(250, 2, 75, 100, 0, 200, 0, 150, 150, 75))
   
-  names(pVals) = missingNames
+  names(pVals) = missingnames
   
   modString = set_params(modData = pVals, mznpath= mznName, modify_mzn = FALSE)
   
@@ -117,11 +132,19 @@ test_that("assignment problems are solved", {
   }
   
   parseObj = mzn_parse(mznpath = mznName)
-  expect_equal(parseObj$Parameters, c("n", "DOM", "m", "COD", "profit"))
-  expect_equal(parseObj$decisionVariables, c("task", "worker"))
-  expect_equal(parseObj$Constraints$noOfConstraints, 1)
-  expect_equal(parseObj$Constraints$varsInvolved$`constraint: 0`, c("task", "worker"))
-  expect_equal(parseObj$Includes, "inverse.mzn")
+  
+  expect_equal(length(parseObj$Variables), 7)
+  nVars = length(parseObj$Variables)
+  v = c()
+  # check if correct variables are parsed 
+  for(i in seq(1, nVars, 1)){
+    nDecl = as.symbol(paste0("decl",i))
+    v = c(v, parseObj$Variables[[nDecl]][["name"]])
+  }
+  expect_equal(v, c("n", "DOM", "m", "COD", "profit", "task", "worker"))
+  
+  expect_equal(parseObj$Constraints$constraint1$varsInvolved, c("task", "worker"))
+  expect_equal(parseObj$Includes$include1$IncludedMZN, "inverse.mzn")
   expect_equal(parseObj$SolveType$objective, "maximize")
   expect_equal(parseObj$SolveType$varsInvolved, c("COD", "profit", "task", "w"))
   
@@ -153,14 +176,21 @@ test_that("line travelling salesman problems can be solved", {
   }
   
   parseObj = mzn_parse(mznpath = mznName)
-  expect_equal(parseObj$Parameters, c("n", "CITY", "POS", "coord", "m", "PREC", "left", "right"))
-  expect_equal(parseObj$decisionVariables, c("order", "city"))
-  expect_equal(parseObj$Constraints$noOfConstraints, 2)
-  expect_equal(parseObj$Constraints$varsInvolved$`constraint: 0`, c("city", "order"))
-  expect_equal(parseObj$Constraints$varsInvolved$`constraint: 1`, c("PREC", "i", "left", "order", "right"))
+  expect_equal(length(parseObj$Variables), 10)
+  nVars = length(parseObj$Variables)
+  v = c()
+  # check if correct variables are parsed 
+  for(i in seq(1, nVars, 1)){
+    nDecl = paste0("decl",i)
+    v = c(v, parseObj$Variables[[nDecl]][["name"]])
+  }
+  expect_equal(v, c("n", "CITY", "POS", "coord", "m", "PREC", "left", "right",
+                    "order", "city"))
+  expect_equal(parseObj$Constraints$constraint1$varsInvolved, c("city", "order"))
+  expect_equal(parseObj$Constraints$constraint2$varsInvolved, c("PREC", "i", "left", "order", "right"))
   expect_equal(parseObj$SolveType$objective, "minimize")
   expect_equal(parseObj$SolveType$varsInvolved, c("city", "coord", "i", "n"))
-  expect_equal(parseObj$Includes, "inverse.mzn")
+  expect_equal(parseObj$Includes$include1$IncludedMZN, "inverse.mzn")
   
   missingPars = getMissingPars(mznpath = mznName)
   
@@ -178,7 +208,7 @@ test_that("line travelling salesman problems can be solved", {
   
 })
 
-test_that("crazy problems can be solved", {
+test_that("crazy set problems can be solved", {
   # for devtools::test()
   mznName = "../../mzn_examples/crazy_sets/crazy_sets.mzn"
   
@@ -191,15 +221,21 @@ test_that("crazy problems can be solved", {
   }
   
   parseObj = mzn_parse(mznpath = mznName)
-  expect_equal(parseObj$Parameters, c("n", "NUMBER", "c", "m"))
-  expect_equal(parseObj$decisionVariables, c("s", "x"))
-  expect_equal(parseObj$Constraints$noOfConstraints, 5)
-  expect_equal(parseObj$Constraints$varsInvolved$`constraint: 0`, c("i", "j", "k", "m", "s"))
-  expect_equal(parseObj$Constraints$varsInvolved$`constraint: 1`, c("c", "i", "j", "m", "x"))
-  expect_equal(parseObj$Constraints$varsInvolved$`constraint: 2`, c("c", "i", "j", "m", "x"))
-  expect_equal(parseObj$Constraints$varsInvolved$`constraint: 3`, c("NUMBER", "c",
+  expect_equal(length(parseObj$Variables), 6)
+  nVars = length(parseObj$Variables)
+  v = c()
+  # check if correct variables are parsed 
+  for(i in seq(1, nVars, 1)){
+    nDecl = paste0("decl",i)
+    v = c(v, parseObj$Variables[[nDecl]][["name"]])
+  }
+  expect_equal(v,c("n", "NUMBER", "c", "m", "s", "x"))
+  expect_equal(parseObj$Constraints$constraint1$varsInvolved, c("i", "j", "k", "m", "s"))
+  expect_equal(parseObj$Constraints$constraint2$varsInvolved, c("c", "i", "j", "m", "x"))
+  expect_equal(parseObj$Constraints$constraint3$varsInvolved, c("c", "i", "j", "m", "x"))
+  expect_equal(parseObj$Constraints$constraint4$varsInvolved, c("NUMBER", "c",
                                                                     "i", "j", "m", "o", "s", "x"))
-  expect_equal(parseObj$Constraints$varsInvolved$`constraint: 4`, c("c", "i", "j", "m", "s", "x"))
+  expect_equal(parseObj$Constraints$constraint5$varsInvolved, c("c", "i", "j", "m", "s", "x"))
   
   expect_equal(parseObj$SolveType$objective, "satisfy")
  

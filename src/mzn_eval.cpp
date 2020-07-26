@@ -1,7 +1,7 @@
 #include <Rcpp.h>
 #include <minizinc/solver.hh>
 #include "sol_parse.h"
-#include "filetoString.h"
+#include "pathStringcheck.h"
 
 using namespace std;
 using namespace MiniZinc;
@@ -24,17 +24,9 @@ using namespace Rcpp;
 List mzn_eval(std::string solver, std::string libpath,std::string modelString = "", 
                        std::string mznpath = "", std::string dznpath = "",
                        bool all_solutions = true){
-  if(modelString.empty() && mznpath.empty()){
-    Rcpp::stop("PROVIDE EITHER modelString OR mznfilename");
-  }else if(!modelString.empty() && !mznpath.empty()){
-    Rcpp::stop("PROVIDE ONLY ONE OF modelString OR mznfilename");
-  }else if(mznpath.length()){
-    // check file extension
-    if(!(mznpath.substr(mznpath.find_last_of(".") + 1) == "mzn" ))
-      Rcpp::stop("file extention is not mzn");
-    //convert to string 
-    modelString = filetoString(mznpath);
-  }
+  
+  modelString = pathStringcheck(modelString, mznpath);
+  
   std::stringstream sol_strn;
   string sol_string;
   if(solver != "Gecode" && solver != "org.gecode.gecode")
