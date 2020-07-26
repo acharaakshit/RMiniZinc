@@ -709,42 +709,46 @@ solve maximize sum(i in OBJ)(profit[i] * x[i]);
 <div id="minid..maxid" class="section level3">
 <h3>minId..maxId</h3>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="co"># model string</span></span>
-<span id="cb21-2"><a href="#cb21-2"></a>modString =<span class="st"> &quot;array [1..n] of var 0..n: x;&quot;</span></span>
+<span id="cb21-2"><a href="#cb21-2"></a>modString =<span class="st"> &quot;int: n; array [1..n] of var 0..1: testVar;&quot;</span></span>
 <span id="cb21-3"><a href="#cb21-3"></a></span>
 <span id="cb21-4"><a href="#cb21-4"></a><span class="kw">print</span>(<span class="st">&quot;The updated model string is:&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;The updated model string is:&quot;</code></pre>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="kw">cat</span>(<span class="kw">modifyDomainId</span>(<span class="dt">ItemNo =</span> <span class="dv">0</span>, <span class="dt">maxIdItem =</span> <span class="dv">0</span>, <span class="dt">modelString =</span> modString))</span></code></pre></div>
-<pre><code>## array [1..n] of var 0..x: x;</code></pre>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="kw">cat</span>(<span class="kw">modifyDomainId</span>(<span class="dt">ItemNo =</span> <span class="dv">1</span>, <span class="dt">maxIdItem =</span> <span class="dv">0</span>, <span class="dt">modelString =</span> modString))</span></code></pre></div>
+<pre><code>## int: n;
+## array [1..n] of var 0..n: testVar;</code></pre>
 </div>
 <div id="mininteger-or-float..maxinteger-or-float" class="section level3">
 <h3>min(Integer or Float)..max(Integer or Float)</h3>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="co"># model string</span></span>
-<span id="cb25-2"><a href="#cb25-2"></a>modString =<span class="st"> &quot;array [1..n] of var 0..n: x;&quot;</span></span>
+<span id="cb25-2"><a href="#cb25-2"></a>modString =<span class="st"> &quot;int: n; array [1..n] of var 0..1: testVar;&quot;</span></span>
 <span id="cb25-3"><a href="#cb25-3"></a></span>
 <span id="cb25-4"><a href="#cb25-4"></a><span class="kw">print</span>(<span class="st">&quot;The updated model string is:&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;The updated model string is:&quot;</code></pre>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="kw">cat</span>(<span class="kw">modifyDomainSetVal</span>(<span class="dt">ItemNo =</span> <span class="dv">0</span>, <span class="dt">imax =</span> <span class="dv">2</span>, <span class="dt">imin =</span> <span class="dv">0</span>, <span class="dt">modelString =</span> modString))</span></code></pre></div>
-<pre><code>## array [1..n] of var 0..2: x;</code></pre>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="kw">cat</span>(<span class="kw">modifyDomainSetVal</span>(<span class="dt">ItemNo =</span> <span class="dv">1</span>, <span class="dt">imax =</span> <span class="dv">2</span>, <span class="dt">imin =</span> <span class="dv">0</span>, <span class="dt">modelString =</span> modString))</span></code></pre></div>
+<pre><code>## int: n;
+## array [1..n] of var 0..2: testVar;</code></pre>
 </div>
 <div id="minfunction-call-..maxfunction-call" class="section level3">
 <h3>min(Function Call )..max(Function Call)</h3>
 <div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a><span class="co"># model string</span></span>
-<span id="cb29-2"><a href="#cb29-2"></a>modString =<span class="st"> &quot;array [1..n] of var 0..n: x;&quot;</span></span>
+<span id="cb29-2"><a href="#cb29-2"></a>modString =<span class="st"> &quot;int: n; array [1..n] of var 0..1: testVar;&quot;</span></span>
 <span id="cb29-3"><a href="#cb29-3"></a></span>
 <span id="cb29-4"><a href="#cb29-4"></a><span class="kw">print</span>(<span class="st">&quot;The updated model string is:&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;The updated model string is:&quot;</code></pre>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a><span class="kw">cat</span>(<span class="kw">modifyDomainFnCall</span>(<span class="dt">ItemNo =</span> <span class="dv">0</span>, <span class="dt">maxIdItem =</span> <span class="dv">0</span> ,<span class="dt">maxFnName =</span> <span class="st">&quot;max&quot;</span>, <span class="dt">modelString =</span> modString))</span></code></pre></div>
-<pre><code>## array [1..n] of var 0..max(x): x;</code></pre>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a><span class="kw">cat</span>(<span class="kw">modifyDomainFnCall</span>(<span class="dt">ItemNo =</span> <span class="dv">1</span>, <span class="dt">maxIdItem =</span> <span class="dv">0</span> ,<span class="dt">maxFnName =</span> <span class="st">&quot;max&quot;</span>, <span class="dt">modelString =</span> modString))</span></code></pre></div>
+<pre><code>## int: n;
+## array [1..n] of var 1..max(n): testVar;</code></pre>
 </div>
-<div id="using-arithmetic-operators-and-constraints" class="section level3">
-<h3>Using arithmetic operators and constraints</h3>
+<div id="using-arithmetic-operators-and-constants" class="section level3">
+<h3>Using arithmetic operators and constants</h3>
 <div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a><span class="co"># model string</span></span>
-<span id="cb33-2"><a href="#cb33-2"></a>modString =<span class="st"> &quot;array [1..n] of var 0..n: x;&quot;</span></span>
+<span id="cb33-2"><a href="#cb33-2"></a>modString =<span class="st"> &quot;set of int: n; array [1..n] of var 0..n: testVar;&quot;</span></span>
 <span id="cb33-3"><a href="#cb33-3"></a></span>
 <span id="cb33-4"><a href="#cb33-4"></a><span class="kw">print</span>(<span class="st">&quot;The updated model string is:&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;The updated model string is:&quot;</code></pre>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a><span class="kw">cat</span>(<span class="kw">modifyDomainAO</span>(<span class="dt">ItemNo =</span> <span class="dv">0</span>, <span class="dt">minVal =</span> <span class="dv">1</span>, <span class="dt">maxVal =</span> <span class="dv">1</span> ,<span class="dt">OPmax =</span><span class="st">&#39;MULT&#39;</span>, <span class="dt">OPmin =</span> <span class="st">&quot;MULT&quot;</span>, <span class="dt">modelString =</span> modString))</span></code></pre></div>
-<pre><code>## array [1..n] of var 0*1..n*1: x;</code></pre>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a><span class="kw">cat</span>(<span class="kw">modifyDomainAO</span>(<span class="dt">ItemNo =</span> <span class="dv">1</span>, <span class="dt">minVal =</span> <span class="dv">1</span>, <span class="dt">maxVal =</span> <span class="dv">1</span> ,<span class="dt">OPmax =</span><span class="st">&#39;MULT&#39;</span>, <span class="dt">OPmin =</span> <span class="st">&quot;MULT&quot;</span>, <span class="dt">modelString =</span> modString))</span></code></pre></div>
+<pre><code>## set of int: n;
+## array [1..n] of var 0*1..n*1: testVar;</code></pre>
 </div>
 </div>
 

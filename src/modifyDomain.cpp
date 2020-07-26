@@ -9,6 +9,24 @@ using namespace std;
 using namespace Rcpp;
 using namespace MiniZinc;
 
+// Helper function
+std::string getnWriteStr(std::string mznpath, MiniZinc::Model* model, bool modify_mzn){
+  
+  stringstream strmodel;
+  Printer *p = new Printer(strmodel); 
+  p->print(model);
+  string mString = strmodel.str();
+  
+  if(!mznpath.empty() && modify_mzn){
+    ofstream out(mznpath);
+    out << mString;
+    out.close();
+  }else if(modify_mzn){
+    Rcpp::warning("no file given to modify");
+  }
+  return mString;
+}
+
 //' @title update the variable domain
 //' 
 //' @desciption assign the new Id to min or max values of the domain
@@ -119,19 +137,7 @@ std::string modifyDomainId(int ItemNo, int maxIdItem = -1, int minIdItem = -1,
       Rcpp::stop("Incorrect choice of parameters --  either replaceIdItem or either or both of minIdItem or maxIdItem can be supplied"); 
     }
     
-  stringstream strmodel;
-  Printer *p = new Printer(strmodel); 
-  p->print(model);
-  string mString = strmodel.str();
-  
-  if(!mznpath.empty() && modify_mzn){
-    ofstream out(mznpath);
-    out << mString;
-    out.close();
-  }else if(modify_mzn){
-    Rcpp::warning("no file given to modify");
-  }
-  return mString;
+    return getnWriteStr(mznpath, model, modify_mzn);
 }
 
 
@@ -154,6 +160,7 @@ std::string modifyDomainSetVal(int ItemNo, Nullable<int> imax = R_NilValue,
                                Nullable<int> imin = R_NilValue, Nullable<double> fmin = R_NilValue,
                              Nullable<double> fmax = R_NilValue, std::string modelString = "",
                              std::string mznpath = "", bool modify_mzn = false) {
+  
   modelString = pathStringcheck(modelString, mznpath);
   Model *model = helper_parse(modelString, "modifyDomainId.mzn");
   
@@ -263,19 +270,7 @@ std::string modifyDomainSetVal(int ItemNo, Nullable<int> imax = R_NilValue,
     Rcpp::stop("Incorrect choice of parameters");
   }
   
-  stringstream strmodel;
-  Printer *p = new Printer(strmodel); 
-  p->print(model);
-  string mString = strmodel.str();
-  
-  if(!mznpath.empty() && modify_mzn){
-    ofstream out(mznpath);
-    out << mString;
-    out.close();
-  }else if(modify_mzn){
-    Rcpp::warning("no file given to modify");
-  }
-  return mString;
+  return getnWriteStr(mznpath, model, modify_mzn);
 }
 
 
@@ -318,10 +313,11 @@ std::string modifyDomainFnCall(int ItemNo, int minIdItem = -1,
   
   if(it->iid() != Item::II_VD) Rcpp::stop("Given item number is not a variable declaration");
   VarDecl *vd =  it->cast<VarDeclI>()->e();
+  Expression *dExp = vd->ti()->domain();
   
   if(vd->ti()->domain() == NULL){
     Rcpp::stop("The domain of the given item is NULL");
-  }else if(vd->ti()->domain()->eid() != Expression::E_BINOP && vd->ti()->domain()->eid() != Expression::E_SETLIT){
+  }else if(dExp->eid() != Expression::E_BINOP && dExp->eid() != Expression::E_SETLIT){
     Rcpp::stop("The domain is not a binary ..  operation or set range");
   }else if(minIdItem == -1 && maxIdItem == -1) {
     Rcpp::stop("Please provide one of minIdItem or maxIdItem");
@@ -335,13 +331,13 @@ std::string modifyDomainFnCall(int ItemNo, int minIdItem = -1,
     try{
       Expression *clExp = new Call(it->loc(), 
                                    minFnName, fnExp);
-      if(vd->ti()->domain()->eid() == Expression::E_BINOP){
-        BinOp *biExp = vd->ti()->domain()->cast<BinOp>();
+      if(dExp->eid() == Expression::E_BINOP){
+        BinOp *biExp = dExp->cast<BinOp>();
         if(biExp->op() != BinOpType::BOT_DOTDOT) Rcpp::stop("Not a range binary expression");
         Expression *nbiExp = new BinOp(it->loc(), clExp, BinOpType::BOT_DOTDOT, biExp->rhs());
         vd->ti()->domain(nbiExp);
       }else{
-        SetLit *sl = vd->ti()->domain()->cast<SetLit>();
+        SetLit *sl = dExp->cast<SetLit>();
         Expression *nbiExp;
         if(sl->isv() != NULL)
           nbiExp = new BinOp(it->loc(), clExp, BinOpType::BOT_DOTDOT, IntLit::a(sl->isv()->max().toInt()));
@@ -366,13 +362,13 @@ std::string modifyDomainFnCall(int ItemNo, int minIdItem = -1,
     try{
       Expression *clExp = new Call(it->loc(), 
                                    maxFnName, fnExp);
-      if(vd->ti()->domain()->eid() == Expression::E_BINOP){
-        BinOp *biExp = vd->ti()->domain()->cast<BinOp>();
+      if(dExp->eid() == Expression::E_BINOP){
+        BinOp *biExp = dExp->cast<BinOp>();
         if(biExp->op() != BinOpType::BOT_DOTDOT) Rcpp::stop("Not a range binary expression");
         Expression *nbiExp = new BinOp(it->loc(), biExp->lhs(), BinOpType::BOT_DOTDOT, clExp);
         vd->ti()->domain(nbiExp);
       }else{
-        SetLit *sl = vd->ti()->domain()->cast<SetLit>();
+        SetLit *sl = dExp->cast<SetLit>();
         Expression *nbiExp;
         if(sl->isv() != NULL)
           nbiExp = new BinOp(it->loc(), IntLit::a(sl->isv()->max().toInt()), BinOpType::BOT_DOTDOT, clExp);
@@ -414,19 +410,17 @@ std::string modifyDomainFnCall(int ItemNo, int minIdItem = -1,
       Rcpp::stop("unknown exception!");
     }
   }
-  stringstream strmodel;
-  Printer *p = new Printer(strmodel); 
-  p->print(model);
-  string mString = strmodel.str();
-  
-  if(!mznpath.empty() && modify_mzn){
-    ofstream out(mznpath);
-    out << mString;
-    out.close();
-  }else if(modify_mzn){
-    Rcpp::warning("no file given to modify");
-  }
-  return mString;
+  return getnWriteStr(mznpath, model, modify_mzn);
+}
+
+// Helper function
+MiniZinc::BinOpType getOP(std::string OP){
+  if(OP.compare("PLUS") == 0 ) return BinOpType::BOT_PLUS;
+  else if(OP.compare("MINUS") == 0) return BinOpType::BOT_MINUS;
+  else if(OP.compare("MULT") == 0) return BinOpType::BOT_MULT;
+  else if(OP.compare("MOD") == 0) return  BinOpType::BOT_MOD;
+  else if(OP.compare("DIV") == 0) return BinOpType::BOT_DIV;
+  else Rcpp::stop("unrecognised operator");
 }
 
 
@@ -462,34 +456,6 @@ std:: string modifyDomainAO(int ItemNo, SEXP minVal = R_NilValue,
   
   BinOpType op;
   
-  if(OP.empty()) ;
-  else if(OP.compare("PLUS") == 0 ) op = BinOpType::BOT_PLUS;
-  else if(OP.compare("MINUS") == 0) op = BinOpType::BOT_MINUS;
-  else if(OP.compare("MULT") == 0) op = BinOpType::BOT_MULT;
-  else if(OP.compare("MOD") == 0) op = BinOpType::BOT_MOD;
-  else if(OP.compare("DIV") == 0) op = BinOpType::BOT_DIV;
-  else Rcpp::stop("unrecognised operator");
-  
-  BinOpType opMin;
-  
-  if(OPmin.empty()) ;
-  else if(OPmin.compare("PLUS") == 0 ) opMin = BinOpType::BOT_PLUS;
-  else if(OPmin.compare("MINUS") == 0) opMin = BinOpType::BOT_MINUS;
-  else if(OPmin.compare("MULT") == 0) opMin = BinOpType::BOT_MULT;
-  else if(OPmin.compare("MOD") == 0) opMin = BinOpType::BOT_MOD;
-  else if(OPmin.compare("DIV") == 0) opMin = BinOpType::BOT_DIV;
-  else Rcpp::stop("unrecognised operator");
-  
-  BinOpType opMax;
-  
-  if(OPmax.empty()) ;
-  else if(OPmax.compare("PLUS") == 0 ) opMax = BinOpType::BOT_PLUS;
-  else if(OPmax.compare("MINUS") == 0) opMax = BinOpType::BOT_MINUS;
-  else if(OPmax.compare("MULT") == 0) opMax = BinOpType::BOT_MULT;
-  else if(OPmax.compare("MOD") == 0) opMax = BinOpType::BOT_MOD;
-  else if(OPmax.compare("DIV") == 0) opMax = BinOpType::BOT_DIV;
-  else Rcpp::stop("unrecognised operator");
-  
   if(it->iid() != Item::II_VD) Rcpp::stop("Item is not a variable declaration");
   
     VarDecl *vd =  it->cast<VarDeclI>()->e();
@@ -499,12 +465,13 @@ std:: string modifyDomainAO(int ItemNo, SEXP minVal = R_NilValue,
       Rcpp::stop("The specified Item doesn't have a domain");
     }else if(!Rf_isNull(minVal) && Rf_isNull(maxVal) && Rf_isNull(Val)){
       if(OPmin.empty()) Rcpp::stop("Please provide the arithmetic operator");
+      op = getOP(OPmin);
       Expression *dExp = vd->ti()->domain();
       if(itp.bt() == Type::BT_FLOAT){
         double imin = Rcpp::as<double>(minVal);
         if(dExp->eid() != Expression::E_BINOP) Rcpp::stop("domain is not a .. binary operator");
         BinOp *bo = dExp->cast<BinOp>();
-        Expression  *nlhs = new BinOp(it->loc(), bo->lhs(), opMin, FloatLit::a(imin));
+        Expression  *nlhs = new BinOp(it->loc(), bo->lhs(), op, FloatLit::a(imin));
         bo->lhs(nlhs);
         Expression*ndExp = bo;
         vd->ti()->domain(ndExp);
@@ -512,7 +479,7 @@ std:: string modifyDomainAO(int ItemNo, SEXP minVal = R_NilValue,
         int imin = Rcpp::as<int>(minVal);
         if(dExp->eid() != Expression::E_BINOP) Rcpp::stop("domain is not a .. binary operator");
         BinOp *bo = dExp->cast<BinOp>();
-        Expression  *nlhs = new BinOp(it->loc(), bo->lhs(), opMin, IntLit::a(imin));
+        Expression  *nlhs = new BinOp(it->loc(), bo->lhs(), op, IntLit::a(imin));
         bo->lhs(nlhs);
         Expression*ndExp = bo;
         vd->ti()->domain(ndExp);
@@ -521,12 +488,13 @@ std:: string modifyDomainAO(int ItemNo, SEXP minVal = R_NilValue,
       }      
     }else if(Rf_isNull(minVal) && !Rf_isNull(maxVal) && Rf_isNull(Val)){
       if(OPmax.empty()) Rcpp::stop("Please provide the arithmetic operator");
+      op = getOP(OPmax);
       Expression *dExp = vd->ti()->domain();
       if(itp.bt() == Type::BT_FLOAT){
         double imax = Rcpp::as<double>(maxVal);
         if(dExp->eid() != Expression::E_BINOP) Rcpp::stop("domain is not a .. binary operator");
         BinOp *bo = dExp->cast<BinOp>();
-        Expression  *nrhs = new BinOp(it->loc(), bo->rhs(), opMax, FloatLit::a(imax));
+        Expression  *nrhs = new BinOp(it->loc(), bo->rhs(), op, FloatLit::a(imax));
         bo->rhs(nrhs);
         Expression*ndExp = bo;
         vd->ti()->domain(ndExp);
@@ -534,7 +502,7 @@ std:: string modifyDomainAO(int ItemNo, SEXP minVal = R_NilValue,
         int imax = Rcpp::as<int>(maxVal);
         if(dExp->eid() != Expression::E_BINOP) Rcpp::stop("domain is not a .. binary operator");
         BinOp *bo = dExp->cast<BinOp>();
-        Expression  *nrhs = new BinOp(it->loc(), bo->rhs(), opMax, IntLit::a(imax));
+        Expression  *nrhs = new BinOp(it->loc(), bo->rhs(), op, IntLit::a(imax));
         bo->rhs(nrhs);
         Expression*ndExp = bo;
         vd->ti()->domain(ndExp);
@@ -544,13 +512,15 @@ std:: string modifyDomainAO(int ItemNo, SEXP minVal = R_NilValue,
     }else if(!Rf_isNull(minVal) && !Rf_isNull(maxVal) && Rf_isNull(Val)){
       if(OPmax.empty()) Rcpp::stop("Please provide the arithmetic operator");
       if(OPmin.empty()) Rcpp::stop("Please provide the arithmetic operator");
+      BinOpType opMin = getOP(OPmin);
+      BinOpType opMax = getOP(OPmax);
       Expression *dExp = vd->ti()->domain();
       if(itp.bt() == Type::BT_FLOAT){
         double imax = Rcpp::as<double>(maxVal);
         double imin = Rcpp::as<double>(minVal);
         if(dExp->eid() != Expression::E_BINOP) Rcpp::stop("domain is not a .. binary operator");
         BinOp *bo = dExp->cast<BinOp>();
-        Expression  *nlhs = new BinOp(it->loc(), bo->lhs(), opMax, FloatLit::a(imin));
+        Expression  *nlhs = new BinOp(it->loc(), bo->lhs(), opMin, FloatLit::a(imin));
         Expression *nrhs = new BinOp(it->loc(), bo->rhs(), opMax, FloatLit::a(imax));
         bo->lhs(nlhs);
         bo->rhs(nrhs);
@@ -572,6 +542,7 @@ std:: string modifyDomainAO(int ItemNo, SEXP minVal = R_NilValue,
       } 
     }else if(Rf_isNull(minVal) && Rf_isNull(maxVal) && !Rf_isNull(Val)){
       if(OP.empty()) Rcpp::stop("Please provide the arithmetic operator");
+      op = getOP(OP);
       Expression *dExp = vd->ti()->domain();
       if(itp.bt() == Type::BT_FLOAT){
         double val = Rcpp::as<double>(Val);
@@ -588,18 +559,5 @@ std:: string modifyDomainAO(int ItemNo, SEXP minVal = R_NilValue,
       Rcpp::stop("Incorrect choice of parameters");
     }     
 
-  stringstream strmodel;
-  Printer *p = new Printer(strmodel); 
-  p->print(model);
-  string mString = strmodel.str();
-  
-  if(!mznpath.empty() && modify_mzn){
-    ofstream out(mznpath);
-    out << mString;
-    out.close();
-  }else if(modify_mzn){
-    Rcpp::warning("no file given to modify");
-  }
-  return mString;
+    return getnWriteStr(mznpath, model, modify_mzn);
 }
-

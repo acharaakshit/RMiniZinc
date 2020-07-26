@@ -160,33 +160,33 @@ cat(deleteItem(itemNo = item_number, mznpath = mzn_path, updateMZN = FALSE))
 ## -----------------------------------------------------------------------------
 
 # model string
-modString = "array [1..n] of var 0..n: x;"
+modString = "int: n; array [1..n] of var 0..1: testVar;"
 
 print("The updated model string is:")
-cat(modifyDomainId(ItemNo = 0, maxIdItem = 0, modelString = modString))
+cat(modifyDomainId(ItemNo = 1, maxIdItem = 0, modelString = modString))
 
 
 ## -----------------------------------------------------------------------------
 # model string
-modString = "array [1..n] of var 0..n: x;"
+modString = "int: n; array [1..n] of var 0..1: testVar;"
 
 print("The updated model string is:")
-cat(modifyDomainSetVal(ItemNo = 0, imax = 2, imin = 0, modelString = modString))
+cat(modifyDomainSetVal(ItemNo = 1, imax = 2, imin = 0, modelString = modString))
 
 
 ## -----------------------------------------------------------------------------
 # model string
-modString = "array [1..n] of var 0..n: x;"
+modString = "int: n; array [1..n] of var 0..1: testVar;"
 
 print("The updated model string is:")
-cat(modifyDomainFnCall(ItemNo = 0, maxIdItem = 0 ,maxFnName = "max", modelString = modString))
+cat(modifyDomainFnCall(ItemNo = 1, maxIdItem = 0 ,maxFnName = "max", modelString = modString))
 
 
 ## -----------------------------------------------------------------------------
 # model string
-modString = "array [1..n] of var 0..n: x;"
+modString = "set of int: n; array [1..n] of var 0..n: testVar;"
 
 print("The updated model string is:")
-cat(modifyDomainAO(ItemNo = 0, minVal = 1, maxVal = 1 ,OPmax ='MULT', OPmin = "MULT", modelString = modString))
+cat(modifyDomainAO(ItemNo = 1, minVal = 1, maxVal = 1 ,OPmax ='MULT', OPmin = "MULT", modelString = modString))
 
 
