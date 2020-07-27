@@ -63,7 +63,7 @@ modifyDomainId <- function(ItemNo, maxIdItem = -1L, minIdItem = -1L, replaceIdIt
     .Call(`_rminizinc_modifyDomainId`, ItemNo, maxIdItem, minIdItem, replaceIdItem, modelString, mznpath, modify_mzn)
 }
 
-#' @title Modify domain of type set 
+#' @title Modify domain using integer or floating point values 
 #' 
 #' @desciption Assign integer or float values to domains which are of type min..max
 #' @importFrom Rcpp sourceCpp

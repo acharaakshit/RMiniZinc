@@ -57,12 +57,12 @@ std::string modifyDomainId(int ItemNo, int maxIdItem = -1, int minIdItem = -1,
   
   Item *it = model->operator[](ItemNo);
   if(it->iid() != Item::II_VD) Rcpp::stop("Given item number is not a variable declaration");
+  VarDecl *vd =  it->cast<VarDeclI>()->e();
+  Expression *dExp = vd->ti()->domain();
   
-    VarDecl *vd =  it->cast<VarDeclI>()->e();
-    //Type mTp = vd->type();
-    if(vd->ti()->domain() == NULL){
+    if(dExp == NULL){
       Rcpp::stop("The specified Item doesn't have a domain");
-    }else if(vd->ti()->domain()->eid() != Expression::E_BINOP && vd->ti()->domain()->eid() != Expression::E_SETLIT){
+    }else if(dExp->eid() != Expression::E_BINOP && dExp->eid() != Expression::E_SETLIT){
       Rcpp:stop("This function is only applicable to binary operator expressions or set literals like min..max");
     }else if(maxIdItem == -1 && minIdItem == -1 && replaceIdItem == -1){
       Rcpp::stop("Supply at least one of maxIdItem, minIdItem or replaceIdItem");
@@ -70,9 +70,7 @@ std::string modifyDomainId(int ItemNo, int maxIdItem = -1, int minIdItem = -1,
       Item *dit = model->operator[](minIdItem);
       if(dit->iid() != Item::II_VD) Rcpp::stop("minIdItem not a variable declaration");
       Type tp = dit->cast<VarDeclI>()->e()->type();
-      if(!tp.is_set()) Rcpp::warning("The supplied ItemId is not of a set variable");
       Expression *minLhs  = dit->cast<VarDeclI>()->e()->id();
-      Expression *dExp = vd->ti()->domain();
       Expression *ndExp; 
       if(dExp->eid() == Expression::E_BINOP){
         BinOp *bo = dExp->cast<BinOp>(); 
@@ -95,7 +93,6 @@ std::string modifyDomainId(int ItemNo, int maxIdItem = -1, int minIdItem = -1,
       Type tp = dit->cast<VarDeclI>()->e()->type();
       if(!tp.is_set()) Rcpp::warning("The supplied ItemId is not of a set variable");
       Expression *maxRhs  = dit->cast<VarDeclI>()->e()->id();
-      Expression *dExp = vd->ti()->domain();
       Expression *ndExp; 
       if(dExp->eid() == Expression::E_BINOP){
         BinOp *bo = dExp->cast<BinOp>(); 
@@ -141,7 +138,7 @@ std::string modifyDomainId(int ItemNo, int maxIdItem = -1, int minIdItem = -1,
 }
 
 
-//' @title Modify domain of type set 
+//' @title Modify domain using integer or floating point values 
 //' 
 //' @desciption Assign integer or float values to domains which are of type min..max
 //' @importFrom Rcpp sourceCpp
@@ -170,9 +167,9 @@ std::string modifyDomainSetVal(int ItemNo, Nullable<int> imax = R_NilValue,
   VarDecl *vd =  it->cast<VarDeclI>()->e();
   Expression *dExp = vd->ti()->domain();
   
-  if(vd->ti()->domain() == NULL){
+  if(dExp == NULL){
     Rcpp::stop("The domain of the given item is NULL");
-  }else if(vd->ti()->domain()->eid() != Expression::E_SETLIT && vd->ti()->domain()->eid() != Expression::E_BINOP ){
+  }else if(dExp->eid() != Expression::E_SETLIT && dExp->eid() != Expression::E_BINOP ){
     Rcpp::stop("The domain is not a set literal i.e it's not of the form minNum..maxNum");
   }else if(imin.isNull() && imax.isNull() && fmin.isNull() && fmax.isNull()) {
     Rcpp::stop("Please provide one of imin, imax, fmin or fmax");
@@ -315,7 +312,7 @@ std::string modifyDomainFnCall(int ItemNo, int minIdItem = -1,
   VarDecl *vd =  it->cast<VarDeclI>()->e();
   Expression *dExp = vd->ti()->domain();
   
-  if(vd->ti()->domain() == NULL){
+  if(dExp == NULL){
     Rcpp::stop("The domain of the given item is NULL");
   }else if(dExp->eid() != Expression::E_BINOP && dExp->eid() != Expression::E_SETLIT){
     Rcpp::stop("The domain is not a binary ..  operation or set range");
@@ -460,8 +457,8 @@ std:: string modifyDomainAO(int ItemNo, SEXP minVal = R_NilValue,
   
     VarDecl *vd =  it->cast<VarDeclI>()->e();
     Type itp = it->cast<VarDeclI>()->e()->type();
-    //Type mTp = vd->type();
-    if(vd->ti()->domain() == NULL){
+    Expression *dExp = vd->ti()->domain();
+    if(dExp == NULL){
       Rcpp::stop("The specified Item doesn't have a domain");
     }else if(!Rf_isNull(minVal) && Rf_isNull(maxVal) && Rf_isNull(Val)){
       if(OPmin.empty()) Rcpp::stop("Please provide the arithmetic operator");
