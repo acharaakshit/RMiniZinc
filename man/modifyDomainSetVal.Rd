@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{modifyDomainSetVal}
 \alias{modifyDomainSetVal}
-\title{Modify domain of type set}
+\title{Modify domain using integer or floating point values}
 \usage{
 modifyDomainSetVal(
   ItemNo,
@@ -33,5 +33,5 @@ modifyDomainSetVal(
 \item{modify_mzn}{if the user wants to modify the mzn parameters.}
 }
 \description{
-Modify domain of type set
+Modify domain using integer or floating point values
 }
