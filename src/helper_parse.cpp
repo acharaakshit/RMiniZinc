@@ -15,6 +15,7 @@ MiniZinc::Model* helper_parse(std::string modelString, std::string modelStringNa
   try{
     model = MiniZinc::parseFromString(*env, modelString, modelStringName , ip, true, true, true, os, se);
     if(model==NULL) throw std::exception();
+    else if(model->size() == 0) Rcpp::stop("Empty Model!");
     else if(se.size()){
       string syntaxErrors;
       for(int i = 0;i < se.size();i++){
