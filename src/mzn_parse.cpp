@@ -22,6 +22,13 @@ std::string boStrMap(BinOpType OP){
   else return "not added currently";
 }
 
+// mapping of UnOp type with strings
+std::string uoStrMap(UnOpType OP){
+  if(OP == UnOpType::UOT_PLUS) return "PLUS";
+  else if(OP == UnOpType::UOT_MINUS) return "MINUS";
+  else return "NOT";
+}
+
 // helper function to parse domain
 void parseDomain(Expression *dExp, List &varDomain){
     if(dExp->eid() == Expression::E_SETLIT){
@@ -54,6 +61,17 @@ void parseDomain(Expression *dExp, List &varDomain){
       parseDomain(boExp->rhs(), boRhs);
       varDomain.push_back(boRhs);
       varDomain.names() = CharacterVector({"LHS", "BINARY_OPERATOR", "RHS"});
+    }else if(dExp->eid() == Expression::E_UNOP){
+      UnOp *uo = dExp->cast<UnOp>();
+      List unop;
+      unop.push_back(uoStrMap(uo->op()));
+      List uoArgs;
+      for(int i=0; i < uo->n_args(); i++) {
+        parseDomain(uo->arg(i), uoArgs);
+      }
+      varDomain.push_back(unop);
+      varDomain.push_back(uoArgs);
+      varDomain.names() = CharacterVector({"UNARY_OPERATOR", "ARGUMENTS"});
     }else{
       if(varDomain.length())
         Rcpp::warning("Part of domain not parsed/supported currently!");
