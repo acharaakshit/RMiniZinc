@@ -1,31 +1,12 @@
 #include <Rcpp.h>
-#include <fstream>
-#include <minizinc/prettyprinter.hh>
 #include "pathStringcheck.h"
 #include "helper_parse.h"
+#include "helper_modify.h"
 
 
 using namespace std;
 using namespace Rcpp;
 using namespace MiniZinc;
-
-// Helper function
-std::string getnWriteStr(std::string mznpath, MiniZinc::Model* model, bool modify_mzn){
-  
-  stringstream strmodel;
-  Printer *p = new Printer(strmodel); 
-  p->print(model);
-  string mString = strmodel.str();
-  
-  if(!mznpath.empty() && modify_mzn){
-    ofstream out(mznpath);
-    out << mString;
-    out.close();
-  }else if(modify_mzn){
-    Rcpp::warning("no file given to modify");
-  }
-  return mString;
-}
 
 //' @title update the variable domain
 //' 
@@ -49,14 +30,11 @@ std::string modifyDomainId(int ItemNo, int maxIdItem = -1, int minIdItem = -1,
   modelString = pathStringcheck(modelString, mznpath);
   Model *model = helper_parse(modelString, "modifyDomainId.mzn");
   
-  if(ItemNo >= model->size() || ItemNo < 0)  Rcpp::stop("item number is out of bounds");
-  
   if(maxIdItem != -1) if(maxIdItem >= model->size() || maxIdItem < 0)  Rcpp::stop("maxItemId is out of bounds");
   if(minIdItem != -1) if(minIdItem >= model->size() || minIdItem < 0)  Rcpp::stop("minItemId is out of bounds");
   if(replaceIdItem != -1) if(replaceIdItem >= model->size() || replaceIdItem < 0)  Rcpp::stop("replaceItemId is out of bounds");
   
-  Item *it = model->operator[](ItemNo);
-  if(it->iid() != Item::II_VD) Rcpp::stop("Given item number is not a variable declaration");
+  Item *it =  DomainItemCheck(model, ItemNo);
   VarDecl *vd =  it->cast<VarDeclI>()->e();
   Expression *dExp = vd->ti()->domain();
   
@@ -161,9 +139,7 @@ std::string modifyDomainSetVal(int ItemNo, Nullable<int> imax = R_NilValue,
   modelString = pathStringcheck(modelString, mznpath);
   Model *model = helper_parse(modelString, "modifyDomainId.mzn");
   
-  if(ItemNo >= model->size() || ItemNo < 0)  Rcpp::stop("item number is out of bounds");
-  Item *it = model->operator[](ItemNo);
-  if(it->iid() != Item::II_VD) Rcpp::stop("Given item number is not a variable declaration");
+  Item *it =  DomainItemCheck(model, ItemNo);
   VarDecl *vd =  it->cast<VarDeclI>()->e();
   Expression *dExp = vd->ti()->domain();
   
@@ -273,7 +249,7 @@ std::string modifyDomainSetVal(int ItemNo, Nullable<int> imax = R_NilValue,
 
 //' @title Modify domain function calls
 //' 
-//' @desciption Assign max(Id) or min(Id) function calls to domains.
+//' @desciption Assign max(Id), min(Id) or sum(Id) function calls to domains.
 //' @importFrom Rcpp sourceCpp
 //' @export modifyDomainFnCall
 //' @useDynLib rminizinc, .registration=TRUE
@@ -296,19 +272,16 @@ std::string modifyDomainFnCall(int ItemNo, int minIdItem = -1,
   modelString = pathStringcheck(modelString, mznpath);
   Model *model = helper_parse(modelString, "modifyDomainId.mzn");
   
-  if(minFnName.compare("max") != 0 && minFnName.compare("min") != 0 && !minFnName.empty())
+  if(minFnName.compare("max") != 0 && minFnName.compare("min") != 0  && minFnName.compare("sum") != 0 && !minFnName.empty())
    Rcpp::stop("Function not supported yet!");
   
-  if(maxFnName.compare("max") != 0 && maxFnName.compare("min") != 0 && !maxFnName.empty())
+  if(maxFnName.compare("max") != 0 && maxFnName.compare("min") != 0 && maxFnName.compare("sum") != 0 && !maxFnName.empty())
       Rcpp::stop("Function not supported yet!");
-  
-  if(ItemNo >= model->size() || ItemNo < 0)  Rcpp::stop("item number is out of bounds");
-  Item *it = model->operator[](ItemNo);
   
   if(maxIdItem != -1) if(maxIdItem >= model->size() || maxIdItem < 0)  Rcpp::stop("maxItemId is out of bounds");
   if(minIdItem != -1) if(minIdItem >= model->size() || minIdItem < 0)  Rcpp::stop("minItemId is out of bounds");
   
-  if(it->iid() != Item::II_VD) Rcpp::stop("Given item number is not a variable declaration");
+  Item *it =  DomainItemCheck(model, ItemNo);
   VarDecl *vd =  it->cast<VarDeclI>()->e();
   Expression *dExp = vd->ti()->domain();
   
@@ -447,20 +420,16 @@ std:: string modifyDomainAO(int ItemNo, SEXP minVal = R_NilValue,
   modelString = pathStringcheck(modelString, mznpath);
   Model *model = helper_parse(modelString, "modifyDomainId.mzn");
   
-  if(ItemNo >= model->size() || ItemNo < 0)  Rcpp::stop("item number is out of bounds");
-  
-  Item *it = model->operator[](ItemNo);
-  
   BinOpType op;
   
-  if(it->iid() != Item::II_VD) Rcpp::stop("Item is not a variable declaration");
+  Item *it =  DomainItemCheck(model, ItemNo);
+  VarDecl *vd =  it->cast<VarDeclI>()->e();
+  Expression *dExp = vd->ti()->domain();
+  Type itp = it->cast<VarDeclI>()->e()->type();
   
-    VarDecl *vd =  it->cast<VarDeclI>()->e();
-    Type itp = it->cast<VarDeclI>()->e()->type();
-    Expression *dExp = vd->ti()->domain();
-    if(dExp == NULL){
+  if(dExp == NULL){
       Rcpp::stop("The specified Item doesn't have a domain");
-    }else if(!Rf_isNull(minVal) && Rf_isNull(maxVal) && Rf_isNull(Val)){
+  }else if(!Rf_isNull(minVal) && Rf_isNull(maxVal) && Rf_isNull(Val)){
       if(OPmin.empty()) Rcpp::stop("Please provide the arithmetic operator");
       op = getOP(OPmin);
       Expression *dExp = vd->ti()->domain();

@@ -83,7 +83,7 @@ modifyDomainSetVal <- function(ItemNo, imax = NULL, imin = NULL, fmin = NULL, fm
 
 #' @title Modify domain function calls
 #' 
-#' @desciption Assign max(Id) or min(Id) function calls to domains.
+#' @desciption Assign max(Id), min(Id) or sum(Id) function calls to domains.
 #' @importFrom Rcpp sourceCpp
 #' @export modifyDomainFnCall
 #' @useDynLib rminizinc, .registration=TRUE

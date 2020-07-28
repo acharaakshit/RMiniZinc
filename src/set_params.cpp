@@ -31,11 +31,8 @@ std::string set_params(List modData, std::string modelString = "",
   vector<Item*> items;
   NumericVector nameIndexMap; 
   CharacterVector parNames;
-  int s = model->size();
-  if(s == 0){
-    Rcpp::stop("Empty model!");
-  }
-  for(int i = 0; i<s;i++){
+
+  for(int i = 0; i<model->size();i++){
     items.push_back(model->operator[] (i));
     if(items[i]->iid() == Item::II_VD){
       if(items[i]->cast<VarDeclI>()->e()->e() == NULL && 
