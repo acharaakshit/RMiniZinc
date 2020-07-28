@@ -6,8 +6,62 @@
 #include "helper_sol_parse.h"
 #include "expVarNames.h"
 
+using namespace Rcpp;
 using namespace std;
 using namespace MiniZinc;
+
+
+// mapping of BinOp type with strings
+std::string boStrMap(BinOpType OP){
+  if(OP == BinOpType::BOT_DOTDOT) return "DOTDOT";
+  else if(OP == BinOpType::BOT_MINUS) return "MINUS";
+  else if(OP == BinOpType::BOT_PLUS) return "PLUS" ;
+  else if(OP == BinOpType::BOT_MOD) return "MOD";
+  else if(OP == BinOpType::BOT_POW) return "RAISE_TO";
+  else if(OP == BinOpType::BOT_MULT) return "MULTIPLY";
+  else return "not added currently";
+}
+
+// helper function to parse domain
+void parseDomain(Expression *dExp, List &varDomain){
+    if(dExp->eid() == Expression::E_SETLIT){
+      helper_sol_parse(dExp, varDomain);
+      varDomain.names() = CharacterVector({"Set"});
+    }else if(dExp->eid() == Expression::E_ID){
+      varDomain.push_back(dExp->cast<Id>()->str().c_str());
+    }else if(dExp->eid() == Expression::E_INTLIT){
+      varDomain.push_back(dExp->cast<IntLit>()->v().toInt());
+    }else if(dExp->eid() == Expression::E_FLOATLIT){
+      varDomain.push_back(dExp->cast<FloatLit>()->v().toDouble());
+    }else if(dExp->eid() == Expression::E_CALL){
+      Call *cl = dExp->cast<Call>();
+      List cList;
+      cList.push_back(cl->id().str().c_str());
+      List cArgs;
+      for(int k = 0; k < cl->n_args(); k++){
+        parseDomain(cl->arg(k), cArgs);
+      }
+      varDomain.push_back(cList);
+      varDomain.push_back(cArgs);
+      varDomain.names() = CharacterVector({"FunctionCall", "Arguments"});
+    }else if(dExp->eid() == Expression::E_BINOP){
+      BinOp *boExp = dExp->cast<BinOp>();
+      List boLhs;
+      parseDomain(boExp->lhs(), boLhs);
+      varDomain.push_back(boLhs);
+      varDomain.push_back(boStrMap(boExp->op()));
+      List boRhs;
+      parseDomain(boExp->rhs(), boRhs);
+      varDomain.push_back(boRhs);
+      varDomain.names() = CharacterVector({"LHS", "BINARY_OPERATOR", "RHS"});
+    }else{
+      if(varDomain.length())
+        Rcpp::warning("Part of domain not parsed/supported currently!");
+      else
+        Rcpp::warning("Domain not parsed/supported currently");
+    }
+}
+
 
 using namespace Rcpp;
 
@@ -31,11 +85,7 @@ List mzn_parse(std::string modelString = "",
   
   
   List retVal;
-  // size of the model
-  int s = model-> size();
-  if(s == 0){
-    Rcpp::stop("Empty model!");
-  }
+
   // get all the items and the names of all the parameters and map to the item numbers
   vector<Item*> items;
   int type = 0;
@@ -57,7 +107,7 @@ List mzn_parse(std::string modelString = "",
   
   int fnCount = 0;
   
-  for(int i=0; i < s; i++){
+  for(int i=0; i < model->size(); i++){
     items.push_back(model->operator[] (i));
     string itemTrack = "item: ";
     itemTrack.append(to_string(i + 1));
@@ -100,6 +150,7 @@ List mzn_parse(std::string modelString = "",
         //decision variables
         varKind = "decision variable";
      }
+     
      // push the variable details
      variableDetails.push_back(i);
      variableDetails.push_back(varKind);
@@ -108,63 +159,14 @@ List mzn_parse(std::string modelString = "",
      variableDetails.names() = CharacterVector({"itemNo","kind", "name", "type"});
      
      Expression *dExp  = items[i]->cast<VarDeclI>()->e()->ti()->domain();
+     
      if(dExp!=NULL){
-       if(dExp->eid() == Expression::E_SETLIT){
-         SetLit *sl = dExp->cast<SetLit>();
-         List setDomain;
-         helper_sol_parse(dExp, setDomain);
-         variableDetails.push_back(setDomain);
-         variableDetails.names() = CharacterVector({"itemNo","kind", "name", "type", "domain"});
-       }else if(dExp->eid() == Expression::E_ID){
-         variableDetails.push_back(dExp->cast<Id>()->str().c_str());
-         variableDetails.names() = CharacterVector({"itemNo","kind", "name", "type", "domain"});
-       }else if(dExp->eid() == Expression::E_BINOP){
-         List varDomain;
-         BinOp *bo = dExp->cast<BinOp>();
-         if(bo->op() != BinOpType::BOT_DOTDOT) Rcpp::warning("Unrecognizable binary operator in domain");
-         Expression *l = bo->lhs();
-         if(l->eid() == Expression::E_INTLIT) varDomain.push_back(l->cast<IntLit>()->v().toInt());
-         else if(l->eid() == Expression::E_FLOATLIT) varDomain.push_back(l->cast<FloatLit>()->v().toDouble());
-         else if(l->eid() == Expression::E_ID) varDomain.push_back(l->cast<Id>()->str().c_str());
-         else if(l->eid() == Expression::E_CALL){
-           Call *cl = l->cast<Call>();
-           string fncId = "Call: ";
-           fncId.append(cl->id().str().c_str());
-           for(int k = 0; k < cl->n_args(); k++){
-             int fEid = cl->arg(k)->eid();
-             if(fEid == Expression::E_ID){
-               Id *finId = cl->arg(k)->cast<Id>();
-               fncId.append("-> "); fncId.append(finId->str().c_str());
-             }else{
-               Rcpp::stop("complex function call in domain");
-             }
-           }
-           varDomain.push_back(fncId);
-         }else Rcpp::stop("Unrecognizable lhs element in the binary operation");
-         Expression *r = bo->rhs();
-         if(r->eid() == Expression::E_INTLIT) varDomain.push_back(r->cast<IntLit>()->v().toInt());
-         else if(r->eid() == Expression::E_FLOATLIT) varDomain.push_back(r->cast<FloatLit>()->v().toDouble());
-         else if(r->eid() == Expression::E_ID) varDomain.push_back(r->cast<Id>()->str().c_str());
-         else if(r->eid() == Expression::E_CALL){
-           Call *cl = r->cast<Call>();
-           string fncId = cl->id().str().c_str();
-           for(int k = 0; k < cl->n_args(); k++){
-             int fEid = cl->arg(k)->eid();
-             if(fEid == Expression::E_ID){
-               Id *finId = cl->arg(k)->cast<Id>();
-               fncId.append("-> "); fncId.append(finId->str().c_str());
-             }else{
-               Rcpp::warning("complex function call in domain");
-             }
-           }
-           varDomain.push_back(fncId);
-         }else Rcpp::stop("Unrecognizable rhs element in the binary operation of domain");
-         varDomain.names() = CharacterVector({"min", "max"});
-         variableDetails.push_back(varDomain);
-       }else{
-         Rcpp::stop("Unrecognizable domain!");
+       List varDomain;
+       parseDomain(dExp, varDomain);
+       if(varDomain.length()){
+          variableDetails.push_back(varDomain);
+          variableDetails.names() = CharacterVector({"itemNo","kind", "name", "type", "domain"});
        }
-       variableDetails.names() = CharacterVector({"itemNo","kind", "name", "type", "domain"});
      }
      variables.push_back(variableDetails);
     }else if(items[i]->iid() == Item::II_CON){
