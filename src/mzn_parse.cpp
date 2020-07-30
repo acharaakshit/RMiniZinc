@@ -108,6 +108,11 @@ List mzn_parse(std::string modelString = "",
       FunctionI *fi = items[i]->cast<FunctionI>();
       fnDetails.push_back(fi->id().c_str());
       List fnDets;
+      if(fi->e() == NULL){
+        string err = "Function expression of item number";
+        err.append(to_string(i)).append(" is NULL.");
+        Rcpp::stop (err);
+      } 
       expDetails(fi->e(), fnDets);
       fnDetails.push_back(fnDets);
       fnDetails.push_back(i);
