@@ -14,12 +14,12 @@ std::string boStrMap(BinOpType OP){
   else if(OP == BinOpType::BOT_DIV) return "DIVIDE";
   else if(OP == BinOpType::BOT_POW) return "RAISE_TO";
   else if(OP == BinOpType::BOT_MULT) return "MULTIPLY";
-  else if(OP == BinOpType::BOT_EQ) return "EQUALS";
-  else if(OP == BinOpType::BOT_GQ) return "GREATER_EQUALS";
-  else if(OP == BinOpType::BOT_GR) return "GREATER";
+  else if(OP == BinOpType::BOT_EQ) return "EQUAL_TO";
+  else if(OP == BinOpType::BOT_GQ) return "GREATER_THAN_OR_EQUAL_TO";
+  else if(OP == BinOpType::BOT_GR) return "GREATER_THAN";
   else if(OP == BinOpType::BOT_INTERSECT) return "INTERSECTION";
-  else if(OP == BinOpType::BOT_LE) return "LESS";
-  else if(OP == BinOpType::BOT_LQ) return "LESS_EQUALS";
+  else if(OP == BinOpType::BOT_LE) return "LESS_THAN";
+  else if(OP == BinOpType::BOT_LQ) return "LESS_THAN_OR_EQUAL_TO";
   else if(OP == BinOpType::BOT_AND) return "AND";
   else if(OP == BinOpType::BOT_OR) return "OR";
   else if(OP == BinOpType::BOT_IMPL) return "IMPLIES";
@@ -73,22 +73,53 @@ void expDetails(MiniZinc::Expression *exp, List &expList){
     List Gentrs;
     CharacterVector gtnms;
     int n_genrtrs =  exp->cast<Comprehension>()->n_generators();
+    
     for(int i = 0; i<n_genrtrs;i++){
         List Gentr;
+        List declLists;
+        List inList;
+        List whereList;
+        CharacterVector gtrnms;
+        CharacterVector dnms;
         Expression *inExp = exp->cast<Comprehension>()->in(i);
         Expression *whereExp = exp->cast<Comprehension>()->where(i);
-        if(inExp != NULL){
-          expDetails(exp->cast<Comprehension>()->in(i), Gentr);  
-        }else if(whereExp != NULL){
-          expDetails(exp->cast<Comprehension>()->where(i), Gentr); 
-        }else{
-          Rcpp::stop("no in or where expression found");
+        
+        for(int j = 0; j < exp->cast<Comprehension>()->n_decls(i); j++){
+          List declList;
+          Expression *vd = exp->cast<Comprehension>()->decl(i, j);
+          expDetails(vd, declList);
+          declLists.push_back(declList);
+          string vn = "DECL";
+          vn.append(to_string(j));
+          dnms.push_back(vn);
         }
+        
+        if(declLists.length()){
+          declLists.names() = dnms;
+          Gentr.push_back(declLists);
+          gtrnms.push_back("DECLARATIONS");
+        }
+        
+        // in expression for this generator
+        if(inExp != NULL){
+          expDetails(exp->cast<Comprehension>()->in(i), inList);
+          Gentr.push_back(inList);
+          gtrnms.push_back("IN");
+        }
+        // where expression for this generator
+        if(whereExp != NULL){
+          expDetails(exp->cast<Comprehension>()->where(i), whereList);
+          Gentr.push_back(whereList);
+          gtrnms.push_back("WHERE");
+        }
+        
+        Gentr.names() = gtrnms;
         string gt = "GENERATOR";
         gt.append(to_string(i+1));
         gtnms.push_back(gt);
         Gentrs.push_back(Gentr);
     }
+    
     Gentrs.names() = gtnms;
     Comp.push_back(Gentrs);
     Comp.names() = CharacterVector({"GENERATOR_SET"}); 
