@@ -105,12 +105,18 @@ void expDetails(MiniZinc::Expression *exp, List &expList){
       expList.push_back(setVec);
     }else{
       ASTExprVec<Expression> expVec = sl->v();
-      List setVec;
+      List setVecs;
+      CharacterVector stnms;
       for(int p = 0; p < expVec.size(); p++){
-        Expression *sExp = expVec.operator[](p);
-        expDetails(sExp, setVec);
+        List setVec;
+        expDetails(expVec.operator[](p), setVec);
+        setVecs.push_back(setVec);
+        string st = "ELEMENT";
+        st.append(to_string(p+1));
+        stnms.push_back(st);
       }
-      expList.push_back(setVec);
+      setVecs.names() = stnms;
+      expList.push_back(setVecs);
     }
     expList.names() = CharacterVector({"SET"});
   }else if(exp->eid() == Expression::E_ID){
@@ -130,12 +136,19 @@ void expDetails(MiniZinc::Expression *exp, List &expList){
     expList.names() = CharacterVector({"STRING"});
   }else if(exp->eid() == Expression::E_ARRAYLIT){
     ArrayLit *al = exp->cast<ArrayLit>();
-    List ArrVec;
+    List ArrVecs;
+    CharacterVector arrnms;
     for(int p = 0;p < al->getVec().size(); p++ ){
       // get the expression form of each element
+      List ArrVec;
       expDetails(al->getVec().operator[](p), ArrVec);
+      ArrVecs.push_back(ArrVec);
+      string av = "ELEMENT";
+      av.append(to_string(p+1));
+      arrnms.push_back(av);
     }
-    expList.push_back(ArrVec);
+    ArrVecs.names() = arrnms;
+    expList.push_back(ArrVecs);
     expList.names() = CharacterVector({"Array"});
   }else if(exp->eid() == Expression::E_CALL){ 
     Call *cl = exp->cast<Call>();
@@ -146,7 +159,7 @@ void expDetails(MiniZinc::Expression *exp, List &expList){
       expDetails(cl->arg(k), cArg);
       cArgs.push_back(cArg);
       string ct = "ARG";
-      ct.append(to_string(k));
+      ct.append(to_string(k+1));
       cnms.push_back(ct);
     }
     cArgs.names() = cnms;
@@ -263,9 +276,25 @@ void expDetails(MiniZinc::Expression *exp, List &expList){
   }else if(exp->eid() == Expression::E_VARDECL){
     VarDecl *vd =  exp->cast<VarDecl>();
     List vdDetails;
+    CharacterVector vdnms;
+    
     expDetails(vd->id(), vdDetails);
+    vdnms.push_back("NAME");
+    
+    // decision variables or parameters
+    if(vd->type().ispar()){
+      //parameter
+      vdDetails.push_back("PARAMETER");
+    }else if(vd->type().isvar()){
+      //decision variables
+      vdDetails.push_back("DECISION_VARIABLE");
+    }else{
+      vdDetails.push_back("OTHER");
+    }
+    vdnms.push_back("KIND");
+    
     vdDetails.push_back(vType(vd->type()));
-    vdDetails.names() = CharacterVector({"NAME", "TYPE"});
+    vdnms.push_back("TYPE");
     
     Expression *dExp = vd->ti()->domain();
     if(dExp!=NULL){
@@ -273,9 +302,19 @@ void expDetails(MiniZinc::Expression *exp, List &expList){
       expDetails(dExp, varDomain);
       if(varDomain.length()){
         vdDetails.push_back(varDomain);
-        vdDetails.names() = CharacterVector({"NAME", "TYPE", "DOMAIN"});
+        vdnms.push_back("DOMAIN");
       }
     }
+    
+    Expression *vExp = vd->e();
+    if(vExp != NULL){
+      List varVal;
+      expDetails(vExp, varVal);
+      vdDetails.push_back(varVal);
+      vdnms.push_back("VALUE");
+    }
+    vdDetails.names() = vdnms;
+    
     expList.push_back(vdDetails);
     expList.names() = CharacterVector({"VARIABLE_DECLARATION"});
   }else{

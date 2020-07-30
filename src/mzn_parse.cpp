@@ -60,53 +60,10 @@ List mzn_parse(std::string modelString = "",
     itemTrack.append(to_string(i + 1));
     if(items[i]->iid() == Item::II_VD){
       List variableDetails;
-      string varName;
-      string varType;
-      string varKind; // whether it's a variable or parameter 
-      NumericVector domain;
-      
-      varName = items[i]->cast<VarDeclI>()->e()->id()->str().aststr()->c_str();
-      
-      // gather the type details 
-      Type tp = items[i]->cast<VarDeclI>()->e()->type();
-      varType = vType(tp);
-  
-     // decision variables or parameters
-     if(items[i]->cast<VarDeclI>()->e()->type().ispar()){
-        //parameter
-        varKind = "parameter";
-     }else if(items[i]->cast<VarDeclI>()->e()->type().isvar()){
-        //decision variables
-        varKind = "decision variable";
-     }
-     
-     // push the variable details
-     variableDetails.push_back(i);
-     variableDetails.push_back(varKind);
-     variableDetails.push_back(varName);
-     variableDetails.push_back(varType);
-     CharacterVector vDetNames = CharacterVector({"itemNo","kind", "name", "type"});;
-     
-     Expression *dExp  = items[i]->cast<VarDeclI>()->e()->ti()->domain();
-     
-     if(dExp!=NULL){
-       List varDomain;
-       expDetails(dExp, varDomain);
-       if(varDomain.length()){
-          variableDetails.push_back(varDomain);
-          vDetNames.push_back("domain");
-       }
-     }
-     
-     Expression *vExp = items[i]->cast<VarDeclI>()->e()->e();
-     if(vExp != NULL){
-       List varVal;
-       expDetails(vExp, varVal);
-       variableDetails.push_back(varVal);
-       vDetNames.push_back("value");
-     }
-     variableDetails.names() = vDetNames;
-     variables.push_back(variableDetails);
+      expDetails(items[i]->cast<VarDeclI>()->e(), variableDetails);
+      variableDetails.push_back(i);
+      variableDetails.names() = CharacterVector({"DETAILS", "ITEM_NO"});
+      variables.push_back(variableDetails);
     }else if(items[i]->iid() == Item::II_CON){
       // constraint
       List constraintInfo;
@@ -115,7 +72,7 @@ List mzn_parse(std::string modelString = "",
       expDetails(cExp, cstDetails);
       constraintInfo.push_back(cstDetails);
       constraintInfo.push_back(i);
-      constraintInfo.names() = CharacterVector({"Details", "itemNo"});
+      constraintInfo.names() = CharacterVector({"DETAILS", "ITEM_NO"});
       constraints.push_back(constraintInfo);
     }else if(items[i]->iid() == Item::II_SOL){
       // satisfaction, minimization or maximization problem
@@ -139,10 +96,10 @@ List mzn_parse(std::string modelString = "",
       }
       objective.push_back(objectiv);
       objective.push_back(i);
-      objective.names() = CharacterVector({"objective", "itemNo"});
+      objective.names() = CharacterVector({"OBJECTIVE", "ITEM_NO"});
       if(slvDetails.size()){
         objective.push_back(slvDetails); 
-        objective.names() = CharacterVector({"objective", "itemNo", "Details"});
+        objective.names() = CharacterVector({"OBJECTIVE", "ITEM_NO", "DETAILS"});
       }
         
     }else if(items[i]->iid() == Item::II_FUN ){
@@ -154,7 +111,7 @@ List mzn_parse(std::string modelString = "",
       expDetails(fi->e(), fnDets);
       fnDetails.push_back(fnDets);
       fnDetails.push_back(i);
-      fnDetails.names() = CharacterVector({"fnName", "Details", "itemNo"});
+      fnDetails.names() = CharacterVector({"FUNCTION_NAME", "DETAILS", "ITEM_NO"});
       functions.push_back(fnDetails);
     }else if(items[i]->iid() == Item::II_INC){
       // included files
@@ -162,7 +119,7 @@ List mzn_parse(std::string modelString = "",
       IncludeI *ii = items[i]->cast<IncludeI>();
       includeItems.push_back(ii->f().c_str());
       includeItems.push_back(i);
-      includeItems.names() = CharacterVector({"IncludedMZN", "itemNo"});
+      includeItems.names() = CharacterVector({"INCLUDED_MZN", "ITEM_NO"});
       includes.push_back(includeItems);
     }else if(items[i]->iid() == Item::II_OUT){
       Rcpp::warning("The model includes output formatting -- remove if parsed solutions are desired");
@@ -171,9 +128,9 @@ List mzn_parse(std::string modelString = "",
       Expression *aExp = items[i]->cast<AssignI>()->e();
       expDetails(aExp, assignExp);
       List assignDetails;
-      assignDetails.push_back(i);
       assignDetails.push_back(assignExp);
-      assignDetails.names() = CharacterVector({"itemNo", "Details"});
+      assignDetails.push_back(i);
+      assignDetails.names() = CharacterVector({"DETAILS", "ITEM_NO"});
       assignments.push_back(assignDetails);
     }else{
       Rcpp::warning("element not identified or supported yet");
@@ -186,13 +143,13 @@ List mzn_parse(std::string modelString = "",
   }else{
     CharacterVector varVecNames;
     for(int i = 0; i < variables.length(); i++){
-      string v = "decl";
+      string v = "DECL";
       v.append(to_string(i+1));
       varVecNames.push_back(v);
     }
     variables.names() = varVecNames;
     retVal.push_back(variables);
-    retValNames.push_back("Variables"); 
+    retValNames.push_back("VARIABLES"); 
   }
   
   if(constraints.length() == 0) {
@@ -201,13 +158,13 @@ List mzn_parse(std::string modelString = "",
     CharacterVector constraintNames; 
     // push the constraint information
     for(int i = 0; i< constraints.length();i++){
-      string c = "constraint";
+      string c = "CONSTRAINT";
       string cNo = c.append(to_string(i+1));
       constraintNames.push_back(cNo);
     }
     constraints.names() = constraintNames;
     retVal.push_back(constraints);
-    retValNames.push_back("Constraints");
+    retValNames.push_back("CONSTRAINTS");
   } 
   
   // push the solveType information of the problem
@@ -215,45 +172,45 @@ List mzn_parse(std::string modelString = "",
     Rcpp::warning("No solve item found"); 
   }else{
     retVal.push_back(objective);
-    retValNames.push_back("SolveType"); 
+    retValNames.push_back("SOLVE_TYPE"); 
   }
   
   // push the used functions information
   if(functions.length()){
     CharacterVector fnVecNames;
     for(int i = 0; i < functions.length(); i++){
-      string f = "function";
+      string f = "FUNCTION";
       string fNo = f.append(to_string(i+1));
       fnVecNames.push_back(fNo);
     }
     functions.names() = fnVecNames;
     retVal.push_back(functions);
-    retValNames.push_back("FunctionItems");
+    retValNames.push_back("FUNCTION_ITEMS");
   }
   // push the names of included mzn files
   if(includes.length()){
     CharacterVector includeItemNames;
     for(int i = 0; i < includes.length(); i++){
-      string inName = "include";
+      string inName = "INCLUDE";
       inName.append(to_string(i+1));
       includeItemNames.push_back(inName);
       
     }
     includes.names() = includeItemNames;
     retVal.push_back(includes);
-    retValNames.push_back("Includes");
+    retValNames.push_back("INCLUDES");
   }
   
   if(assignments.length()){
     CharacterVector assignmentNames;
     for(int i = 0; i< assignments.length();i++){
-      string c = "assignment";
+      string c = "ASSIGNMENT";
       string cNo = c.append(to_string(i+1));
       assignmentNames.push_back(cNo);
     }
     assignments.names() = assignmentNames;
     retVal.push_back(assignments);
-    retValNames.push_back("Assignments");
+    retValNames.push_back("ASSIGNMENTS");
   }
   
   // return the string representation of the model
@@ -262,7 +219,7 @@ List mzn_parse(std::string modelString = "",
   p->print(model);
   string mString = strmodel.str();
   retVal.push_back(mString);
-  retValNames.push_back("modelString");
+  retValNames.push_back("MODEL_STRING");
   retVal.names() = retValNames;
   return retVal;
 }
