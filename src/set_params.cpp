@@ -73,6 +73,9 @@ std::string set_params(List modData, std::string modelString = "",
       }else if(tp.isbool()){
         BoolLit *bl = new BoolLit(items[nameIndexMap[index]]->loc(),(bool)modData[i]);
         vd->e(bl);
+      }else if(tp.isstring()){
+        string sV = modData[i];
+        StringLit *sl = new StringLit(items[nameIndexMap[index]]->loc(), sV);
       }else if(tp.is_set()){
         vector<Expression*> expVec;
         NumericVector setVal = modData[i];
@@ -110,6 +113,7 @@ std::string set_params(List modData, std::string modelString = "",
               expVec.push_back(IntLit::a(arrVal[it]));
         }else if(tp.st() == Type::ST_PLAIN && tp.ot() == Type::OT_PRESENT && tp.bt() == Type::BT_UNKNOWN){
             // array index is not a value but a variable
+            Rcpp::warning("Data Type is Unknown -- coercing to int");
             NumericVector arrVal= modData[i];
             for(int it = 0;it < arrVal.length();it++)
               expVec.push_back(IntLit::a(arrVal[it]));
