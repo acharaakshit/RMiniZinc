@@ -85,7 +85,7 @@ List mzn_parse(std::string modelString = "",
      variableDetails.push_back(varKind);
      variableDetails.push_back(varName);
      variableDetails.push_back(varType);
-     variableDetails.names() = CharacterVector({"itemNo","kind", "name", "type"});
+     CharacterVector vDetNames = CharacterVector({"itemNo","kind", "name", "type"});;
      
      Expression *dExp  = items[i]->cast<VarDeclI>()->e()->ti()->domain();
      
@@ -94,9 +94,18 @@ List mzn_parse(std::string modelString = "",
        expDetails(dExp, varDomain);
        if(varDomain.length()){
           variableDetails.push_back(varDomain);
-          variableDetails.names() = CharacterVector({"itemNo","kind", "name", "type", "domain"});
+          vDetNames.push_back("domain");
        }
      }
+     
+     Expression *vExp = items[i]->cast<VarDeclI>()->e()->e();
+     if(vExp != NULL){
+       List varVal;
+       expDetails(vExp, varVal);
+       variableDetails.push_back(varVal);
+       vDetNames.push_back("value");
+     }
+     variableDetails.names() = vDetNames;
      variables.push_back(variableDetails);
     }else if(items[i]->iid() == Item::II_CON){
       // constraint
