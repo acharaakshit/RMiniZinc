@@ -11,18 +11,30 @@ std::string boStrMap(BinOpType OP){
   else if(OP == BinOpType::BOT_MINUS) return "MINUS";
   else if(OP == BinOpType::BOT_PLUS) return "PLUS" ;
   else if(OP == BinOpType::BOT_MOD) return "MOD";
+  else if(OP == BinOpType::BOT_DIV) return "DIVIDE";
   else if(OP == BinOpType::BOT_POW) return "RAISE_TO";
   else if(OP == BinOpType::BOT_MULT) return "MULTIPLY";
   else if(OP == BinOpType::BOT_EQ) return "EQUALS";
-  else if(OP == BinOpType::BOT_GQ) return "GREATEREQUAL";
+  else if(OP == BinOpType::BOT_GQ) return "GREATER_EQUALS";
   else if(OP == BinOpType::BOT_GR) return "GREATER";
   else if(OP == BinOpType::BOT_INTERSECT) return "INTERSECTION";
   else if(OP == BinOpType::BOT_LE) return "LESS";
-  else if(OP == BinOpType::BOT_LQ) return "LESSEQUAL";
+  else if(OP == BinOpType::BOT_LQ) return "LESS_EQUALS";
   else if(OP == BinOpType::BOT_AND) return "AND";
   else if(OP == BinOpType::BOT_OR) return "OR";
-  else if(OP == BinOpType::BOT_IMPL) return "implies";
-  else return "not added currently";
+  else if(OP == BinOpType::BOT_IMPL) return "IMPLIES";
+  else if(OP == BinOpType::BOT_NQ) return "NOT_EQUALS";
+  else if(OP == BinOpType::BOT_UNION) return "UNION";
+  else if(OP == BinOpType::BOT_SUBSET) return "SUBSET";
+  else if(OP == BinOpType::BOT_SUPERSET) return "SUPERSET";
+  else if(OP == BinOpType::BOT_DIFF) return "DIFF";
+  else if(OP == BinOpType::BOT_SYMDIFF) return "SYMDIFF";
+  else if(OP == BinOpType::BOT_PLUSPLUS) return "PLUS_PLUS";
+  else if(OP == BinOpType::BOT_XOR) return "XOR";
+  else if(OP == BinOpType::BOT_IN) return "IN";
+  else if(OP == BinOpType::BOT_EQUIV) return "EQUIVALENCE";
+  else if(OP == BinOpType::BOT_RIMPL) return "REVERSE_IMPLIES";
+  else return "IDIV";
 }
 
 // mapping of UnOp type with strings
