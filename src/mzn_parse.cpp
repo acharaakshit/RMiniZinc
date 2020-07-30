@@ -4,82 +4,11 @@
 #include "pathStringcheck.h"
 #include "helper_parse.h"
 #include "helper_sol_parse.h"
-#include "expVarNames.h"
+#include "expDetails.h"
 
 using namespace Rcpp;
 using namespace std;
 using namespace MiniZinc;
-
-
-// mapping of BinOp type with strings
-std::string boStrMap(BinOpType OP){
-  if(OP == BinOpType::BOT_DOTDOT) return "DOTDOT";
-  else if(OP == BinOpType::BOT_MINUS) return "MINUS";
-  else if(OP == BinOpType::BOT_PLUS) return "PLUS" ;
-  else if(OP == BinOpType::BOT_MOD) return "MOD";
-  else if(OP == BinOpType::BOT_POW) return "RAISE_TO";
-  else if(OP == BinOpType::BOT_MULT) return "MULTIPLY";
-  else return "not added currently";
-}
-
-// mapping of UnOp type with strings
-std::string uoStrMap(UnOpType OP){
-  if(OP == UnOpType::UOT_PLUS) return "PLUS";
-  else if(OP == UnOpType::UOT_MINUS) return "MINUS";
-  else return "NOT";
-}
-
-// helper function to parse domain
-void parseDomain(Expression *dExp, List &varDomain){
-    if(dExp->eid() == Expression::E_SETLIT){
-      helper_sol_parse(dExp, varDomain);
-      varDomain.names() = CharacterVector({"Set"});
-    }else if(dExp->eid() == Expression::E_ID){
-      varDomain.push_back(dExp->cast<Id>()->str().c_str());
-    }else if(dExp->eid() == Expression::E_INTLIT){
-      varDomain.push_back(dExp->cast<IntLit>()->v().toInt());
-    }else if(dExp->eid() == Expression::E_FLOATLIT){
-      varDomain.push_back(dExp->cast<FloatLit>()->v().toDouble());
-    }else if(dExp->eid() == Expression::E_CALL){
-      Call *cl = dExp->cast<Call>();
-      List cList;
-      cList.push_back(cl->id().str().c_str());
-      List cArgs;
-      for(int k = 0; k < cl->n_args(); k++){
-        parseDomain(cl->arg(k), cArgs);
-      }
-      varDomain.push_back(cList);
-      varDomain.push_back(cArgs);
-      varDomain.names() = CharacterVector({"FunctionCall", "Arguments"});
-    }else if(dExp->eid() == Expression::E_BINOP){
-      BinOp *boExp = dExp->cast<BinOp>();
-      List boLhs;
-      parseDomain(boExp->lhs(), boLhs);
-      varDomain.push_back(boLhs);
-      varDomain.push_back(boStrMap(boExp->op()));
-      List boRhs;
-      parseDomain(boExp->rhs(), boRhs);
-      varDomain.push_back(boRhs);
-      varDomain.names() = CharacterVector({"LHS", "BINARY_OPERATOR", "RHS"});
-    }else if(dExp->eid() == Expression::E_UNOP){
-      UnOp *uo = dExp->cast<UnOp>();
-      List unop;
-      unop.push_back(uoStrMap(uo->op()));
-      List uoArgs;
-      for(int i=0; i < uo->n_args(); i++) {
-        parseDomain(uo->arg(i), uoArgs);
-      }
-      varDomain.push_back(unop);
-      varDomain.push_back(uoArgs);
-      varDomain.names() = CharacterVector({"UNARY_OPERATOR", "ARGUMENTS"});
-    }else{
-      if(varDomain.length())
-        Rcpp::warning("Part of domain not parsed/supported currently!");
-      else
-        Rcpp::warning("Domain not parsed/supported currently");
-    }
-}
-
 
 using namespace Rcpp;
 
@@ -113,8 +42,7 @@ List mzn_parse(std::string modelString = "",
   
   // to store the variables involved in the constraints
   List constraints;
-  int constraintCount = 0;
-  
+ 
   // to store the solvetype of the problem
   List objective;
   // to store the names of included mzn files
@@ -123,7 +51,8 @@ List mzn_parse(std::string modelString = "",
   // to store the information about functions used 
   List functions;
   
-  int fnCount = 0;
+  // to store the Assignments
+  List assignments;
   
   for(int i=0; i < model->size(); i++){
     items.push_back(model->operator[] (i));
@@ -140,25 +69,7 @@ List mzn_parse(std::string modelString = "",
       
       // gather the type details 
       Type tp = items[i]->cast<VarDeclI>()->e()->type();
-      
-      if(tp.isint()) varType = ("int");
-      else if(tp.isfloat()) varType = ("float");
-      else if(tp.isbool()) varType = ("bool");
-      else if(tp.is_set()){
-        if(tp.bt() == Type::BT_INT) varType = ("set of int");
-        else if(tp.bt() == Type::BT_FLOAT) varType = ("set of float");
-        else if(tp.bt() == Type::BT_BOOL) varType = ("set of bool");
-        else if(tp.bt() == Type::BT_STRING) varType = ("set of string");
-        else varType = ("unknown set");
-      }else if(tp.dim() >= 1  && !tp.is_set()){
-        string arr_tp = to_string(tp.dim());
-        if(tp.bt() == Type::BT_INT) arr_tp.append(" dimensional array of int");
-        else if(tp.bt() == Type::BT_FLOAT) arr_tp.append(" dimensional array of float");
-        else if(tp.bt() == Type::BT_BOOL) arr_tp.append(" dimensional array of bool");
-        else if(tp.bt() == Type::BT_STRING) arr_tp.append(" dimensional array of string");
-        else arr_tp.append(" dimensional unknown array");
-        varType = (arr_tp);
-      }
+      varType = vType(tp);
   
      // decision variables or parameters
      if(items[i]->cast<VarDeclI>()->e()->type().ispar()){
@@ -180,7 +91,7 @@ List mzn_parse(std::string modelString = "",
      
      if(dExp!=NULL){
        List varDomain;
-       parseDomain(dExp, varDomain);
+       expDetails(dExp, varDomain);
        if(varDomain.length()){
           variableDetails.push_back(varDomain);
           variableDetails.names() = CharacterVector({"itemNo","kind", "name", "type", "domain"});
@@ -189,20 +100,19 @@ List mzn_parse(std::string modelString = "",
      variables.push_back(variableDetails);
     }else if(items[i]->iid() == Item::II_CON){
       // constraint
-      List constraintDetails;
+      List constraintInfo;
       Expression *cExp = items[i]->cast<ConstraintI>()->e();
-      vector<string> cstNames;
-      expVarNames(cExp, cstNames);
-      constraintDetails.push_back(cstNames);
-      constraintDetails.push_back(i);
-      constraintDetails.names() = CharacterVector({"varsInvolved", "itemNo"});
-      constraints.push_back(constraintDetails);
-      constraintCount++;
+      List cstDetails;
+      expDetails(cExp, cstDetails);
+      constraintInfo.push_back(cstDetails);
+      constraintInfo.push_back(i);
+      constraintInfo.names() = CharacterVector({"Details", "itemNo"});
+      constraints.push_back(constraintInfo);
     }else if(items[i]->iid() == Item::II_SOL){
       // satisfaction, minimization or maximization problem
       SolveI *ci = items[i]->cast<SolveI>();
       string objectiv;
-      vector<string> cstNames;
+      List slvDetails;
       Expression *optimizeExp =  ci->e();
       if(ci->st() == SolveI::ST_SAT){
         objectiv = "satisfy";
@@ -213,7 +123,7 @@ List mzn_parse(std::string modelString = "",
           objectiv = "maximize";
         }
         try{
-          expVarNames(ci->e(), cstNames);
+          expDetails(ci->e(), slvDetails);
         }catch(std::exception &e){
           Rcpp::stop(e.what());
         }
@@ -221,9 +131,9 @@ List mzn_parse(std::string modelString = "",
       objective.push_back(objectiv);
       objective.push_back(i);
       objective.names() = CharacterVector({"objective", "itemNo"});
-      if(cstNames.size()){
-        objective.push_back(cstNames); 
-        objective.names() = CharacterVector({"objective", "itemNo", "varsInvolved"});
+      if(slvDetails.size()){
+        objective.push_back(slvDetails); 
+        objective.names() = CharacterVector({"objective", "itemNo", "Details"});
       }
         
     }else if(items[i]->iid() == Item::II_FUN ){
@@ -231,13 +141,12 @@ List mzn_parse(std::string modelString = "",
       List fnDetails;
       FunctionI *fi = items[i]->cast<FunctionI>();
       fnDetails.push_back(fi->id().c_str());
-      vector<string> nmes;
-      expVarNames(fi->e(), nmes);
-      fnDetails.push_back(nmes);
+      List fnDets;
+      expDetails(fi->e(), fnDets);
+      fnDetails.push_back(fnDets);
       fnDetails.push_back(i);
-      fnDetails.names() = CharacterVector({"fnName", "varsInvolved", "itemNo"});
+      fnDetails.names() = CharacterVector({"fnName", "Details", "itemNo"});
       functions.push_back(fnDetails);
-      fnCount++;
     }else if(items[i]->iid() == Item::II_INC){
       // included files
       List includeItems;
@@ -247,45 +156,63 @@ List mzn_parse(std::string modelString = "",
       includeItems.names() = CharacterVector({"IncludedMZN", "itemNo"});
       includes.push_back(includeItems);
     }else if(items[i]->iid() == Item::II_OUT){
-      Rcpp::warning("The model includes output formatting -- make sure it is correct MiniZinc syntax");
+      Rcpp::warning("The model includes output formatting -- remove if parsed solutions are desired");
+    }else if(items[i]->iid() == Item::II_ASN){
+      List assignExp;
+      Expression *aExp = items[i]->cast<AssignI>()->e();
+      expDetails(aExp, assignExp);
+      List assignDetails;
+      assignDetails.push_back(i);
+      assignDetails.push_back(assignExp);
+      assignDetails.names() = CharacterVector({"itemNo", "Details"});
+      assignments.push_back(assignDetails);
     }else{
-      //cout << "element not identified or supported yet";
+      Rcpp::warning("element not identified or supported yet");
     }
   }
   // to store the names of the return Value list
   CharacterVector retValNames;
-  if(variables.length() == 0) Rcpp::warning("No variables found!");
-  CharacterVector varVecNames;
-  for(int i = 0; i < variables.length(); i++){
-    string v = "decl";
-    v.append(to_string(i+1));
-    varVecNames.push_back(v);
+  if(variables.length() == 0){
+    Rcpp::warning("No variables found!"); 
+  }else{
+    CharacterVector varVecNames;
+    for(int i = 0; i < variables.length(); i++){
+      string v = "decl";
+      v.append(to_string(i+1));
+      varVecNames.push_back(v);
+    }
+    variables.names() = varVecNames;
+    retVal.push_back(variables);
+    retValNames.push_back("Variables"); 
   }
-  variables.names() = varVecNames;
-  retVal.push_back(variables);
-  retValNames.push_back("Variables");
   
-  if(constraintCount == 0)   Rcpp::warning("No constraints found!");
-  CharacterVector constraintNames; 
-  // push the constraint information
-  for(int i = 0; i< constraintCount;i++){
-    string c = "constraint";
-    string cNo = c.append(to_string(i+1));
-    constraintNames.push_back(cNo);
-  }
-  constraints.names() = constraintNames;
-  retVal.push_back(constraints);
-  retValNames.push_back("Constraints");
+  if(constraints.length() == 0) {
+    Rcpp::warning("No constraints found!");
+  }else{
+    CharacterVector constraintNames; 
+    // push the constraint information
+    for(int i = 0; i< constraints.length();i++){
+      string c = "constraint";
+      string cNo = c.append(to_string(i+1));
+      constraintNames.push_back(cNo);
+    }
+    constraints.names() = constraintNames;
+    retVal.push_back(constraints);
+    retValNames.push_back("Constraints");
+  } 
   
   // push the solveType information of the problem
-  if(objective.length() == 0) Rcpp::warning("No solve item found");
-  retVal.push_back(objective);
-  retValNames.push_back("SolveType");
+  if(objective.length() == 0) {
+    Rcpp::warning("No solve item found"); 
+  }else{
+    retVal.push_back(objective);
+    retValNames.push_back("SolveType"); 
+  }
   
   // push the used functions information
   if(functions.length()){
     CharacterVector fnVecNames;
-    for(int i = 0; i < fnCount; i++){
+    for(int i = 0; i < functions.length(); i++){
       string f = "function";
       string fNo = f.append(to_string(i+1));
       fnVecNames.push_back(fNo);
@@ -307,6 +234,19 @@ List mzn_parse(std::string modelString = "",
     retVal.push_back(includes);
     retValNames.push_back("Includes");
   }
+  
+  if(assignments.length()){
+    CharacterVector assignmentNames;
+    for(int i = 0; i< assignments.length();i++){
+      string c = "assignment";
+      string cNo = c.append(to_string(i+1));
+      assignmentNames.push_back(cNo);
+    }
+    assignments.names() = assignmentNames;
+    retVal.push_back(assignments);
+    retValNames.push_back("Assignments");
+  }
+  
   // return the string representation of the model
   stringstream strmodel;
   Printer *p = new Printer(strmodel); 
