@@ -98,28 +98,25 @@ test_that("'knapsack problems can be created",{
                              libpath = "/snap/minizinc/current/share/minizinc")
   
   # there are 7 solutions
-  expect_equal(length(sol$Solutions), 7)
+  expect_equal(length(sol$SOLUTIONS), 7)
   # check the value of the solutions
-  expect_equal(sol$Solutions$optimal_solution$x, list(1,1,1))
+  expect_equal(sol$SOLUTIONS$OPTIMAL_SOLUTION$x, list(1,1,1))
   
   # check if parsed model is same 
   parsedModel = rminizinc:::mzn_parse(modelString = modString)
   # check if parsed string is the same
-  expect_equal(modString, parsedModel$modelString)
-  expect_equal(length(parsedModel$Variables), 6)
-  nVars = length(parsedModel$Variables)
+  expect_equal(modString, parsedModel$MODEL_STRING)
+  expect_equal(length(parsedModel$VARIABLES), 6)
+  nVars = length(parsedModel$VARIABLES)
   v = c()
   for(i in seq(1, nVars, 1)){
-    nDecl = as.symbol(paste0("decl",i))
-    v = c(v, parsedModel$Variables[[nDecl]][["name"]])
+    nDecl = as.symbol(paste0("DECL",i))
+    v = c(v, parsedModel$VARIABLES[[nDecl]][["DETAILS"]][["NAME"]])
   }
   expect_equal(v, c("n", "OBJ", "capacity", "profit", "size", "x"))
-  #Constraints
-  expect_equal(parsedModel$Constraints$constraint1$varsInvolved, c("OBJ","i", "x"))
-  expect_equal(parsedModel$Constraints$constraint2$varsInvolved, c("OBJ", "capacity", "i", "size", "x"))
+  
   #Solve Items
-  expect_equal(parsedModel$SolveType$objective, "maximize")
-  expect_equal(parsedModel$SolveType$varsInvolved, c( "OBJ", "i", "profit", "x"))
+  expect_equal(parsedModel$SOLVE_TYPE$OBJECTIVE, "maximize")
 })
 
 test_that("knapsack_1 problem can also be created and solved", {

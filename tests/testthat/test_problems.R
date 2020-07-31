@@ -19,24 +19,25 @@ test_that("jobshop problems are solved without issues",{
   }
   
   parseInfo <- mzn_parse(mznpath = mznName)
-  expect_equal(length(parseInfo$Variables), 10)
-  nVars = length(parseInfo$Variables)
+  expect_equal(length(parseInfo$VARIABLES), 10)
+  nVars = length(parseInfo$VARIABLES)
   v = c()
+  k = c()
+  t = c()
   for(i in seq(1, nVars, 1)){
-    nDecl = as.symbol(paste0("decl",i))
-    v = c(v, parseInfo$Variables[[nDecl]][["name"]])
+    nDecl = as.symbol(paste0("DECL",i))
+    v = c(v, parseInfo$VARIABLES[[nDecl]][["DETAILS"]][["NAME"]])
+    k = c(k , parseInfo$VARIABLES[[nDecl]][["DETAILS"]][["KIND"]])
+    t = c(t, parseInfo$VARIABLES[[nDecl]][["DETAILS"]][["TYPE"]])
   }
   expect_equal(v, c("n", "JOB", "m", "MACH", "TASK", "d", "mc", "maxt", "s", "makespan"))
+  expect_equal(k, c("PARAMETER", "PARAMETER", "PARAMETER", "PARAMETER", "PARAMETER", "PARAMETER", "PARAMETER",
+                    "PARAMETER", "DECISION_VARIABLE", "DECISION_VARIABLE"))
+  expect_equal(t, c("int","set of int", "int", "set of int", "set of int", "2 dimensional array of int",
+                    "2 dimensional unknown array","int", "2 dimensional unknown array",
+                    "type couldn't be  identified"))
 
-  expect_length(parseInfo$Constraints, 2)
-  expect_equal(parseInfo$Constraints$constraint1$varsInvolved, c("JOB", "d", "j", "m", "s", "t"))
-  expect_equal(parseInfo$Constraints$constraint2$varsInvolved, c("JOB", "TASK", "d", "j1", "j2",
-                                                                     "s", "t1", "t2"))
-  expect_equal(parseInfo$SolveType$objective, "minimize");
-  expect_equal(parseInfo$SolveType$varsInvolved, "makespan")
-  expect_equal(parseInfo$FunctionItems$function1$fnName, "nonoverlap")
-  expect_equal(parseInfo$FunctionItems$function1$varsInvolved, 
-               c("d1", "d2", "s1", "s2"))
+  expect_length(parseInfo$CONSTRAINTS, 2)
   
   missingPars = getMissingPars(mznpath = mznName)
   expect_equal(missingPars, c("n", "m", "d", "mc"))
@@ -55,43 +56,44 @@ test_that("jobshop problems are solved without issues",{
 
 test_that("production planning problems are solved",{
   # for devtools::test()
-  mznName = "../../mzn_examples/production_planning/prod_plan_0_update.mzn"
+  mznName = "../../mzn_examples/production_planning/prod_plan_0.mzn"
   
   if(str_detect(getwd(), c("rminizinc.Rcheck")) && !str_detect(getwd(), c("RMiniZinc"))){
     # for R CMD CHECK
-    mznName = paste0(dirname(dirname(dirname(getwd()))), "/RMiniZinc/mzn_examples/production_planning/prod_plan_0_update.mzn")
+    mznName = paste0(dirname(dirname(dirname(getwd()))), "/RMiniZinc/mzn_examples/production_planning/prod_plan_0.mzn")
   }else if(str_detect(getwd(), c("rminizinc.Rcheck")) && str_detect(getwd(), c("RMiniZinc"))){
     # for travis build
-    mznName = paste0(dirname(dirname(dirname(getwd()))), "/mzn_examples/production_planning/prod_plan_0_update.mzn") 
+    mznName = paste0(dirname(dirname(dirname(getwd()))), "/mzn_examples/production_planning/prod_plan_0.mzn") 
   }
   
-  parseObj = mzn_parse(mznpath = mznName)
-  expect_equal(length(parseObj$Variables), 12)
-  nVars = length(parseObj$Variables)
+  parseInfo = mzn_parse(mznpath = mznName)
+  expect_equal(length(parseInfo$VARIABLES), 12)
+  nVars = length(parseInfo$VARIABLES)
   v = c()
-  # check if correct variables are parsed 
+  k = c()
+  t = c()
   for(i in seq(1, nVars, 1)){
-    nDecl = as.symbol(paste0("decl",i))
-    v = c(v, parseObj$Variables[[nDecl]][["name"]])
+    nDecl = as.symbol(paste0("DECL",i))
+    v = c(v, parseInfo$VARIABLES[[nDecl]][["DETAILS"]][["NAME"]])
+    k = c(k , parseInfo$VARIABLES[[nDecl]][["DETAILS"]][["KIND"]])
+    t = c(t, parseInfo$VARIABLES[[nDecl]][["DETAILS"]][["TYPE"]])
   }
+  
   expect_equal(v, c("nproducts", "Products", "profit", "pname", "nresources",
                     "Resources", "capacity", "rname", "consumption", "mproducts",
                     "produce", "used"))
+  expect_equal(k, c("PARAMETER", "PARAMETER", "PARAMETER", "PARAMETER", "PARAMETER", "PARAMETER", "PARAMETER",
+                    "PARAMETER", "PARAMETER", "PARAMETER", "DECISION_VARIABLE", "DECISION_VARIABLE"))
+  expect_equal(t, c("int", "set of int", "1 dimensional array of int", "1 dimensional array of string", "int",
+                    "set of int", "1 dimensional array of int", "1 dimensional array of string",
+                    "2 dimensional array of int", "int" ,"1 dimensional unknown array", "1 dimensional unknown array"))
   
-  expect_length(parseObj$Constraints,2)
+  
+  expect_length(parseInfo$CONSTRAINTS,2)
 
-  #check if correct constraints are parse
-  expect_equal(parseObj$Constraints$constraint1$varsInvolved, c("Products", "Resources", "consumption",
-                                                                    "p", "r"))
-  
-  expect_equal(parseObj$Constraints$constraint2$varsInvolved, c("Products", "Resources", "capacity", 
-                                                                    "consumption", "p", "produce",
-                                                                    "r", "used" ))
   
   # check if solve type and variables in the maximization or minimization expression are correct
-  expect_equal(parseObj$SolveType$objective, "maximize")
-  
-  expect_equal(parseObj$SolveType$varsInvolved, c("Products", "p", "produce", "profit"))
+  expect_equal(parseInfo$SOLVE_TYPE$OBJECTIVE, "maximize")
   
   # get the names of missing parameters
   missingnames = getMissingPars(mznpath = mznName)
@@ -111,14 +113,14 @@ test_that("production planning problems are solved",{
   solution = mzn_eval(modelString = modString, solver = "org.gecode.gecode",
                       libpath = "/snap/minizinc/current/share/minizinc")
   
-  expect_length(solution$Solutions, 7)
-  expect_length(solution$Solutions$optimal_solution$produce, 2)
-  expect_equal(solution$Solutions$optimal_solution$produce, list(2,2))
-  expect_length(solution$Solutions$optimal_solution$used, 5)
-  expect_equal(solution$Solutions$optimal_solution$used, list(900, 4, 450, 500, 150))
+  expect_length(solution$SOLUTIONS, 7)
+  expect_length(solution$SOLUTIONS$OPTIMAL_SOLUTION$produce, 2)
+  expect_equal(solution$SOLUTIONS$OPTIMAL_SOLUTION$produce, list(2,2))
+  expect_length(solution$SOLUTIONS$OPTIMAL_SOLUTION$used, 5)
+  expect_equal(solution$SOLUTIONS$OPTIMAL_SOLUTION$used, list(900, 4, 450, 500, 150))
 })
 
-test_that("assignment problems are solved", {
+test_that("assignment problems can be solved", {
   
   # for devtools::test()
   mznName = "../../mzn_examples/assign/assign_inverse.mzn"
@@ -131,22 +133,26 @@ test_that("assignment problems are solved", {
     mznName = paste0(dirname(dirname(dirname(getwd()))), "/mzn_examples/assign/assign_inverse.mzn") 
   }
   
-  parseObj = mzn_parse(mznpath = mznName)
-  
-  expect_equal(length(parseObj$Variables), 7)
-  nVars = length(parseObj$Variables)
+  parseInfo = mzn_parse(mznpath = mznName)
+  expect_equal(length(parseInfo$VARIABLES), 7)
+  nVars = length(parseInfo$VARIABLES)
   v = c()
-  # check if correct variables are parsed 
+  k = c()
+  t = c()
   for(i in seq(1, nVars, 1)){
-    nDecl = as.symbol(paste0("decl",i))
-    v = c(v, parseObj$Variables[[nDecl]][["name"]])
+    nDecl = as.symbol(paste0("DECL",i))
+    v = c(v, parseInfo$VARIABLES[[nDecl]][["DETAILS"]][["NAME"]])
+    k = c(k , parseInfo$VARIABLES[[nDecl]][["DETAILS"]][["KIND"]])
+    t = c(t, parseInfo$VARIABLES[[nDecl]][["DETAILS"]][["TYPE"]])
   }
   expect_equal(v, c("n", "DOM", "m", "COD", "profit", "task", "worker"))
+  expect_equal(k, c("PARAMETER", "PARAMETER", "PARAMETER", "PARAMETER", "PARAMETER",
+                    "DECISION_VARIABLE", "DECISION_VARIABLE"))
+  expect_equal(t, c("int", "set of int", "int", "set of int", "2 dimensional array of int",
+                    "1 dimensional unknown array", "1 dimensional unknown array"))
   
-  expect_equal(parseObj$Constraints$constraint1$varsInvolved, c("task", "worker"))
-  expect_equal(parseObj$Includes$include1$IncludedMZN, "inverse.mzn")
-  expect_equal(parseObj$SolveType$objective, "maximize")
-  expect_equal(parseObj$SolveType$varsInvolved, c("COD", "profit", "task", "w"))
+  expect_equal(parseInfo$INCLUDES$INCLUDE1$INCLUDED_MZN, "inverse.mzn")
+  expect_equal(parseInfo$SOLVE_TYPE$OBJECTIVE, "maximize")
   
   missingPars = getMissingPars(mznpath = mznName)
   expect_equal(missingPars, c("n", "m", "profit"))
@@ -159,54 +165,10 @@ test_that("assignment problems are solved", {
   solution  = mzn_eval(modelString = modString, solver = "org.gecode.gecode",
                        libpath = "/snap/minizinc/current/share/minizinc")
   
-  expect_equal(solution$Solutions$optimal_solution$task, list(4,1,2,3))
-  expect_equal(solution$Solutions$optimal_solution$worker, list(2, 3, 4, 1))
+  expect_equal(solution$SOLUTIONS$OPTIMAL_SOLUTION$task, list(4,1,2,3))
+  expect_equal(solution$SOLUTIONS$OPTIMAL_SOLUTION$worker, list(2, 3, 4, 1))
 })
 
-test_that("line travelling salesman problems can be solved", {
-  # for devtools::test()
-  mznName = "../../mzn_examples/linetsp/ltsp.mzn"
-  
-  if(str_detect(getwd(), c("rminizinc.Rcheck")) && !str_detect(getwd(), c("RMiniZinc"))){
-    # for R CMD CHECK
-    mznName = paste0(dirname(dirname(dirname(getwd()))), "/RMiniZinc/mzn_examples/linetsp/ltsp.mzn")
-  }else if(str_detect(getwd(), c("rminizinc.Rcheck")) && str_detect(getwd(), c("RMiniZinc"))){
-    # for travis build
-    mznName = paste0(dirname(dirname(dirname(getwd()))), "/mzn_examples/linetsp/ltsp.mzn") 
-  }
-  
-  parseObj = mzn_parse(mznpath = mznName)
-  expect_equal(length(parseObj$Variables), 10)
-  nVars = length(parseObj$Variables)
-  v = c()
-  # check if correct variables are parsed 
-  for(i in seq(1, nVars, 1)){
-    nDecl = paste0("decl",i)
-    v = c(v, parseObj$Variables[[nDecl]][["name"]])
-  }
-  expect_equal(v, c("n", "CITY", "POS", "coord", "m", "PREC", "left", "right",
-                    "order", "city"))
-  expect_equal(parseObj$Constraints$constraint1$varsInvolved, c("city", "order"))
-  expect_equal(parseObj$Constraints$constraint2$varsInvolved, c("PREC", "i", "left", "order", "right"))
-  expect_equal(parseObj$SolveType$objective, "minimize")
-  expect_equal(parseObj$SolveType$varsInvolved, c("city", "coord", "i", "n"))
-  expect_equal(parseObj$Includes$include1$IncludedMZN, "inverse.mzn")
-  
-  missingPars = getMissingPars(mznpath = mznName)
-  
-  pVals = list(8, c(-7, -4, -2, 0, 1, 6, 9, 12), 7, c(3, 7, 8, 3, 2, 1, 4),
-               c(1, 2, 4, 6, 5, 7, 2))
-  names(pVals) = missingPars
-  
-  modString = set_params(modData = pVals, mznpath = mznName, modify_mzn = FALSE)
-  
-  solution = mzn_eval(modelString = modString, solver = "org.gecode.gecode",
-                      libpath = "/snap/minizinc/current/share/minizinc")
-  
-  expect_equal(solution$Solutions$optimal_solution$order, list(2, 7, 1, 6, 8, 5, 4, 3))
-  expect_equal(solution$Solutions$optimal_solution$city, list(3, 1, 8, 7, 6, 4, 2, 5))
-  
-})
 
 test_that("crazy set problems can be solved", {
   # for devtools::test()
@@ -220,24 +182,56 @@ test_that("crazy set problems can be solved", {
     mznName = paste0(dirname(dirname(dirname(getwd()))), "/mzn_examples/crazy_sets/crazy_sets.mzn") 
   }
   
-  parseObj = mzn_parse(mznpath = mznName)
-  expect_equal(length(parseObj$Variables), 6)
-  nVars = length(parseObj$Variables)
+  parseInfo = mzn_parse(mznpath = mznName)
+  expect_equal(length(parseInfo$VARIABLES), 6)
+  nVars = length(parseInfo$VARIABLES)
   v = c()
-  # check if correct variables are parsed 
+  k = c()
+  t = c()
   for(i in seq(1, nVars, 1)){
-    nDecl = paste0("decl",i)
-    v = c(v, parseObj$Variables[[nDecl]][["name"]])
+    nDecl = as.symbol(paste0("DECL",i))
+    v = c(v, parseInfo$VARIABLES[[nDecl]][["DETAILS"]][["NAME"]])
+    k = c(k , parseInfo$VARIABLES[[nDecl]][["DETAILS"]][["KIND"]])
+    t = c(t, parseInfo$VARIABLES[[nDecl]][["DETAILS"]][["TYPE"]])
   }
   expect_equal(v,c("n", "NUMBER", "c", "m", "s", "x"))
-  expect_equal(parseObj$Constraints$constraint1$varsInvolved, c("i", "j", "k", "m", "s"))
-  expect_equal(parseObj$Constraints$constraint2$varsInvolved, c("c", "i", "j", "m", "x"))
-  expect_equal(parseObj$Constraints$constraint3$varsInvolved, c("c", "i", "j", "m", "x"))
-  expect_equal(parseObj$Constraints$constraint4$varsInvolved, c("NUMBER", "c",
-                                                                    "i", "j", "m", "o", "s", "x"))
-  expect_equal(parseObj$Constraints$constraint5$varsInvolved, c("c", "i", "j", "m", "s", "x"))
+  expect_equal(k, c("PARAMETER", "PARAMETER", "PARAMETER", "PARAMETER", "DECISION_VARIABLE",
+               "DECISION_VARIABLE"))
+  expect_equal(t, c("int", "set of int", "int", "int", "1 dimensional unknown array",
+                    "2 dimensional unknown array"))
+  expect_equal(parseInfo$CONSTRAINTS$CONSTRAINT1$DETAILS$FUNCTION_CALL$NAME, "forall")
   
-  expect_equal(parseObj$SolveType$objective, "satisfy")
+  expect_equal(parseInfo$CONSTRAINTS$CONSTRAINT1$DETAILS$FUNCTION_CALL$ARGUMENTS$ARG1$COMPREHENSION$GENERATORS$GENERATOR1$DECLARATIONS$DECL1$VARIABLE_DECLARATION$NAME, "i")
+  expect_equal(parseInfo$CONSTRAINTS$CONSTRAINT1$DETAILS$FUNCTION_CALL$ARGUMENTS$ARG1$COMPREHENSION$GENERATORS$GENERATOR1$DECLARATIONS$DECL1$VARIABLE_DECLARATION$KIND, "PARAMETER")
+  expect_equal(parseInfo$CONSTRAINTS$CONSTRAINT1$DETAILS$FUNCTION_CALL$ARGUMENTS$ARG1$COMPREHENSION$GENERATORS$GENERATOR1$DECLARATIONS$DECL1$VARIABLE_DECLARATION$TYPE, "int")
+  
+  expect_equal(parseInfo$CONSTRAINTS$CONSTRAINT1$DETAILS$FUNCTION_CALL$ARGUMENTS$ARG1$COMPREHENSION$GENERATORS$GENERATOR1$DECLARATIONS$DECL2$VARIABLE_DECLARATION$NAME, "j")
+  expect_equal(parseInfo$CONSTRAINTS$CONSTRAINT1$DETAILS$FUNCTION_CALL$ARGUMENTS$ARG1$COMPREHENSION$GENERATORS$GENERATOR1$DECLARATIONS$DECL2$VARIABLE_DECLARATION$KIND, "PARAMETER")
+  expect_equal(parseInfo$CONSTRAINTS$CONSTRAINT1$DETAILS$FUNCTION_CALL$ARGUMENTS$ARG1$COMPREHENSION$GENERATORS$GENERATOR1$DECLARATIONS$DECL2$VARIABLE_DECLARATION$TYPE, "int")
+  
+  expect_equal(parseInfo$CONSTRAINTS$CONSTRAINT1$DETAILS$FUNCTION_CALL$ARGUMENTS$ARG1$COMPREHENSION$GENERATORS$GENERATOR1$DECLARATIONS$DECL3$VARIABLE_DECLARATION$NAME, "k")
+  expect_equal(parseInfo$CONSTRAINTS$CONSTRAINT1$DETAILS$FUNCTION_CALL$ARGUMENTS$ARG1$COMPREHENSION$GENERATORS$GENERATOR1$DECLARATIONS$DECL3$VARIABLE_DECLARATION$KIND, "PARAMETER")
+  expect_equal(parseInfo$CONSTRAINTS$CONSTRAINT1$DETAILS$FUNCTION_CALL$ARGUMENTS$ARG1$COMPREHENSION$GENERATORS$GENERATOR1$DECLARATIONS$DECL3$VARIABLE_DECLARATION$TYPE, "int")
+  
+  expect_equal(parseInfo$CONSTRAINTS$CONSTRAINT1$DETAILS$FUNCTION_CALL$ARGUMENTS$ARG1$COMPREHENSION$GENERATORS$GENERATOR1$IN$BINARY_OPERATION$LHS$INT, 1)
+  expect_equal(parseInfo$CONSTRAINTS$CONSTRAINT1$DETAILS$FUNCTION_CALL$ARGUMENTS$ARG1$COMPREHENSION$GENERATORS$GENERATOR1$IN$BINARY_OPERATION$BINARY_OPERATOR, "DOTDOT")
+  expect_equal(parseInfo$CONSTRAINTS$CONSTRAINT1$DETAILS$FUNCTION_CALL$ARGUMENTS$ARG1$COMPREHENSION$GENERATORS$GENERATOR1$IN$BINARY_OPERATION$RHS$ID, "m")
+  
+  expect_equal(parseInfo$CONSTRAINTS$CONSTRAINT1$DETAILS$FUNCTION_CALL$ARGUMENTS$ARG1$COMPREHENSION$GENERATORS$GENERATOR1$WHERE$BINARY_OPERATION$LHS$BINARY_OPERATION$LHS$ID, "i")
+  expect_equal(parseInfo$CONSTRAINTS$CONSTRAINT1$DETAILS$FUNCTION_CALL$ARGUMENTS$ARG1$COMPREHENSION$GENERATORS$GENERATOR1$WHERE$BINARY_OPERATION$LHS$BINARY_OPERATION$BINARY_OPERATOR, "LESS_THAN")
+  expect_equal(parseInfo$CONSTRAINTS$CONSTRAINT1$DETAILS$FUNCTION_CALL$ARGUMENTS$ARG1$COMPREHENSION$GENERATORS$GENERATOR1$WHERE$BINARY_OPERATION$LHS$BINARY_OPERATION$RHS$ID, "j")
+
+  expect_equal(parseInfo$CONSTRAINTS$CONSTRAINT1$DETAILS$FUNCTION_CALL$ARGUMENTS$ARG1$COMPREHENSION$EXPRESSION$BINARY_OPERATION$LHS$BINARY_OPERATION$BINARY_OPERATOR, "INTERSECTION")    
+  
+  expect_equal(parseInfo$CONSTRAINTS$CONSTRAINT1$DETAILS$FUNCTION_CALL$ARGUMENTS$ARG1$COMPREHENSION$EXPRESSION$BINARY_OPERATION$LHS$BINARY_OPERATION$RHS$ARRAY_ACCESS$NAME$ID, "s")
+  expect_equal(parseInfo$CONSTRAINTS$CONSTRAINT1$DETAILS$FUNCTION_CALL$ARGUMENTS$ARG1$COMPREHENSION$EXPRESSION$BINARY_OPERATION$LHS$BINARY_OPERATION$RHS$ARRAY_ACCESS$ARGUMENTS$ARG1$ID, "k")
+  
+  expect_equal(parseInfo$CONSTRAINTS$CONSTRAINT1$DETAILS$FUNCTION_CALL$ARGUMENTS$ARG1$COMPREHENSION$EXPRESSION$BINARY_OPERATION$BINARY_OPERATOR, "EQUAL_TO")
+  expect_equal(length(parseInfo$CONSTRAINTS$CONSTRAINT1$DETAILS$FUNCTION_CALL$ARGUMENTS$ARG1$COMPREHENSION$EXPRESSION$BINARY_OPERATION$RHS$SET), 0)
+  
+  
+  expect_equal(parseInfo$SOLVE_TYPE$OBJECTIVE, "satisfy")
+  
  
   missingPars = getMissingPars(mznpath = mznName)
   
