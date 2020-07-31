@@ -1,5 +1,6 @@
 #include <Rcpp.h>
 #include <minizinc/ast.hh>
+#include <minizinc/hash.hh>
 #include <minizinc/prettyprinter.hh>
 #include "pathStringcheck.h"
 #include "helper_parse.h"
@@ -31,28 +32,24 @@ List mzn_parse(std::string modelString = "",
   Model *model = helper_parse(modelString, modelStringName);
   
   
-  List retVal;
-
   // get all the items and the names of all the parameters and map to the item numbers
   vector<Item*> items;
   int type = 0;
   
   // to store parameter and decision variable details
   List variables;
-  
   // to store the variables involved in the constraints
   List constraints;
- 
   // to store the solvetype of the problem
   List objective;
   // to store the names of included mzn files
   List includes;
- 
   // to store the information about functions used 
   List functions;
-  
   // to store the Assignments
   List assignments;
+  // to store the output item
+  List output;
   
   for(int i=0; i < model->size(); i++){
     items.push_back(model->operator[] (i));
@@ -79,6 +76,7 @@ List mzn_parse(std::string modelString = "",
       SolveI *ci = items[i]->cast<SolveI>();
       string objectiv;
       List slvDetails;
+      CharacterVector slvnms;
       Expression *optimizeExp =  ci->e();
       if(ci->st() == SolveI::ST_SAT){
         objectiv = "satisfy";
@@ -89,31 +87,99 @@ List mzn_parse(std::string modelString = "",
           objectiv = "maximize";
         }
         try{
-          expDetails(ci->e(), slvDetails);
+          List slvExp;
+          expDetails(ci->e(), slvExp);
+          slvDetails.push_back(slvExp);
+          slvnms.push_back("EXPRESSION");
         }catch(std::exception &e){
           Rcpp::stop(e.what());
         }
-      }
+      }  
+      if(!ci->ann().isEmpty()){
+        List slvAnn;
+        for(ExpressionSetIter si = ci->ann().begin(); si != ci->ann().end(); ++si){
+          Expression *e = *si;
+          expDetails(e, slvAnn);
+        }
+        slvDetails.push_back(slvAnn);
+        slvnms.push_back("ANNOTATION");
+     }
+      slvDetails.names() = slvnms;
+      objective.push_back(slvDetails);
       objective.push_back(objectiv);
+      slvnms.push_back("OBJECTIVE");
       objective.push_back(i);
-      objective.names() = CharacterVector({"OBJECTIVE", "ITEM_NO"});
-      if(slvDetails.size()){
-        objective.push_back(slvDetails); 
-        objective.names() = CharacterVector({"OBJECTIVE", "ITEM_NO", "DETAILS"});
-      }
-        
+      slvnms.push_back("ITEM_NO");
+      objective.names() = CharacterVector({"DETAILS", "OBJECTIVE", "ITEM_NO"});
     }else if(items[i]->iid() == Item::II_FUN ){
       // function
       List fnDetails;
       FunctionI *fi = items[i]->cast<FunctionI>();
       fnDetails.push_back(fi->id().c_str());
       List fnDets;
-      if(fi->e() == NULL){
-        string err = "Function expression of item number";
-        err.append(to_string(i)).append(" is NULL.");
-        Rcpp::stop (err);
-      } 
-      expDetails(fi->e(), fnDets);
+      CharacterVector fnDetnms;
+      
+      if(fi->e() != NULL){
+        List fnExp;
+        expDetails(fi->e(), fnExp);
+        fnDets.push_back(fnExp);
+        fnDetnms.push_back("EXPRESSION");
+      }else{
+        Rcpp::warning ("Detected function without expression");
+      }
+      
+      if(!fi->ann().isEmpty()){
+        List fnAnn;
+        for(ExpressionSetIter si = fi->ann().begin(); si != fi->ann().end(); ++si){
+          Expression *e = *si;
+          expDetails(e, fnAnn);
+        }
+        fnDets.push_back(fnAnn);
+        fnDetnms.push_back("ANNOTATION");
+      }
+      
+      List fnParLists;
+      CharacterVector fpnms;
+      ASTExprVec<VarDecl> pars = fi->params();
+      for(int k = 0; k < pars.size();k++){
+        List fnParList;
+        CharacterVector fplnms;
+        
+        VarDecl *pe = pars.operator[](k);
+        fnParList.push_back(pe->id()->v().c_str());
+        fplnms.push_back("NAME");
+        fnParList.push_back(vType(pe->type()));
+        fplnms.push_back("TYPE");
+      
+        Expression *dExp = pe->ti()->domain();
+        if(dExp!=NULL){
+          List varDomain;
+          expDetails(dExp, varDomain);
+          if(varDomain.length()){
+            fnParList.push_back(varDomain);
+            fplnms.push_back("DOMAIN");
+          }
+        }
+        
+        Expression *vExp = pe->e();
+        if(vExp != NULL){
+          List varVal;
+          expDetails(vExp, varVal);
+          fnParList.push_back(varVal);
+          fplnms.push_back("VALUE");
+        }
+        fnParList.names() = fplnms;
+        fnParLists.push_back(fnParList);
+        
+        string fp = "DECL";
+        fp.append(to_string(k+1));
+        fpnms.push_back(fp);
+      }
+      
+      fnParLists.names() = fpnms;
+      fnDets.push_back(fnParLists);
+      fnDetnms.push_back("PARAMETER_DECLARATIONS");
+      fnDets.names() = fnDetnms;
       fnDetails.push_back(fnDets);
       fnDetails.push_back(i);
       fnDetails.names() = CharacterVector({"FUNCTION_NAME", "DETAILS", "ITEM_NO"});
@@ -128,6 +194,12 @@ List mzn_parse(std::string modelString = "",
       includes.push_back(includeItems);
     }else if(items[i]->iid() == Item::II_OUT){
       Rcpp::warning("The model includes output formatting -- remove if parsed solutions are desired");
+      List oput;
+      OutputI *ot  = items[i]->cast<OutputI>();
+      expDetails(ot->e() , oput);
+      output.push_back(oput);
+      output.push_back(i);
+      output.names() = CharacterVector({"DETAILS", "ITEM_NO"});
     }else if(items[i]->iid() == Item::II_ASN){
       List assignExp;
       Expression *aExp = items[i]->cast<AssignI>()->e();
@@ -141,6 +213,9 @@ List mzn_parse(std::string modelString = "",
       Rcpp::warning("element not identified or supported yet");
     }
   }
+  
+  // list to return
+  List retVal;
   // to store the names of the return Value list
   CharacterVector retValNames;
   if(variables.length() == 0){
@@ -216,6 +291,11 @@ List mzn_parse(std::string modelString = "",
     assignments.names() = assignmentNames;
     retVal.push_back(assignments);
     retValNames.push_back("ASSIGNMENTS");
+  }
+  
+  if(output.length()){
+    retVal.push_back(output);
+    retValNames.push_back("OUTPUT_ITEM");
   }
   
   // return the string representation of the model
