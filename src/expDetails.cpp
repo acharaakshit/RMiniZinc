@@ -49,6 +49,7 @@ std::string vType(Type tp){
   if(tp.isint()) return ("int");
   else if(tp.isfloat()) return ("float");
   else if(tp.isbool()) return ("bool");
+  else if(tp.isstring()) return ("string");
   else if(tp.is_set()){
     if(tp.bt() == Type::BT_INT) return ("set of int");
     else if(tp.bt() == Type::BT_FLOAT) return ("set of float");
