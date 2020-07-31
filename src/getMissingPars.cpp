@@ -34,16 +34,11 @@ Rcpp::CharacterVector getMissingPars(std::string modelString="",
   
   Model *model = helper_parse(modelString, modelStringName);  
   
-  int s = model-> size();
-  if(s == 0){
-    Rcpp::stop("Empty model!");
-  }
-  
   CharacterVector missingPars;
   NumericVector indexPars;
   vector<Item*> items;
   
-  for(int i=0; i < s; i++){
+  for(int i=0; i < model->size(); i++){
     items.push_back(model->operator[] (i));
     
     if(items[i]->iid() == Item::II_VD){

@@ -74,12 +74,12 @@ List sol_parse(std::string solutionString) {
       }
       thisSol.names() = varName;
     }
-    string track_nsol = "solution:";
+    string track_nsol = "SOLUTION";
     track_nsol.append(to_string(nsol));
     if(nsol == solutions.size()-1 && optimal_sol_flag){
-      track_nsol = "optimal_solution";
+      track_nsol = "OPTIMAL_SOLUTION";
     }else if(nsol == solutions.size()-1){
-      track_nsol = "best_solution";
+      track_nsol = "BEST_SOLUTION";
     }
     retVal.push_back(thisSol);
     nameretVal.push_back(track_nsol);

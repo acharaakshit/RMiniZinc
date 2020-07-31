@@ -62,10 +62,10 @@ List mzn_eval(std::string solver, std::string libpath,std::string modelString = 
   
   try{
     retVal.push_back(sol_parse(sol_string));
-    retVal.names() = CharacterVector({"solutionString", "Solutions"});
+    retVal.names() = CharacterVector({"SOLUTION_STRING", "SOLUTIONS"});
   }catch(std::exception &e){
     retVal.push_back(e.what());
-    retVal.names() = CharacterVector({"solutionString", "solutionParseError"});
+    retVal.names() = CharacterVector({"SOLUTION_STRING", "SOLUTION_PARSE_ERROR"});
   }
   return retVal;
 }

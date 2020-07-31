@@ -18,4 +18,4 @@ modString = set_params(modData = pVals, mznpath = "mzn_examples/Hamiltonian/Hami
 solution = mzn_eval(modelString = modString, solver = "org.gecode.gecode",
                               libpath = "/snap/minizinc/current/share/minizinc")
 
-print(solution$Solutions$optimal_solution)
+print(solution$SOLUTIONS$OPTIMAL_SOLUTION)

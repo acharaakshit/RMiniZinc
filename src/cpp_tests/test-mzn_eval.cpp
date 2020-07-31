@@ -63,7 +63,7 @@ context("Tests for example knapsack problems"){
     List pres = mzn_eval(solver, libpath, "", mznpath, dznpath);
     // check if both solution string and solutions are obtained
     expect_true(pres.length() == 2);
-    List psols = pres["Solutions"];
+    List psols = pres["SOLUTIONS"];
     // check if all the solutions are obtained
     expect_true(psols.size() == 7);
   }
@@ -101,7 +101,7 @@ context("Tests for example knapsack problems"){
     List pres = mzn_eval(solver, libpath, "", mznpath, dznpath);
     // check if both solution string and solutions are obtained
     expect_true(pres.length() == 2);
-    List psols = pres["Solutions"];
+    List psols = pres["SOLUTIONS"];
     // check if all the solutions are obtained
     expect_true(psols.size() == 4);
   }
@@ -138,7 +138,7 @@ context("Tests for example knapsack problems"){
     List pres = mzn_eval(solver, libpath, "", mznpath, dznpath);
     // check if both solution string and solutions are obtained
     expect_true(pres.length() == 2);
-    List psols = pres["Solutions"];
+    List psols = pres["SOLUTIONS"];
     // check if all the solutions are obtained
     expect_true(psols.size() == 1);
   }
@@ -176,7 +176,7 @@ context("Tests for example knapsack problems"){
     List pres = mzn_eval(solver, libpath, "", mznpath, dznpath);
     // check if both solution string and solutions are obtained
     expect_true(pres.length() == 2);
-    List psols = pres["Solutions"];
+    List psols = pres["SOLUTIONS"];
     // check if all the solutions are obtained
     expect_true(psols.size() == 7);
   }
@@ -213,7 +213,7 @@ context("Tests for example knapsack problems"){
     List pres = mzn_eval(solver, libpath, "", mznpath, dznpath);
     // check if both solution string and solutions are obtained
     expect_true(pres.length() == 2);
-    List psols = pres["Solutions"];
+    List psols = pres["SOLUTIONS"];
     // check if all the solutions are obtained
     expect_true(psols.size() == 24);
   }
