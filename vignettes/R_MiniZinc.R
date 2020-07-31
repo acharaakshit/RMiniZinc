@@ -93,11 +93,17 @@ dzn_path = paste0(dirname(getwd()), "/mzn_examples/knapsack/knapsack_0.dzn")
 sol = rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gecode",
                       libpath = "/snap/minizinc/current/share/minizinc", dznpath = dzn_path)
 
-## ----Workflow 1, echo=FALSE, out.width = '100%'-------------------------------
+## ----Workflow 1, echo=FALSE, out.width = '80%'--------------------------------
 knitr::include_graphics(paste0(getwd(),"/workflows/write_model.png"))
 
-## ----Workflow 2, echo=FALSE, out.width = '100%'-------------------------------
+## ----Workflow 2, echo=FALSE, out.width = '80%'--------------------------------
 knitr::include_graphics(paste0(getwd(),"/workflows/API.png"))
+
+## ----BASIC EXPRESSIONS, echo=FALSE, out.width = '80%'-------------------------
+knitr::include_graphics(paste0(getwd(),"/workflows/Basic_Types.png"))
+
+## ----PARENT EXPRESSIONS, echo=FALSE, out.width = '80%'------------------------
+knitr::include_graphics(paste0(getwd(),"/workflows/Parent_Types.png"))
 
 ## -----------------------------------------------------------------------------
 # mzn file path
@@ -107,7 +113,7 @@ mzn_path = paste0(dirname(getwd()), "/mzn_examples/knapsack/knapsack_0.mzn")
 parseObj=rminizinc:::mzn_parse(mznpath = mzn_path)
 
 # get the modelString
-modString = parseObj$modelString
+modString = parseObj$MODEL_STRING
 
 # dzn file path
 dzn_path = paste0(dirname(getwd()), "/mzn_examples/knapsack/knapsack_0.dzn")
@@ -116,7 +122,7 @@ dzn_path = paste0(dirname(getwd()), "/mzn_examples/knapsack/knapsack_0.dzn")
 solObj = rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gecode",
                      libpath = "/snap/minizinc/current/share/minizinc", dznpath = dzn_path)
 # get all the solutions
-print(solObj$Solutions)
+print(solObj$SOLUTIONS)
 
 ## -----------------------------------------------------------------------------
 # file path
@@ -137,7 +143,7 @@ modString = rminizinc:::set_params(modData = pVals,mznpath = mzn_path, modify_mz
 solObj = rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gecode",
                      libpath = "/snap/minizinc/current/share/minizinc")
 # get all the solutions
-print(solObj$Solutions)
+print(solObj$SOLUTIONS)
 
 
 ## -----------------------------------------------------------------------------
@@ -151,7 +157,7 @@ print("The original model:")
 cat(parseObj$modelString)
 
 # delete the first variable declaration
-item_number  = parseObj$Variables$decl1$itemNo
+item_number  = parseObj$VARIABLES$DECL1$ITEM_NO
 
 # delete the item but don't update the mzn
 print("The updated model string is:")

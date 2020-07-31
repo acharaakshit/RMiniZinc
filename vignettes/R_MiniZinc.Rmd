@@ -30,7 +30,7 @@ Please make sure to install MiniZinc on your operating system and also ensure th
 
 There are two types of variables in MiniZinc -- decision variables and parameters. 
 
-The data types of variables can be single types i.e integers (int), floating point numbers (float), Booleans (bool) and strings (string) and collections i.e sets, enums and arrays (upto 5 dimensional arrays).
+The data types of variables can be single types i.e integers (int), floating point numbers (float), Booleans (bool) and strings (string) and collections i.e sets, enums and arrays (upto 6 dimensional arrays).
 
 Parameter is used to specify a parameter in a given problem and they are assigned a fixed value or expression.
 
@@ -198,20 +198,114 @@ Currently only the knapsack problem specified above can be created using the cur
 Now, that the basic structure of the problem is clear, we can create functions for solving different constraint programming problems.
 
 The workflow of the approach used above is given below:
-```{r Workflow 1, echo=FALSE, out.width = '100%'}
+```{r Workflow 1, echo=FALSE, out.width = '80%'}
 knitr::include_graphics(paste0(getwd(),"/workflows/write_model.png"))
 ```
 
 This approach is helpful for R users who have little understanding of MiniZinc.
 
 The next approach is to use the MiniZinc C++ API. This involves giving the MiniZinc model to the Rcpp function, evaluate the results and return them back to R. The workflow can be seen below:
-```{r Workflow 2, echo=FALSE, out.width = '100%'}
+```{r Workflow 2, echo=FALSE, out.width = '80%'}
 knitr::include_graphics(paste0(getwd(),"/workflows/API.png"))
 ```
 
 ## Parse Model, Set Missing Parameters and Solve 
 
-A parser function `mzn_parse` has also been implemented which can be used to detect possible syntax errors (and to modify the components of the model -- to be done later) before the MiniZinc model is evaluated. This function can either take the path of a model file path or it can take a string model and returns a list with different elements like: `modelString` which is the string representation of the model and `Variables` which are the variable declaration details, `Constraints` which are the constraint details of a model, `SolveType` which contains the information about the solve type of the problem and also returns the function information and information about the included mzn files. Each component (Variable Declarations, Constraints, Solve Items, Include Items and Functions) in a MiniZinc model is considered as an item. The itemNo for each element is also returned.
+A parser function `mzn_parse` has also been implemented which can be used to detect possible syntax errors and get the smallest of details before the MiniZinc model is evaluated. This function can either take the path of a model file path or it can take a string model and returns a list with different elements like: `MODEL_STRING` which is the string representation of the model and `VARIABLES` which are the variable declaration details, `CONSTRAINTS` which are the constraint details of a model, `SOLVE_TYPE` which contains the information about the solve type of the problem, `FUNCTION_ITEMS` contains the function information, `ASSIGNMENTS` contains the assignment information, `INCLUDES` contains information about the included mzn files and `OUTPUT_ITEM` contains the information about the output formatting. Each component (Variable Declarations, Constraints, Solve Items, Assignment Items, Include Items, Functions and Assignments) in a MiniZinc model is considered as an item. The `ITEM_NO` for each element is also returned.
+
+The Information about the naming of the elements returned is described in the following figures:
+
+### Model Items
+
+*Name*: `VARIABLES`    
+*Components*: `DECL<n>` is the list of declaration with components `DETAILS` and `ITEM_NO`  
+*Description*: `DETAILS` are the details of a variable declaration namely: `NAME`, `TYPE`, `KIND`, `DOMAIN` and `VALUE` and `ITEM_NO` is the item number of the variable declaration in the model.  
+
+*Name*: `CONSTRAINTS`  
+*Components*: `CONSTRAINT<n>` is the list of constraints with components: `DETAILS` and `ITEM_NO`.    
+*Description*: `DETAILS` are the details about the expressions.
+
+*Name*: `FUNCTION_ITEMS`  
+*Components*: `FUNCTION<n>` is the list of functions with components: `DETAILS` and `ITEM_NO`.    
+*Description*: `DETAILS` are the details that can `EXPRESSION`, `ANNOTATION` or `PARAMETER_DECLARATIONS`.    
+
+*Name*: `SOLVE_TYPE`  
+*Components*: `DETAILS`, `OBJECTIVE` and `ITEM_NO`  
+*Description*: `DETAILS` are the details that can `EXPRESSION` or `ANNOTATION`, `OBJECTIVE` can be "satisfy", "minimize" or "maximize".  
+
+*Name*: `ASSIGNMENTS`  
+*Components*: `ASSIGNMENT<n>` have the sub components: `DETAILS` and `ITEM_NO`.  
+*Description*: `DETAILS` contain the value expression details.
+
+*Name*: `INCLUDES`  
+*Components*: `INCLUDED_MZN` and `ITEM_NO`
+*Description*: `INCLUDED_MZN` is the name of the included mzn file.
+
+*Name*: `OUTPUT_ITEM`  
+*Components*: `DETAILS` and `ITEM_NO`.  
+*Description*: `DETAILS` are the details about the output formatting expression.
+
+
+### Basic Expressions
+
+These are the expressions that lie at the lowest level when parsing any expression.
+
+```{r BASIC EXPRESSIONS, echo=FALSE, out.width = '80%'}
+knitr::include_graphics(paste0(getwd(),"/workflows/Basic_Types.png"))
+```
+
+### Parent_Expressions
+
+These are the expressions that are above the basic types in hierarchy and can have sub expressions that can be either basic expressions or parent expressions.
+
+```{r PARENT EXPRESSIONS, echo=FALSE, out.width = '80%'}
+knitr::include_graphics(paste0(getwd(),"/workflows/Parent_Types.png"))
+```
+
+#### Properties of Parent Expressions
+
+Each parent has different properties that define it's structure. The properties of each of the parent are described below:
+
+*Name*: `COMPREHENSION`  
+*Components*: `GENERATORS` and `EXPRESSION`  
+*Description*: `GENERATORS` is a list of expressions and each generator contains `DECLARATIONS` (list of variable declarations), `IN_EXPRESSION` and `WHERE_EXPRESSION` (Expressions). and `EXPRESSION` is the expression in the comprehension.
+
+*Name*: `BINARY_OPERATION`   
+*Components*: `LHS`, `BINARY_OPERATOR` and `RHS`  
+*Description*: `LHS` and `RHS` are both expressions (basic or parent) and `BINARY_OPERATOR` is a binary operator in MiniZinc.
+
+
+*Name*: `UNARY_OPERATION`   
+*Components*: `UNARY_OPERATOR` and `ARGUMENTS`   
+*Description*: `UNARY_OPERATOR` are the unary operators in MiniZinc and `ARGUMENTS` contain a list of expressions.
+
+*Name*: `VARIABLE_DECLARATION`  
+*Components*: `NAME`, `KIND`, `TYPE`, `DOMAIN` and `VALUE`  
+*Description*: `NAME`, `KIND` and `TYPE` are strings representing the name, kind and type of the variable and `DOMAIN` and `VALUE` are expressions representing domain and value of the variable declaration.
+
+*Name*: `ARRAY_ACCESS`   
+*Components*: `NAME` and `ARGUMENTS`   
+*Description*: `NAME` is the name of the variable and `ARGUMENTS` is the list of expressions that represent the indices. 
+
+*Name*: `IF_THEN_ELSE`  
+*Components*: `IF`, `THEN` and `ELSE`   
+*Description*: `IF` is the list of if expressions, `THEN` is the list of then expressions and `ELSE` is the else expression. 
+
+*Name*: `LET`  
+*Components*: `LET_EXPRESSION` and `IN_EXPRESSION`  
+*Description*: `LET_EXPRESSION` and `IN_EXPRESSION` are lists of expressions. 
+
+*Name*: `CALL`  
+*Components*: `NAME` and `ARGUMENTS`  
+*Description*: `NAME` is the name of the function call and `ARGUMENTS` is the list of expressions to that function call.
+
+*Name*: `SET`  
+*Components*: `MIN`, `MAX` (set ranges) or `ELEMENT<n>` where n is the serial number of the element.  
+*Description*: `MIN` , `MAX` and `ELEMENT<n>` are all expression types (mostly basic expressions).
+
+*Name*: `ARRAY`  
+*Components*: `ELEMENT<n>` where n is the serial number of the element.  
+*Description*: `ELEMENT<n>` is an expression.
 
 The function `set_params` can be used to set the missing parameters of the model. Any number of missing parameters can be set. The missing parameters can be obtained using `getMissingPars()`. 
 
@@ -224,7 +318,7 @@ mzn_path = paste0(dirname(getwd()), "/mzn_examples/knapsack/knapsack_0.mzn")
 parseObj=rminizinc:::mzn_parse(mznpath = mzn_path)
 
 # get the modelString
-modString = parseObj$modelString
+modString = parseObj$MODEL_STRING
 
 # dzn file path
 dzn_path = paste0(dirname(getwd()), "/mzn_examples/knapsack/knapsack_0.dzn")
@@ -233,10 +327,10 @@ dzn_path = paste0(dirname(getwd()), "/mzn_examples/knapsack/knapsack_0.dzn")
 solObj = rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gecode",
                      libpath = "/snap/minizinc/current/share/minizinc", dznpath = dzn_path)
 # get all the solutions
-print(solObj$Solutions)
+print(solObj$SOLUTIONS)
 ```
 
-The data can also be provided as a list of values of parameters where the names of the list are the missing parameter names returned by `parse_mzn()`. For now, only integer, floats, bools, 1 dimensional integer and string arrays, 2 dimensional integer arrays and integer, float and bool sets are supported. Alternatively, if the user wishes to provide a data file, it can be provided to the function `mzn_eval()`.
+The data can also be provided as a list of values of parameters where the names of the list must be the names(whole or part) of the parameters whose values are missing. The names of the parameters whose values are missing can be obtained using the function `getMissingPars`. Alternatively, if the user wishes to provide a data file, it can be provided to the function `mzn_eval()`. 
 
 ```{r}
 # file path
@@ -257,7 +351,7 @@ modString = rminizinc:::set_params(modData = pVals,mznpath = mzn_path, modify_mz
 solObj = rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gecode",
                      libpath = "/snap/minizinc/current/share/minizinc")
 # get all the solutions
-print(solObj$Solutions)
+print(solObj$SOLUTIONS)
 
 ```
 
@@ -269,7 +363,7 @@ The next step is to allow the users to modify a MiniZinc model.
 
 ## Delete Items
 
-The items/components in a model can be deleted using the function `deleteItem()`. The details about the function and its arguments can be seen using `?deleteItem`. The itemNo returned by `mzn_parse()` for each component can be used to delete the required component.The update string representation after deleting the item is returned. The demonstration of how to use this function is shown below:
+The items/components in a model can be deleted using the function `deleteItem()`. The details about the function and its arguments can be seen using `?deleteItem`. The `ITEM_NO` returned by `mzn_parse()` for each component can be used to delete the required component.The update string representation after deleting the item is returned. The demonstration of how to use this function is shown below:
 
 ```{r}
 # file path
@@ -282,7 +376,7 @@ print("The original model:")
 cat(parseObj$modelString)
 
 # delete the first variable declaration
-item_number  = parseObj$Variables$decl1$itemNo
+item_number  = parseObj$VARIABLES$DECL1$ITEM_NO
 
 # delete the item but don't update the mzn
 print("The updated model string is:")
