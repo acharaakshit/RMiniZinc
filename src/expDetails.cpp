@@ -90,7 +90,7 @@ void expDetails(MiniZinc::Expression *exp, List &expList){
           expDetails(vd, declList);
           declLists.push_back(declList);
           string vn = "DECL";
-          vn.append(to_string(j));
+          vn.append(to_string(j+1));
           dnms.push_back(vn);
         }
         
@@ -122,12 +122,12 @@ void expDetails(MiniZinc::Expression *exp, List &expList){
     
     Gentrs.names() = gtnms;
     Comp.push_back(Gentrs);
-    Comp.names() = CharacterVector({"GENERATOR_SET"}); 
+    Comp.names() = CharacterVector({"GENERATORS"}); 
     List cExp;
     if(exp->cast<Comprehension>()->e() != NULL){
       expDetails(exp->cast<Comprehension>()->e() , cExp);
       Comp.push_back(cExp);
-      Comp.names() = CharacterVector({"GENERATOR_SET", "EXPRESSION"}); 
+      Comp.names() = CharacterVector({"GENERATORS", "EXPRESSION"}); 
     }
     expList.push_back(Comp);
     expList.names() = CharacterVector({"COMPREHENSION"});
@@ -138,13 +138,13 @@ void expDetails(MiniZinc::Expression *exp, List &expList){
       int max_val = sl->isv()->max().toInt();
       int min_val = sl->isv()->min().toInt();  
       IntegerVector setVec = {max_val, min_val}; 
-      setVec.names() = CharacterVector({"max", "min"});
+      setVec.names() = CharacterVector({"MAX", "MIN"});
       expList.push_back(setVec);
     }else if(sl->fsv()!=NULL){
       float max_val =  sl->fsv()->max().toDouble();
       float min_val =  sl->fsv()->min().toDouble();
       NumericVector setVec = {max_val, min_val};
-      setVec.names() = CharacterVector({"max", "min"});
+      setVec.names() = CharacterVector({"MAX", "MIN"});
       expList.push_back(setVec);
     }else{
       ASTExprVec<Expression> expVec = sl->v();
@@ -192,7 +192,7 @@ void expDetails(MiniZinc::Expression *exp, List &expList){
     }
     ArrVecs.names() = arrnms;
     expList.push_back(ArrVecs);
-    expList.names() = CharacterVector({"Array"});
+    expList.names() = CharacterVector({"ARRAY"});
   }else if(exp->eid() == Expression::E_CALL){ 
     Call *cl = exp->cast<Call>();
     List cArgs;
@@ -255,7 +255,7 @@ void expDetails(MiniZinc::Expression *exp, List &expList){
       List ltExp;
       expDetails(letVec.operator[](i), ltExp);
       ltExps.push_back(ltExp);
-      string lt = "LetExpression";
+      string lt = "LET";
       lt.append(to_string(i+1));
       ltnms.push_back(lt);
     }
@@ -303,7 +303,7 @@ void expDetails(MiniZinc::Expression *exp, List &expList){
       List thenExp;
       expDetails(ite->e_then(i), thenExp);
       thenExps.push_back(thenExp);
-      string then = "then";
+      string then = "THEN";
       then.append(to_string(i+1));
       thennms.push_back(then);
     }
@@ -313,9 +313,8 @@ void expDetails(MiniZinc::Expression *exp, List &expList){
     expDetails(ite->e_else(), elseExp);
     List iteList = {ifExps, thenExps, elseExp};
     iteList.names() = CharacterVector({"IF", "THEN", "ELSE"});
-    //expList.push_back(ifExps); expList.push_back(thenExps); expList.push_back(elseExp);
     expList.push_back(iteList);
-    expList.names() = CharacterVector({"IFTHENELSE"});
+    expList.names() = CharacterVector({"IF_THEN_ELSE"});
   }else if(exp->eid() == Expression::E_VARDECL){
     VarDecl *vd =  exp->cast<VarDecl>();
     List vdDetails;

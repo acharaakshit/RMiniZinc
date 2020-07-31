@@ -19,13 +19,13 @@ void helper_sol_parse(MiniZinc::Expression *sExp,  Rcpp::List &thisSol){
       int max_val = sl->isv()->max().toInt();
       int min_val = sl->isv()->min().toInt();  
       IntegerVector setVec = {max_val, min_val}; 
-      setVec.names() = CharacterVector({"max", "min"});
+      setVec.names() = CharacterVector({"MAX", "MIN"});
       thisSol.push_back(setVec);
     }else if(sl->fsv()!=NULL){
       float max_val =  sl->fsv()->max().toDouble();
       float min_val =  sl->fsv()->min().toDouble();
       NumericVector setVec = {max_val, min_val};
-      setVec.names() = CharacterVector({"max", "min"});
+      setVec.names() = CharacterVector({"MAX", "MIN"});
       thisSol.push_back(setVec);
     }else{
       ASTExprVec<Expression> expVec = sl->v();
