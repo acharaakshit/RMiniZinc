@@ -47,14 +47,14 @@ context("tests for optimization problems"){
       string destmzn = dirPath;
       if(dirPath.find("RMiniZinc") != npos){
         // for travis
-        mznpath = destmzn.append("/mzn_examples/knapsack/knapsack_0.mzn");
+        mznpath = destmzn.append("/inst/mzn_examples/knapsack/knapsack_0.mzn");
       }else{
         // for R CMD CHECK
-        mznpath = destmzn.append("/RMiniZinc/mzn_examples/knapsack/knapsack_0.mzn");  
+        mznpath = destmzn.append("/RMiniZinc/inst/mzn_examples/knapsack/knapsack_0.mzn");  
       }
     }else{
       // for devtools::test()
-      mznpath = "../../mzn_examples/knapsack/knapsack_0.mzn";
+      mznpath = "../../inst/mzn_examples/knapsack/knapsack_0.mzn";
     }
     string modelString = filetoString(mznpath);
     List modData = (List)NumericVector({3,9});
@@ -84,14 +84,14 @@ context("tests for optimization problems"){
       string destmzn = dirPath;
       if(dirPath.find("RMiniZinc") != npos){
         // for travis
-        mznpath = destmzn.append("/mzn_examples/production_planning/prod_plan_0.mzn");
+        mznpath = destmzn.append("/inst/mzn_examples/production_planning/prod_plan_0.mzn");
       }else{
         // for R CMD CHECK
-        mznpath = destmzn.append("/RMiniZinc/mzn_examples/production_planning/prod_plan_0.mzn");  
+        mznpath = destmzn.append("/RMiniZinc/inst/mzn_examples/production_planning/prod_plan_0.mzn");  
       }
     }else{
       // for devtools::test()
-      mznpath = "../../mzn_examples/production_planning/prod_plan_0.mzn";
+      mznpath = "../../inst/mzn_examples/production_planning/prod_plan_0.mzn";
     }
     string modelString = filetoString(mznpath);
     

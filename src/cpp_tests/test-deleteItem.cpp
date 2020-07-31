@@ -23,14 +23,14 @@ context("Correct mzn path input tests") {
       string dest = dirPath;
       if(dirPath.find("RMiniZinc") != npos){
         // for travis
-        mznpath = dest.append("/mzn_examples/knapsack/knapsack_0.mzn");
+        mznpath = dest.append("/inst/mzn_examples/knapsack/knapsack_0.mzn");
       }else{
         // for R CMD CHECK
-        mznpath = dest.append("/RMiniZinc/mzn_examples/knapsack/knapsack_0.mzn"); 
+        mznpath = dest.append("/RMiniZinc/inst/mzn_examples/knapsack/knapsack_0.mzn"); 
       }
     }else{
       // for devtools::test()
-      mznpath = "../../mzn_examples/knapsack/knapsack_0.mzn";
+      mznpath = "../../inst/mzn_examples/knapsack/knapsack_0.mzn";
     }
     
     expect_error(deleteItem(1000, "", mznpath));

@@ -4,7 +4,6 @@
 #include <minizinc/prettyprinter.hh>
 #include "pathStringcheck.h"
 #include "helper_parse.h"
-#include "helper_sol_parse.h"
 #include "expDetails.h"
 
 using namespace Rcpp;

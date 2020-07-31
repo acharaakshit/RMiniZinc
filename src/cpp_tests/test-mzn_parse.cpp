@@ -19,7 +19,7 @@ context("Correct mzn path input tests") {
     expect_error(mzn_parse("", "int a = 10"));
   }
   test_that("incorrect file extention yeilds error"){
-   expect_error(mzn_parse("", "../../mzn_examples/knapsack/knapsack_0.dzn")); 
+   expect_error(mzn_parse("", "../../inst/mzn_examples/knapsack/knapsack_0.dzn")); 
   }
 }
 
@@ -38,14 +38,14 @@ context("test if correct missing parameter values are returned"){
       string dest = dirPath;
       if(dirPath.find("RMiniZinc") != npos){
         // for travis
-        mznpath = dest.append("/mzn_examples/knapsack/knapsack_0.mzn");
+        mznpath = dest.append("/inst/mzn_examples/knapsack/knapsack_0.mzn");
       }else{
         // for R CMD CHECK
-        mznpath = dest.append("/RMiniZinc/mzn_examples/knapsack/knapsack_0.mzn"); 
+        mznpath = dest.append("/RMiniZinc/inst/mzn_examples/knapsack/knapsack_0.mzn"); 
       }
     }else{
       // for devtools::test()
-      mznpath = "../../mzn_examples/knapsack/knapsack_0.mzn";
+      mznpath = "../../inst/mzn_examples/knapsack/knapsack_0.mzn";
     }
     
     List parseVal = mzn_parse("",mznpath);
@@ -82,14 +82,14 @@ context("test if correct missing parameter values are returned"){
       string dest = dirPath;
       if(dirPath.find("RMiniZinc") != npos){
         // for travis
-        mznpath = dest.append("/mzn_examples/knapsack/knapsack_2(bool).mzn");
+        mznpath = dest.append("/inst/mzn_examples/knapsack/knapsack_2(bool).mzn");
       }else{
         // for R CMD CHECK
-        mznpath = dest.append("/RMiniZinc/mzn_examples/knapsack/knapsack_2(bool).mzn"); 
+        mznpath = dest.append("/RMiniZinc/inst/mzn_examples/knapsack/knapsack_2(bool).mzn"); 
       }
     }else{
       // for devtools::test()
-      mznpath = "../../mzn_examples/knapsack/knapsack_2(bool).mzn";
+      mznpath = "../../inst/mzn_examples/knapsack/knapsack_2(bool).mzn";
     }
     
     List parseVal = mzn_parse("",mznpath);
@@ -127,14 +127,14 @@ context("test if correct missing parameter values are returned"){
       string dest = dirPath;
       if(dirPath.find("RMiniZinc") != npos){
         // for travis
-        mznpath = dest.append("/mzn_examples/knapsack/knapsack_3(set_concise).mzn");
+        mznpath = dest.append("/inst/mzn_examples/knapsack/knapsack_3(set_concise).mzn");
       }else{
         // for R CMD CHECK
-        mznpath = dest.append("/RMiniZinc/mzn_examples/knapsack/knapsack_3(set_concise).mzn"); 
+        mznpath = dest.append("/RMiniZinc/inst/mzn_examples/knapsack/knapsack_3(set_concise).mzn"); 
       }
     }else{
       // for devtools::test()
-      mznpath = "../../mzn_examples/knapsack/knapsack_3(set_concise).mzn";
+      mznpath = "../../inst/mzn_examples/knapsack/knapsack_3(set_concise).mzn";
     }
     
     List parseVal = mzn_parse("",mznpath);
