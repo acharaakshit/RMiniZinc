@@ -13,6 +13,8 @@ void helper_sol_parse(MiniZinc::Expression *sExp,  Rcpp::List &thisSol){
     thisSol.push_back(sExp->cast<FloatLit>()->v().toDouble()); 
   }else if(sExp->eid()==Expression::E_BOOLLIT){
     thisSol.push_back(sExp->cast<BoolLit>()->v()); 
+  }else if(sExp->eid()==Expression::E_STRINGLIT){
+    thisSol.push_back(sExp->cast<StringLit>()->v().c_str());
   }else if(sExp->eid()==Expression::E_SETLIT){
     SetLit *sl = sExp->cast<SetLit>();
     if(sl->isv()!= NULL){  
