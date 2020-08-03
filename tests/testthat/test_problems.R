@@ -1,5 +1,3 @@
-library(stringr)
-
 test_that("type compatibility is detected correctly",{
   expect_error(set_params(modData = 1, modify_mzn = "A"))
   expect_error(mzn_parse(mznpath = 1))
@@ -8,14 +6,14 @@ test_that("type compatibility is detected correctly",{
 
 test_that("jobshop problems are solved without issues",{
   # for devtools::test()
-  mznName = "../../inst/mzn_examples/jobshop/jobshop_0.mzn"
+  mznName = "../../inst/extdata/mzn_examples/jobshop/jobshop_0.mzn"
   
   if(str_detect(getwd(), c("rminizinc.Rcheck")) && !str_detect(getwd(), c("RMiniZinc"))){
     # for R CMD CHECK
-    mznName = paste0(dirname(dirname(dirname(getwd()))), "/RMiniZinc/inst/mzn_examples/jobshop/jobshop_0.mzn")
+    mznName = paste0(dirname(dirname(dirname(getwd()))), "/RMiniZinc/inst/extdata/mzn_examples/jobshop/jobshop_0.mzn")
   }else if(str_detect(getwd(), c("rminizinc.Rcheck")) && str_detect(getwd(), c("RMiniZinc"))){
     # for travis build
-    mznName = paste0(dirname(dirname(dirname(getwd()))), "/inst/mzn_examples/jobshop/jobshop_0.mzn") 
+    mznName = paste0(dirname(dirname(dirname(getwd()))), "/inst/extdata/mzn_examples/jobshop/jobshop_0.mzn") 
   }
   
   parseInfo <- mzn_parse(mznpath = mznName)
@@ -56,14 +54,14 @@ test_that("jobshop problems are solved without issues",{
 
 test_that("production planning problems are solved",{
   # for devtools::test()
-  mznName = "../../inst/mzn_examples/production_planning/prod_plan_0.mzn"
+  mznName = "../../inst/extdata/mzn_examples/production_planning/prod_plan_0.mzn"
   
   if(str_detect(getwd(), c("rminizinc.Rcheck")) && !str_detect(getwd(), c("RMiniZinc"))){
     # for R CMD CHECK
-    mznName = paste0(dirname(dirname(dirname(getwd()))), "/RMiniZinc/inst/mzn_examples/production_planning/prod_plan_0.mzn")
+    mznName = paste0(dirname(dirname(dirname(getwd()))), "/RMiniZinc/inst/extdata/mzn_examples/production_planning/prod_plan_0.mzn")
   }else if(str_detect(getwd(), c("rminizinc.Rcheck")) && str_detect(getwd(), c("RMiniZinc"))){
     # for travis build
-    mznName = paste0(dirname(dirname(dirname(getwd()))), "/inst/mzn_examples/production_planning/prod_plan_0.mzn") 
+    mznName = paste0(dirname(dirname(dirname(getwd()))), "/inst/extdata/mzn_examples/production_planning/prod_plan_0.mzn") 
   }
   
   parseInfo = mzn_parse(mznpath = mznName)
@@ -115,22 +113,22 @@ test_that("production planning problems are solved",{
   
   expect_length(solution$SOLUTIONS, 7)
   expect_length(solution$SOLUTIONS$OPTIMAL_SOLUTION$produce, 2)
-  expect_equal(solution$SOLUTIONS$OPTIMAL_SOLUTION$produce, list(2,2))
+  expect_equal(solution$SOLUTIONS$OPTIMAL_SOLUTION$produce, c(2,2))
   expect_length(solution$SOLUTIONS$OPTIMAL_SOLUTION$used, 5)
-  expect_equal(solution$SOLUTIONS$OPTIMAL_SOLUTION$used, list(900, 4, 450, 500, 150))
+  expect_equal(solution$SOLUTIONS$OPTIMAL_SOLUTION$used, c(900, 4, 450, 500, 150))
 })
 
 test_that("assignment problems can be solved", {
   
   # for devtools::test()
-  mznName = "../../inst/mzn_examples/assign/assign_inverse.mzn"
+  mznName = "../../inst/extdata/mzn_examples/assign/assign_inverse.mzn"
   
   if(str_detect(getwd(), c("rminizinc.Rcheck")) && !str_detect(getwd(), c("RMiniZinc"))){
     # for R CMD CHECK
-    mznName = paste0(dirname(dirname(dirname(getwd()))), "/RMiniZinc/inst/mzn_examples/assign/assign_inverse.mzn")
+    mznName = paste0(dirname(dirname(dirname(getwd()))), "/RMiniZinc/inst/extdata/mzn_examples/assign/assign_inverse.mzn")
   }else if(str_detect(getwd(), c("rminizinc.Rcheck")) && str_detect(getwd(), c("RMiniZinc"))){
     # for travis build
-    mznName = paste0(dirname(dirname(dirname(getwd()))), "/inst/mzn_examples/assign/assign_inverse.mzn") 
+    mznName = paste0(dirname(dirname(dirname(getwd()))), "/inst/extdata/mzn_examples/assign/assign_inverse.mzn") 
   }
   
   parseInfo = mzn_parse(mznpath = mznName)
@@ -165,21 +163,21 @@ test_that("assignment problems can be solved", {
   solution  = mzn_eval(modelString = modString, solver = "org.gecode.gecode",
                        libpath = "/snap/minizinc/current/share/minizinc")
   
-  expect_equal(solution$SOLUTIONS$OPTIMAL_SOLUTION$task, list(4,1,2,3))
-  expect_equal(solution$SOLUTIONS$OPTIMAL_SOLUTION$worker, list(2, 3, 4, 1))
+  expect_equal(solution$SOLUTIONS$OPTIMAL_SOLUTION$task, c(4,1,2,3))
+  expect_equal(solution$SOLUTIONS$OPTIMAL_SOLUTION$worker, c(2, 3, 4, 1))
 })
 
 
 test_that("crazy set problems can be solved", {
   # for devtools::test()
-  mznName = "../../inst/mzn_examples/crazy_sets/crazy_sets.mzn"
+  mznName = "../../inst/extdata/mzn_examples/crazy_sets/crazy_sets.mzn"
   
   if(str_detect(getwd(), c("rminizinc.Rcheck")) && !str_detect(getwd(), c("RMiniZinc"))){
     # for R CMD CHECK
-    mznName = paste0(dirname(dirname(dirname(getwd()))), "/RMiniZinc/inst/mzn_examples/crazy_sets/crazy_sets.mzn")
+    mznName = paste0(dirname(dirname(dirname(getwd()))), "/RMiniZinc/inst/extdata/mzn_examples/crazy_sets/crazy_sets.mzn")
   }else if(str_detect(getwd(), c("rminizinc.Rcheck")) && str_detect(getwd(), c("RMiniZinc"))){
     # for travis build
-    mznName = paste0(dirname(dirname(dirname(getwd()))), "/inst/mzn_examples/crazy_sets/crazy_sets.mzn") 
+    mznName = paste0(dirname(dirname(dirname(getwd()))), "/inst/extdata/mzn_examples/crazy_sets/crazy_sets.mzn") 
   }
   
   parseInfo = mzn_parse(mznpath = mznName)
