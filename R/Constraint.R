@@ -14,25 +14,23 @@ ConstraintItem = R6Class("ConstraintItem",
                      public = list(
                        #' @description
                        #' Creates a new instance of Constraint class.
-                       #' @param expression The expression for the constraint
-                       initialize = function(expression) {
-                         assertR6(expression, "Expression")
-                         private$.expression = expression
+                       #' @param e The expression for the constraint
+                       initialize = function(e) {
+                         assertR6(e, "Expression")
+                         private$.e = e
                        },
                        #' @description return the constraint expression
                        e = function(){
-                         return(private$.expression)
+                         return(private$.e)
                        },
                        #' @description serialize to MiniZinc syntax
                        c_str = function(){
-                         # currently only one knapsack problem can be solved
-                         mainExp = private$.expression
-                         return(sprintf("constraint %s;", helper_serialize(mainExp)))
+                         return(sprintf("constraint %s;", private$.e$c_str()))
                       }
                      ),
                      private = list(
                        #' @field .expression
                        #' the constraint expression
-                       .expression = NULL
+                       .e = NULL
                      )
                   )

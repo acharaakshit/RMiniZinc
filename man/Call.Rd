@@ -37,7 +37,10 @@ function calls in MiniZinc
 \item \href{#method-new}{\code{Call$new()}}
 \item \href{#method-id}{\code{Call$id()}}
 \item \href{#method-nargs}{\code{Call$nargs()}}
-\item \href{#method-e_i}{\code{Call$e_i()}}
+\item \href{#method-arg}{\code{Call$arg()}}
+\item \href{#method-setArg}{\code{Call$setArg()}}
+\item \href{#method-setArgs}{\code{Call$setArgs()}}
+\item \href{#method-c_str}{\code{Call$c_str()}}
 \item \href{#method-clone}{\code{Call$clone()}}
 }
 }
@@ -53,7 +56,7 @@ function calls in MiniZinc
 \subsection{Method \code{new()}}{
 constructor
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Call$new(fn_id, lExp)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Call$new(fnName, args)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -61,7 +64,7 @@ constructor
 \describe{
 \item{\code{fn_id}}{the function id}
 
-\item{\code{lExp}}{the list of expressions}
+\item{\code{argExps}}{the list of expressions}
 }
 \if{html}{\out{</div>}}
 }
@@ -70,7 +73,7 @@ constructor
 \if{html}{\out{<a id="method-id"></a>}}
 \if{latex}{\out{\hypertarget{method-id}{}}}
 \subsection{Method \code{id()}}{
-the function id object
+the function id/string
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Call$id()}\if{html}{\out{</div>}}
 }
@@ -87,12 +90,12 @@ get the number of arguments
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-e_i"></a>}}
-\if{latex}{\out{\hypertarget{method-e_i}{}}}
-\subsection{Method \code{e_i()}}{
+\if{html}{\out{<a id="method-arg"></a>}}
+\if{latex}{\out{\hypertarget{method-arg}{}}}
+\subsection{Method \code{arg()}}{
 get the expression based on index
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Call$e_i(i)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Call$arg(i)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -102,6 +105,45 @@ get the expression based on index
 }
 \if{html}{\out{</div>}}
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-setArg"></a>}}
+\if{latex}{\out{\hypertarget{method-setArg}{}}}
+\subsection{Method \code{setArg()}}{
+set argument i
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Call$setArg(e, i)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{e}}{expression}
+
+\item{\code{i}}{index}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-setArgs"></a>}}
+\if{latex}{\out{\hypertarget{method-setArgs}{}}}
+\subsection{Method \code{setArgs()}}{
+set all the expression arguments
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Call$setArgs(expList)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-c_str"></a>}}
+\if{latex}{\out{\hypertarget{method-c_str}{}}}
+\subsection{Method \code{c_str()}}{
+return the MiniZinc representation
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Call$c_str()}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}

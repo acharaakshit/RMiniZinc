@@ -12,18 +12,18 @@ create ArrayAccess elements
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{.id}}{the id of array}
+\item{\code{.v}}{the id/value of array}
 
-\item{\code{.index}}{index of the array}
+\item{\code{.index}}{indices of the array}
 }
 \if{html}{\out{</div>}}
 }
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
-\item{\code{.id}}{the id of array}
+\item{\code{.v}}{the id/value of array}
 
-\item{\code{.index}}{index of the array}
+\item{\code{.index}}{indices of the array}
 }
 \if{html}{\out{</div>}}
 }
@@ -31,8 +31,9 @@ create ArrayAccess elements
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{ArrayAccess$new()}}
-\item \href{#method-id}{\code{ArrayAccess$id()}}
+\item \href{#method-v}{\code{ArrayAccess$v()}}
 \item \href{#method-index}{\code{ArrayAccess$index()}}
+\item \href{#method-c_str}{\code{ArrayAccess$c_str()}}
 \item \href{#method-clone}{\code{ArrayAccess$clone()}}
 }
 }
@@ -48,26 +49,26 @@ create ArrayAccess elements
 \subsection{Method \code{new()}}{
 constructor
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ArrayAccess$new(id, index)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ArrayAccess$new(v, args)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{id}}{the name of element}
+\item{\code{v}}{the value of element}
 
-\item{\code{index}}{the array indices}
+\item{\code{args}}{the array indices}
 }
 \if{html}{\out{</div>}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-id"></a>}}
-\if{latex}{\out{\hypertarget{method-id}{}}}
-\subsection{Method \code{id()}}{
-return the array access id
+\if{html}{\out{<a id="method-v"></a>}}
+\if{latex}{\out{\hypertarget{method-v}{}}}
+\subsection{Method \code{v()}}{
+return the array access value
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ArrayAccess$id()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ArrayAccess$v()}\if{html}{\out{</div>}}
 }
 
 }
@@ -77,7 +78,24 @@ return the array access id
 \subsection{Method \code{index()}}{
 return the index id
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ArrayAccess$index()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ArrayAccess$index(i)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{i}}{index of argument}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-c_str"></a>}}
+\if{latex}{\out{\hypertarget{method-c_str}{}}}
+\subsection{Method \code{c_str()}}{
+return the MiniZinc representation
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ArrayAccess$c_str()}\if{html}{\out{</div>}}
 }
 
 }

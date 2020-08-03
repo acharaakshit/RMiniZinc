@@ -17,8 +17,8 @@ SolveItem = R6Class("SolveType",
                              #' @description 
                              #' create an instance of specify_problem class
                              #' @param solve_type satisfaction, minimization or maximization
-                             #' @param expression expression to minimize or maximize
-                             initialize = function(solve_type, expression = NULL){
+                             #' @param e expression to minimize or maximize
+                             initialize = function(solve_type, e = NULL){
                                 
                                   assert_choice(solve_type, .globals$objectives)
                                   private$.st = solve_type
@@ -26,14 +26,14 @@ SolveItem = R6Class("SolveType",
                                   if(test_choice(solve_type, "satisfy")){
                                     assert_null(expression)
                                   }else{
-                                    assertR6(expression, "Expression")
-                                    private$.exp = expression
+                                    assertR6(e, "Expression")
+                                    private$.e = e
                                   }
                                   
                                 },
                              #' @description return the expression
                              e =  function(){
-                               return(private$.exp)
+                               return(private$.e)
                              },
                              st = function(){
                                return(private$.st)
@@ -43,15 +43,14 @@ SolveItem = R6Class("SolveType",
                                if(private$.st == "satisfy"){
                                  return(sprintf("solve satisfy;"))
                                }else{
-                                 mainExp = private$.exp
-                                 return(sprintf("solve %s %s;", private$.st, helper_serialize(mainExp)))
+                                 return(sprintf("solve %s %s;", private$.st, private$.e$c_str()))
                                }
                              }
                              ),
                           private = list(
-                            #' @description .exp
+                            #' @description .e
                             #' the expression to maximize or minimize
-                            .exp = NULL,
+                            .e = NULL,
                             #' @description .st
                             #' the solve type
                             .st = NULL

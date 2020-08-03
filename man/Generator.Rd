@@ -12,22 +12,22 @@ create a generator
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
+\item{\code{.decls}}{variable declarations}
+
 \item{\code{.in}}{in expression}
 
 \item{\code{where}}{where expression}
-
-\item{\code{.iter_id}}{the iterator id}
 }
 \if{html}{\out{</div>}}
 }
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
+\item{\code{.decls}}{variable declarations}
+
 \item{\code{.in}}{in expression}
 
 \item{\code{where}}{where expression}
-
-\item{\code{.iter_id}}{the iterator id}
 }
 \if{html}{\out{</div>}}
 }
@@ -37,7 +37,8 @@ create a generator
 \item \href{#method-new}{\code{Generator$new()}}
 \item \href{#method-In}{\code{Generator$In()}}
 \item \href{#method-where}{\code{Generator$where()}}
-\item \href{#method-iter_id}{\code{Generator$iter_id()}}
+\item \href{#method-decl}{\code{Generator$decl()}}
+\item \href{#method-c_str}{\code{Generator$c_str()}}
 \item \href{#method-clone}{\code{Generator$clone()}}
 }
 }
@@ -53,7 +54,7 @@ create a generator
 \subsection{Method \code{new()}}{
 constructor
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Generator$new(IN = NULL, where = NULL, iterator = "i")}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Generator$new(IN = NULL, where = NULL, decls)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -63,7 +64,7 @@ constructor
 
 \item{\code{where}}{the where expression of generator}
 
-\item{\code{the}}{name of the iterator}
+\item{\code{decl}}{list of variable declarations}
 }
 \if{html}{\out{</div>}}
 }
@@ -89,12 +90,29 @@ get the where expression
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-iter_id"></a>}}
-\if{latex}{\out{\hypertarget{method-iter_id}{}}}
-\subsection{Method \code{iter_id()}}{
-get the iterator id
+\if{html}{\out{<a id="method-decl"></a>}}
+\if{latex}{\out{\hypertarget{method-decl}{}}}
+\subsection{Method \code{decl()}}{
+get the ith declaration
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Generator$iter_id()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Generator$decl(i)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{i}}{index}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-c_str"></a>}}
+\if{latex}{\out{\hypertarget{method-c_str}{}}}
+\subsection{Method \code{c_str()}}{
+get the MiniZinc representation
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Generator$c_str()}\if{html}{\out{</div>}}
 }
 
 }

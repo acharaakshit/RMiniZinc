@@ -13,6 +13,10 @@ create a set in MiniZinc
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
 \item{\code{.setVal}}{the value of the set}
+
+\item{\code{.isv}}{the integer range set}
+
+\item{\code{.fsv}}{the float range set}
 }
 \if{html}{\out{</div>}}
 }
@@ -20,6 +24,10 @@ create a set in MiniZinc
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
 \item{\code{.setVal}}{the value of the set}
+
+\item{\code{.isv}}{the integer range set}
+
+\item{\code{.fsv}}{the float range set}
 }
 \if{html}{\out{</div>}}
 }
@@ -27,7 +35,14 @@ create a set in MiniZinc
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{Set$new()}}
-\item \href{#method-v}{\code{Set$v()}}
+\item \href{#method-getSetVec}{\code{Set$getSetVec()}}
+\item \href{#method-setSetVec}{\code{Set$setSetVec()}}
+\item \href{#method-getIsv}{\code{Set$getIsv()}}
+\item \href{#method-setIsv}{\code{Set$setIsv()}}
+\item \href{#method-getFsv}{\code{Set$getFsv()}}
+\item \href{#method-setFsv}{\code{Set$setFsv()}}
+\item \href{#method-display}{\code{Set$display()}}
+\item \href{#method-c_str}{\code{Set$c_str()}}
 \item \href{#method-clone}{\code{Set$clone()}}
 }
 }
@@ -43,24 +58,115 @@ create a set in MiniZinc
 \subsection{Method \code{new()}}{
 constuctor
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Set$new(setVal)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Set$new(val)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{setVal}}{the set value}
+\item{\code{val}}{the set value}
 }
 \if{html}{\out{</div>}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-v"></a>}}
-\if{latex}{\out{\hypertarget{method-v}{}}}
-\subsection{Method \code{v()}}{
-return the value
+\if{html}{\out{<a id="method-getSetVec"></a>}}
+\if{latex}{\out{\hypertarget{method-getSetVec}{}}}
+\subsection{Method \code{getSetVec()}}{
+return the set expression
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Set$v()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Set$getSetVec()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-setSetVec"></a>}}
+\if{latex}{\out{\hypertarget{method-setSetVec}{}}}
+\subsection{Method \code{setSetVec()}}{
+set the set expression
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Set$setSetVec(val)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{val}}{list of expressions}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getIsv"></a>}}
+\if{latex}{\out{\hypertarget{method-getIsv}{}}}
+\subsection{Method \code{getIsv()}}{
+return the integer set range
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Set$getIsv()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-setIsv"></a>}}
+\if{latex}{\out{\hypertarget{method-setIsv}{}}}
+\subsection{Method \code{setIsv()}}{
+set the integer set range
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Set$setIsv(val)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{val}}{integer set range}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getFsv"></a>}}
+\if{latex}{\out{\hypertarget{method-getFsv}{}}}
+\subsection{Method \code{getFsv()}}{
+get the float set range
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Set$getFsv()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-setFsv"></a>}}
+\if{latex}{\out{\hypertarget{method-setFsv}{}}}
+\subsection{Method \code{setFsv()}}{
+set the float set range
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Set$setFsv(val)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{val}}{float set range}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-display"></a>}}
+\if{latex}{\out{\hypertarget{method-display}{}}}
+\subsection{Method \code{display()}}{
+display the value
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Set$display()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-c_str"></a>}}
+\if{latex}{\out{\hypertarget{method-c_str}{}}}
+\subsection{Method \code{c_str()}}{
+convert into MiniZinc representation
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Set$c_str()}\if{html}{\out{</div>}}
 }
 
 }

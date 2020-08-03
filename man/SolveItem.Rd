@@ -32,7 +32,7 @@ minimization or maximization problem
 \subsection{Method \code{new()}}{
 create an instance of specify_problem class
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SolveItem$new(solve_type, expression = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SolveItem$new(solve_type, e = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -40,7 +40,7 @@ create an instance of specify_problem class
 \describe{
 \item{\code{solve_type}}{satisfaction, minimization or maximization}
 
-\item{\code{expression}}{expression to minimize or maximize}
+\item{\code{e}}{expression to minimize or maximize}
 }
 \if{html}{\out{</div>}}
 }

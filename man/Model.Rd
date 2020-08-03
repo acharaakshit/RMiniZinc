@@ -26,6 +26,7 @@ This class will take all the objects required to create a MiniZinc model.
 \item \href{#method-new}{\code{Model$new()}}
 \item \href{#method-item_i}{\code{Model$item_i()}}
 \item \href{#method-mzn_string}{\code{Model$mzn_string()}}
+\item \href{#method-delete}{\code{Model$delete()}}
 \item \href{#method-clone}{\code{Model$clone()}}
 }
 }
@@ -72,6 +73,23 @@ get the string representation of the model
 \if{html}{\out{<div class="r">}}\preformatted{Model$mzn_string()}\if{html}{\out{</div>}}
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-delete"></a>}}
+\if{latex}{\out{\hypertarget{method-delete}{}}}
+\subsection{Method \code{delete()}}{
+delete item i from the model
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Model$delete(i)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{i}}{index of the item}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}

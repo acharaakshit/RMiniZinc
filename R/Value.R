@@ -1,63 +1,101 @@
-#' @title SetVal class
+#' @title Integer set value
 #' 
-#' @description possible types of set values in MiniZinc
+#' @description integer range set value in MiniZinc
 #' 
 #' @import R6
 #' @import checkmate
-#' 
 #' @export
-SetVal = R6Class("SetVal",
-                 public = list(
-                  #' @description  constructor
-                  #' @param val set value to be assigned
-                  initialize = function(val){
-                    if(all(names(val) == c("l","u"))){
-                      # int set val
-                      assert_true((testR6(val[['l']], "VarDecl") || test_numeric(val[['l']])) &&
-                                    testR6(val[['u']], "VarDecl") || test_numeric(val[['u']]))
-                      
-                      if(test_numeric(val[['l']]) && test_numeric(val[['u']])){
-                        assert(val[['l']] - floor(val[['l']]) == 0 && val[['u']] - floor(val[['u']]) == 0)
-                        private$.isv = val
-                      }else if(testR6(val[['l']], "VarDecl") && test_numeric(val[['u']])){
-                        assert_true(val[['l']]$ti()$type()$ndim() == 0 &&
-                                      val[['l']]$ti()$type()$bt() == "INT")
-                        private$.isv = c( l = val[['l']]$id(), u = val[['u']])
-                        assert(val[['u']] - floor(val[['u']]) == 0)
-                      }else if(test_numeric(val[['l']]) && testR6(val[['u']], "VarDecl")){
-                        assert(val[['l']] - floor(val[['l']]) == 0)
-                        assert_true(val[['u']]$ti()$type()$ndim() == 0 &&
-                                      val[['u']]$ti()$type()$bt() == "INT")
-                        private$.isv = c( l = val[['l']], u = val[['u']]$id())
-                      }else if(testR6(val[['l']], "VarDecl") && testR6(val[['u']], "VarDecl")){
-                        assert_true(val[['u']]$ti()$type()$ndim() == 0 &&
-                                      val[['u']]$ti()$type()$bt() == "INT")
-                        assert_true(val[['l']]$ti()$type()$ndim() == 0 &&
-                                      val[['l']]$ti()$type()$bt() == "INT")
-                        private$.isv = c( l = val[['l']]$id(), u = val[['u']]$id())
-                      }else{
-                        stop("not supported")
+IntSetVal = R6Class("IntSetVal",
+                    public = list(
+                      #' @description constructor
+                      #' @param imin minimum value of type IntVal
+                      #' @param imax maximum value of type IntVal
+                      initialize = function(imin, imax){
+                        assertR6(lhs, "IntVal")
+                        private$.min  = imin
+                        assertR6(rhs, "IntVal")
+                        private$.max = imax
+                        assert_true(imax$v() >= imin$v())
+                      },
+                      #' @description get the minimum IntVal
+                      getMin = function(){
+                        return(private$.min)
+                      },
+                      #' @description set the minimum IntVal
+                      #' @param val IntVal value to be set
+                      setMin = function(val){
+                        assertR6(val, "IntVal")
+                        private$.min = val
+                      },
+                      #' @description get the maximum IntVal
+                      getMax = function(){
+                        return(private$.max)
+                      },
+                      #' @description set the maximum IntVal
+                      #' @param val IntVal value to be set
+                      setMax = function(val){
+                        assertR6(val, "IntVal")
+                        private$.max = val
                       }
-                      
-                    }
-                  },
-                  #' @description return the int set value
-                  isv = function(){
-                    return(private$.isv)
-                  },
-                  #' @description return the float set value
-                  fsv = function(){
-                    return(private$.fsv)
-                  }
-                 ),
-                 private = list(
-                   #' @field .isv
-                   #' the int set value
-                   .isv = NULL,
-                   #' @field .fsv
-                   #' the float set value
-                   .fsv = NULL
-                 ))
+                    ),
+                    private = list(
+                      #' @field .min
+                      #' minimum value of integer range
+                      .min = NULL,
+                      #' @field .max
+                      #' maximum value of integer range
+                      .max = NULL
+                    ))
+
+
+#' @title Float set value
+#' 
+#' @description float set range in MiniZinc
+#' 
+#' @import R6
+#' @import checkmate
+#' @export
+FloatSetVal = R6Class("FloatSetVal",
+                      public = list(
+                        #' @description constructor
+                        #' @param fmin the minimum FloatVal
+                        #' @param fmax the maximum FloatVal
+                        initialize = function(fmin, fmax){
+                          assertR6(fmin, "FloatVal")
+                          assertR6(fmax, "FloatVal")
+                          assert_true(fmax$v() >= fmin$v())
+                          private$.min = fmin
+                          private$.max = fmax
+                        },
+                        #' @description get the minimum FloatVal
+                        getMin = function(){
+                          return(private$.min)
+                        },
+                        #' @description set the minimum FloatVal
+                        #' @param val FloatVal value to be set
+                        setMin = function(val){
+                          assertR6(val, "FloatVal")
+                          private$.min = val
+                        },
+                        #' @description get the maximum FloatVal
+                        getMax = function(){
+                          return(private$.max)
+                        },
+                        #' @description set the maximum FloatVal
+                        #' @param val FloatVal value to be set
+                        setMax = function(val){
+                          assertR6(val, "FloatVal")
+                          private$.max = val
+                        }
+                      ),
+                      private = list(
+                        #' @field .min
+                        #' minimum FloatVal
+                        .min = NULL,
+                        #' @field .max
+                        #' maximum FloatVal
+                        .max = NULL
+                      ))
 
 #' @title IntVal class
 #' 

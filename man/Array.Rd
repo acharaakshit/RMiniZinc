@@ -12,14 +12,18 @@ create an array in MiniZinc
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{.value}}{object of class expression}
+\item{\code{.exprVec}}{vector of value expressions}
+
+\item{\code{.dims}}{vector of dimension expressions}
 }
 \if{html}{\out{</div>}}
 }
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
-\item{\code{.value}}{object of class expression}
+\item{\code{.exprVec}}{vector of value expressions}
+
+\item{\code{.dims}}{vector of dimension expressions}
 }
 \if{html}{\out{</div>}}
 }
@@ -27,7 +31,9 @@ create an array in MiniZinc
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{Array$new()}}
-\item \href{#method-dims}{\code{Array$dims()}}
+\item \href{#method-ndims}{\code{Array$ndims()}}
+\item \href{#method-getDim}{\code{Array$getDim()}}
+\item \href{#method-c_str}{\code{Array$c_str()}}
 \item \href{#method-clone}{\code{Array$clone()}}
 }
 }
@@ -43,24 +49,53 @@ create an array in MiniZinc
 \subsection{Method \code{new()}}{
 constructor for an int literal
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Array$new(exprVec)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Array$new(exprVec, dims)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{exprVec}}{the value of the integer}
+
+\item{\code{dims}}{dimension expression vector}
 }
 \if{html}{\out{</div>}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-dims"></a>}}
-\if{latex}{\out{\hypertarget{method-dims}{}}}
-\subsection{Method \code{dims()}}{
-get the integer value
+\if{html}{\out{<a id="method-ndims"></a>}}
+\if{latex}{\out{\hypertarget{method-ndims}{}}}
+\subsection{Method \code{ndims()}}{
+get the number of dimensions
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Array$dims()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Array$ndims()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getDim"></a>}}
+\if{latex}{\out{\hypertarget{method-getDim}{}}}
+\subsection{Method \code{getDim()}}{
+get the ith dimension vector
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Array$getDim(i)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{i}}{index}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-c_str"></a>}}
+\if{latex}{\out{\hypertarget{method-c_str}{}}}
+\subsection{Method \code{c_str()}}{
+return the MiniZinc representation
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Array$c_str()}\if{html}{\out{</div>}}
 }
 
 }

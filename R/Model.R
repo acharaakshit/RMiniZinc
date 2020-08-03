@@ -28,7 +28,12 @@ Model = R6Class("Model",
                      mzn_str = paste0(mzn_str, private$.items[[i]]$c_str(), "\n")
                    }
                    return(mzn_str)
-                 } 
+                 },
+                 #' @description delete item i from the model
+                 #' @param i index of the item
+                 delete = function(i){
+                   private$.items[[-i]]
+                 }
                  ),
                 private = list(
                   #' @field parameters

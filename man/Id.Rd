@@ -27,7 +27,9 @@ create a new Id in MiniZinc
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{Id$new()}}
-\item \href{#method-id}{\code{Id$id()}}
+\item \href{#method-getId}{\code{Id$getId()}}
+\item \href{#method-setId}{\code{Id$setId()}}
+\item \href{#method-c_str}{\code{Id$c_str()}}
 \item \href{#method-clone}{\code{Id$clone()}}
 }
 }
@@ -43,24 +45,51 @@ create a new Id in MiniZinc
 \subsection{Method \code{new()}}{
 constructor
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Id$new(ID)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Id$new(id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{ID}}{id to be created}
+\item{\code{id}}{id to be created}
 }
 \if{html}{\out{</div>}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-id"></a>}}
-\if{latex}{\out{\hypertarget{method-id}{}}}
-\subsection{Method \code{id()}}{
+\if{html}{\out{<a id="method-getId"></a>}}
+\if{latex}{\out{\hypertarget{method-getId}{}}}
+\subsection{Method \code{getId()}}{
 get the string identifier
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Id$id()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Id$getId()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-setId"></a>}}
+\if{latex}{\out{\hypertarget{method-setId}{}}}
+\subsection{Method \code{setId()}}{
+set the string identifier
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Id$setId(val)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{val}}{string value to set}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-c_str"></a>}}
+\if{latex}{\out{\hypertarget{method-c_str}{}}}
+\subsection{Method \code{c_str()}}{
+return the MiniZinc representation
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Id$c_str()}\if{html}{\out{</div>}}
 }
 
 }

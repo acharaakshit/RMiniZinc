@@ -33,7 +33,11 @@ create a Comprehension
 \item \href{#method-new}{\code{Comprehension$new()}}
 \item \href{#method-ngens}{\code{Comprehension$ngens()}}
 \item \href{#method-gen_i}{\code{Comprehension$gen_i()}}
+\item \href{#method-In}{\code{Comprehension$In()}}
+\item \href{#method-where}{\code{Comprehension$where()}}
+\item \href{#method-decl}{\code{Comprehension$decl()}}
 \item \href{#method-e}{\code{Comprehension$e()}}
+\item \href{#method-c_str}{\code{Comprehension$c_str()}}
 \item \href{#method-clone}{\code{Comprehension$clone()}}
 }
 }
@@ -49,7 +53,7 @@ create a Comprehension
 \subsection{Method \code{new()}}{
 constructor
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Comprehension$new(generators, expression)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Comprehension$new(generators, e)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -57,7 +61,7 @@ constructor
 \describe{
 \item{\code{generators}}{generators of the expression}
 
-\item{\code{expression}}{inside the comprehension}
+\item{\code{e}}{inside the comprehension}
 }
 \if{html}{\out{</div>}}
 }
@@ -90,12 +94,75 @@ get the ith generator expression
 }
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-In"></a>}}
+\if{latex}{\out{\hypertarget{method-In}{}}}
+\subsection{Method \code{In()}}{
+get the in expression of ith generator
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Comprehension$In(i)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{i}}{index}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-where"></a>}}
+\if{latex}{\out{\hypertarget{method-where}{}}}
+\subsection{Method \code{where()}}{
+get the where expression of ith generator
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Comprehension$where(i)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{i}}{index}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-decl"></a>}}
+\if{latex}{\out{\hypertarget{method-decl}{}}}
+\subsection{Method \code{decl()}}{
+get the idecl declaration of igen generator
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Comprehension$decl(igen, idecl)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{igen}}{generator index}
+
+\item{\code{idecl}}{declaration index}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-e"></a>}}
 \if{latex}{\out{\hypertarget{method-e}{}}}
 \subsection{Method \code{e()}}{
 get the expression
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Comprehension$e()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-c_str"></a>}}
+\if{latex}{\out{\hypertarget{method-c_str}{}}}
+\subsection{Method \code{c_str()}}{
+get the MiniZinc representation
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Comprehension$c_str()}\if{html}{\out{</div>}}
 }
 
 }
