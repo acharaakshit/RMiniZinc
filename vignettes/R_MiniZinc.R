@@ -1,85 +1,81 @@
-## ----VarDecl UML, echo=FALSE, out.width = '30%'-------------------------------
-knitr::include_graphics(paste0(getwd(),"/workflows/VarDecl.png"))
-
-## ----Expression UML, echo=FALSE, out.width = '80%'----------------------------
-knitr::include_graphics(paste0(getwd(),"/workflows/ExpressionUml.png"))
-
 ## -----------------------------------------------------------------------------
 library(rminizinc)
 
 # create the variable and parameter declarations
-par_ti = TypeInst$new(Type$new(base_type = "INT", kind = "parameter"))
-par1 = VarDecl$new(id = "n", par_ti, type_inst = par_ti)
+par_ti = TypeInst$new(Type$new(base_type = "int", kind = "parameter"))
+par1 = VarDecl$new(id = "n", type_inst = par_ti)
 item1 = VarDeclItem$new(decl = par1)
 
-sv = SetVal$new(val = c(l = 1, u=par1))
-par2_dt = Set$new(setVal = sv)
-par2_ti = TypeInst$new(Type$new(base_type = "INT", kind = "parameter", dim = 1, set_type = TRUE))
-par2 = VarDecl$new(type_inst = par2_ti, expression = par2_dt, id = "OBJ")
+par2_val = BinOp$new(lhs_expression = Int$new(IntVal$new(1)), binop = "..", rhs_expression =  par1$id())
+par2_ti = TypeInst$new(Type$new(base_type = "int", kind = "parameter", dim = 1, set_type = TRUE))
+par2 = VarDecl$new(type_inst = par2_ti, e = par2_val, id = "OBJ")
 item2 = VarDeclItem$new(decl = par2)
 
-par3_ti = TypeInst$new(Type$new(base_type = "INT", kind = "parameter"))
+par3_ti = TypeInst$new(Type$new(base_type = "int", kind = "parameter"))
 par3 = VarDecl$new(type_inst = par3_ti, id = "capacity")
 item3 = VarDeclItem$new(decl = par3)
 
-par4_ti = TypeInst$new(Type$new(base_type = "INT", kind = "parameter", dim = 1),
+par4_ti = TypeInst$new(Type$new(base_type = "int", kind = "parameter", dim = 1),
                    indexExprVec = par2$id())
 par4 = VarDecl$new(type_inst = par4_ti, id = "profit")
 item4 = VarDeclItem$new(decl = par4)
 
-par5_ti = TypeInst$new(Type$new(base_type = "INT", kind = "parameter", dim = 1),
+par5_ti = TypeInst$new(Type$new(base_type = "int", kind = "parameter", dim = 1),
                    indexExprVec = par2$id())
 par5 = VarDecl$new(type = par5_ti, id = "size")
 item5 = VarDeclItem$new(decl = par5)
 
-par6_ti = TypeInst$new(Type$new(base_type = "INT", kind = "decision", dim = 1),
+par6_ti = TypeInst$new(Type$new(base_type = "int", kind = "decision", dim = 1),
                    indexExprVec = par2$id())
 par6 = VarDecl$new(type = par6_ti, id = "x")
 item6 = VarDeclItem$new(decl = par6)
 
 ## -----------------------------------------------------------------------------
-# generator
-gen_forall = Generator$new(IN = par2$id(), iterator = "i")
-# binary operator expression
-bop1 = Binop$new(lhs_expression = ArrayAccess$new(id = par6$id(), index = gen_forall$iter_id()), binop = ">=", 
-                                        rhs_expression =    Int$new(value = IntVal$new(0)))
-# comprehension
-Comp1 = Comprehension$new(generators = list(gen_forall), expression = bop1)
-# forall function call
-cl1 = Call$new(fn_id = "forall", lExp = list(Comp1))
-item7 = ConstraintItem$new(expression = cl1)
 
-gen_sum = Generator$new(IN = par2$id(), iterator = "i")
-bop2 = Binop$new(lhs_expression = ArrayAccess$new(id = par5$id(), index = gen_sum$iter_id()), binop = "*", 
-                                      rhs_expression = ArrayAccess$new(id = par6$id() ,index = gen_sum$iter_id()))
-Comp2 = Comprehension$new(generators = list(gen_sum), expression = bop2)
-cl2 = Call$new(fn_id = "sum", lExp = list(Comp2))
-bop3 = Binop$new(lhs_expression = cl2, binop = "<=", rhs_expression = par3$id())
-item8 = ConstraintItem$new(expression = bop3)
+# declare parameter for iterator
+par_ti = TypeInst$new(Type$new(base_type = "int", kind = "parameter"))
+parIter = VarDecl$new(id = "i", par_ti, type_inst = par_ti)
+# generator
+gen_forall = Generator$new(IN = par2$id(), decls = list(parIter))
+# binary operator expression
+bop1 = BinOp$new(lhs_expression = ArrayAccess$new(v = par6$id(), 
+                args= list(gen_forall$decl(1))),
+                binop = ">=", rhs_expression = Int$new(value = IntVal$new(0)))
+# comprehension
+Comp1 = Comprehension$new(generators = list(gen_forall), e = bop1)
+# forall function call
+cl1 = Call$new(fnName = "forall", args = list(Comp1))
+item7 = ConstraintItem$new(e = cl1)
+
+gen_sum = Generator$new(IN = par2$id(), decls = list(parIter))
+
+bop2 = BinOp$new(lhs_expression = ArrayAccess$new(v = par5$id(), args = list(gen_sum$decl(1))),                  binop = "*",  rhs_expression = ArrayAccess$new(v = par6$id() , 
+                args = list(gen_sum$decl(1))))
+Comp2 = Comprehension$new(generators = list(gen_sum), e = bop2)
+cl2 = Call$new(fnName = "sum", args = list(Comp2))
+bop3 = BinOp$new(lhs_expression = cl2, binop = "<=", rhs_expression = par3$id())
+item8 = ConstraintItem$new(e = bop3)
 
 ## -----------------------------------------------------------------------------
 
-gen_sum = Generator$new(IN = par2$id(), iterator = "i")
+bop4 = BinOp$new(lhs_expression = ArrayAccess$new(v = par4$id(), args = list(gen_sum$decl(1))),
+                      binop = "*", rhs_expression = ArrayAccess$new(v = par6$id(), 
+                      args = list(gen_sum$decl(1))))
 
-bop4 = Binop$new(lhs_expression = ArrayAccess$new(id = par4$id(),index = gen_sum$iter_id()), 
-                      binop = "*", rhs_expression = ArrayAccess$new(id = par6$id(), index = gen_sum$iter_id()))
+Comp3 = Comprehension$new(generators = list(gen_sum), e = bop4)
 
-Comp3 = Comprehension$new(generators = list(gen_sum), expression = bop4)
+cl3 = Call$new(fnName = "sum", args = list(Comp3))
 
-cl3 = Call$new(fn_id = "sum", lExp = list(Comp3))
-
-item9 = SolveItem$new(solve_type = "maximize", expression = cl3)
-
-## ----Model UML, echo=FALSE, out.width = '70%'---------------------------------
-knitr::include_graphics(paste0(getwd(),"/workflows/ItemUml.png"))
+item9 = SolveItem$new(solve_type = "maximize", e = cl3)
 
 ## -----------------------------------------------------------------------------
 items  = c(item1, item2, item3, item4, item5, item6, item7, item8, item9)
 mod = Model$new(items = items)
 modString = mod$mzn_string()
+cat(modString)
 
 ## -----------------------------------------------------------------------------
-dzn_path = paste0(dirname(getwd()), "/inst/mzn_examples/knapsack/knapsack_0.dzn")
+dzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/knapsack/knapsack_0.dzn")
 sol = rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gecode",
                       libpath = "/snap/minizinc/current/share/minizinc", dznpath = dzn_path)
 
@@ -97,7 +93,7 @@ knitr::include_graphics(paste0(getwd(),"/workflows/Parent_Types.png"))
 
 ## -----------------------------------------------------------------------------
 # mzn file path
-mzn_path = paste0(dirname(getwd()), "/inst/mzn_examples/knapsack/knapsack_0.mzn")
+mzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/jobshop/jobshop_0.mzn")
 
 # parse the model
 parseObj=rminizinc:::mzn_parse(mznpath = mzn_path)
@@ -106,7 +102,7 @@ parseObj=rminizinc:::mzn_parse(mznpath = mzn_path)
 modString = parseObj$MODEL_STRING
 
 # dzn file path
-dzn_path = paste0(dirname(getwd()), "/inst/mzn_examples/knapsack/knapsack_0.dzn")
+dzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/jobshop/jobshop.dzn")
 
 # R List object containing the solutions
 solObj = rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gecode",
@@ -116,7 +112,7 @@ print(solObj$SOLUTIONS)
 
 ## -----------------------------------------------------------------------------
 # file path
-mzn_path = paste0(dirname(getwd()), "/inst/mzn_examples/knapsack/knapsack_0.mzn")
+mzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/knapsack/knapsack_0.mzn")
 
 # get missing parameter values
 missingVals=rminizinc:::getMissingPars( mznpath = mzn_path)
@@ -138,7 +134,7 @@ print(solObj$SOLUTIONS)
 
 ## -----------------------------------------------------------------------------
 # file path
-mzn_path = paste0(dirname(getwd()), "/inst/mzn_examples/knapsack/knapsack_0.mzn")
+mzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/knapsack/knapsack_0.mzn")
 
 # parse the model
 parseObj=rminizinc:::mzn_parse(mznpath = mzn_path)
