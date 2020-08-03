@@ -77,20 +77,39 @@ std::string set_params(List modData, std::string modelString = "",
         string sV = modData[i];
         StringLit *sl = new StringLit(items[nameIndexMap[index]]->loc(), sV);
       }else if(tp.is_set()){
-        vector<Expression*> expVec;
         NumericVector setVal = modData[i];
-        if(tp.isintset()){
-          for(int it = 0;it<setVal.length();it++)
-            expVec.push_back(IntLit::a(setVal[it]));
-        }else if(tp.isfloatset()){
-          for(int it = 0;it<setVal.length();it++)
-            expVec.push_back(FloatLit::a(setVal[it]));
-        }else if(tp.isboolset()){
-          for(int it = 0;it<setVal.length();it++)
-            expVec.push_back(new BoolLit(items[nameIndexMap[index]]->loc(),(bool)modData[it]));
+        CharacterVector stNms = setVal.names();
+        if(stNms.length()){
+          vector<string> cmpWith = {"min", "max"};
+          if(!std::equal(stNms.begin(), stNms.end(), cmpWith.begin())){
+            Rcpp::stop("Named set value must have the names min and max");
+          }
+          SetLit *sl;
+          if(tp.bt() == Type::BT_INT){
+            IntSetVal *isv =  IntSetVal::a(IntVal((int)setVal[0]), IntVal((int)setVal[1]));
+            sl = new SetLit(items[nameIndexMap[index]]->loc(), isv);
+          }else if(tp.bt() == Type::BT_FLOAT){
+            FloatSetVal *fsv =  FloatSetVal::a(FloatVal((double)setVal[0]), FloatVal((double)setVal[1]));
+            sl = new SetLit(items[nameIndexMap[index]]->loc(), fsv);
+          }else{
+            Rcpp::stop("Only int and float Set ranges can be assigned");
+          }
+          vd->e(sl);
+        }else{
+          vector<Expression*> expVec;
+          if(tp.isintset()){
+            for(int it = 0;it<setVal.length();it++)
+              expVec.push_back(IntLit::a(setVal[it]));
+          }else if(tp.isfloatset()){
+            for(int it = 0;it<setVal.length();it++)
+              expVec.push_back(FloatLit::a(setVal[it]));
+          }else if(tp.isboolset()){
+            for(int it = 0;it<setVal.length();it++)
+              expVec.push_back(new BoolLit(items[nameIndexMap[index]]->loc(),(bool)modData[it]));
+          }
+          SetLit *sl = new SetLit(items[nameIndexMap[i]]->loc(), expVec);
+          vd->e(sl);
         }
-        SetLit *sl = new SetLit(items[nameIndexMap[i]]->loc(), expVec);
-        vd->e(sl);
       }else if(tp.dim() >= 1  && !tp.is_set()){
         // arrays of all dimensions
         vector<Expression*> callVec;
@@ -128,6 +147,45 @@ std::string set_params(List modData, std::string modelString = "",
             for(int it = 0;it < arrStrVal.length();it++){
               expVec.push_back(new StringLit(items[nameIndexMap[index]]->loc(),(string)arrStrVal[it]));   
             }
+          }else if(tp.st() == Type::ST_SET && tp.ot() == Type::OT_PRESENT){
+            List ArrVal = modData[i];
+            for(int it = 0; it< ArrVal.length();it++ ){
+              NumericVector setVal = ArrVal[it];
+              CharacterVector stNms = setVal.names();
+              if(stNms.length()){
+                vector<string> cmpWith = {"min", "max"};
+                if(!std::equal(stNms.begin(), stNms.end(), cmpWith.begin())){
+                  Rcpp::stop("Named set value must have the names min and max");
+                }
+                SetLit *sl;
+                if(tp.bt() == Type::BT_INT){
+                  IntSetVal *isv =  IntSetVal::a(IntVal((int)setVal[0]), IntVal((int)setVal[1]));
+                  sl = new SetLit(items[nameIndexMap[index]]->loc(), isv);
+                }else if(tp.bt() == Type::BT_FLOAT){
+                  FloatSetVal *fsv =  FloatSetVal::a(FloatVal((double)setVal[0]), FloatVal((double)setVal[1]));
+                  sl = new SetLit(items[nameIndexMap[index]]->loc(), fsv);
+                }else{
+                  Rcpp::stop("Only int and float Set ranges can be assigned");
+                }
+                expVec.push_back(sl);
+              }else{
+                vector<Expression*> subExpVec;
+                if(tp.isintset()){
+                  for(int itt = 0;itt<setVal.length();itt++)
+                    subExpVec.push_back(IntLit::a(setVal[itt]));
+                }else if(tp.isfloatset()){
+                  for(int itt = 0;itt<setVal.length();itt++)
+                    subExpVec.push_back(FloatLit::a(setVal[itt]));
+                }else if(tp.isboolset()){
+                  for(int itt = 0;itt<setVal.length();itt++)
+                    subExpVec.push_back(new BoolLit(items[nameIndexMap[index]]->loc(),(bool)modData[itt]));
+                }
+                SetLit *sl = new SetLit(items[nameIndexMap[i]]->loc(), subExpVec);
+                expVec.push_back(sl);
+              }
+            }
+          }else{
+            Rcpp::stop("Array type not supported yet");
           }
           ArrayLit *al = new ArrayLit(items[nameIndexMap[index]]->loc(),expVec);
           // initialize constructor for 1 dimensional arrays
