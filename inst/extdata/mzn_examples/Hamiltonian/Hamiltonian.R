@@ -1,6 +1,6 @@
 library(rminizinc)
 
-getMissingPars(mznpath = "mzn_examples/Hamiltonian/Hamiltonian.mzn")
+getMissingPars(mznpath = "inst/extdata/mzn_examples/Hamiltonian/Hamiltonian.mzn")
 
 pVals = list(G = c(1, 7,  1, 8,  1, 9,  1,10,
                           2, 3,  2, 9,  2,10,
@@ -13,7 +13,7 @@ pVals = list(G = c(1, 7,  1, 8,  1, 9,  1,10,
                           9, 1,  9, 2,  9, 3,  9, 6,  9,10,
                           10, 1,  10, 2,  10, 9))
 
-modString = set_params(modData = pVals, mznpath = "mzn_examples/Hamiltonian/Hamiltonian.mzn", modify_mzn = FALSE)
+modString = set_params(modData = pVals, mznpath = "inst/extdata/mzn_examples/Hamiltonian/Hamiltonian.mzn", modify_mzn = FALSE)
 
 solution = mzn_eval(modelString = modString, solver = "org.gecode.gecode",
                               libpath = "/snap/minizinc/current/share/minizinc")
