@@ -21,14 +21,14 @@ context("verify the missing values"){
       string dest = dirPath;
       if(dirPath.find("RMiniZinc") != npos){
         // for travis
-        mznpath = dest.append("/inst/mzn_examples/knapsack/knapsack_0.mzn");
+        mznpath = dest.append("/inst/extdata/mzn_examples/knapsack/knapsack_0.mzn");
       }else{
         // for R CMD CHECK
-        mznpath = dest.append("/RMiniZinc/inst/mzn_examples/knapsack/knapsack_0.mzn"); 
+        mznpath = dest.append("/RMiniZinc/inst/extdata/mzn_examples/knapsack/knapsack_0.mzn"); 
       }
     }else{
       // for devtools::test()
-      mznpath = "../../inst/mzn_examples/knapsack/knapsack_0.mzn";
+      mznpath = "../../inst/extdata/mzn_examples/knapsack/knapsack_0.mzn";
     }
     // missing parameter checks
     CharacterVector missingVals = getMissingPars("", mznpath);
@@ -52,14 +52,14 @@ context("verify the missing values"){
       string dest = dirPath;
       if(dirPath.find("RMiniZinc") != npos){
         // for travis
-        mznpath = dest.append("/inst/mzn_examples/knapsack/knapsack_2(bool).mzn");
+        mznpath = dest.append("/inst/extdata/mzn_examples/knapsack/knapsack_2(bool).mzn");
       }else{
         // for R CMD CHECK
-        mznpath = dest.append("/RMiniZinc/inst/mzn_examples/knapsack/knapsack_2(bool).mzn"); 
+        mznpath = dest.append("/RMiniZinc/inst/extdata/mzn_examples/knapsack/knapsack_2(bool).mzn"); 
       }
     }else{
       // for devtools::test()
-      mznpath = "../../inst/mzn_examples/knapsack/knapsack_2(bool).mzn";
+      mznpath = "../../inst/extdata/mzn_examples/knapsack/knapsack_2(bool).mzn";
     }
     // missing parameter checks
     CharacterVector missingVals = getMissingPars("", mznpath);
@@ -83,14 +83,14 @@ context("verify the missing values"){
       string dest = dirPath;
       if(dirPath.find("RMiniZinc") != npos){
         // for travis
-        mznpath = dest.append("/inst/mzn_examples/knapsack/knapsack_3(set_concise).mzn");
+        mznpath = dest.append("/inst/extdata/mzn_examples/knapsack/knapsack_3(set_concise).mzn");
       }else{
         // for R CMD CHECK
-        mznpath = dest.append("/RMiniZinc/inst/mzn_examples/knapsack/knapsack_3(set_concise).mzn"); 
+        mznpath = dest.append("/RMiniZinc/inst/extdata/mzn_examples/knapsack/knapsack_3(set_concise).mzn"); 
       }
     }else{
       // for devtools::test()
-      mznpath = "../../inst/mzn_examples/knapsack/knapsack_3(set_concise).mzn";
+      mznpath = "../../inst/extdata/mzn_examples/knapsack/knapsack_3(set_concise).mzn";
     }
     // missing parameter checks
     CharacterVector missingVals = getMissingPars("", mznpath);

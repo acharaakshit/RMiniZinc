@@ -45,17 +45,17 @@ context("Tests for example knapsack problems"){
       string destdzn =  dirPath;
       if(dirPath.find("RMiniZinc") != npos){
         // for travis
-        mznpath = destmzn.append("/inst/mzn_examples/knapsack/knapsack_0.mzn");
-        dznpath = destdzn.append("/inst/mzn_examples/knapsack/knapsack_0.dzn");
+        mznpath = destmzn.append("/inst/extdata/mzn_examples/knapsack/knapsack_0.mzn");
+        dznpath = destdzn.append("/inst/extdata/mzn_examples/knapsack/knapsack_0.dzn");
       }else{
         // for R CMD CHECK
-        mznpath = destmzn.append("/RMiniZinc/inst/mzn_examples/knapsack/knapsack_0.mzn"); 
-        dznpath = destdzn.append("/RMiniZinc/inst/mzn_examples/knapsack/knapsack_0.dzn"); 
+        mznpath = destmzn.append("/RMiniZinc/inst/extdata/mzn_examples/knapsack/knapsack_0.mzn"); 
+        dznpath = destdzn.append("/RMiniZinc/inst/extdata/mzn_examples/knapsack/knapsack_0.dzn"); 
       }
     }else{
       // for devtools::test()
-      mznpath = "../../inst/mzn_examples/knapsack/knapsack_0.mzn";
-      dznpath = "../../inst/mzn_examples/knapsack/knapsack_0.dzn";
+      mznpath = "../../inst/extdata/mzn_examples/knapsack/knapsack_0.mzn";
+      dznpath = "../../inst/extdata/mzn_examples/knapsack/knapsack_0.dzn";
     }
     
     string solver = "org.gecode.gecode";
@@ -83,17 +83,17 @@ context("Tests for example knapsack problems"){
       string destdzn = dirPath;
       if(dirPath.find("RMiniZinc") != npos){
         // for travis
-        mznpath = destmzn.append("/inst/mzn_examples/knapsack/knapsack_2(bool).mzn");
-        dznpath = destdzn.append("/inst/mzn_examples/knapsack/knapsack_0.dzn");
+        mznpath = destmzn.append("/inst/extdata/mzn_examples/knapsack/knapsack_2(bool).mzn");
+        dznpath = destdzn.append("/inst/extdata/mzn_examples/knapsack/knapsack_0.dzn");
       }else{
         // for R CMD CHECK
-        mznpath = destmzn.append("/RMiniZinc/inst/mzn_examples/knapsack/knapsack_2(bool).mzn"); 
-        dznpath = destdzn.append("/RMiniZinc/inst/mzn_examples/knapsack/knapsack_0.dzn"); 
+        mznpath = destmzn.append("/RMiniZinc/inst/extdata/mzn_examples/knapsack/knapsack_2(bool).mzn"); 
+        dznpath = destdzn.append("/RMiniZinc/inst/extdata/mzn_examples/knapsack/knapsack_0.dzn"); 
       }
     }else{
       // for devtools::test()
-      mznpath = "../../inst/mzn_examples/knapsack/knapsack_2(bool).mzn";
-      dznpath = "../../inst/mzn_examples/knapsack/knapsack_0.dzn";
+      mznpath = "../../inst/extdata/mzn_examples/knapsack/knapsack_2(bool).mzn";
+      dznpath = "../../inst/extdata/mzn_examples/knapsack/knapsack_0.dzn";
     }
     
     string solver = "org.gecode.gecode";
@@ -121,17 +121,17 @@ context("Tests for example knapsack problems"){
       string destdzn = dirPath;
       if(dirPath.find("RMiniZinc") != npos){
         // for travis
-        mznpath = destmzn.append("/inst/mzn_examples/knapsack/knapsack_3(set_concise).mzn");
-        dznpath = destdzn.append("/inst/mzn_examples/knapsack/knapsack_2.dzn");
+        mznpath = destmzn.append("/inst/extdata/mzn_examples/knapsack/knapsack_3(set_concise).mzn");
+        dznpath = destdzn.append("/inst/extdata/mzn_examples/knapsack/knapsack_2.dzn");
       }else{
         // for R CMD CHECK
-        mznpath = destmzn.append("/RMiniZinc/inst/mzn_examples/knapsack/knapsack_3(set_concise).mzn"); 
-        dznpath = destdzn.append("/RMiniZinc/inst/mzn_examples/knapsack/knapsack_2.dzn"); 
+        mznpath = destmzn.append("/RMiniZinc/inst/extdata/mzn_examples/knapsack/knapsack_3(set_concise).mzn"); 
+        dznpath = destdzn.append("/RMiniZinc/inst/extdata/mzn_examples/knapsack/knapsack_2.dzn"); 
       }
     }else{
       // for devtools::test()
-      mznpath = "../../inst/mzn_examples/knapsack/knapsack_3(set_concise).mzn";
-      dznpath = "../../inst/mzn_examples/knapsack/knapsack_2.dzn";
+      mznpath = "../../inst/extdata/mzn_examples/knapsack/knapsack_3(set_concise).mzn";
+      dznpath = "../../inst/extdata/mzn_examples/knapsack/knapsack_2.dzn";
     }
     string solver = "org.gecode.gecode";
     string libpath = "/snap/minizinc/current/share/minizinc";
@@ -159,17 +159,17 @@ context("Tests for example knapsack problems"){
       string destdzn = dirPath;
       if(dirPath.find("RMiniZinc") != npos){
         // for travis
-        mznpath = destmzn.append("/inst/mzn_examples/production_planning/prod_plan_0.mzn");
-        dznpath = destdzn.append("/inst/mzn_examples/production_planning/prod_plan_0.dzn");
+        mznpath = destmzn.append("/inst/extdata/mzn_examples/production_planning/prod_plan_0.mzn");
+        dznpath = destdzn.append("/inst/extdata/mzn_examples/production_planning/prod_plan_0.dzn");
       }else{
         // for R CMD CHECK
-        mznpath = destmzn.append("/RMiniZinc/inst/mzn_examples/production_planning/prod_plan_0.mzn"); 
-        dznpath = destdzn.append("/RMiniZinc/inst/mzn_examples/production_planning/prod_plan_0.dzn"); 
+        mznpath = destmzn.append("/RMiniZinc/inst/extdata/mzn_examples/production_planning/prod_plan_0.mzn"); 
+        dznpath = destdzn.append("/RMiniZinc/inst/extdata/mzn_examples/production_planning/prod_plan_0.dzn"); 
       }
     }else{
       // for devtools::test()
-      mznpath = "../../inst/mzn_examples/production_planning/prod_plan_0.mzn";
-      dznpath = "../../inst/mzn_examples/production_planning/prod_plan_0.dzn";
+      mznpath = "../../inst/extdata/mzn_examples/production_planning/prod_plan_0.mzn";
+      dznpath = "../../inst/extdata/mzn_examples/production_planning/prod_plan_0.dzn";
     }
     string solver = "org.gecode.gecode";
     string libpath = "/snap/minizinc/current/share/minizinc";
@@ -196,17 +196,17 @@ context("Tests for example knapsack problems"){
       string destdzn = dirPath;
       if(dirPath.find("RMiniZinc") != npos){
         // for travis
-        mznpath = destmzn.append("/inst/mzn_examples/shipping/shipping.mzn");
-        dznpath = destdzn.append("/inst/mzn_examples/shipping/shipping.dzn");
+        mznpath = destmzn.append("/inst/extdata/mzn_examples/shipping/shipping.mzn");
+        dznpath = destdzn.append("/inst/extdata/mzn_examples/shipping/shipping.dzn");
       }else{
         // for R CMD CHECK
-        mznpath = destmzn.append("/RMiniZinc/inst/mzn_examples/shipping/shipping.mzn"); 
-        dznpath = destdzn.append("/RMiniZinc/inst/mzn_examples/shipping/shipping.dzn"); 
+        mznpath = destmzn.append("/RMiniZinc/inst/extdata/mzn_examples/shipping/shipping.mzn"); 
+        dznpath = destdzn.append("/RMiniZinc/inst/extdata/mzn_examples/shipping/shipping.dzn"); 
       }
     }else{
       // for devtools::test()
-      mznpath = "../../inst/mzn_examples/shipping/shipping.mzn";
-      dznpath = "../../inst/mzn_examples/shipping/shipping.dzn";
+      mznpath = "../../inst/extdata/mzn_examples/shipping/shipping.mzn";
+      dznpath = "../../inst/extdata/mzn_examples/shipping/shipping.dzn";
     }
     string solver = "org.gecode.gecode";
     string libpath = "/snap/minizinc/current/share/minizinc";
