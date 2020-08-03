@@ -32,8 +32,8 @@ List mzn_eval(std::string solver, std::string libpath,std::string modelString = 
   if(solver != "Gecode" && solver != "org.gecode.gecode")
     Rcpp:stop("only Gecode solver is supported for now");
   try {
-    MznSolver slv(sol_strn,std::cerr);
-    vector<std::string> options({"--stdlib-dir", libpath, "--solver", solver});
+    MznSolver slv(sol_strn, Rcpp::Rcerr);
+    vector<std::string> options({"--stdlib-dir", libpath, "--solver", solver, "--output-mode", "json"});
     if(!dznpath.empty()) options.push_back(dznpath);
     if(all_solutions) options.push_back("-a");
     slv.run(options,modelString, "minizinc", "model.mzn");

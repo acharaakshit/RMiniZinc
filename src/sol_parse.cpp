@@ -1,11 +1,8 @@
 #include <Rcpp.h>
 #include <regex>
-#include "helper_parse.h"
-#include "helper_sol_parse.h"
 
 
 using namespace Rcpp;
-using namespace MiniZinc;
 using namespace std;
 
 //' @title parse the solution
@@ -53,27 +50,11 @@ List sol_parse(std::string solutionString) {
   
   for(int nsol=0; nsol< solutions.size(); nsol++){
     
-    List thisSol;
+    //List thisSol;
     solutionString = solutions[nsol];
-    CharacterVector varName;
-
-    Model *model = helper_parse(solutionString, "solution.mzn");
-
-    vector<Item*> items;
-    
-    for(int i=0; i < model->size(); i++){
-      items.push_back(model->operator[] (i));
-      bool isAssignment = (int)items[i]->iid()==Item::II_ASN?true:false;
-      if(isAssignment){
-        varName.push_back(items[i]->cast<AssignI>()->id().str());
-        Expression *assignExp = items[i]->cast<AssignI>()->e();
-        helper_sol_parse(assignExp, thisSol);
-        
-      }else {
-        Rcpp::stop("Solution string contains non assignments");
-      }
-      thisSol.names() = varName;
-    }
+    Rcpp::Environment base("package:rjson");
+    Rcpp::Function fromJSON_cpp = base["fromJSON"];  
+    retVal.push_back(fromJSON_cpp(solutionString));
     string track_nsol = "SOLUTION";
     track_nsol.append(to_string(nsol));
     if(nsol == solutions.size()-1 && optimal_sol_flag){
@@ -81,7 +62,7 @@ List sol_parse(std::string solutionString) {
     }else if(nsol == solutions.size()-1){
       track_nsol = "BEST_SOLUTION";
     }
-    retVal.push_back(thisSol);
+    //retVal.push_back(thisSol);
     nameretVal.push_back(track_nsol);
   }
   retVal.names() = nameretVal;
