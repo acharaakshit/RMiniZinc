@@ -537,7 +537,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb9-6"><a href="#cb9-6"></a><span class="kw">print</span>(missingVals)</span></code></pre></div>
 <pre><code>## [1] &quot;n&quot;        &quot;capacity&quot; &quot;profit&quot;   &quot;size&quot;</code></pre>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="co"># list of the data</span></span>
-<span id="cb11-2"><a href="#cb11-2"></a>pVals =<span class="st"> </span><span class="kw">list</span>(<span class="dv">3</span>,<span class="dv">9</span>,<span class="kw">c</span>(<span class="dv">15</span>,<span class="dv">10</span>,<span class="dv">7</span>),<span class="kw">c</span>(<span class="dv">4</span>,<span class="dv">3</span>,<span class="dv">2</span>))</span>
+<span id="cb11-2"><a href="#cb11-2"></a>pVals =<span class="st"> </span><span class="kw">list</span>(<span class="dv">3</span>, <span class="dv">9</span>, <span class="kw">c</span>(<span class="dv">15</span>,<span class="dv">10</span>,<span class="dv">7</span>), <span class="kw">c</span>(<span class="dv">4</span>,<span class="dv">3</span>,<span class="dv">2</span>))</span>
 <span id="cb11-3"><a href="#cb11-3"></a><span class="kw">names</span>(pVals) =<span class="st"> </span>missingVals</span>
 <span id="cb11-4"><a href="#cb11-4"></a></span>
 <span id="cb11-5"><a href="#cb11-5"></a><span class="co"># set the missing parameters</span></span>
@@ -583,90 +583,8 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ## [1] 1 1 1</code></pre>
 <p>Some examples of how to use these functions to solve optimization problems can be found in <code>mzn_examples</code> which are taken from <a href="https://github.com/MiniZinc/minizinc-examples">minizinc-examples</a>.</p>
 <p>NOTE: Please don’t include output formatting in the mzn files or the solutions might not be parsed properly.</p>
-<p>The next step is to allow the users to modify a MiniZinc model.</p>
+<p>The next step is to allow the users to modify a MiniZinc model using the R6 objects which will be demonstrated soon.</p>
 </div>
-</div>
-</div>
-<div id="delete-items" class="section level2">
-<h2>Delete Items</h2>
-<p>The items/components in a model can be deleted using the function <code>deleteItem()</code>. The details about the function and its arguments can be seen using <code>?deleteItem</code>. The <code>ITEM_NO</code> returned by <code>mzn_parse()</code> for each component can be used to delete the required component.The update string representation after deleting the item is returned. The demonstration of how to use this function is shown below:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="co"># file path</span></span>
-<span id="cb13-2"><a href="#cb13-2"></a>mzn_path =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">dirname</span>(<span class="kw">getwd</span>()), <span class="st">&quot;/inst/extdata/mzn_examples/knapsack/knapsack_0.mzn&quot;</span>)</span>
-<span id="cb13-3"><a href="#cb13-3"></a></span>
-<span id="cb13-4"><a href="#cb13-4"></a><span class="co"># parse the model</span></span>
-<span id="cb13-5"><a href="#cb13-5"></a>parseObj=rminizinc<span class="op">:::</span><span class="kw">mzn_parse</span>(<span class="dt">mznpath =</span> mzn_path)</span>
-<span id="cb13-6"><a href="#cb13-6"></a></span>
-<span id="cb13-7"><a href="#cb13-7"></a><span class="kw">print</span>(<span class="st">&quot;The original model:&quot;</span>)</span></code></pre></div>
-<pre><code>## [1] &quot;The original model:&quot;</code></pre>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="kw">cat</span>(parseObj<span class="op">$</span>modelString)</span>
-<span id="cb15-2"><a href="#cb15-2"></a></span>
-<span id="cb15-3"><a href="#cb15-3"></a><span class="co"># delete the first variable declaration</span></span>
-<span id="cb15-4"><a href="#cb15-4"></a>item_number  =<span class="st"> </span>parseObj<span class="op">$</span>VARIABLES<span class="op">$</span>DECL1<span class="op">$</span>ITEM_NO</span>
-<span id="cb15-5"><a href="#cb15-5"></a></span>
-<span id="cb15-6"><a href="#cb15-6"></a><span class="co"># delete the item but don&#39;t update the mzn</span></span>
-<span id="cb15-7"><a href="#cb15-7"></a><span class="kw">print</span>(<span class="st">&quot;The updated model string is:&quot;</span>)</span></code></pre></div>
-<pre><code>## [1] &quot;The updated model string is:&quot;</code></pre>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="kw">cat</span>(<span class="kw">deleteItem</span>(<span class="dt">itemNo =</span> item_number, <span class="dt">mznpath =</span> mzn_path, <span class="dt">updateMZN =</span> <span class="ot">FALSE</span>))</span></code></pre></div>
-<pre><code>## set of int: OBJ = 1..n;
-## int: capacity;
-## array [OBJ] of int: profit;
-## array [OBJ] of int: size;
-## array [OBJ] of var int: x;
-## constraint forall ( i in OBJ ) ( x[i]&gt;=0 );
-## constraint sum ( i in OBJ ) ( size[i]*x[i] )&lt;=capacity;
-## solve maximize sum ( i in OBJ ) ( profit[i]*x[i] );</code></pre>
-</div>
-<div id="modify-domain" class="section level2">
-<h2>Modify Domain</h2>
-<p>The domain of a variable can be modified using the function <code>modifyDomain</code>. The item number of the variable whose domain is to be changed needs to be supplied along with the values to be modified.</p>
-<p>The modifications given below are just examples and the modified models aren’t meant to be solved.</p>
-<div id="minid..maxid" class="section level3">
-<h3>minId..maxId</h3>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="co"># model string</span></span>
-<span id="cb19-2"><a href="#cb19-2"></a>modString =<span class="st"> &quot;int: n; array [1..n] of var 0..1: testVar;&quot;</span></span>
-<span id="cb19-3"><a href="#cb19-3"></a></span>
-<span id="cb19-4"><a href="#cb19-4"></a><span class="kw">print</span>(<span class="st">&quot;The updated model string is:&quot;</span>)</span></code></pre></div>
-<pre><code>## [1] &quot;The updated model string is:&quot;</code></pre>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="kw">cat</span>(<span class="kw">modifyDomainId</span>(<span class="dt">ItemNo =</span> <span class="dv">1</span>, <span class="dt">maxIdItem =</span> <span class="dv">0</span>, <span class="dt">modelString =</span> modString))</span></code></pre></div>
-<pre><code>## Warning in modifyDomainId(ItemNo = 1, maxIdItem = 0, modelString = modString):
-## The supplied ItemId is not of a set variable</code></pre>
-<pre><code>## int: n;
-## array [1..n] of var 0..n: testVar;</code></pre>
-</div>
-<div id="mininteger-or-float..maxinteger-or-float" class="section level3">
-<h3>min(Integer or Float)..max(Integer or Float)</h3>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a><span class="co"># model string</span></span>
-<span id="cb24-2"><a href="#cb24-2"></a>modString =<span class="st"> &quot;int: n; array [1..n] of var 0..1: testVar;&quot;</span></span>
-<span id="cb24-3"><a href="#cb24-3"></a></span>
-<span id="cb24-4"><a href="#cb24-4"></a><span class="kw">print</span>(<span class="st">&quot;The updated model string is:&quot;</span>)</span></code></pre></div>
-<pre><code>## [1] &quot;The updated model string is:&quot;</code></pre>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="kw">cat</span>(<span class="kw">modifyDomainSetVal</span>(<span class="dt">ItemNo =</span> <span class="dv">1</span>, <span class="dt">imax =</span> <span class="dv">2</span>, <span class="dt">imin =</span> <span class="dv">0</span>, <span class="dt">modelString =</span> modString))</span></code></pre></div>
-<pre><code>## int: n;
-## array [1..n] of var 0..2: testVar;</code></pre>
-</div>
-<div id="minfunction-call-..maxfunction-call" class="section level3">
-<h3>min(Function Call )..max(Function Call)</h3>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a><span class="co"># model string</span></span>
-<span id="cb28-2"><a href="#cb28-2"></a>modString =<span class="st"> &quot;int: n; array [1..n] of var 0..1: testVar;&quot;</span></span>
-<span id="cb28-3"><a href="#cb28-3"></a></span>
-<span id="cb28-4"><a href="#cb28-4"></a><span class="kw">print</span>(<span class="st">&quot;The updated model string is:&quot;</span>)</span></code></pre></div>
-<pre><code>## [1] &quot;The updated model string is:&quot;</code></pre>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a><span class="kw">cat</span>(<span class="kw">modifyDomainFnCall</span>(<span class="dt">ItemNo =</span> <span class="dv">1</span>, <span class="dt">maxIdItem =</span> <span class="dv">0</span>, <span class="dt">maxFnName =</span> <span class="st">&quot;max&quot;</span>, <span class="dt">modelString =</span> modString))</span></code></pre></div>
-<pre><code>## int: n;
-## array [1..n] of var 1..max(n): testVar;</code></pre>
-</div>
-<div id="using-arithmetic-operators-and-constants" class="section level3">
-<h3>Using arithmetic operators and constants</h3>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a><span class="co"># model string</span></span>
-<span id="cb32-2"><a href="#cb32-2"></a>modString =<span class="st"> &quot;set of int: n; array [1..n] of var 0..n: testVar;&quot;</span></span>
-<span id="cb32-3"><a href="#cb32-3"></a></span>
-<span id="cb32-4"><a href="#cb32-4"></a><span class="kw">print</span>(<span class="st">&quot;The updated model string is:&quot;</span>)</span></code></pre></div>
-<pre><code>## [1] &quot;The updated model string is:&quot;</code></pre>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a><span class="kw">cat</span>(<span class="kw">modifyDomainAO</span>(<span class="dt">ItemNo =</span> <span class="dv">1</span>, <span class="dt">minVal =</span> <span class="dv">1</span>, <span class="dt">maxVal =</span> <span class="dv">1</span>, <span class="dt">OPmax =</span> <span class="st">&#39;MULT&#39;</span>, <span class="dt">OPmin =</span> <span class="st">&quot;MULT&quot;</span>, <span class="dt">modelString =</span> modString))</span></code></pre></div>
-<pre><code>## Warning in modifyDomainAO(ItemNo = 1, minVal = 1, maxVal = 1, OPmax = &quot;MULT&quot;, :
-## The data type of the variable is not mentioned, casting to int.</code></pre>
-<pre><code>## set of int: n;
-## array [1..n] of var 0*1..n*1: testVar;</code></pre>
 </div>
 </div>
 
