@@ -1,5 +1,6 @@
 # package level environment
-.globals = rlang::env()
+#' @importFrom  rlang env
+.globals = env()
 .globals$Type$kinds =  c("decision", "parameter") 
 .globals$Type$baseTypes = c("bool", "int", "float", "UNKNOWN") 
 .globals$binopTypes =  c( "+", "-", ">=",  "<=", "*", ">", "<", "->", "<-", ".." )

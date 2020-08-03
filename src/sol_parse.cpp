@@ -10,6 +10,7 @@ using namespace std;
 //' @description can parse the solution of a model
 //' 
 //' @importFrom Rcpp sourceCpp
+//' @import rjson
 //' @export sol_parse
 //' @useDynLib rminizinc, .registration=TRUE
 //' @param solutionString solution of the model as a string representation
@@ -50,7 +51,6 @@ List sol_parse(std::string solutionString) {
   
   for(int nsol=0; nsol< solutions.size(); nsol++){
     
-    //List thisSol;
     solutionString = solutions[nsol];
     Rcpp::Environment base("package:rjson");
     Rcpp::Function fromJSON_cpp = base["fromJSON"];  
@@ -62,7 +62,6 @@ List sol_parse(std::string solutionString) {
     }else if(nsol == solutions.size()-1){
       track_nsol = "BEST_SOLUTION";
     }
-    //retVal.push_back(thisSol);
     nameretVal.push_back(track_nsol);
   }
   retVal.names() = nameretVal;
