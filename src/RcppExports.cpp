@@ -5,21 +5,6 @@
 
 using namespace Rcpp;
 
-// deleteItem
-std::string deleteItem(int itemNo, std::string modelString, std::string mznpath, std::string modelStringName, bool updateMZN);
-RcppExport SEXP _rminizinc_deleteItem(SEXP itemNoSEXP, SEXP modelStringSEXP, SEXP mznpathSEXP, SEXP modelStringNameSEXP, SEXP updateMZNSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type itemNo(itemNoSEXP);
-    Rcpp::traits::input_parameter< std::string >::type modelString(modelStringSEXP);
-    Rcpp::traits::input_parameter< std::string >::type mznpath(mznpathSEXP);
-    Rcpp::traits::input_parameter< std::string >::type modelStringName(modelStringNameSEXP);
-    Rcpp::traits::input_parameter< bool >::type updateMZN(updateMZNSEXP);
-    rcpp_result_gen = Rcpp::wrap(deleteItem(itemNo, modelString, mznpath, modelStringName, updateMZN));
-    return rcpp_result_gen;
-END_RCPP
-}
 // filetoString
 std::string filetoString(std::string filepath);
 RcppExport SEXP _rminizinc_filetoString(SEXP filepathSEXP) {
@@ -41,79 +26,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< std::string >::type mznpath(mznpathSEXP);
     Rcpp::traits::input_parameter< std::string >::type modelStringName(modelStringNameSEXP);
     rcpp_result_gen = Rcpp::wrap(getMissingPars(modelString, mznpath, modelStringName));
-    return rcpp_result_gen;
-END_RCPP
-}
-// modifyDomainId
-std::string modifyDomainId(int ItemNo, int maxIdItem, int minIdItem, int replaceIdItem, std::string modelString, std::string mznpath, bool modify_mzn);
-RcppExport SEXP _rminizinc_modifyDomainId(SEXP ItemNoSEXP, SEXP maxIdItemSEXP, SEXP minIdItemSEXP, SEXP replaceIdItemSEXP, SEXP modelStringSEXP, SEXP mznpathSEXP, SEXP modify_mznSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type ItemNo(ItemNoSEXP);
-    Rcpp::traits::input_parameter< int >::type maxIdItem(maxIdItemSEXP);
-    Rcpp::traits::input_parameter< int >::type minIdItem(minIdItemSEXP);
-    Rcpp::traits::input_parameter< int >::type replaceIdItem(replaceIdItemSEXP);
-    Rcpp::traits::input_parameter< std::string >::type modelString(modelStringSEXP);
-    Rcpp::traits::input_parameter< std::string >::type mznpath(mznpathSEXP);
-    Rcpp::traits::input_parameter< bool >::type modify_mzn(modify_mznSEXP);
-    rcpp_result_gen = Rcpp::wrap(modifyDomainId(ItemNo, maxIdItem, minIdItem, replaceIdItem, modelString, mznpath, modify_mzn));
-    return rcpp_result_gen;
-END_RCPP
-}
-// modifyDomainSetVal
-std::string modifyDomainSetVal(int ItemNo, Nullable<int> imax, Nullable<int> imin, Nullable<double> fmin, Nullable<double> fmax, std::string modelString, std::string mznpath, bool modify_mzn);
-RcppExport SEXP _rminizinc_modifyDomainSetVal(SEXP ItemNoSEXP, SEXP imaxSEXP, SEXP iminSEXP, SEXP fminSEXP, SEXP fmaxSEXP, SEXP modelStringSEXP, SEXP mznpathSEXP, SEXP modify_mznSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type ItemNo(ItemNoSEXP);
-    Rcpp::traits::input_parameter< Nullable<int> >::type imax(imaxSEXP);
-    Rcpp::traits::input_parameter< Nullable<int> >::type imin(iminSEXP);
-    Rcpp::traits::input_parameter< Nullable<double> >::type fmin(fminSEXP);
-    Rcpp::traits::input_parameter< Nullable<double> >::type fmax(fmaxSEXP);
-    Rcpp::traits::input_parameter< std::string >::type modelString(modelStringSEXP);
-    Rcpp::traits::input_parameter< std::string >::type mznpath(mznpathSEXP);
-    Rcpp::traits::input_parameter< bool >::type modify_mzn(modify_mznSEXP);
-    rcpp_result_gen = Rcpp::wrap(modifyDomainSetVal(ItemNo, imax, imin, fmin, fmax, modelString, mznpath, modify_mzn));
-    return rcpp_result_gen;
-END_RCPP
-}
-// modifyDomainFnCall
-std::string modifyDomainFnCall(int ItemNo, int minIdItem, int maxIdItem, std::string minFnName, std::string maxFnName, std::string modelString, std::string mznpath, bool modify_mzn);
-RcppExport SEXP _rminizinc_modifyDomainFnCall(SEXP ItemNoSEXP, SEXP minIdItemSEXP, SEXP maxIdItemSEXP, SEXP minFnNameSEXP, SEXP maxFnNameSEXP, SEXP modelStringSEXP, SEXP mznpathSEXP, SEXP modify_mznSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type ItemNo(ItemNoSEXP);
-    Rcpp::traits::input_parameter< int >::type minIdItem(minIdItemSEXP);
-    Rcpp::traits::input_parameter< int >::type maxIdItem(maxIdItemSEXP);
-    Rcpp::traits::input_parameter< std::string >::type minFnName(minFnNameSEXP);
-    Rcpp::traits::input_parameter< std::string >::type maxFnName(maxFnNameSEXP);
-    Rcpp::traits::input_parameter< std::string >::type modelString(modelStringSEXP);
-    Rcpp::traits::input_parameter< std::string >::type mznpath(mznpathSEXP);
-    Rcpp::traits::input_parameter< bool >::type modify_mzn(modify_mznSEXP);
-    rcpp_result_gen = Rcpp::wrap(modifyDomainFnCall(ItemNo, minIdItem, maxIdItem, minFnName, maxFnName, modelString, mznpath, modify_mzn));
-    return rcpp_result_gen;
-END_RCPP
-}
-// modifyDomainAO
-std:: string modifyDomainAO(int ItemNo, SEXP minVal, SEXP maxVal, SEXP Val, std::string OPmin, std::string OPmax, std::string OP, std::string modelString, std::string mznpath, bool modify_mzn);
-RcppExport SEXP _rminizinc_modifyDomainAO(SEXP ItemNoSEXP, SEXP minValSEXP, SEXP maxValSEXP, SEXP ValSEXP, SEXP OPminSEXP, SEXP OPmaxSEXP, SEXP OPSEXP, SEXP modelStringSEXP, SEXP mznpathSEXP, SEXP modify_mznSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type ItemNo(ItemNoSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type minVal(minValSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type maxVal(maxValSEXP);
-    Rcpp::traits::input_parameter< SEXP >::type Val(ValSEXP);
-    Rcpp::traits::input_parameter< std::string >::type OPmin(OPminSEXP);
-    Rcpp::traits::input_parameter< std::string >::type OPmax(OPmaxSEXP);
-    Rcpp::traits::input_parameter< std::string >::type OP(OPSEXP);
-    Rcpp::traits::input_parameter< std::string >::type modelString(modelStringSEXP);
-    Rcpp::traits::input_parameter< std::string >::type mznpath(mznpathSEXP);
-    Rcpp::traits::input_parameter< bool >::type modify_mzn(modify_mznSEXP);
-    rcpp_result_gen = Rcpp::wrap(modifyDomainAO(ItemNo, minVal, maxVal, Val, OPmin, OPmax, OP, modelString, mznpath, modify_mzn));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -175,13 +87,8 @@ END_RCPP
 RcppExport SEXP run_testthat_tests();
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_rminizinc_deleteItem", (DL_FUNC) &_rminizinc_deleteItem, 5},
     {"_rminizinc_filetoString", (DL_FUNC) &_rminizinc_filetoString, 1},
     {"_rminizinc_getMissingPars", (DL_FUNC) &_rminizinc_getMissingPars, 3},
-    {"_rminizinc_modifyDomainId", (DL_FUNC) &_rminizinc_modifyDomainId, 7},
-    {"_rminizinc_modifyDomainSetVal", (DL_FUNC) &_rminizinc_modifyDomainSetVal, 8},
-    {"_rminizinc_modifyDomainFnCall", (DL_FUNC) &_rminizinc_modifyDomainFnCall, 8},
-    {"_rminizinc_modifyDomainAO", (DL_FUNC) &_rminizinc_modifyDomainAO, 10},
     {"_rminizinc_mzn_eval", (DL_FUNC) &_rminizinc_mzn_eval, 6},
     {"_rminizinc_mzn_parse", (DL_FUNC) &_rminizinc_mzn_parse, 3},
     {"_rminizinc_set_params", (DL_FUNC) &_rminizinc_set_params, 4},
