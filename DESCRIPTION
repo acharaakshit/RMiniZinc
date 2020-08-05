@@ -11,7 +11,7 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.0
 Depends: rjson
-Imports: testthat, R6, checkmate, Rcpp, rlang, stringr
+Imports: testthat, R6, checkmate, Rcpp, rlang, rlist, stringr
 LinkingTo: Rcpp, testthat
 Suggests: knitr, rmarkdown
 VignetteBuilder: knitr
