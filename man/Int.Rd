@@ -29,7 +29,6 @@ create an integer in MiniZinc
 \item \href{#method-new}{\code{Int$new()}}
 \item \href{#method-getIntVal}{\code{Int$getIntVal()}}
 \item \href{#method-setIntVal}{\code{Int$setIntVal()}}
-\item \href{#method-display}{\code{Int$display()}}
 \item \href{#method-c_str}{\code{Int$c_str()}}
 \item \href{#method-clone}{\code{Int$clone()}}
 }
@@ -72,19 +71,9 @@ get the IntVal value
 \if{latex}{\out{\hypertarget{method-setIntVal}{}}}
 \subsection{Method \code{setIntVal()}}{
 set the IntVal value
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Int$setIntVal(val)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-display"></a>}}
-\if{latex}{\out{\hypertarget{method-display}{}}}
-\subsection{Method \code{display()}}{
-print object
 MiniZinc representation
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Int$display()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Int$setIntVal(val)}\if{html}{\out{</div>}}
 }
 
 }

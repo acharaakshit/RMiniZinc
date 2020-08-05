@@ -47,9 +47,9 @@ constructor
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{imin}}{minimum value of type IntVal}
+\item{\code{imin}}{minimum int value}
 
-\item{\code{imax}}{maximum value of type IntVal}
+\item{\code{imax}}{maximum int value}
 }
 \if{html}{\out{</div>}}
 }
@@ -76,7 +76,7 @@ set the minimum IntVal
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{val}}{IntVal value to be set}
+\item{\code{val}}{int value to be set}
 }
 \if{html}{\out{</div>}}
 }
@@ -103,7 +103,7 @@ set the maximum IntVal
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{val}}{IntVal value to be set}
+\item{\code{val}}{int value to be set}
 }
 \if{html}{\out{</div>}}
 }
