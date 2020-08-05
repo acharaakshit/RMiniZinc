@@ -5,86 +5,71 @@ test_that("check if the variable declarations are correct",{
   # set values  -- currently only integer ranges are supported
   expect_error(SetVal$new(c(l=1.1, u=2.1)))
   # set can't be assigned an index
-  expect_error(TypeInst$new(Type$new(base_type = "INT", kind = "parameter", set_type = TRUE),
+  expect_error(TypeInst$new(Type$new(base_type = "int", kind = "par", set_type = TRUE),
                             indexExprVec = Set$new(SetVal$new(c(l=1, u=2)))))
 })
 
 test_that("'knapsack problems can be created",{
   # create the variable and parameter declarations
   
-  par_ti = TypeInst$new(Type$new(base_type = "int", kind = "parameter"))
-  par1 = VarDecl$new(id = "n", type_inst = par_ti)
-  item1 = VarDeclItem$new(decl = par1)
+  # create the variable and parameter declarations
+  item1 = VarDeclItem$new(decl = IntDecl(name = "n", kind = "par"))
   
-  par2_val = BinOp$new(lhs_expression = Int$new(IntVal$new(1)), binop = "..", rhs_expression =  par1$id())
-  par2_ti = TypeInst$new(Type$new(base_type = "int", kind = "parameter", dim = 1, set_type = TRUE))
-  par2 = VarDecl$new(type_inst = par2_ti, e = par2_val, id = "OBJ")
-  item2 = VarDeclItem$new(decl = par2)
+  par2_val = BinOp$new(lhs_expression = Int$new(1), binop = "..", rhs_expression = item1$e()$id())
+  item2 = VarDeclItem$new(decl = IntSetDecl(name = "OBJ", kind = "par", e = par2_val))
   
-  par3_ti = TypeInst$new(Type$new(base_type = "int", kind = "parameter"))
-  par3 = VarDecl$new(type_inst = par3_ti, id = "capacity")
-  item3 = VarDeclItem$new(decl = par3)
+  item3 = VarDeclItem$new(decl = IntDecl(name = "capacity", kind = "par"))
   
-  par4_ti = TypeInst$new(Type$new(base_type = "int", kind = "parameter", dim = 1),
-                         indexExprVec = par2$id())
-  par4 = VarDecl$new(type_inst = par4_ti, id = "profit")
-  item4 = VarDeclItem$new(decl = par4)
+  item4 = VarDeclItem$new(decl = IntArrDecl(name = "profit", kind = "par", ind = item2$e()$id()))
   
-  par5_ti = TypeInst$new(Type$new(base_type = "int", kind = "parameter", dim = 1),
-                         indexExprVec = par2$id())
-  par5 = VarDecl$new(type = par5_ti, id = "size")
-  item5 = VarDeclItem$new(decl = par5)
+  item5 = VarDeclItem$new(decl = IntArrDecl(name = "size", kind = "par", ind = item2$e()$id()))
   
-  par6_ti = TypeInst$new(Type$new(base_type = "int", kind = "decision", dim = 1),
-                         indexExprVec = par2$id())
-  par6 = VarDecl$new(type = par6_ti, id = "x")
-  item6 = VarDeclItem$new(decl = par6)
-  
+  item6 = VarDeclItem$new(decl = IntArrDecl(name = "x", kind = "var", ind = item2$e()$id()))
   # create the constraints
   
   # declare parameter for iterator
-  par_ti = TypeInst$new(Type$new(base_type = "int", kind = "parameter"))
-  parIter = VarDecl$new(id = "i", par_ti, type_inst = par_ti)
-  # generator
-  gen_forall = Generator$new(IN = par2$id(), decls = list(parIter))
-  # binary operator expression
-  bop1 = BinOp$new(lhs_expression = ArrayAccess$new(v = par6$id(), 
+  parIter = IntDecl(name = "i", kind = "par")
+  
+  
+  gen_forall = Generator$new(IN = item2$e()$id(), decls = list(parIter))
+  bop1 = BinOp$new(lhs_expression = ArrayAccess$new(v = item6$e()$id(), 
                                                     args= list(gen_forall$decl(1))),
-                   binop = ">=", rhs_expression = Int$new(value = IntVal$new(0)))
-  # comprehension
-  Comp1 = Comprehension$new(generators = list(gen_forall), e = bop1)
-  # forall function call
+                   binop = ">=", rhs_expression = Int$new(0))
+  
+  Comp1 = Comprehension$new(generators = list(gen_forall), e = bop1, set = FALSE)
   cl1 = Call$new(fnName = "forall", args = list(Comp1))
   item7 = ConstraintItem$new(e = cl1)
   
-  gen_sum = Generator$new(IN = par2$id(), decls = list(parIter))
+  gen_sum = Generator$new(IN = item2$e()$id(), decls = list(parIter))
   
-  bop2 = BinOp$new(lhs_expression = ArrayAccess$new(v = par5$id(), args = list(gen_sum$decl(1))),                  binop = "*",  rhs_expression = ArrayAccess$new(v = par6$id() , 
-                                                                                                                                                                  args = list(gen_sum$decl(1))))
-  Comp2 = Comprehension$new(generators = list(gen_sum), e = bop2)
+  bop2 = BinOp$new(lhs_expression = ArrayAccess$new(v = item5$e()$id(), args = list(gen_sum$decl(1))),                  binop = "*",  rhs_expression = ArrayAccess$new(v = item6$e()$id() , 
+                                                                                                                                                                       args = list(gen_sum$decl(1))))
+  Comp2 = Comprehension$new(generators = list(gen_sum), e = bop2, set = FALSE)
   cl2 = Call$new(fnName = "sum", args = list(Comp2))
-  bop3 = BinOp$new(lhs_expression = cl2, binop = "<=", rhs_expression = par3$id())
+  bop3 = BinOp$new(lhs_expression = cl2, binop = "<=", rhs_expression = item3$e()$id())
   item8 = ConstraintItem$new(e = bop3)
   
   # create solve type
   
-  bop4 = BinOp$new(lhs_expression = ArrayAccess$new(v = par4$id(), args = list(gen_sum$decl(1))),
-                   binop = "*", rhs_expression = ArrayAccess$new(v = par6$id(), 
+  bop4 = BinOp$new(lhs_expression = ArrayAccess$new(v = item4$e()$id(), args = list(gen_sum$decl(1))),
+                   binop = "*", rhs_expression = ArrayAccess$new(v = item6$e()$id(), 
                                                                  args = list(gen_sum$decl(1))))
   
-  Comp3 = Comprehension$new(generators = list(gen_sum), e = bop4)
+  Comp3 = Comprehension$new(generators = list(gen_sum), e = bop4, set = FALSE)
   
   cl3 = Call$new(fnName = "sum", args = list(Comp3))
   
   item9 = SolveItem$new(solve_type = "maximize", e = cl3)
+  
   
   # combine to create model
   
   items  = c(item1, item2, item3, item4, item5, item6, item7, item8, item9)
   mod = Model$new(items = items)
   modString = mod$mzn_string()
+  
   pVals= list(3,9,c(15,10,7),c(4,3,2))
-  names(pVals) = c(par1$id()$getId(), par3$id()$getId(), par4$id()$getId(), par5$id()$getId())
+  names(pVals) = c(item1$e()$id()$getId(), item3$e()$id()$getId(), item4$e()$id()$getId(), item5$e()$id()$getId())
   
   modString = rminizinc:::set_params(modData = pVals, modelString = modString)
   
