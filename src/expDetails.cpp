@@ -7,45 +7,46 @@ using namespace std;
 
 // mapping of BinOp type with strings
 std::string boStrMap(BinOpType OP){
-  if(OP == BinOpType::BOT_DOTDOT) return "DOTDOT";
-  else if(OP == BinOpType::BOT_MINUS) return "MINUS";
-  else if(OP == BinOpType::BOT_PLUS) return "PLUS" ;
-  else if(OP == BinOpType::BOT_MOD) return "MOD";
-  else if(OP == BinOpType::BOT_DIV) return "DIVIDE";
-  else if(OP == BinOpType::BOT_POW) return "RAISE_TO";
-  else if(OP == BinOpType::BOT_MULT) return "MULTIPLY";
-  else if(OP == BinOpType::BOT_EQ) return "EQUAL_TO";
-  else if(OP == BinOpType::BOT_GQ) return "GREATER_THAN_OR_EQUAL_TO";
-  else if(OP == BinOpType::BOT_GR) return "GREATER_THAN";
-  else if(OP == BinOpType::BOT_INTERSECT) return "INTERSECTION";
-  else if(OP == BinOpType::BOT_LE) return "LESS_THAN";
-  else if(OP == BinOpType::BOT_LQ) return "LESS_THAN_OR_EQUAL_TO";
-  else if(OP == BinOpType::BOT_AND) return "AND";
-  else if(OP == BinOpType::BOT_OR) return "OR";
-  else if(OP == BinOpType::BOT_IMPL) return "IMPLIES";
-  else if(OP == BinOpType::BOT_NQ) return "NOT_EQUALS";
-  else if(OP == BinOpType::BOT_UNION) return "UNION";
-  else if(OP == BinOpType::BOT_SUBSET) return "SUBSET";
-  else if(OP == BinOpType::BOT_SUPERSET) return "SUPERSET";
-  else if(OP == BinOpType::BOT_DIFF) return "DIFF";
-  else if(OP == BinOpType::BOT_SYMDIFF) return "SYMDIFF";
-  else if(OP == BinOpType::BOT_PLUSPLUS) return "PLUS_PLUS";
-  else if(OP == BinOpType::BOT_XOR) return "XOR";
-  else if(OP == BinOpType::BOT_IN) return "IN";
-  else if(OP == BinOpType::BOT_EQUIV) return "EQUIVALENCE";
-  else if(OP == BinOpType::BOT_RIMPL) return "REVERSE_IMPLIES";
-  else return "IDIV";
+  if(OP == BinOpType::BOT_DOTDOT) return "'..'";
+  else if(OP == BinOpType::BOT_MINUS) return "'-'";
+  else if(OP == BinOpType::BOT_PLUS) return "'+'" ;
+  else if(OP == BinOpType::BOT_MOD) return "'mod'";
+  else if(OP == BinOpType::BOT_DIV) return "'/'";
+  else if(OP == BinOpType::BOT_POW) return "'^'";
+  else if(OP == BinOpType::BOT_MULT) return "'*'";
+  else if(OP == BinOpType::BOT_EQ) return "'='";
+  else if(OP == BinOpType::BOT_GQ) return "'>='";
+  else if(OP == BinOpType::BOT_GR) return "'>'";
+  else if(OP == BinOpType::BOT_INTERSECT) return "'intersect'";
+  else if(OP == BinOpType::BOT_LE) return "'<'";
+  else if(OP == BinOpType::BOT_LQ) return "'<='";
+  else if(OP == BinOpType::BOT_AND) return "'/\\'";
+  else if(OP == BinOpType::BOT_OR) return "'\\/'";
+  else if(OP == BinOpType::BOT_IMPL) return "'->'";
+  else if(OP == BinOpType::BOT_NQ) return "'!='";
+  else if(OP == BinOpType::BOT_UNION) return "'union'";
+  else if(OP == BinOpType::BOT_SUBSET) return "'subset'";
+  else if(OP == BinOpType::BOT_SUPERSET) return "'superset'";
+  else if(OP == BinOpType::BOT_DIFF) return "'diff'";
+  else if(OP == BinOpType::BOT_SYMDIFF) return "'symdiff'";
+  else if(OP == BinOpType::BOT_PLUSPLUS) return "'++'";
+  else if(OP == BinOpType::BOT_XOR) return "'xor'";
+  else if(OP == BinOpType::BOT_IN) return "'in'";
+  else if(OP == BinOpType::BOT_EQUIV) return "'<->'";
+  else if(OP == BinOpType::BOT_RIMPL) return "'<-'";
+  else return "'div'";
 }
 
 // mapping of UnOp type with strings
 std::string uoStrMap(UnOpType OP){
-  if(OP == UnOpType::UOT_PLUS) return "PLUS";
-  else if(OP == UnOpType::UOT_MINUS) return "MINUS";
-  else return "NOT";
+  if(OP == UnOpType::UOT_PLUS) return "'+'";
+  else if(OP == UnOpType::UOT_MINUS) return "'-'";
+  else return "'not'";
 }
 
 // Type details for variable declarations
 std::string vType(Type tp){
+  // if(tp.isopt()) cout << "OPT" << endl;
   if(tp.isint()) return ("int");
   else if(tp.isfloat()) return ("float");
   else if(tp.isbool()) return ("bool");
@@ -69,12 +70,14 @@ std::string vType(Type tp){
 }
 
 void expDetails(MiniZinc::Expression *exp, List &expList){
-  if(exp->eid() == Expression::E_COMP){
+  if(exp == NULL){
+   Rcpp::stop("Parse error"); 
+  }if(exp->eid() == Expression::E_COMP){
     List Comp;
     List Gentrs;
     CharacterVector gtnms;
-    int n_genrtrs =  exp->cast<Comprehension>()->n_generators();
-    
+    Comprehension *cp = exp->cast<Comprehension>();
+    int n_genrtrs =  cp->n_generators();
     for(int i = 0; i<n_genrtrs;i++){
         List Gentr;
         List declLists;
@@ -82,12 +85,11 @@ void expDetails(MiniZinc::Expression *exp, List &expList){
         List whereList;
         CharacterVector gtrnms;
         CharacterVector dnms;
-        Expression *inExp = exp->cast<Comprehension>()->in(i);
-        Expression *whereExp = exp->cast<Comprehension>()->where(i);
-        
-        for(int j = 0; j < exp->cast<Comprehension>()->n_decls(i); j++){
+        Expression *inExp = cp->in(i);
+        Expression *whereExp = cp->where(i);
+        for(int j = 0; j < cp->n_decls(i); j++){
           List declList;
-          Expression *vd = exp->cast<Comprehension>()->decl(i, j);
+          Expression *vd = cp->decl(i, j);
           expDetails(vd, declList);
           declLists.push_back(declList);
           string vn = "DECL";
@@ -103,13 +105,13 @@ void expDetails(MiniZinc::Expression *exp, List &expList){
         
         // in expression for this generator
         if(inExp != NULL){
-          expDetails(exp->cast<Comprehension>()->in(i), inList);
+          expDetails(inExp, inList);
           Gentr.push_back(inList);
           gtrnms.push_back("IN");
         }
         // where expression for this generator
         if(whereExp != NULL){
-          expDetails(exp->cast<Comprehension>()->where(i), whereList);
+          expDetails(whereExp, whereList);
           Gentr.push_back(whereList);
           gtrnms.push_back("WHERE");
         }
@@ -123,12 +125,13 @@ void expDetails(MiniZinc::Expression *exp, List &expList){
     
     Gentrs.names() = gtnms;
     Comp.push_back(Gentrs);
-    Comp.names() = CharacterVector({"GENERATORS"}); 
+    Comp.push_back(cp->set());
+    Comp.names() = CharacterVector({"GENERATORS", "SET"}); 
     List cExp;
     if(exp->cast<Comprehension>()->e() != NULL){
       expDetails(exp->cast<Comprehension>()->e() , cExp);
       Comp.push_back(cExp);
-      Comp.names() = CharacterVector({"GENERATORS", "EXPRESSION"}); 
+      Comp.names() = CharacterVector({"GENERATORS", "IS_SET", "EXPRESSION"}); 
     }
     expList.push_back(Comp);
     expList.names() = CharacterVector({"COMPREHENSION"});
@@ -136,16 +139,16 @@ void expDetails(MiniZinc::Expression *exp, List &expList){
     SetLit *sl = exp->cast<SetLit>();
     List setList;
     if(sl->isv()!= NULL){  
+      int min_val = sl->isv()->min().toInt();
       int max_val = sl->isv()->max().toInt();
-      int min_val = sl->isv()->min().toInt();  
-      IntegerVector setVec = {max_val, min_val}; 
-      setVec.names() = CharacterVector({"MAX", "MIN"});
+      IntegerVector setVec = {min_val, max_val}; 
+      setVec.names() = CharacterVector({"IMIN", "IMAX"});
       expList.push_back(setVec);
     }else if(sl->fsv()!=NULL){
-      float max_val =  sl->fsv()->max().toDouble();
       float min_val =  sl->fsv()->min().toDouble();
-      NumericVector setVec = {max_val, min_val};
-      setVec.names() = CharacterVector({"MAX", "MIN"});
+      float max_val =  sl->fsv()->max().toDouble();
+      NumericVector setVec = {min_val, max_val};
+      setVec.names() = CharacterVector({"FMIN", "FMAX"});
       expList.push_back(setVec);
     }else{
       ASTExprVec<Expression> expVec = sl->v();
@@ -327,10 +330,10 @@ void expDetails(MiniZinc::Expression *exp, List &expList){
     // decision variables or parameters
     if(vd->type().ispar()){
       //parameter
-      vdDetails.push_back("PARAMETER");
+      vdDetails.push_back("par");
     }else if(vd->type().isvar()){
       //decision variables
-      vdDetails.push_back("DECISION_VARIABLE");
+      vdDetails.push_back("var");
     }else{
       vdDetails.push_back("OTHER");
     }
@@ -347,6 +350,28 @@ void expDetails(MiniZinc::Expression *exp, List &expList){
         vdDetails.push_back(varDomain);
         vdnms.push_back("DOMAIN");
       }
+    }
+    
+    List indices;
+    CharacterVector indnms;
+    TypeInst *nti = vd->ti();
+    ASTExprVec<TypeInst> index_ti = nti->ranges();
+    for(int s = 0; s < index_ti.size(); s++){
+      List index;
+      if(index_ti.operator[](s)->domain() == NULL){
+        Rcpp::warning("could not parse array index -- is it a data type?");
+        break;
+      }
+      expDetails(index_ti.operator[](s)->domain() , index);
+      indices.push_back(index);
+      string ix = "INDEX";
+      ix.append(to_string(s+1));
+      indnms.push_back(ix);
+    }
+    if(indices.length()){
+      indices.names() = indnms;
+      vdDetails.push_back(indices);
+      vdnms.push_back("INDEX");
     }
     
     Expression *vExp = vd->e();
