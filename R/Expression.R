@@ -25,21 +25,15 @@ Int = R6Class("Int",
                  #' @description constructor for an int literal
                  #' @param value the value of the integer
                  initialize =  function(value){
-                   assertR6(value, "IntVal")
-                   private$.value = value 
+                   private$.value = IntVal$new(val = value)
                  },
                  #' @description get the IntVal value
                  getIntVal = function(){
-                   return (private$.value)
+                   return (private$.value$v())
                  },
                  #' @description set the IntVal value
                  setIntVal = function(val){
-                   assertR6(val, "IntVal")
-                   private$.value = val
-                 },
-                 #' @description print object
-                 display = function(){
-                   print(self$c_str())
+                   private$.value = IntVal$new(val = val)
                  },
                  #' MiniZinc representation
                  c_str = function(){
@@ -67,25 +61,19 @@ Float = R6Class("Float",
                  #' @description constructor for an int literal
                  #' @param value the value of the integer
                  initialize =  function(value){
-                   assertR6(value, "FloatVal")
-                   private$.value = value 
+                   private$.value = FloatVal$new(val = value)
                  },
                  #' @description get the integer value
                  getFloatVal = function(){
-                   return (private$.value)
+                   return (private$.value$v())
                  },
                  #' @description set the integer value
                  setFloatVal = function(val){
-                   assertR6(val, "FloatVal")
-                   private$.value = val
-                 },
-                 #' @description print object
-                 display = function(){
-                   print(self$c_str())
+                   private$.value = FloatVal$new(val = val)
                  },
                  #' MiniZinc representation
                  c_str = function(){
-                   return(as.character(private$.value))
+                   return(as.character(private$.value$v()))
                  }
                ),
                private = list(
@@ -108,8 +96,11 @@ Set = R6Class("Set",
               public = list(
                 #' @description constuctor
                 #' @param val the set value
-                initialize = function(val){
-                  if(testR6(val, "IntSetVal")){
+                #' @param empty_set bool to specify is set is empty(FALSE by default) 
+                initialize = function(val = NULL, empty_set = FALSE){
+                  if(is.null(val) && empty_set){
+                    private$.et = TRUE
+                  }else if(testR6(val, "IntSetVal")){
                     private$.isv = val 
                   }else if(testR6(val, "FloatSetVal")){
                     private$.fsv = val
@@ -148,23 +139,21 @@ Set = R6Class("Set",
                   assertR6(val, "FloatSetVal")
                   private$.fsv = val
                 },
-                #' @description display the value
-                display =  function(){
-                  print(self$c_str())
-                },
                 #' @description convert into MiniZinc representation
                 c_str = function(){
                   if(!is.null(private$.isv)){
-                    sprintf("%s..%s", private$isv()$getMin()$v(), private$isv()$getMax()$v())
+                    sprintf("%s..%s", private$.isv$getMin(), private$.isv$getMax())
                   }else if(!is.null(private$.fsv)){
-                    sprintf("%s..%s", private$fsv()$getMin()$v(), private$fsv()$getMax()$v())
+                    sprintf("%s..%s", private$.fsv$getMin(), private$.fsv$getMax())
                   }else{
                     retStr = "";
-                    for(i in seq(1, length(private$.setVec), 1)){
-                      retStr = paste0(retStr, private$.setVec[[i]]$c_str())
-                      if(i < length(private$.setVec)){
-                        retStr = paste0(retStr, ", ")
-                      }
+                    if(private$.et != TRUE){
+                      for(i in seq(1, length(private$.setVec), 1)){
+                        retStr = paste0(retStr, private$.setVec[[i]]$c_str())
+                        if(i < length(private$.setVec)){
+                          retStr = paste0(retStr, ", ")
+                        }
+                      } 
                     }
                     return(sprintf("{%s}", retStr))
                   }
@@ -179,7 +168,10 @@ Set = R6Class("Set",
                 .isv = NULL,
                 #' @field .fsv
                 #' the float range set 
-                .fsv = NULL
+                .fsv = NULL,
+                #' @field .et
+                #' empty set
+                .et = FALSE
               ))
 
 #' @title create a bool
@@ -202,10 +194,6 @@ Bool = R6Class("Bool",
                  #' @description get boolean value
                  v = function(){
                    return(private$.v)
-                 },
-                 #' @description print object
-                 display = function(){
-                   print(self$c_str())
                  },
                  #' MiniZinc representation
                  c_str = function(){
@@ -245,13 +233,9 @@ String = R6Class("String",
                      assertCharacter(val)
                      private$.v = val
                    },
-                   #' @description print object
-                   display = function(){
-                     print(self$c_str())
-                   },
                    #' MiniZinc representation
                    c_str = function(){
-                     return(as.character(private$.v))
+                     return(shQuote(private$.v, "cmd"))
                    }
                  ),
                  private = list(
@@ -380,7 +364,7 @@ ArrayAccess = R6Class("ArrayAccess",
                         #' @description return the MiniZinc representation
                         c_str = function(){
                           retStr = ""
-                          for (i in seq(1, length(args), 1)) {
+                          for (i in seq(1, length(private$.args), 1)) {
                             if(testR6(private$.args[[i]], "VarDecl")){
                               retStr = paste0(retStr, private$.args[[i]]$id()$getId())
                             }else{
@@ -448,11 +432,11 @@ Generator = R6Class("Generator",
                          }
                          inStr = ''
                          if(!is.null(private$.in)){
-                           inStr = sprintf("in %s ", private$.in$c_str())
+                           inStr = sprintf("in %s", private$.in$c_str())
                          }
                          whereStr = ''
                          if(!is.null(private$.where)){
-                           whereStr = sprintf("where %s ", private$.where$c_str())
+                           whereStr = sprintf("where %s", private$.where$c_str())
                          }
                          return(sprintf("%s %s %s", dStr, inStr, whereStr)) 
                        }
@@ -481,11 +465,14 @@ Comprehension = R6Class("Comprehension",
                            #' @description constructor
                            #' @param generators generators of the expression
                            #' @param e inside the comprehension
-                           initialize = function(generators, e){
+                           #' @param set bool to specify if comprehension is a set.
+                           initialize = function(generators, e, set){
                              assert_list(generators, "Generator")
                              private$.generators = generators
                              assertR6(e, "Expression")
                              private$.e = e
+                             assertLogical(set)
+                             private$.set = set
                            },
                            #' @description get the number of generators
                            ngens = function(){
@@ -516,16 +503,24 @@ Comprehension = R6Class("Comprehension",
                            e = function(){
                              return(private$.e)
                            },
+                           #' @description check if comprehension is a set
+                           isSet = function(){
+                             return(private$.set)
+                           },
                            #' @description get the MiniZinc representation
                            c_str = function(){
                              gStr = ""
                              for (i in seq(1, length(private$.generators), 1)) {
                                gStr = paste0(gStr, private$.generators[[i]]$c_str())
                                if(i < length(private$.generators)){
-                                 gStr = paste0(gStr, " | ")
+                                 gStr = paste0(gStr, ", ")
                                }
                              }
-                             return(sprintf("[%s | %s]", private$.e$c_str(), gStr)) 
+                             if(private$.set){
+                               return(sprintf("{%s | %s}", private$.e$c_str(), gStr)) 
+                             }else{
+                               return(sprintf("[%s | %s]", private$.e$c_str(), gStr))  
+                             }
                            }
                          ),
                          private = list(
@@ -534,7 +529,10 @@ Comprehension = R6Class("Comprehension",
                            .generators = NULL,
                            #' @field .expression
                            #' the comprehension expression
-                           .e = NULL
+                           .e = NULL,
+                           #' @field .set
+                           #' TRUE if comprehension is a set
+                           .set = NULL
                          ))
 
 #' @title Binop class
@@ -572,7 +570,7 @@ BinOp = R6Class("BinOp",
                    },
                    #' @description return the MiniZinc representation
                    c_str = function(){
-                     return(sprintf("%s%s%s", private$.lhs_exp$c_str(),
+                     return(sprintf("%s %s %s", private$.lhs_exp$c_str(),
                                     private$.op, private$.rhs_exp$c_str()))
                    }
                  ),
@@ -657,6 +655,7 @@ Call = R6Class("Call",
                    private$.id = fnName
                    assert_list(args, "Expression")
                    private$.args = args
+                   private$.nargs = length(args)
                  },
                  #' @description the function id/string
                  id =  function(){
@@ -686,14 +685,14 @@ Call = R6Class("Call",
                  },
                  #' @description return the MiniZinc representation
                  c_str = function(){
-                   clStr = ''
-                   for(i in seq(1, length(private$.args), 1)){
-                     clStr = paste0(clStr, "(" , private$.args[[i]]$c_str(), ")")
-                     if(i < length(private$.args)){
-                       clStr = sprintf(clStr, ", ")
+                   clStr = ""
+                   for(i in seq(1, self$nargs(), 1)){
+                     clStr = paste0(clStr, private$.args[[i]]$c_str())
+                     if(i < self$nargs()){
+                       clStr = paste0(clStr, ", ")
                      }
                    }
-                   return(sprintf("%s %s", private$.id, clStr))
+                   return(sprintf("%s(%s)", private$.id, clStr))
                  }
                ),
                private = list(
@@ -732,6 +731,17 @@ Let = R6Class("Let",
                 #' @description return the body
                 body = function(){
                   return(private$.in)
+                },
+                #' @description get the MiniZinc representation
+                c_str = function(){
+                  declStr = ""
+                  for(i in seq(1, length(private$.decl), 1)){
+                    declStr = paste0(declStr, private$.decl[[i]]$c_str())
+                    if(i < length(private$.decl)){
+                      declStr = paste0(declStr, ", ")
+                    }
+                  }
+                  return(sprintf("let {%s} (%s)", declStr, private$.in$c_str()))
                 }
               ),
               private = list(
@@ -841,14 +851,14 @@ VarDecl = R6Class("VarDecl",
                     },
                     #' @description check if it's a parameter
                     isPar = function(){
-                      if(private$.ti$type()$kind() == "parameter"){
+                      if(private$.ti$type()$kind() == "par"){
                         return (TRUE)
                       }
                       return(FALSE)
                     },
                     #' @description check if it's a decision variable
                     isVar = function(){
-                      if(private$.ti$type()$kind() == "decision"){
+                      if(private$.ti$type()$kind() == "var"){
                         return (TRUE)
                       }
                       return(FALSE)
@@ -860,18 +870,42 @@ VarDecl = R6Class("VarDecl",
                       if (self$isVar()){
                         var = "var "  
                       }
-                      if(test_choice(private$.ti$type()$bt(), c("int", "float", "bool")) &&
-                         private$.ti$type()$ndim() == 0){
-                        retStr = sprintf("%s%s: %s", var, private$.ti$type()$bt(), private$.id$getId()) 
-                      }else if(test_choice(private$.ti$type()$bt(), c("int", "float", "bool")) &&
-                               private$.ti$type()$ndim() > 0){
-                        if(private$.ti$type()$isSet()){
+                      if(private$.ti$type()$bt() == "unknown"){
+                        if(private$.ti$type()$ndim() == 0 && !private$.ti$type()$isSet()){
+                          retStr = sprintf("%s%s: %s", var, private$.ti$domain()$c_str(), private$.id$getId()) 
+                        }else if(private$.ti$type()$isSet()){
+                          retStr = sprintf("%s set of %s: %s",var, private$.ti$domain()$c_str(),
+                                           private$.id$getId())
+                        }else{
+                          indList = private$.ti$ranges()
+                          indices = ""
+                          for (i in seq(1, length(indList), 1)) {
+                            indices = paste0(indices, indList[[i]]$c_str())
+                            if(i < length(indList)){
+                              indices = paste0(indices, ", ")
+                            }
+                          }
+                          retStr = sprintf("%s array[%s] of %s: %s", var, indices,
+                                           private$.ti$domain()$c_str(), private$.id$getId())
+                        } 
+                      }else{
+                        if(private$.ti$type()$ndim() == 0 && !private$.ti$type()$isSet()){
+                          retStr = sprintf("%s%s: %s", var, private$.ti$type()$bt(), private$.id$getId()) 
+                        }else if(private$.ti$type()$isSet()){
                           retStr = sprintf("set of %s%s: %s",private$.ti$type()$bt(),
                                            var, private$.id$getId())
                         }else{
-                          retStr = sprintf("array[%s] of %s%s: %s", private$.ti$ranges()$c_str(),
+                          indList = private$.ti$ranges()
+                          indices = ""
+                          for (i in seq(1, length(indList), 1)) {
+                            indices = paste0(indices, indList[[i]]$c_str())
+                            if(i < length(indList)){
+                              indices = paste0(indices, ", ")
+                            }
+                          }
+                          retStr = sprintf("array[%s] of %s%s: %s", indices,
                                            var, private$.ti$type()$bt(), private$.id$getId())
-                        }
+                        } 
                       }
                       if(!is.null(private$.e)){
                         return(sprintf("%s = %s", retStr, private$.e$c_str()))
@@ -918,7 +952,7 @@ TypeInst = R6Class("TypeInst",
                      initialize = function(type, indexExprVec = NULL, domain = NULL){
                        assertR6(type, "Type")
                        private$.type = type 
-                       assertTRUE(testR6(indexExprVec, "Expression") || testNull(indexExprVec))
+                       assertTRUE(testList(indexExprVec, "Expression") || testNull(indexExprVec))
                        private$.indExpr = indexExprVec
                        assertTRUE(testR6(domain, "Expression") || testNull(domain))
                        private$.domain = domain
@@ -955,3 +989,35 @@ TypeInst = R6Class("TypeInst",
                      #' the type information
                      .type = NULL
                    ))
+
+#' @title Annotation
+#' @description create Annotations in MiniZinc
+#' @import R6
+#' @import checkmate
+#' @export
+Annotation = R6Class("Annotation",
+                     public = list(
+                       #' @description constructor
+                       #' @param expVec expression vector
+                       initialize = function(expVec){
+                        assertList(expVec, "Expression")
+                         private$.expVec = expVec
+                       },
+                       #' @description get the list of expressions
+                       getExp = function(){
+                         return(private$.expVec)
+                       },
+                       #' @description get the MiniZinc expression
+                       c_str = function(){
+                         retStr = ""
+                         for (i in seq(1, length(private$.expVec), 1)) {
+                           retStr = paste0(retStr, private$.expVec[[i]]$c_str())
+                         }
+                         return(sprintf(" :: %s", retStr))
+                       }
+                     ),
+                     private = list(
+                       #' @field .expVec
+                       #' list of expressions
+                       .expVec = NULL
+                     ))
