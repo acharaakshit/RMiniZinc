@@ -18,11 +18,13 @@ SolveItem = R6Class("SolveType",
                              #' create an instance of specify_problem class
                              #' @param solve_type satisfaction, minimization or maximization
                              #' @param e expression to minimize or maximize
-                             initialize = function(solve_type, e = NULL){
+                             #' @param ann annotation
+                             initialize = function(solve_type, e = NULL, ann = NULL){
                                 
                                   assert_choice(solve_type, .globals$objectives)
                                   private$.st = solve_type
-                                  
+                                  assertTRUE(testR6(ann, "Annotation") || testNull(ann))
+                                  private$.ann = ann
                                   if(test_choice(solve_type, "satisfy")){
                                     assert_null(expression)
                                   }else{
@@ -40,10 +42,14 @@ SolveItem = R6Class("SolveType",
                              },
                              #' @description to string method
                              c_str = function(){
+                               annStr = ""
+                               if(!is.null(private$.ann)){
+                                 annStr = private$.ann$c_str()
+                               }
                                if(private$.st == "satisfy"){
-                                 return(sprintf("solve satisfy;"))
+                                 return(sprintf("solve %s satisfy;", annStr))
                                }else{
-                                 return(sprintf("solve %s %s;", private$.st, private$.e$c_str()))
+                                 return(sprintf("solve %s %s %s;", annStr, private$.st, private$.e$c_str()))
                                }
                              }
                              ),
@@ -53,6 +59,9 @@ SolveItem = R6Class("SolveType",
                             .e = NULL,
                             #' @description .st
                             #' the solve type
-                            .st = NULL
+                            .st = NULL,
+                            #' @field .ann
+                            #' annotation of the solve type
+                            .ann = NULL
                           )
                     )
