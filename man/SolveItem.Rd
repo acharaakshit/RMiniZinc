@@ -10,6 +10,20 @@ minimization or maximization problem
 \section{Super class}{
 \code{\link[rminizinc:Item]{rminizinc::Item}} -> \code{SolveType}
 }
+\section{Public fields}{
+\if{html}{\out{<div class="r6-fields">}}
+\describe{
+\item{\code{.ann}}{annotation of the solve type}
+}
+\if{html}{\out{</div>}}
+}
+\section{Active bindings}{
+\if{html}{\out{<div class="r6-active-bindings">}}
+\describe{
+\item{\code{.ann}}{annotation of the solve type}
+}
+\if{html}{\out{</div>}}
+}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
@@ -32,7 +46,7 @@ minimization or maximization problem
 \subsection{Method \code{new()}}{
 create an instance of specify_problem class
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SolveItem$new(solve_type, e = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SolveItem$new(solve_type, e = NULL, ann = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -41,6 +55,8 @@ create an instance of specify_problem class
 \item{\code{solve_type}}{satisfaction, minimization or maximization}
 
 \item{\code{e}}{expression to minimize or maximize}
+
+\item{\code{ann}}{annotation}
 }
 \if{html}{\out{</div>}}
 }

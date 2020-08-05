@@ -29,7 +29,6 @@ create a string in MiniZinc
 \item \href{#method-new}{\code{String$new()}}
 \item \href{#method-getV}{\code{String$getV()}}
 \item \href{#method-setV}{\code{String$setV()}}
-\item \href{#method-display}{\code{String$display()}}
 \item \href{#method-c_str}{\code{String$c_str()}}
 \item \href{#method-clone}{\code{String$clone()}}
 }
@@ -79,21 +78,11 @@ set value
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{val}}{string value}
+\item{\code{val}}{string value
+MiniZinc representation}
 }
 \if{html}{\out{</div>}}
 }
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-display"></a>}}
-\if{latex}{\out{\hypertarget{method-display}{}}}
-\subsection{Method \code{display()}}{
-print object
-MiniZinc representation
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{String$display()}\if{html}{\out{</div>}}
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-c_str"></a>}}

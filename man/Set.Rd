@@ -17,6 +17,8 @@ create a set in MiniZinc
 \item{\code{.isv}}{the integer range set}
 
 \item{\code{.fsv}}{the float range set}
+
+\item{\code{.et}}{empty set}
 }
 \if{html}{\out{</div>}}
 }
@@ -28,6 +30,8 @@ create a set in MiniZinc
 \item{\code{.isv}}{the integer range set}
 
 \item{\code{.fsv}}{the float range set}
+
+\item{\code{.et}}{empty set}
 }
 \if{html}{\out{</div>}}
 }
@@ -41,7 +45,6 @@ create a set in MiniZinc
 \item \href{#method-setIsv}{\code{Set$setIsv()}}
 \item \href{#method-getFsv}{\code{Set$getFsv()}}
 \item \href{#method-setFsv}{\code{Set$setFsv()}}
-\item \href{#method-display}{\code{Set$display()}}
 \item \href{#method-c_str}{\code{Set$c_str()}}
 \item \href{#method-clone}{\code{Set$clone()}}
 }
@@ -58,13 +61,15 @@ create a set in MiniZinc
 \subsection{Method \code{new()}}{
 constuctor
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Set$new(val)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Set$new(val = NULL, empty_set = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{val}}{the set value}
+
+\item{\code{empty_set}}{bool to specify is set is empty(FALSE by default)}
 }
 \if{html}{\out{</div>}}
 }
@@ -149,16 +154,6 @@ set the float set range
 }
 \if{html}{\out{</div>}}
 }
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-display"></a>}}
-\if{latex}{\out{\hypertarget{method-display}{}}}
-\subsection{Method \code{display()}}{
-display the value
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Set$display()}\if{html}{\out{</div>}}
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-c_str"></a>}}
