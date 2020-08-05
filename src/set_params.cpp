@@ -106,6 +106,13 @@ std::string set_params(List modData, std::string modelString = "",
           }else if(tp.isboolset()){
             for(int it = 0;it<setVal.length();it++)
               expVec.push_back(new BoolLit(items[nameIndexMap[index]]->loc(),(bool)modData[it]));
+          }else if(tp.bt() == Type::BT_STRING && tp.is_set()){
+            for(int it = 0;it<setVal.length();it++){
+              string setStr = modData[it];
+              expVec.push_back(new StringLit(items[nameIndexMap[index]]->loc(), setStr)); 
+            }
+          }else{
+            Rcpp::stop("not supported yet");
           }
           SetLit *sl = new SetLit(items[nameIndexMap[i]]->loc(), expVec);
           vd->e(sl);
@@ -119,8 +126,7 @@ std::string set_params(List modData, std::string modelString = "",
         
         TypeInst *nti = items[nameIndexMap[index]]->cast<VarDeclI>()->e()->ti();
         ASTExprVec<TypeInst> index_ti = nti->ranges();
-        int noIndex = index_ti.size();
-        for( int k = 0; k<noIndex; k++){
+        for( int k = 0; k < index_ti.size(); k++){
           Expression *ind_exp = index_ti.operator[](k);
           callVec.push_back(ind_exp);
         }
@@ -179,6 +185,13 @@ std::string set_params(List modData, std::string modelString = "",
                 }else if(tp.isboolset()){
                   for(int itt = 0;itt<setVal.length();itt++)
                     subExpVec.push_back(new BoolLit(items[nameIndexMap[index]]->loc(),(bool)modData[itt]));
+                }else if(tp.bt() == Type::BT_STRING && tp.is_set()){
+                  for(int it = 0;it<setVal.length();it++){
+                    string setStr = modData[it];
+                    subExpVec.push_back(new StringLit(items[nameIndexMap[index]]->loc(), setStr)); 
+                  }
+                }else{
+                  Rcpp::stop("not supported yet");
                 }
                 SetLit *sl = new SetLit(items[nameIndexMap[i]]->loc(), subExpVec);
                 expVec.push_back(sl);
