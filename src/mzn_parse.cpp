@@ -74,6 +74,7 @@ List mzn_parse(std::string modelString = "",
       // satisfaction, minimization or maximization problem
       SolveI *ci = items[i]->cast<SolveI>();
       string objectiv;
+      CharacterVector objnms;
       List slvDetails;
       CharacterVector slvnms;
       Expression *optimizeExp =  ci->e();
@@ -95,21 +96,33 @@ List mzn_parse(std::string modelString = "",
         }
       }  
       if(!ci->ann().isEmpty()){
-        List slvAnn;
+        List slvAnns;
+        CharacterVector anms;
+        int annCount = 0;
         for(ExpressionSetIter si = ci->ann().begin(); si != ci->ann().end(); ++si){
+          List slvAnn;
           Expression *e = *si;
           expDetails(e, slvAnn);
+          slvAnns.push_back(slvAnn);
+          string ann = "ARG";
+          ann.append(to_string(annCount+1));
+          anms.push_back(ann);
+          annCount++;
         }
-        slvDetails.push_back(slvAnn);
+        slvAnns.names() = anms;
+        slvDetails.push_back(slvAnns);
         slvnms.push_back("ANNOTATION");
      }
       slvDetails.names() = slvnms;
-      objective.push_back(slvDetails);
       objective.push_back(objectiv);
-      slvnms.push_back("OBJECTIVE");
+      objnms.push_back("OBJECTIVE");
       objective.push_back(i);
-      slvnms.push_back("ITEM_NO");
-      objective.names() = CharacterVector({"DETAILS", "OBJECTIVE", "ITEM_NO"});
+      objnms.push_back("ITEM_NO");
+      if(slvDetails.length()){
+        objective.push_back(slvDetails);
+        objnms.push_back("DETAILS");
+      }
+      objective.names() = objnms;
     }else if(items[i]->iid() == Item::II_FUN ){
       // function
       List fnDetails;
@@ -128,12 +141,21 @@ List mzn_parse(std::string modelString = "",
       }
       
       if(!fi->ann().isEmpty()){
-        List fnAnn;
+        List fnAnns;
+        CharacterVector anms;
+        int annCount = 0;
         for(ExpressionSetIter si = fi->ann().begin(); si != fi->ann().end(); ++si){
+          List fnAnn;
           Expression *e = *si;
           expDetails(e, fnAnn);
+          fnAnns.push_back(fnAnn);
+          string ann = "ARG";
+          ann.append(to_string(annCount+1));
+          anms.push_back(ann);
+          annCount++;
         }
-        fnDets.push_back(fnAnn);
+        fnAnns.names() = anms;
+        fnDets.push_back(fnAnns);
         fnDetnms.push_back("ANNOTATION");
       }
       
@@ -204,9 +226,10 @@ List mzn_parse(std::string modelString = "",
       Expression *aExp = items[i]->cast<AssignI>()->e();
       expDetails(aExp, assignExp);
       List assignDetails;
+      assignDetails.push_back(items[i]->cast<AssignI>()->id().c_str());
       assignDetails.push_back(assignExp);
       assignDetails.push_back(i);
-      assignDetails.names() = CharacterVector({"DETAILS", "ITEM_NO"});
+      assignDetails.names() = CharacterVector({"NAME", "DETAILS", "ITEM_NO"});
       assignments.push_back(assignDetails);
     }else{
       Rcpp::warning("element not identified or supported yet");
