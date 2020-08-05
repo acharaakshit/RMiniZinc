@@ -20,11 +20,11 @@ test_that("'knapsack problems can be created",{
   
   item3 = VarDeclItem$new(decl = IntDecl(name = "capacity", kind = "par"))
   
-  item4 = VarDeclItem$new(decl = IntArrDecl(name = "profit", kind = "par", ind = item2$e()$id()))
+  item4 = VarDeclItem$new(decl = IntArrDecl(name = "profit", kind = "par", ind = list(item2$e()$id())))
   
-  item5 = VarDeclItem$new(decl = IntArrDecl(name = "size", kind = "par", ind = item2$e()$id()))
+  item5 = VarDeclItem$new(decl = IntArrDecl(name = "size", kind = "par", ind = list(item2$e()$id())))
   
-  item6 = VarDeclItem$new(decl = IntArrDecl(name = "x", kind = "var", ind = item2$e()$id()))
+  item6 = VarDeclItem$new(decl = IntArrDecl(name = "x", kind = "var", ind = list(item2$e()$id())))
   # create the constraints
   
   # declare parameter for iterator
