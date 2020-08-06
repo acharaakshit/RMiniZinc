@@ -4,14 +4,14 @@
 \alias{IntSetDecl}
 \title{new int set declaration}
 \usage{
-IntSetDecl(name, kind, e = NULL)
+IntSetDecl(name, kind, value = NULL)
 }
 \arguments{
 \item{name}{variable/parameter name}
 
 \item{kind}{"var" or "par"}
 
-\item{e}{value (NULL by default)}
+\item{value}{value (NULL by default)}
 }
 \description{
 declare a new set of int

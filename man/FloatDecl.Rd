@@ -4,14 +4,14 @@
 \alias{FloatDecl}
 \title{new float declaration}
 \usage{
-FloatDecl(name, kind, e = NULL)
+FloatDecl(name, kind, value = NULL)
 }
 \arguments{
 \item{name}{variable/parameter name}
 
 \item{kind}{"var" or "par"}
 
-\item{e}{value (NULL by default)}
+\item{value}{value (NULL by default)}
 }
 \description{
 declare a new float

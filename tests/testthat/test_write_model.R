@@ -16,15 +16,15 @@ test_that("'knapsack problems can be created",{
   item1 = VarDeclItem$new(decl = IntDecl(name = "n", kind = "par"))
   
   par2_val = BinOp$new(lhs_expression = Int$new(1), binop = "..", rhs_expression = item1$e()$id())
-  item2 = VarDeclItem$new(decl = IntSetDecl(name = "OBJ", kind = "par", e = par2_val))
+  item2 = VarDeclItem$new(decl = IntSetDecl(name = "OBJ", kind = "par", value = par2_val))
   
   item3 = VarDeclItem$new(decl = IntDecl(name = "capacity", kind = "par"))
   
-  item4 = VarDeclItem$new(decl = IntArrDecl(name = "profit", kind = "par", ind = list(item2$e()$id())))
+  item4 = VarDeclItem$new(decl = IntArrDecl(name = "profit", kind = "par", ndim = 1, ind = list(item2$e()$id())))
   
-  item5 = VarDeclItem$new(decl = IntArrDecl(name = "size", kind = "par", ind = list(item2$e()$id())))
+  item5 = VarDeclItem$new(decl = IntArrDecl(name = "size", kind = "par", ndim = 1, ind = list(item2$e()$id())))
   
-  item6 = VarDeclItem$new(decl = IntArrDecl(name = "x", kind = "var", ind = list(item2$e()$id())))
+  item6 = VarDeclItem$new(decl = IntArrDecl(name = "x", kind = "var", ndim = 1, ind = list(item2$e()$id())))
   # create the constraints
   
   # declare parameter for iterator
