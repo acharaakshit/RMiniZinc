@@ -310,7 +310,7 @@ The named list returned by `mzn_parse()` can be used to initialize all the R6 cl
 
 ```{r}
 # mzn file path
-mzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/knapsack/knapsack_0.mzn")
+mzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/production_planning/prod_plan_0.mzn")
 
 # parse the model
 parseObj=rminizinc:::mzn_parse(mznpath = mzn_path)
@@ -318,7 +318,7 @@ parseObj=rminizinc:::mzn_parse(mznpath = mzn_path)
 modString = getRModel(parseObj)$mzn_string()
 
 # dzn file path
-dzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/knapsack/knapsack_0.dzn")
+dzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/production_planning/prod_plan_0.dzn")
 
 # R List object containing the solutions
 solObj = rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gecode",
