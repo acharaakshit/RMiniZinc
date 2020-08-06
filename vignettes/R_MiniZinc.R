@@ -5,15 +5,15 @@ library(rminizinc)
 item1 = VarDeclItem$new(decl = IntDecl(name = "n", kind = "par"))
 
 par2_val = BinOp$new(lhs_expression = Int$new(1), binop = "..", rhs_expression = item1$e()$id())
-item2 = VarDeclItem$new(decl = IntSetDecl(name = "OBJ", kind = "par", e = par2_val))
+item2 = VarDeclItem$new(decl = IntSetDecl(name = "OBJ", kind = "par", value = par2_val))
 
 item3 = VarDeclItem$new(decl = IntDecl(name = "capacity", kind = "par"))
 
-item4 = VarDeclItem$new(decl = IntArrDecl(name = "profit", kind = "par", ind = list(item2$e()$id())))
+item4 = VarDeclItem$new(decl = IntArrDecl(name = "profit", kind = "par", ndim = 1, ind = list(item2$e()$id())))
 
-item5 = VarDeclItem$new(decl = IntArrDecl(name = "size", kind = "par", ind = list(item2$e()$id())))
+item5 = VarDeclItem$new(decl = IntArrDecl(name = "size", kind = "par", ndim = 1, ind = list(item2$e()$id())))
 
-item6 = VarDeclItem$new(decl = IntArrDecl(name = "x", kind = "var", ind = list(item2$e()$id())))
+item6 = VarDeclItem$new(decl = IntArrDecl(name = "x", kind = "var", ndim = 1, ind = list(item2$e()$id())))
 
 ## -----------------------------------------------------------------------------
 
@@ -117,7 +117,7 @@ print(solObj$SOLUTIONS)
 
 ## -----------------------------------------------------------------------------
 # mzn file path
-mzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/knapsack/knapsack_0.mzn")
+mzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/production_planning/prod_plan_0.mzn")
 
 # parse the model
 parseObj=rminizinc:::mzn_parse(mznpath = mzn_path)
@@ -125,7 +125,7 @@ parseObj=rminizinc:::mzn_parse(mznpath = mzn_path)
 modString = getRModel(parseObj)$mzn_string()
 
 # dzn file path
-dzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/knapsack/knapsack_0.dzn")
+dzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/production_planning/prod_plan_0.dzn")
 
 # R List object containing the solutions
 solObj = rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gecode",
