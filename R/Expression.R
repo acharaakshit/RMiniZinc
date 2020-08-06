@@ -885,7 +885,7 @@ VarDecl = R6Class("VarDecl",
                               indices = paste0(indices, ", ")
                             }
                           }
-                          retStr = sprintf("%s array[%s] of %s: %s", var, indices,
+                          retStr = sprintf("array[%s] of %s%s: %s", indices, var, 
                                            private$.ti$domain()$c_str(), private$.id$getId())
                         } 
                       }else{

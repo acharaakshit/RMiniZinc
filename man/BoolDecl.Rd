@@ -4,14 +4,14 @@
 \alias{BoolDecl}
 \title{new bool declaration}
 \usage{
-BoolDecl(name, kind, e = NULL)
+BoolDecl(name, kind, value = NULL)
 }
 \arguments{
 \item{name}{variable/parameter name}
 
 \item{kind}{"var" or "par"}
 
-\item{e}{value (NULL by default)}
+\item{value}{value (NULL by default)}
 }
 \description{
 declare a new bool

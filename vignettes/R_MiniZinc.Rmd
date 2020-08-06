@@ -41,6 +41,8 @@ To create a variable declaration one needs to understand the elements of R6 clas
 
 The type information of the declaration is stored in an object of class Type which holds information like base type, number of dimensions, etc. The type inst is stored in an object of TypeInst class which contains the type information as well as the index or domain in case the variable is an array or decision variable with domain respectively. The value assigned to the variable declaration is stored in an object of sub classes of super class Expression that can be Int, Float, Array, or other Expression sub classes that result in a value of corresponding type.
 
+Easy to use declaration functions have been created for the users to declare variables and parameters of different data types. Examples of how to declare variables is shown below.
+
 Here are examples of how we can create parameters and decision variables.
 ```{r}
 library(rminizinc)
@@ -49,15 +51,15 @@ library(rminizinc)
 item1 = VarDeclItem$new(decl = IntDecl(name = "n", kind = "par"))
 
 par2_val = BinOp$new(lhs_expression = Int$new(1), binop = "..", rhs_expression = item1$e()$id())
-item2 = VarDeclItem$new(decl = IntSetDecl(name = "OBJ", kind = "par", e = par2_val))
+item2 = VarDeclItem$new(decl = IntSetDecl(name = "OBJ", kind = "par", value = par2_val))
 
 item3 = VarDeclItem$new(decl = IntDecl(name = "capacity", kind = "par"))
 
-item4 = VarDeclItem$new(decl = IntArrDecl(name = "profit", kind = "par", ind = list(item2$e()$id())))
+item4 = VarDeclItem$new(decl = IntArrDecl(name = "profit", kind = "par", ndim = 1, ind = list(item2$e()$id())))
 
-item5 = VarDeclItem$new(decl = IntArrDecl(name = "size", kind = "par", ind = list(item2$e()$id())))
+item5 = VarDeclItem$new(decl = IntArrDecl(name = "size", kind = "par", ndim = 1, ind = list(item2$e()$id())))
 
-item6 = VarDeclItem$new(decl = IntArrDecl(name = "x", kind = "var", ind = list(item2$e()$id())))
+item6 = VarDeclItem$new(decl = IntArrDecl(name = "x", kind = "var", ndim = 1, ind = list(item2$e()$id())))
 ```
 
 ## Constraints
@@ -310,7 +312,7 @@ The named list returned by `mzn_parse()` can be used to initialize all the R6 cl
 
 ```{r}
 # mzn file path
-mzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/knapsack/knapsack_0.mzn")
+mzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/production_planning/prod_plan_0.mzn")
 
 # parse the model
 parseObj=rminizinc:::mzn_parse(mznpath = mzn_path)
@@ -318,7 +320,7 @@ parseObj=rminizinc:::mzn_parse(mznpath = mzn_path)
 modString = getRModel(parseObj)$mzn_string()
 
 # dzn file path
-dzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/knapsack/knapsack_0.dzn")
+dzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/production_planning/prod_plan_0.dzn")
 
 # R List object containing the solutions
 solObj = rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gecode",
