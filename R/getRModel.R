@@ -60,6 +60,8 @@ initItem = function(parsedList){
     return(SolveItem$new(solve_type = sit$OBJECTIVE, e = exp, ann = ann))
   }else if(names(parsedList) == "FUNCTION_ITEMS"){
     
+  }else if(names(parsedList) == "ASSIGNMENTS"){
+
   }else if(names(parsedList) == "MODEL_STRING"){
     # do nothing
   }else{
