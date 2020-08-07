@@ -46,8 +46,12 @@ std::string uoStrMap(UnOpType OP){
 
 // Type details for variable declarations
 std::string vType(Type tp){
+  string retp;
   // if(tp.isopt()) cout << "OPT" << endl;
-  if(tp.isint()) return ("int");
+  if(tp.isann()) return ("annotation"); 
+  else if(tp.bt() == Type::BT_BOT) return("bot");
+  //else if(tp.bt() == Type::BT_TOP) return("top");
+  else if(tp.isint()) return ("int");
   else if(tp.isfloat()) return ("float");
   else if(tp.isbool()) return ("bool");
   else if(tp.isstring()) return ("string");
@@ -56,6 +60,7 @@ std::string vType(Type tp){
     else if(tp.bt() == Type::BT_FLOAT) return ("set of float");
     else if(tp.bt() == Type::BT_BOOL) return ("set of bool");
     else if(tp.bt() == Type::BT_STRING) return ("set of string");
+    else if(tp.bt() == Type::BT_BOT) return("set of bot");
     else return ("unknown set");
   }else if(tp.dim() >= 1  && !tp.is_set()){
     string arr_tp = to_string(tp.dim());
@@ -63,6 +68,7 @@ std::string vType(Type tp){
     else if(tp.bt() == Type::BT_FLOAT) arr_tp.append(" dimensional array of float");
     else if(tp.bt() == Type::BT_BOOL) arr_tp.append(" dimensional array of bool");
     else if(tp.bt() == Type::BT_STRING) arr_tp.append(" dimensional array of string");
+    else if(tp.bt() == Type::BT_BOT) arr_tp.append(" dimensional array of bot");
     else arr_tp.append(" dimensional unknown array");
     return (arr_tp);
   }

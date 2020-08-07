@@ -229,7 +229,7 @@ List mzn_parse(std::string modelString = "",
       assignDetails.push_back(items[i]->cast<AssignI>()->id().c_str());
       assignDetails.push_back(assignExp);
       assignDetails.push_back(i);
-      assignDetails.names() = CharacterVector({"NAME", "DETAILS", "ITEM_NO"});
+      assignDetails.names() = CharacterVector({"NAME", "VALUE", "ITEM_NO"});
       assignments.push_back(assignDetails);
     }else{
       Rcpp::warning("element not identified or supported yet");
