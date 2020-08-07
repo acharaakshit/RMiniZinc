@@ -49,7 +49,7 @@ create an array in MiniZinc
 \subsection{Method \code{new()}}{
 constructor for an int literal
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Array$new(exprVec, dims)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Array$new(exprVec, dims = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
