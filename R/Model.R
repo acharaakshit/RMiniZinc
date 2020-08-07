@@ -52,32 +52,35 @@ Item = R6Class("Item",
                  }
                ))
 
+
+
 #' @title Include Items
 #' @description include files in MiniZinc
 #' @import R6
 #' @import checkmate
 #' @export
 IncludeItem = R6Class("IncludeItem",
-               public = list(
-                 #' @description constructor
-                 #' @param name name of the file to include
-                 initialize = function(name){
-                   assertCharacter(name)
-                   private$.id = name
-                 },
-                 #' get file name
-                 getmznName = function(){
-                   return(private$.id)
-                 },
-                 #' set the file name
-                 #' @param name name of file
-                 setmznName = function(name){
-                   private$.id = name
-                 },
-                 #' @description get the MiniZinc representation
-                 c_str = function(){
-                   return(sprintf("include %s;", private$.id))
-                 }
+                      inherit = Item,
+                    public = list(
+                       #' @description constructor
+                       #' @param name name of the file to include
+                       initialize = function(name){
+                         assertCharacter(name)
+                         private$.id = name
+                       },
+                       #' get file name
+                       getmznName = function(){
+                         return(private$.id)
+                       },
+                       #' set the file name
+                       #' @param name name of file
+                       setmznName = function(name){
+                         private$.id = name
+                       },
+                       #' @description get the MiniZinc representation
+                       c_str = function(){
+                         return(sprintf("include %s;", shQuote(private$.id, "cmd")))
+                       }
                ),
                private = list(
                  #' @field .id
@@ -91,6 +94,7 @@ IncludeItem = R6Class("IncludeItem",
 #' @import checkmate
 #' @export
 AssignItem = R6Class("AssignItem",
+                     inherit = Item,
                      public = list(
                        #' @description constructor
                        #' @param decl declaration associated with assignment
@@ -128,7 +132,7 @@ AssignItem = R6Class("AssignItem",
                        },
                        #' @description get the MiniZinc representation
                        c_str = function(){
-                         return(sprintf("%s = %s", private$.decl$id(), private$.e$c_str()))
+                         return(sprintf("%s = %s;", private$.decl$id()$getId(), private$.e$c_str()))
                        }
                      ),
                      private = list(
