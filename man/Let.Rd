@@ -33,6 +33,7 @@ let expression in MiniZinc
 \item \href{#method-new}{\code{Let$new()}}
 \item \href{#method-let}{\code{Let$let()}}
 \item \href{#method-body}{\code{Let$body()}}
+\item \href{#method-c_str}{\code{Let$c_str()}}
 \item \href{#method-clone}{\code{Let$clone()}}
 }
 }
@@ -78,6 +79,16 @@ access list of local declarations
 return the body
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Let$body()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-c_str"></a>}}
+\if{latex}{\out{\hypertarget{method-c_str}{}}}
+\subsection{Method \code{c_str()}}{
+get the MiniZinc representation
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Let$c_str()}\if{html}{\out{</div>}}
 }
 
 }

@@ -2,67 +2,50 @@
 library(rminizinc)
 
 # create the variable and parameter declarations
-par_ti = TypeInst$new(Type$new(base_type = "int", kind = "parameter"))
-par1 = VarDecl$new(id = "n", type_inst = par_ti)
-item1 = VarDeclItem$new(decl = par1)
+item1 = VarDeclItem$new(decl = IntDecl(name = "n", kind = "par"))
 
-par2_val = BinOp$new(lhs_expression = Int$new(IntVal$new(1)), binop = "..", rhs_expression =  par1$id())
-par2_ti = TypeInst$new(Type$new(base_type = "int", kind = "parameter", dim = 1, set_type = TRUE))
-par2 = VarDecl$new(type_inst = par2_ti, e = par2_val, id = "OBJ")
-item2 = VarDeclItem$new(decl = par2)
+par2_val = BinOp$new(lhs_expression = Int$new(1), binop = "..", rhs_expression = item1$e()$id())
+item2 = VarDeclItem$new(decl = IntSetDecl(name = "OBJ", kind = "par", value = par2_val))
 
-par3_ti = TypeInst$new(Type$new(base_type = "int", kind = "parameter"))
-par3 = VarDecl$new(type_inst = par3_ti, id = "capacity")
-item3 = VarDeclItem$new(decl = par3)
+item3 = VarDeclItem$new(decl = IntDecl(name = "capacity", kind = "par"))
 
-par4_ti = TypeInst$new(Type$new(base_type = "int", kind = "parameter", dim = 1),
-                   indexExprVec = par2$id())
-par4 = VarDecl$new(type_inst = par4_ti, id = "profit")
-item4 = VarDeclItem$new(decl = par4)
+item4 = VarDeclItem$new(decl = IntArrDecl(name = "profit", kind = "par", ndim = 1, ind = list(item2$e()$id())))
 
-par5_ti = TypeInst$new(Type$new(base_type = "int", kind = "parameter", dim = 1),
-                   indexExprVec = par2$id())
-par5 = VarDecl$new(type = par5_ti, id = "size")
-item5 = VarDeclItem$new(decl = par5)
+item5 = VarDeclItem$new(decl = IntArrDecl(name = "size", kind = "par", ndim = 1, ind = list(item2$e()$id())))
 
-par6_ti = TypeInst$new(Type$new(base_type = "int", kind = "decision", dim = 1),
-                   indexExprVec = par2$id())
-par6 = VarDecl$new(type = par6_ti, id = "x")
-item6 = VarDeclItem$new(decl = par6)
+item6 = VarDeclItem$new(decl = IntArrDecl(name = "x", kind = "var", ndim = 1, ind = list(item2$e()$id())))
 
 ## -----------------------------------------------------------------------------
 
 # declare parameter for iterator
-par_ti = TypeInst$new(Type$new(base_type = "int", kind = "parameter"))
-parIter = VarDecl$new(id = "i", par_ti, type_inst = par_ti)
-# generator
-gen_forall = Generator$new(IN = par2$id(), decls = list(parIter))
-# binary operator expression
-bop1 = BinOp$new(lhs_expression = ArrayAccess$new(v = par6$id(), 
+parIter = IntDecl(name = "i", kind = "par")
+
+
+gen_forall = Generator$new(IN = item2$e()$id(), decls = list(parIter))
+bop1 = BinOp$new(lhs_expression = ArrayAccess$new(v = item6$e()$id(), 
                 args= list(gen_forall$decl(1))),
-                binop = ">=", rhs_expression = Int$new(value = IntVal$new(0)))
-# comprehension
-Comp1 = Comprehension$new(generators = list(gen_forall), e = bop1)
-# forall function call
+                binop = ">=", rhs_expression = Int$new(0))
+
+Comp1 = Comprehension$new(generators = list(gen_forall), e = bop1, set = FALSE)
 cl1 = Call$new(fnName = "forall", args = list(Comp1))
 item7 = ConstraintItem$new(e = cl1)
 
-gen_sum = Generator$new(IN = par2$id(), decls = list(parIter))
+gen_sum = Generator$new(IN = item2$e()$id(), decls = list(parIter))
 
-bop2 = BinOp$new(lhs_expression = ArrayAccess$new(v = par5$id(), args = list(gen_sum$decl(1))),                  binop = "*",  rhs_expression = ArrayAccess$new(v = par6$id() , 
+bop2 = BinOp$new(lhs_expression = ArrayAccess$new(v = item5$e()$id(), args = list(gen_sum$decl(1))),                  binop = "*",  rhs_expression = ArrayAccess$new(v = item6$e()$id() , 
                 args = list(gen_sum$decl(1))))
-Comp2 = Comprehension$new(generators = list(gen_sum), e = bop2)
+Comp2 = Comprehension$new(generators = list(gen_sum), e = bop2, set = FALSE)
 cl2 = Call$new(fnName = "sum", args = list(Comp2))
-bop3 = BinOp$new(lhs_expression = cl2, binop = "<=", rhs_expression = par3$id())
+bop3 = BinOp$new(lhs_expression = cl2, binop = "<=", rhs_expression = item3$e()$id())
 item8 = ConstraintItem$new(e = bop3)
 
 ## -----------------------------------------------------------------------------
 
-bop4 = BinOp$new(lhs_expression = ArrayAccess$new(v = par4$id(), args = list(gen_sum$decl(1))),
-                      binop = "*", rhs_expression = ArrayAccess$new(v = par6$id(), 
+bop4 = BinOp$new(lhs_expression = ArrayAccess$new(v = item4$e()$id(), args = list(gen_sum$decl(1))),
+                      binop = "*", rhs_expression = ArrayAccess$new(v = item6$e()$id(), 
                       args = list(gen_sum$decl(1))))
 
-Comp3 = Comprehension$new(generators = list(gen_sum), e = bop4)
+Comp3 = Comprehension$new(generators = list(gen_sum), e = bop4, set = FALSE)
 
 cl3 = Call$new(fnName = "sum", args = list(Comp3))
 
@@ -131,4 +114,22 @@ solObj = rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.geco
 # get all the solutions
 print(solObj$SOLUTIONS)
 
+
+## -----------------------------------------------------------------------------
+# mzn file path
+mzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/production_planning/prod_plan_0.mzn")
+
+# parse the model
+parseObj=rminizinc:::mzn_parse(mznpath = mzn_path)
+
+modString = getRModel(parseObj)$mzn_string()
+
+# dzn file path
+dzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/production_planning/prod_plan_0.dzn")
+
+# R List object containing the solutions
+solObj = rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gecode",
+                     libpath = "/snap/minizinc/current/share/minizinc", dznpath = dzn_path)
+# get all the solutions
+print(solObj$SOLUTIONS)
 

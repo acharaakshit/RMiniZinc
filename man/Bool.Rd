@@ -28,7 +28,6 @@ create a bool in MiniZinc
 \itemize{
 \item \href{#method-new}{\code{Bool$new()}}
 \item \href{#method-v}{\code{Bool$v()}}
-\item \href{#method-display}{\code{Bool$display()}}
 \item \href{#method-c_str}{\code{Bool$c_str()}}
 \item \href{#method-clone}{\code{Bool$clone()}}
 }
@@ -61,19 +60,9 @@ constructor
 \if{latex}{\out{\hypertarget{method-v}{}}}
 \subsection{Method \code{v()}}{
 get boolean value
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Bool$v()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-display"></a>}}
-\if{latex}{\out{\hypertarget{method-display}{}}}
-\subsection{Method \code{display()}}{
-print object
 MiniZinc representation
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Bool$display()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Bool$v()}\if{html}{\out{</div>}}
 }
 
 }

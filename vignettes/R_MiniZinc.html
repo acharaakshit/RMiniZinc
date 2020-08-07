@@ -12,7 +12,7 @@
 
 <meta name="author" content="Akshit Achara" />
 
-<meta name="date" content="2020-08-03" />
+<meta name="date" content="2020-08-06" />
 
 <title>MiniZinc Interface for R</title>
 
@@ -303,7 +303,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">MiniZinc Interface for R</h1>
 <h4 class="author">Akshit Achara</h4>
-<h4 class="date">2020-08-03</h4>
+<h4 class="date">2020-08-06</h4>
 
 
 
@@ -324,37 +324,23 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <p>Decision variables are the unknowns that Minizinc model is finding solutions for. We do not need to give them a value, but instead we give them a domain of possible values. Sometimes expressions involving other variables and parameters are also assigned to decision variables. Decision variables need to satisfy a set of constraints which form the core of the problem.</p>
 <p>To create a variable declaration one needs to understand the elements of R6 classes that will be used to create the variables.</p>
 <p>The type information of the declaration is stored in an object of class Type which holds information like base type, number of dimensions, etc. The type inst is stored in an object of TypeInst class which contains the type information as well as the index or domain in case the variable is an array or decision variable with domain respectively. The value assigned to the variable declaration is stored in an object of sub classes of super class Expression that can be Int, Float, Array, or other Expression sub classes that result in a value of corresponding type.</p>
+<p>Easy to use declaration functions have been created for the users to declare variables and parameters of different data types. Examples of how to declare variables is shown below.</p>
 <p>Here are examples of how we can create parameters and decision variables.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(rminizinc)</span>
 <span id="cb1-2"><a href="#cb1-2"></a></span>
 <span id="cb1-3"><a href="#cb1-3"></a><span class="co"># create the variable and parameter declarations</span></span>
-<span id="cb1-4"><a href="#cb1-4"></a>par_ti =<span class="st"> </span>TypeInst<span class="op">$</span><span class="kw">new</span>(Type<span class="op">$</span><span class="kw">new</span>(<span class="dt">base_type =</span> <span class="st">&quot;int&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;parameter&quot;</span>))</span>
-<span id="cb1-5"><a href="#cb1-5"></a>par1 =<span class="st"> </span>VarDecl<span class="op">$</span><span class="kw">new</span>(<span class="dt">id =</span> <span class="st">&quot;n&quot;</span>, <span class="dt">type_inst =</span> par_ti)</span>
-<span id="cb1-6"><a href="#cb1-6"></a>item1 =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">decl =</span> par1)</span>
-<span id="cb1-7"><a href="#cb1-7"></a></span>
-<span id="cb1-8"><a href="#cb1-8"></a>par2_val =<span class="st"> </span>BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs_expression =</span> Int<span class="op">$</span><span class="kw">new</span>(IntVal<span class="op">$</span><span class="kw">new</span>(<span class="dv">1</span>)), <span class="dt">binop =</span> <span class="st">&quot;..&quot;</span>, <span class="dt">rhs_expression =</span>  par1<span class="op">$</span><span class="kw">id</span>())</span>
-<span id="cb1-9"><a href="#cb1-9"></a>par2_ti =<span class="st"> </span>TypeInst<span class="op">$</span><span class="kw">new</span>(Type<span class="op">$</span><span class="kw">new</span>(<span class="dt">base_type =</span> <span class="st">&quot;int&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;parameter&quot;</span>, <span class="dt">dim =</span> <span class="dv">1</span>, <span class="dt">set_type =</span> <span class="ot">TRUE</span>))</span>
-<span id="cb1-10"><a href="#cb1-10"></a>par2 =<span class="st"> </span>VarDecl<span class="op">$</span><span class="kw">new</span>(<span class="dt">type_inst =</span> par2_ti, <span class="dt">e =</span> par2_val, <span class="dt">id =</span> <span class="st">&quot;OBJ&quot;</span>)</span>
-<span id="cb1-11"><a href="#cb1-11"></a>item2 =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">decl =</span> par2)</span>
+<span id="cb1-4"><a href="#cb1-4"></a>item1 =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">decl =</span> <span class="kw">IntDecl</span>(<span class="dt">name =</span> <span class="st">&quot;n&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;par&quot;</span>))</span>
+<span id="cb1-5"><a href="#cb1-5"></a></span>
+<span id="cb1-6"><a href="#cb1-6"></a>par2_val =<span class="st"> </span>BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs_expression =</span> Int<span class="op">$</span><span class="kw">new</span>(<span class="dv">1</span>), <span class="dt">binop =</span> <span class="st">&quot;..&quot;</span>, <span class="dt">rhs_expression =</span> item1<span class="op">$</span><span class="kw">e</span>()<span class="op">$</span><span class="kw">id</span>())</span>
+<span id="cb1-7"><a href="#cb1-7"></a>item2 =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">decl =</span> <span class="kw">IntSetDecl</span>(<span class="dt">name =</span> <span class="st">&quot;OBJ&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;par&quot;</span>, <span class="dt">value =</span> par2_val))</span>
+<span id="cb1-8"><a href="#cb1-8"></a></span>
+<span id="cb1-9"><a href="#cb1-9"></a>item3 =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">decl =</span> <span class="kw">IntDecl</span>(<span class="dt">name =</span> <span class="st">&quot;capacity&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;par&quot;</span>))</span>
+<span id="cb1-10"><a href="#cb1-10"></a></span>
+<span id="cb1-11"><a href="#cb1-11"></a>item4 =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">decl =</span> <span class="kw">IntArrDecl</span>(<span class="dt">name =</span> <span class="st">&quot;profit&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;par&quot;</span>, <span class="dt">ndim =</span> <span class="dv">1</span>, <span class="dt">ind =</span> <span class="kw">list</span>(item2<span class="op">$</span><span class="kw">e</span>()<span class="op">$</span><span class="kw">id</span>())))</span>
 <span id="cb1-12"><a href="#cb1-12"></a></span>
-<span id="cb1-13"><a href="#cb1-13"></a>par3_ti =<span class="st"> </span>TypeInst<span class="op">$</span><span class="kw">new</span>(Type<span class="op">$</span><span class="kw">new</span>(<span class="dt">base_type =</span> <span class="st">&quot;int&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;parameter&quot;</span>))</span>
-<span id="cb1-14"><a href="#cb1-14"></a>par3 =<span class="st"> </span>VarDecl<span class="op">$</span><span class="kw">new</span>(<span class="dt">type_inst =</span> par3_ti, <span class="dt">id =</span> <span class="st">&quot;capacity&quot;</span>)</span>
-<span id="cb1-15"><a href="#cb1-15"></a>item3 =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">decl =</span> par3)</span>
-<span id="cb1-16"><a href="#cb1-16"></a></span>
-<span id="cb1-17"><a href="#cb1-17"></a>par4_ti =<span class="st"> </span>TypeInst<span class="op">$</span><span class="kw">new</span>(Type<span class="op">$</span><span class="kw">new</span>(<span class="dt">base_type =</span> <span class="st">&quot;int&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;parameter&quot;</span>, <span class="dt">dim =</span> <span class="dv">1</span>),</span>
-<span id="cb1-18"><a href="#cb1-18"></a>                   <span class="dt">indexExprVec =</span> par2<span class="op">$</span><span class="kw">id</span>())</span>
-<span id="cb1-19"><a href="#cb1-19"></a>par4 =<span class="st"> </span>VarDecl<span class="op">$</span><span class="kw">new</span>(<span class="dt">type_inst =</span> par4_ti, <span class="dt">id =</span> <span class="st">&quot;profit&quot;</span>)</span>
-<span id="cb1-20"><a href="#cb1-20"></a>item4 =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">decl =</span> par4)</span>
-<span id="cb1-21"><a href="#cb1-21"></a></span>
-<span id="cb1-22"><a href="#cb1-22"></a>par5_ti =<span class="st"> </span>TypeInst<span class="op">$</span><span class="kw">new</span>(Type<span class="op">$</span><span class="kw">new</span>(<span class="dt">base_type =</span> <span class="st">&quot;int&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;parameter&quot;</span>, <span class="dt">dim =</span> <span class="dv">1</span>),</span>
-<span id="cb1-23"><a href="#cb1-23"></a>                   <span class="dt">indexExprVec =</span> par2<span class="op">$</span><span class="kw">id</span>())</span>
-<span id="cb1-24"><a href="#cb1-24"></a>par5 =<span class="st"> </span>VarDecl<span class="op">$</span><span class="kw">new</span>(<span class="dt">type =</span> par5_ti, <span class="dt">id =</span> <span class="st">&quot;size&quot;</span>)</span>
-<span id="cb1-25"><a href="#cb1-25"></a>item5 =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">decl =</span> par5)</span>
-<span id="cb1-26"><a href="#cb1-26"></a></span>
-<span id="cb1-27"><a href="#cb1-27"></a>par6_ti =<span class="st"> </span>TypeInst<span class="op">$</span><span class="kw">new</span>(Type<span class="op">$</span><span class="kw">new</span>(<span class="dt">base_type =</span> <span class="st">&quot;int&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;decision&quot;</span>, <span class="dt">dim =</span> <span class="dv">1</span>),</span>
-<span id="cb1-28"><a href="#cb1-28"></a>                   <span class="dt">indexExprVec =</span> par2<span class="op">$</span><span class="kw">id</span>())</span>
-<span id="cb1-29"><a href="#cb1-29"></a>par6 =<span class="st"> </span>VarDecl<span class="op">$</span><span class="kw">new</span>(<span class="dt">type =</span> par6_ti, <span class="dt">id =</span> <span class="st">&quot;x&quot;</span>)</span>
-<span id="cb1-30"><a href="#cb1-30"></a>item6 =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">decl =</span> par6)</span></code></pre></div>
+<span id="cb1-13"><a href="#cb1-13"></a>item5 =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">decl =</span> <span class="kw">IntArrDecl</span>(<span class="dt">name =</span> <span class="st">&quot;size&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;par&quot;</span>, <span class="dt">ndim =</span> <span class="dv">1</span>, <span class="dt">ind =</span> <span class="kw">list</span>(item2<span class="op">$</span><span class="kw">e</span>()<span class="op">$</span><span class="kw">id</span>())))</span>
+<span id="cb1-14"><a href="#cb1-14"></a></span>
+<span id="cb1-15"><a href="#cb1-15"></a>item6 =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">decl =</span> <span class="kw">IntArrDecl</span>(<span class="dt">name =</span> <span class="st">&quot;x&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;var&quot;</span>, <span class="dt">ndim =</span> <span class="dv">1</span>, <span class="dt">ind =</span> <span class="kw">list</span>(item2<span class="op">$</span><span class="kw">e</span>()<span class="op">$</span><span class="kw">id</span>())))</span></code></pre></div>
 </div>
 <div id="constraints" class="section level2">
 <h2>Constraints</h2>
@@ -362,38 +348,36 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <p>Constraints can be created using different R6 sub classes of the super class Expression. In this example Generator, Binop, Comprehension and Call classes have been used. These classes take in the elements required to create an expression that will be used as a constraint. More information can be found using <code>?&lt;class Name&gt;</code></p>
 <p>Create constraints:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="co"># declare parameter for iterator</span></span>
-<span id="cb2-2"><a href="#cb2-2"></a>par_ti =<span class="st"> </span>TypeInst<span class="op">$</span><span class="kw">new</span>(Type<span class="op">$</span><span class="kw">new</span>(<span class="dt">base_type =</span> <span class="st">&quot;int&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;parameter&quot;</span>))</span>
-<span id="cb2-3"><a href="#cb2-3"></a>parIter =<span class="st"> </span>VarDecl<span class="op">$</span><span class="kw">new</span>(<span class="dt">id =</span> <span class="st">&quot;i&quot;</span>, par_ti, <span class="dt">type_inst =</span> par_ti)</span>
-<span id="cb2-4"><a href="#cb2-4"></a><span class="co"># generator</span></span>
-<span id="cb2-5"><a href="#cb2-5"></a>gen_forall =<span class="st"> </span>Generator<span class="op">$</span><span class="kw">new</span>(<span class="dt">IN =</span> par2<span class="op">$</span><span class="kw">id</span>(), <span class="dt">decls =</span> <span class="kw">list</span>(parIter))</span>
-<span id="cb2-6"><a href="#cb2-6"></a><span class="co"># binary operator expression</span></span>
-<span id="cb2-7"><a href="#cb2-7"></a>bop1 =<span class="st"> </span>BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs_expression =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> par6<span class="op">$</span><span class="kw">id</span>(), </span>
-<span id="cb2-8"><a href="#cb2-8"></a>                <span class="dt">args=</span> <span class="kw">list</span>(gen_forall<span class="op">$</span><span class="kw">decl</span>(<span class="dv">1</span>))),</span>
-<span id="cb2-9"><a href="#cb2-9"></a>                <span class="dt">binop =</span> <span class="st">&quot;&gt;=&quot;</span>, <span class="dt">rhs_expression =</span> Int<span class="op">$</span><span class="kw">new</span>(<span class="dt">value =</span> IntVal<span class="op">$</span><span class="kw">new</span>(<span class="dv">0</span>)))</span>
-<span id="cb2-10"><a href="#cb2-10"></a><span class="co"># comprehension</span></span>
-<span id="cb2-11"><a href="#cb2-11"></a>Comp1 =<span class="st"> </span>Comprehension<span class="op">$</span><span class="kw">new</span>(<span class="dt">generators =</span> <span class="kw">list</span>(gen_forall), <span class="dt">e =</span> bop1)</span>
-<span id="cb2-12"><a href="#cb2-12"></a><span class="co"># forall function call</span></span>
-<span id="cb2-13"><a href="#cb2-13"></a>cl1 =<span class="st"> </span>Call<span class="op">$</span><span class="kw">new</span>(<span class="dt">fnName =</span> <span class="st">&quot;forall&quot;</span>, <span class="dt">args =</span> <span class="kw">list</span>(Comp1))</span>
-<span id="cb2-14"><a href="#cb2-14"></a>item7 =<span class="st"> </span>ConstraintItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">e =</span> cl1)</span>
+<span id="cb2-2"><a href="#cb2-2"></a>parIter =<span class="st"> </span><span class="kw">IntDecl</span>(<span class="dt">name =</span> <span class="st">&quot;i&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;par&quot;</span>)</span>
+<span id="cb2-3"><a href="#cb2-3"></a></span>
+<span id="cb2-4"><a href="#cb2-4"></a></span>
+<span id="cb2-5"><a href="#cb2-5"></a>gen_forall =<span class="st"> </span>Generator<span class="op">$</span><span class="kw">new</span>(<span class="dt">IN =</span> item2<span class="op">$</span><span class="kw">e</span>()<span class="op">$</span><span class="kw">id</span>(), <span class="dt">decls =</span> <span class="kw">list</span>(parIter))</span>
+<span id="cb2-6"><a href="#cb2-6"></a>bop1 =<span class="st"> </span>BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs_expression =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> item6<span class="op">$</span><span class="kw">e</span>()<span class="op">$</span><span class="kw">id</span>(), </span>
+<span id="cb2-7"><a href="#cb2-7"></a>                <span class="dt">args=</span> <span class="kw">list</span>(gen_forall<span class="op">$</span><span class="kw">decl</span>(<span class="dv">1</span>))),</span>
+<span id="cb2-8"><a href="#cb2-8"></a>                <span class="dt">binop =</span> <span class="st">&quot;&gt;=&quot;</span>, <span class="dt">rhs_expression =</span> Int<span class="op">$</span><span class="kw">new</span>(<span class="dv">0</span>))</span>
+<span id="cb2-9"><a href="#cb2-9"></a></span>
+<span id="cb2-10"><a href="#cb2-10"></a>Comp1 =<span class="st"> </span>Comprehension<span class="op">$</span><span class="kw">new</span>(<span class="dt">generators =</span> <span class="kw">list</span>(gen_forall), <span class="dt">e =</span> bop1, <span class="dt">set =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb2-11"><a href="#cb2-11"></a>cl1 =<span class="st"> </span>Call<span class="op">$</span><span class="kw">new</span>(<span class="dt">fnName =</span> <span class="st">&quot;forall&quot;</span>, <span class="dt">args =</span> <span class="kw">list</span>(Comp1))</span>
+<span id="cb2-12"><a href="#cb2-12"></a>item7 =<span class="st"> </span>ConstraintItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">e =</span> cl1)</span>
+<span id="cb2-13"><a href="#cb2-13"></a></span>
+<span id="cb2-14"><a href="#cb2-14"></a>gen_sum =<span class="st"> </span>Generator<span class="op">$</span><span class="kw">new</span>(<span class="dt">IN =</span> item2<span class="op">$</span><span class="kw">e</span>()<span class="op">$</span><span class="kw">id</span>(), <span class="dt">decls =</span> <span class="kw">list</span>(parIter))</span>
 <span id="cb2-15"><a href="#cb2-15"></a></span>
-<span id="cb2-16"><a href="#cb2-16"></a>gen_sum =<span class="st"> </span>Generator<span class="op">$</span><span class="kw">new</span>(<span class="dt">IN =</span> par2<span class="op">$</span><span class="kw">id</span>(), <span class="dt">decls =</span> <span class="kw">list</span>(parIter))</span>
-<span id="cb2-17"><a href="#cb2-17"></a></span>
-<span id="cb2-18"><a href="#cb2-18"></a>bop2 =<span class="st"> </span>BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs_expression =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> par5<span class="op">$</span><span class="kw">id</span>(), <span class="dt">args =</span> <span class="kw">list</span>(gen_sum<span class="op">$</span><span class="kw">decl</span>(<span class="dv">1</span>))),                  <span class="dt">binop =</span> <span class="st">&quot;*&quot;</span>,  <span class="dt">rhs_expression =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> par6<span class="op">$</span><span class="kw">id</span>() , </span>
-<span id="cb2-19"><a href="#cb2-19"></a>                <span class="dt">args =</span> <span class="kw">list</span>(gen_sum<span class="op">$</span><span class="kw">decl</span>(<span class="dv">1</span>))))</span>
-<span id="cb2-20"><a href="#cb2-20"></a>Comp2 =<span class="st"> </span>Comprehension<span class="op">$</span><span class="kw">new</span>(<span class="dt">generators =</span> <span class="kw">list</span>(gen_sum), <span class="dt">e =</span> bop2)</span>
-<span id="cb2-21"><a href="#cb2-21"></a>cl2 =<span class="st"> </span>Call<span class="op">$</span><span class="kw">new</span>(<span class="dt">fnName =</span> <span class="st">&quot;sum&quot;</span>, <span class="dt">args =</span> <span class="kw">list</span>(Comp2))</span>
-<span id="cb2-22"><a href="#cb2-22"></a>bop3 =<span class="st"> </span>BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs_expression =</span> cl2, <span class="dt">binop =</span> <span class="st">&quot;&lt;=&quot;</span>, <span class="dt">rhs_expression =</span> par3<span class="op">$</span><span class="kw">id</span>())</span>
-<span id="cb2-23"><a href="#cb2-23"></a>item8 =<span class="st"> </span>ConstraintItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">e =</span> bop3)</span></code></pre></div>
+<span id="cb2-16"><a href="#cb2-16"></a>bop2 =<span class="st"> </span>BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs_expression =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> item5<span class="op">$</span><span class="kw">e</span>()<span class="op">$</span><span class="kw">id</span>(), <span class="dt">args =</span> <span class="kw">list</span>(gen_sum<span class="op">$</span><span class="kw">decl</span>(<span class="dv">1</span>))),                  <span class="dt">binop =</span> <span class="st">&quot;*&quot;</span>,  <span class="dt">rhs_expression =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> item6<span class="op">$</span><span class="kw">e</span>()<span class="op">$</span><span class="kw">id</span>() , </span>
+<span id="cb2-17"><a href="#cb2-17"></a>                <span class="dt">args =</span> <span class="kw">list</span>(gen_sum<span class="op">$</span><span class="kw">decl</span>(<span class="dv">1</span>))))</span>
+<span id="cb2-18"><a href="#cb2-18"></a>Comp2 =<span class="st"> </span>Comprehension<span class="op">$</span><span class="kw">new</span>(<span class="dt">generators =</span> <span class="kw">list</span>(gen_sum), <span class="dt">e =</span> bop2, <span class="dt">set =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb2-19"><a href="#cb2-19"></a>cl2 =<span class="st"> </span>Call<span class="op">$</span><span class="kw">new</span>(<span class="dt">fnName =</span> <span class="st">&quot;sum&quot;</span>, <span class="dt">args =</span> <span class="kw">list</span>(Comp2))</span>
+<span id="cb2-20"><a href="#cb2-20"></a>bop3 =<span class="st"> </span>BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs_expression =</span> cl2, <span class="dt">binop =</span> <span class="st">&quot;&lt;=&quot;</span>, <span class="dt">rhs_expression =</span> item3<span class="op">$</span><span class="kw">e</span>()<span class="op">$</span><span class="kw">id</span>())</span>
+<span id="cb2-21"><a href="#cb2-21"></a>item8 =<span class="st"> </span>ConstraintItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">e =</span> bop3)</span></code></pre></div>
 </div>
 <div id="solve-type" class="section level2">
 <h2>Solve Type</h2>
 <p>The constraint programming problem can be of three types, namely: Satisfaction , Minimization and Maximization. Satisfaction problems produce all the solutions that satisfy the constraints whereas minimization and maximization problems produce the solution which minimizes and maximizes the given arithmetic expression.</p>
 <p>An example is shown below:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>bop4 =<span class="st"> </span>BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs_expression =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> par4<span class="op">$</span><span class="kw">id</span>(), <span class="dt">args =</span> <span class="kw">list</span>(gen_sum<span class="op">$</span><span class="kw">decl</span>(<span class="dv">1</span>))),</span>
-<span id="cb3-2"><a href="#cb3-2"></a>                      <span class="dt">binop =</span> <span class="st">&quot;*&quot;</span>, <span class="dt">rhs_expression =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> par6<span class="op">$</span><span class="kw">id</span>(), </span>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>bop4 =<span class="st"> </span>BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs_expression =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> item4<span class="op">$</span><span class="kw">e</span>()<span class="op">$</span><span class="kw">id</span>(), <span class="dt">args =</span> <span class="kw">list</span>(gen_sum<span class="op">$</span><span class="kw">decl</span>(<span class="dv">1</span>))),</span>
+<span id="cb3-2"><a href="#cb3-2"></a>                      <span class="dt">binop =</span> <span class="st">&quot;*&quot;</span>, <span class="dt">rhs_expression =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> item6<span class="op">$</span><span class="kw">e</span>()<span class="op">$</span><span class="kw">id</span>(), </span>
 <span id="cb3-3"><a href="#cb3-3"></a>                      <span class="dt">args =</span> <span class="kw">list</span>(gen_sum<span class="op">$</span><span class="kw">decl</span>(<span class="dv">1</span>))))</span>
 <span id="cb3-4"><a href="#cb3-4"></a></span>
-<span id="cb3-5"><a href="#cb3-5"></a>Comp3 =<span class="st"> </span>Comprehension<span class="op">$</span><span class="kw">new</span>(<span class="dt">generators =</span> <span class="kw">list</span>(gen_sum), <span class="dt">e =</span> bop4)</span>
+<span id="cb3-5"><a href="#cb3-5"></a>Comp3 =<span class="st"> </span>Comprehension<span class="op">$</span><span class="kw">new</span>(<span class="dt">generators =</span> <span class="kw">list</span>(gen_sum), <span class="dt">e =</span> bop4, <span class="dt">set =</span> <span class="ot">FALSE</span>)</span>
 <span id="cb3-6"><a href="#cb3-6"></a></span>
 <span id="cb3-7"><a href="#cb3-7"></a>cl3 =<span class="st"> </span>Call<span class="op">$</span><span class="kw">new</span>(<span class="dt">fnName =</span> <span class="st">&quot;sum&quot;</span>, <span class="dt">args =</span> <span class="kw">list</span>(Comp3))</span>
 <span id="cb3-8"><a href="#cb3-8"></a></span>
@@ -408,14 +392,14 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb4-3"><a href="#cb4-3"></a>modString =<span class="st"> </span>mod<span class="op">$</span><span class="kw">mzn_string</span>()</span>
 <span id="cb4-4"><a href="#cb4-4"></a><span class="kw">cat</span>(modString)</span></code></pre></div>
 <pre><code>## int: n;
-## set of int: OBJ = 1..n;
+## set of int: OBJ = 1 .. n;
 ## int: capacity;
 ## array[OBJ] of int: profit;
 ## array[OBJ] of int: size;
 ## array[OBJ] of var int: x;
-## constraint forall ([x[i]&gt;=0 | i in OBJ  ]);
-## constraint sum ([size[i]*x[i] | i in OBJ  ])&lt;=capacity;
-## solve maximize sum ([profit[i]*x[i] | i in OBJ  ]);</code></pre>
+## constraint forall([x[i] &gt;= 0 | i in OBJ ]);
+## constraint sum([size[i] * x[i] | i in OBJ ]) &lt;= capacity;
+## solve  maximize sum([profit[i] * x[i] | i in OBJ ]);</code></pre>
 </div>
 <div id="solve-the-model" class="section level2">
 <h2>Solve the model</h2>
@@ -583,6 +567,77 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ## [1] 1 1 1</code></pre>
 <p>Some examples of how to use these functions to solve optimization problems can be found in <code>mzn_examples</code> which are taken from <a href="https://github.com/MiniZinc/minizinc-examples">minizinc-examples</a>.</p>
 <p>NOTE: Please don’t include output formatting in the mzn files or the solutions might not be parsed properly.</p>
+<p>The named list returned by <code>mzn_parse()</code> can be used to initialize all the R6 classes required to create the model that was parsed. This will help the user to use a lot of functions to understand, manipulate and use the model using the R6 objects. <code>getRModel()</code> is used to initialize all the relevant objects using named list returned by <code>mzn_parse()</code>. The support is only available for basic models currently but the scope will be increased soon.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="co"># mzn file path</span></span>
+<span id="cb13-2"><a href="#cb13-2"></a>mzn_path =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">dirname</span>(<span class="kw">getwd</span>()), <span class="st">&quot;/inst/extdata/mzn_examples/production_planning/prod_plan_0.mzn&quot;</span>)</span>
+<span id="cb13-3"><a href="#cb13-3"></a></span>
+<span id="cb13-4"><a href="#cb13-4"></a><span class="co"># parse the model</span></span>
+<span id="cb13-5"><a href="#cb13-5"></a>parseObj=rminizinc<span class="op">:::</span><span class="kw">mzn_parse</span>(<span class="dt">mznpath =</span> mzn_path)</span>
+<span id="cb13-6"><a href="#cb13-6"></a></span>
+<span id="cb13-7"><a href="#cb13-7"></a>modString =<span class="st"> </span><span class="kw">getRModel</span>(parseObj)<span class="op">$</span><span class="kw">mzn_string</span>()</span>
+<span id="cb13-8"><a href="#cb13-8"></a></span>
+<span id="cb13-9"><a href="#cb13-9"></a><span class="co"># dzn file path</span></span>
+<span id="cb13-10"><a href="#cb13-10"></a>dzn_path =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">dirname</span>(<span class="kw">getwd</span>()), <span class="st">&quot;/inst/extdata/mzn_examples/production_planning/prod_plan_0.dzn&quot;</span>)</span>
+<span id="cb13-11"><a href="#cb13-11"></a></span>
+<span id="cb13-12"><a href="#cb13-12"></a><span class="co"># R List object containing the solutions</span></span>
+<span id="cb13-13"><a href="#cb13-13"></a>solObj =<span class="st"> </span>rminizinc<span class="op">:::</span><span class="kw">mzn_eval</span>(<span class="dt">modelString =</span> modString, <span class="dt">solver =</span> <span class="st">&quot;org.gecode.gecode&quot;</span>,</span>
+<span id="cb13-14"><a href="#cb13-14"></a>                     <span class="dt">libpath =</span> <span class="st">&quot;/snap/minizinc/current/share/minizinc&quot;</span>, <span class="dt">dznpath =</span> dzn_path)</span>
+<span id="cb13-15"><a href="#cb13-15"></a><span class="co"># get all the solutions</span></span>
+<span id="cb13-16"><a href="#cb13-16"></a><span class="kw">print</span>(solObj<span class="op">$</span>SOLUTIONS)</span></code></pre></div>
+<pre><code>## $SOLUTION0
+## $SOLUTION0$produce
+## [1] 0 0
+## 
+## $SOLUTION0$used
+## [1] 0 0 0 0 0
+## 
+## 
+## $SOLUTION1
+## $SOLUTION1$produce
+## [1] 1 0
+## 
+## $SOLUTION1$used
+## [1] 250   2  75 100   0
+## 
+## 
+## $SOLUTION2
+## $SOLUTION2$produce
+## [1] 2 0
+## 
+## $SOLUTION2$used
+## [1] 500   4 150 200   0
+## 
+## 
+## $SOLUTION3
+## $SOLUTION3$produce
+## [1] 3 0
+## 
+## $SOLUTION3$used
+## [1] 750   6 225 300   0
+## 
+## 
+## $SOLUTION4
+## $SOLUTION4$produce
+## [1] 2 1
+## 
+## $SOLUTION4$used
+## [1] 700   4 300 350  75
+## 
+## 
+## $SOLUTION5
+## $SOLUTION5$produce
+## [1] 3 1
+## 
+## $SOLUTION5$used
+## [1] 950   6 375 450  75
+## 
+## 
+## $OPTIMAL_SOLUTION
+## $OPTIMAL_SOLUTION$produce
+## [1] 2 2
+## 
+## $OPTIMAL_SOLUTION$used
+## [1] 900   4 450 500 150</code></pre>
 <p>The next step is to allow the users to modify a MiniZinc model using the R6 objects which will be demonstrated soon.</p>
 </div>
 </div>

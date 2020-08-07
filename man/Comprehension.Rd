@@ -15,6 +15,8 @@ create a Comprehension
 \item{\code{.generators}}{a vector of generators}
 
 \item{\code{.expression}}{the comprehension expression}
+
+\item{\code{.set}}{TRUE if comprehension is a set}
 }
 \if{html}{\out{</div>}}
 }
@@ -24,6 +26,8 @@ create a Comprehension
 \item{\code{.generators}}{a vector of generators}
 
 \item{\code{.expression}}{the comprehension expression}
+
+\item{\code{.set}}{TRUE if comprehension is a set}
 }
 \if{html}{\out{</div>}}
 }
@@ -37,6 +41,7 @@ create a Comprehension
 \item \href{#method-where}{\code{Comprehension$where()}}
 \item \href{#method-decl}{\code{Comprehension$decl()}}
 \item \href{#method-e}{\code{Comprehension$e()}}
+\item \href{#method-isSet}{\code{Comprehension$isSet()}}
 \item \href{#method-c_str}{\code{Comprehension$c_str()}}
 \item \href{#method-clone}{\code{Comprehension$clone()}}
 }
@@ -53,7 +58,7 @@ create a Comprehension
 \subsection{Method \code{new()}}{
 constructor
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Comprehension$new(generators, e)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Comprehension$new(generators, e, set)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -62,6 +67,8 @@ constructor
 \item{\code{generators}}{generators of the expression}
 
 \item{\code{e}}{inside the comprehension}
+
+\item{\code{set}}{bool to specify if comprehension is a set.}
 }
 \if{html}{\out{</div>}}
 }
@@ -153,6 +160,16 @@ get the idecl declaration of igen generator
 get the expression
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Comprehension$e()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-isSet"></a>}}
+\if{latex}{\out{\hypertarget{method-isSet}{}}}
+\subsection{Method \code{isSet()}}{
+check if comprehension is a set
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Comprehension$isSet()}\if{html}{\out{</div>}}
 }
 
 }

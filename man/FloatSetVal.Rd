@@ -58,7 +58,7 @@ constructor
 \if{html}{\out{<a id="method-getMin"></a>}}
 \if{latex}{\out{\hypertarget{method-getMin}{}}}
 \subsection{Method \code{getMin()}}{
-get the minimum FloatVal
+get the minimum float value
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FloatSetVal$getMin()}\if{html}{\out{</div>}}
 }
@@ -68,7 +68,7 @@ get the minimum FloatVal
 \if{html}{\out{<a id="method-setMin"></a>}}
 \if{latex}{\out{\hypertarget{method-setMin}{}}}
 \subsection{Method \code{setMin()}}{
-set the minimum FloatVal
+set the minimum float value
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FloatSetVal$setMin(val)}\if{html}{\out{</div>}}
 }
@@ -76,7 +76,7 @@ set the minimum FloatVal
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{val}}{FloatVal value to be set}
+\item{\code{val}}{float value to be set}
 }
 \if{html}{\out{</div>}}
 }
@@ -85,7 +85,7 @@ set the minimum FloatVal
 \if{html}{\out{<a id="method-getMax"></a>}}
 \if{latex}{\out{\hypertarget{method-getMax}{}}}
 \subsection{Method \code{getMax()}}{
-get the maximum FloatVal
+get the maximum float value
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FloatSetVal$getMax()}\if{html}{\out{</div>}}
 }
@@ -95,7 +95,7 @@ get the maximum FloatVal
 \if{html}{\out{<a id="method-setMax"></a>}}
 \if{latex}{\out{\hypertarget{method-setMax}{}}}
 \subsection{Method \code{setMax()}}{
-set the maximum FloatVal
+set the maximum float value
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FloatSetVal$setMax(val)}\if{html}{\out{</div>}}
 }
@@ -103,7 +103,7 @@ set the maximum FloatVal
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{val}}{FloatVal value to be set}
+\item{\code{val}}{float value to be set}
 }
 \if{html}{\out{</div>}}
 }

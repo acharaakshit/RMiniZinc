@@ -29,7 +29,6 @@ create an float in MiniZinc
 \item \href{#method-new}{\code{Float$new()}}
 \item \href{#method-getFloatVal}{\code{Float$getFloatVal()}}
 \item \href{#method-setFloatVal}{\code{Float$setFloatVal()}}
-\item \href{#method-display}{\code{Float$display()}}
 \item \href{#method-c_str}{\code{Float$c_str()}}
 \item \href{#method-clone}{\code{Float$clone()}}
 }
@@ -72,19 +71,9 @@ get the integer value
 \if{latex}{\out{\hypertarget{method-setFloatVal}{}}}
 \subsection{Method \code{setFloatVal()}}{
 set the integer value
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Float$setFloatVal(val)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-display"></a>}}
-\if{latex}{\out{\hypertarget{method-display}{}}}
-\subsection{Method \code{display()}}{
-print object
 MiniZinc representation
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Float$display()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Float$setFloatVal(val)}\if{html}{\out{</div>}}
 }
 
 }
