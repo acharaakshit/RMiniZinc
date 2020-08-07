@@ -26,7 +26,7 @@ SolveItem = R6Class("SolveType",
                                   assertTRUE(testR6(ann, "Annotation") || testNull(ann))
                                   private$.ann = ann
                                   if(test_choice(solve_type, "satisfy")){
-                                    assert_null(expression)
+                                    assert_null(e)
                                   }else{
                                     assertR6(e, "Expression")
                                     private$.e = e
