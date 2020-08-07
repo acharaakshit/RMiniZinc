@@ -45,13 +45,13 @@ create an float in MiniZinc
 \subsection{Method \code{new()}}{
 constructor for an int literal
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Float$new(value)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Float$new(val)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{value}}{the value of the integer}
+\item{\code{val}}{the value of the integer}
 }
 \if{html}{\out{</div>}}
 }
