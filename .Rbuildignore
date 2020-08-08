@@ -3,5 +3,9 @@
 ^\.travis\.yml$
 ^doc$
 ^Meta$
-^LICENSE$
+LICENSE
+^\.travis\.yml$
+^aclocal.m4$
+\.o$
+\.so$
 

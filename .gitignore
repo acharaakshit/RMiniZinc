@@ -4,5 +4,10 @@
 .Ruserdata
 doc
 Meta
+src/Makevars
 src/*.o
 src/cpp_tests/*.o
+autom4te.cache
+config.log
+config.status
+aclocal.m4
