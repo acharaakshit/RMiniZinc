@@ -12,14 +12,14 @@ create a bool in MiniZinc
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{.v}}{value}
+\item{\code{.value}}{value}
 }
 \if{html}{\out{</div>}}
 }
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
-\item{\code{.v}}{value}
+\item{\code{.value}}{value}
 }
 \if{html}{\out{</div>}}
 }

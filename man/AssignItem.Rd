@@ -6,6 +6,9 @@
 \description{
 assignments in MiniZinc
 }
+\section{Super class}{
+\code{\link[rminizinc:Item]{rminizinc::Item}} -> \code{AssignItem}
+}
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
@@ -36,6 +39,12 @@ assignments in MiniZinc
 \item \href{#method-c_str}{\code{AssignItem$c_str()}}
 \item \href{#method-clone}{\code{AssignItem$clone()}}
 }
+}
+\if{html}{
+\out{<details open ><summary>Inherited methods</summary>}
+\itemize{
+}
+\out{</details>}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}

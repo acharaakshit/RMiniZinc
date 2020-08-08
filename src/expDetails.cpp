@@ -47,7 +47,10 @@ std::string uoStrMap(UnOpType OP){
 // Type details for variable declarations
 std::string vType(Type tp){
   // if(tp.isopt()) cout << "OPT" << endl;
-  if(tp.isint()) return ("int");
+  if(tp.isann()) return ("annotation"); 
+  //else if(tp.bt() == Type::BT_BOT) return("bot");
+  //else if(tp.bt() == Type::BT_TOP) return("top");
+  else if(tp.isint()) return ("int");
   else if(tp.isfloat()) return ("float");
   else if(tp.isbool()) return ("bool");
   else if(tp.isstring()) return ("string");

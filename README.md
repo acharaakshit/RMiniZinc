@@ -2,7 +2,7 @@
 
 ## Under Development
 
-This package is aimed towards providing the r users to use MiniZinc from within R. Currently basic integer programming problems can be solved. The package vignette contains a basic demonstration of how to create a MiniZinc model for basic constraint programming problems, obtain the string solution or parsed solution for an existing model. Please refer to the vignette for more information. The vignette will be updated from time to time and more features will be added to the package.
+This package is aimed towards providing the r users to use MiniZinc from within R. Currently basic integer programming problems can be solved. The package vignette contains a basic demonstration of how to create and/or solve a MiniZinc model for a wide variety of constraint programming problems, obtain the string solution or parsed solution for an existing model. Please refer to the vignette for more information. The vignette will be updated from time to time and more features will be added to the package.
 
 ## Getting Started
 
@@ -20,13 +20,9 @@ Now go to the libminizinc folder:
 
 `cd libminizinc/`  
 
-Set the **CFLAGS**, **CPPFLAGS** AND **CXXFLAGS** as compilation with -fpic is required to prevent the relocation errors while integrating the library with Rcpp:
+Set the flag to prevent the relocation errors while integrating the library with Rcpp:
 
-`sudo sed -i '3 i set(CMAKE_CXX_FLAGS "-fpic" CACHE INTERNAL "")' CMakeLists.txt`
-
-`sudo sed -i '4 i set(CMAKE_CPP_FLAGS "-fpic" CACHE INTERNAL "")' CMakeLists.txt`
-
-`sudo sed -i '5 i set(CMAKE_C_FLAGS "-fpic" CACHE INTERNAL "")' CMakeLists.txt`
+`sudo sed -i '3 i set(CMAKE_POSITION_INDEPENDENT_CODE ON)' CMakeLists.txt`
 
 Now, build the library (make sure you have `cmake` installed on your system):
 

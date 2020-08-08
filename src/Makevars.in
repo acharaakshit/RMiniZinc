@@ -1,0 +1,10 @@
+PKG_CPPFLAGS = -I. @PKG_CPPFLAGS@
+PKG_LIBS = @PKG_LIBS@
+OBJECTS.tests = cpp_tests/test-runner.o cpp_tests/test-mzn_parse.o cpp_tests/test-set_params.o cpp_tests/test-mzn_eval.o cpp_tests/test-sol_parse.o  cpp_tests/test-getMissingPars.o 
+OBJECTS.sources = RcppExports.o set_params.o mzn_parse.o mzn_eval.o sol_parse.o getMissingPars.o  
+OBJECTS.helpers = filetoString.o helper_parse.o expDetails.o pathStringcheck.o 
+OBJECTS = $(OBJECTS.sources) $(OBJECTS.tests) $(OBJECTS.helpers) $(SOURCES:.cpp=.o)
+all: clean
+clean:
+	rm -f $(OBJECTS.sources) $(OBJECTS.tests) $(OBJECTS.helpers) Makevars *.so
+

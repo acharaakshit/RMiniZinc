@@ -6,6 +6,9 @@
 \description{
 include files in MiniZinc
 }
+\section{Super class}{
+\code{\link[rminizinc:Item]{rminizinc::Item}} -> \code{IncludeItem}
+}
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
@@ -29,6 +32,12 @@ include files in MiniZinc
 \item \href{#method-c_str}{\code{IncludeItem$c_str()}}
 \item \href{#method-clone}{\code{IncludeItem$clone()}}
 }
+}
+\if{html}{
+\out{<details open ><summary>Inherited methods</summary>}
+\itemize{
+}
+\out{</details>}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}
