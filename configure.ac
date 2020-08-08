@@ -12,43 +12,25 @@ CPPFLAGS=`"${R_HOME}/bin/R" CMD config CPPFLAGS`
 AC_LANG(C++)
 AC_PROG_CPP
 
-have_mzn=no
-MZN_CXXFLAGS=""
-MZN_LIBS="-L/usr/local/lib/libminizinc -lmzn"
+AC_ARG_WITH([mzn],
+            AC_HELP_STRING([--with-mzn=PREFIX],
+                           [path to where libminizinc is installed]),
+            [AC_MSG_NOTICE([Custom libminizinc path provided!])],
+            [AC_SUBST([DEFAULT_INCLUDE], "/usr/local/lib/libminizinc")])
 
-PKG_PROG_PKG_CONFIG
+AC_SUBST([MZN_INCLUDE], "-I${DEFAULT_INCLUDE}/include")
+AC_SUBST([MZN_LIBS], "-L${DEFAULT_INCLUDE} -lmzn")
 
-if test [ -n "$PKG_CONFIG" ] ; then
-  AC_MSG_CHECKING([pkg-config for mzn])
-  if $PKG_CONFIG --exists mzn; then
-    have_mzn=yes
-    MZN_CXXFLAGS=`"${PKG_CONFIG}" --cflags mzn`
-    MZN_LIBS=`"${PKG_CONFIG}" --libs mzn`
-  fi
-  AC_MSG_RESULT([${have_mzn}])
-fi
+AS_IF([test -e "${with_mzn}"],
+            [
+             MZN_INCLUDE="-I${with_mzn}/include"
+             MZN_LIBS="-L${with_mzn} -lmzn"
+            ])
 
+CPP_FLAGS="${CPP_FLAGS} ${MZN_INCLUDE}"
+CXX_FLAGS="${CXX_FLAGS} ${MZN_INCLUDE}"
+LDFLAGS="${LDFLAGS} ${MZN_LIBS}"
 
-if test "x${have_mzn}" = xno; then
-  AC_CHECK_HEADERS(minizinc/ast.hh, [have_mzn=yes], [AC_MSG_FAILURE([
-  ---------------------------------------------
-   'libminizinc' and its header files are required.
-
-   Please install libminizinc and try again.
-
-   If you believe this library is installed on your system but
-   this script is simply unable to find it, you can specify the
-   include and lib paths manually:
-
-   R CMD INSTALL ${PACKAGE_NAME} \\
-     --configure-vars='LIBS=-L/path/to/libs CPPFLAGS=-I/path/to/headers'
-  ---------------------------------------------
-  ])])
-fi
-
-
-AC_SUBST([PKG_CPPFLAGS], ["${PKG_CPPFLAGS}"])
-AC_SUBST([PKG_LIBS], ["${PKG_LIBS} ${MZN_LIBS}"])
 AC_CONFIG_FILES([src/Makevars])
 AC_OUTPUT
 
@@ -56,8 +38,8 @@ echo "
   --------------------------------------------------
   Configuration for ${PACKAGE_NAME} ${PACKAGE_VERSION}
 
-    cppflags: ${CPPFLAGS} ${PKG_CPPFLAGS} 
-    libs:     ${PKG_LIBS} 
+    cppflags: ${CPPFLAGS} ${PKG_CPPFLAGS} ${MZN_INCLUDE}
+    libs:     ${PKG_LIBS} ${MZN_LIBS}
 
   --------------------------------------------------
 "
