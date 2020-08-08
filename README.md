@@ -59,7 +59,7 @@ Change the path in the configuration files accordingly:
 `sudo sed -i 's+../../../bin+/snap/minizinc/current/bin+g' gecode.msc`
 
 The package can be installed using  
-R CMD INSTALL rminizinc_0.0.0.99.tar.gz --configure-args='--with-mzn=/path/to/libminizinc' if already built or   using remotes::install_github("acharaakshit/rminizinc", ... = "--with-mzn=/path/to/libminizinc")
+R CMD INSTALL rminizinc_0.0.0.99.tar.gz --configure-args='--with-mzn=/path/to/libminizinc' if already built or   using remotes::install_github("acharaakshit/rminizinc", configure.args="--with-mzn=/path/to/libminizinc")
 
 Please note that if path arguments are not passed along with the installation, the default path `usr/local/lib` will be chosen so you will require to install libminizinc in `usr/local/lib`.
 
