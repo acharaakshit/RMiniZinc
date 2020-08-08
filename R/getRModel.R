@@ -1,3 +1,6 @@
+# contains variable declarations
+variableItems = c()
+
 #' @title init all classes
 #' @description given the return value of
 #' `mzn_parse()`, it creates a model in R
@@ -41,7 +44,7 @@ initItem = function(parsedList){
       }
       ti = TypeInst$new(type = vType, domain = initExpression(vList[[i]]$DETAILS$DOMAIN), 
                         indexExprVec = indexList)
-      variableItems <<- vItems
+      variableItems = vItems
       vItems = c(vItems, VarDeclItem$new(decl = VarDecl$new(id =  vList[[i]]$DETAILS$NAME, type_inst = ti,
                                                             e = initExpression(vList[[i]]$DETAILS$VALUE))))
     }
@@ -227,7 +230,7 @@ initExpression = function(pList){
 getType = function(typeStr, kind){
   if(typeStr == "annotation"){
     return(Type$new(base_type = "ann", kind =  kind))
-  }else if(typeStr %in% c("int", "float", "bool", "string", "bot")){
+  }else if(typeStr %in% c("int", "float", "bool", "string")){
     return(Type$new(base_type = typeStr, kind =  kind))
   }else if(typeStr == "set of int"){
     Type$new(base_type = "int", kind = kind,set_type = TRUE)
@@ -237,8 +240,6 @@ getType = function(typeStr, kind){
     return(Type$new(base_type = "bool", kind = kind, set_type = TRUE))
   }else if(typeStr == "set of string"){
     return(Type$new(base_type = "string", kind = kind, set_type = TRUE))
-  }else if(typeStr == "set of bot"){
-    return(Type$new(base_type = "bot", kind = kind, set_type = TRUE))
   }else if(typeStr == "unknown set"){
     return(Type$new(base_type = "unknown", kind = kind, set_type = TRUE))
   }else if(typeStr == "type couldn't be  identified"){
@@ -255,8 +256,6 @@ getType = function(typeStr, kind){
       return(Type$new(base_type = "bool", kind = kind, dim = ndim))
     }else if(ntypeStr == " dimensional array of string"){
       return(Type$new(base_type = "string", kind = kind, dim = ndim))
-    }else if(ntypeStr == " dimensional array of bot"){
-      return(Type$new(base_type = "bot", kind = kind, dim = ndim))
     }else if(ntypeStr == " dimensional unknown array"){
       return(Type$new(base_type = "unknown", kind = kind, dim = ndim))
     }else {

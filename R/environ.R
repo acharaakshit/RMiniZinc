@@ -2,7 +2,7 @@
 #' @importFrom  rlang env
 .globals = env()
 .globals$Type$kinds =  c("var", "par") 
-.globals$Type$baseTypes = c("bool", "int", "float", "string", "unknown", "ann", "bot") 
+.globals$Type$baseTypes = c("bool", "int", "float", "string", "unknown", "ann") 
 .globals$binopTypes =  c("+", "-", "!=", "<->", ">=", "<=", "*", ">", "<", "->", "<-", "..", "\\/", "/\\", "'not'",
                           "subset", "superset", "union", "diff", "symdiff", "intersect",
                           "^", "div", "mod", "/", "++", "xor", "in", "=")
