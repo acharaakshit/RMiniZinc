@@ -10,9 +10,7 @@ One of the prerequisites to use this package is that [MiniZinc](https://www.mini
 To install minizinc : `snap install minizinc --classic` should be used. You can verify if MiniZinc is accessible from the command line by typing `minizinc`. You can use the package once you have set up MiniZinc.
 Once you have installed the snap binary, you need to build the [libminizinc](https://github.com/MiniZinc/libminizinc) library by following the steps given below:
 
-Go to the lib folder and clone the repository:
-
-`cd /usr/local/lib`
+Clone the repository:
 
 `sudo git clone https://github.com/MiniZinc/libminizinc.git`
 
@@ -34,7 +32,7 @@ Now, build the library (make sure you have `cmake` installed on your system):
 
 Now you need to put the solver configurations from the MiniZinc binary to the libminizinc solvers:
 
-`sudo cp -r /snap/minizinc/current/share/minizinc/solvers  /usr/local/lib/libminizinc/share/minizinc`
+`sudo cp -r /snap/minizinc/current/share/minizinc/solvers  /path/to/libminizinc/share/minizinc`
 
 `cd share/minizinc/solvers`
 
@@ -44,9 +42,9 @@ Change the paths accordingly in the library (Currently the package is only using
 
 Now, the library is built and you need to add it to the path:
 
-`export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/libminizinc`
+`export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/path/to/libminizinc`
 
-`sudo echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/libminizinc' >> ~/.bashrc`
+`sudo echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/path/to/libminizinc' >> ~/.bashrc`
 
 `sudo ldconfig`
 
@@ -60,8 +58,9 @@ Change the path in the configuration files accordingly:
 
 `sudo sed -i 's+../../../bin+/snap/minizinc/current/bin+g' gecode.msc`
 
-Now, you can use the package!
+The package can be installed using  
+R CMD INSTALL rminizinc_0.0.0.99.tar.gz --configure-args='--with-mzn=/path/to/libminizinc' if already built or   using remotes::install_github("acharaakshit/rminizinc", ... = "--with-mzn=/path/to/libminizinc")
 
-Please note that these are workaround instructions to run this package currently and improved installation instructions will be released soon. 
+Please note that if path arguments are not passed along with the installation, the default path `usr/local/lib` will be chosen so you will require to install libminizinc in `usr/local/lib`.
 
-
+Now, you can use the package!  
