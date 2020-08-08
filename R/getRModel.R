@@ -67,8 +67,6 @@ initItem = function(parsedList){
   }else if(names(parsedList) == "FUNCTION_ITEMS"){
     
   }else if(names(parsedList) == "ASSIGNMENTS"){
-  }else if(names(parsedList) == "MODEL_STRING"){
-    # do nothing
     assignList = c()
     for (i in seq(1, length(parsedList$ASSIGNMENTS), 1)) {
       for (j in seq(1, length(variableItems), 1)) {
