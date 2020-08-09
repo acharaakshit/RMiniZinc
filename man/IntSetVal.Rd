@@ -32,6 +32,7 @@ integer range set value in MiniZinc
 \item \href{#method-setMin}{\code{IntSetVal$setMin()}}
 \item \href{#method-getMax}{\code{IntSetVal$getMax()}}
 \item \href{#method-setMax}{\code{IntSetVal$setMax()}}
+\item \href{#method-c_str}{\code{IntSetVal$c_str()}}
 \item \href{#method-clone}{\code{IntSetVal$clone()}}
 }
 }
@@ -107,6 +108,16 @@ set the maximum IntVal
 }
 \if{html}{\out{</div>}}
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-c_str"></a>}}
+\if{latex}{\out{\hypertarget{method-c_str}{}}}
+\subsection{Method \code{c_str()}}{
+get the MiniZinc representation
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{IntSetVal$c_str()}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}
