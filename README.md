@@ -1,6 +1,6 @@
 # RMiniZinc
 
-[![Build Status](https://travis-ci.org/{acharaakshit}/{rminizinc}.png?branch=master)](https://travis-ci.org/{acharaakshit}/{rminizinc})
+[![Build Status](https://travis-ci.org/acharaakshit/rminizinc.png?branch=master)](https://travis-ci.org/acharaakshit/rminizinc)
 
 ## Introduction
 
