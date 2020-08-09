@@ -1,6 +1,8 @@
 # RMiniZinc
 
-## Under Development
+[![Build Status](https://travis-ci.org/{acharaakshit}/{rminizinc}.png?branch=master)](https://travis-ci.org/{acharaakshit}/{rminizinc})
+
+## Introduction
 
 This package is aimed towards providing the r users to use MiniZinc from within R. The package vignette contains a basic demonstration of how to create and/or solve a MiniZinc model for a wide variety of constraint programming problems, obtain the string solution or parsed solution for an existing model. Please refer to the vignette for more information. 
 
