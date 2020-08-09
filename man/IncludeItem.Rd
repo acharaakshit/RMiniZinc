@@ -13,6 +13,8 @@ include files in MiniZinc
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
 \item{\code{.id}}{name of mzn file}
+
+\item{\code{.delete_flag}}{used to delete items}
 }
 \if{html}{\out{</div>}}
 }
@@ -20,6 +22,8 @@ include files in MiniZinc
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
 \item{\code{.id}}{name of mzn file}
+
+\item{\code{.delete_flag}}{used to delete items}
 }
 \if{html}{\out{</div>}}
 }
@@ -30,6 +34,8 @@ include files in MiniZinc
 \item \href{#method-getmznName}{\code{IncludeItem$getmznName()}}
 \item \href{#method-setmznName}{\code{IncludeItem$setmznName()}}
 \item \href{#method-c_str}{\code{IncludeItem$c_str()}}
+\item \href{#method-getDeleteFlag}{\code{IncludeItem$getDeleteFlag()}}
+\item \href{#method-delete}{\code{IncludeItem$delete()}}
 \item \href{#method-clone}{\code{IncludeItem$clone()}}
 }
 }
@@ -90,6 +96,26 @@ set the file name}
 get the MiniZinc representation
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{IncludeItem$c_str()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getDeleteFlag"></a>}}
+\if{latex}{\out{\hypertarget{method-getDeleteFlag}{}}}
+\subsection{Method \code{getDeleteFlag()}}{
+delete flag for internal use
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{IncludeItem$getDeleteFlag()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-delete"></a>}}
+\if{latex}{\out{\hypertarget{method-delete}{}}}
+\subsection{Method \code{delete()}}{
+delete the include item
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{IncludeItem$delete()}\if{html}{\out{</div>}}
 }
 
 }
