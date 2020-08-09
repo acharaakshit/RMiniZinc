@@ -51,6 +51,22 @@ SolveItem = R6Class("SolveType",
                                }else{
                                  return(sprintf("solve %s %s %s;", annStr, private$.st, private$.e$c_str()))
                                }
+                             },
+                             #' @description delete flag for internal use
+                             getDeleteFlag = function(){
+                               return(private$.delete_flag)
+                             },
+                             #' @description delete the solve item
+                             delete = function(){
+                               private$.delete_flag = TRUE
+                               pf = parent.frame()
+                               items = sapply(ls(pf), function(i) {
+                                 class(get(i, envir = pf))[1] == "SolveItem"
+                               })
+                               this = ls(pf)[items][sapply(mget(ls(pf)[items], envir = pf),
+                                                            function(x) x$getDeleteFlag())]
+                               rm(list = this, envir = pf)
+                               message("SolveItem object deleted!")
                              }
                              ),
                           private = list(
@@ -62,6 +78,9 @@ SolveItem = R6Class("SolveType",
                             .st = NULL,
                             #' @field .ann
                             #' annotation of the solve type
-                            .ann = NULL
+                            .ann = NULL,
+                            #' @field .delete_flag
+                            #' used to delete items
+                            .delete_flag = FALSE
                           )
                     )

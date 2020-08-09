@@ -15,6 +15,8 @@ assignments in MiniZinc
 \item{\code{.decl}}{associated declaration}
 
 \item{\code{.e}}{value to be assigned}
+
+\item{\code{.delete_flag}}{used to delete items}
 }
 \if{html}{\out{</div>}}
 }
@@ -24,6 +26,8 @@ assignments in MiniZinc
 \item{\code{.decl}}{associated declaration}
 
 \item{\code{.e}}{value to be assigned}
+
+\item{\code{.delete_flag}}{used to delete items}
 }
 \if{html}{\out{</div>}}
 }
@@ -37,6 +41,8 @@ assignments in MiniZinc
 \item \href{#method-getDecl}{\code{AssignItem$getDecl()}}
 \item \href{#method-setDecl}{\code{AssignItem$setDecl()}}
 \item \href{#method-c_str}{\code{AssignItem$c_str()}}
+\item \href{#method-getDeleteFlag}{\code{AssignItem$getDeleteFlag()}}
+\item \href{#method-delete}{\code{AssignItem$delete()}}
 \item \href{#method-clone}{\code{AssignItem$clone()}}
 }
 }
@@ -136,6 +142,26 @@ set the associated declaration
 get the MiniZinc representation
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{AssignItem$c_str()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getDeleteFlag"></a>}}
+\if{latex}{\out{\hypertarget{method-getDeleteFlag}{}}}
+\subsection{Method \code{getDeleteFlag()}}{
+delete flag for internal use
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AssignItem$getDeleteFlag()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-delete"></a>}}
+\if{latex}{\out{\hypertarget{method-delete}{}}}
+\subsection{Method \code{delete()}}{
+delete the assignment item
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{AssignItem$delete()}\if{html}{\out{</div>}}
 }
 
 }

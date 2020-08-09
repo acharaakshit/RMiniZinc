@@ -78,12 +78,31 @@ IncludeItem = R6Class("IncludeItem",
                        #' @description get the MiniZinc representation
                        c_str = function(){
                          return(sprintf("include %s;", shQuote(private$.id, "cmd")))
+                       },
+                       #' @description delete flag for internal use
+                       getDeleteFlag = function(){
+                         return(private$.delete_flag)
+                       },
+                       #' @description delete the include item
+                       delete = function(){
+                         private$.delete_flag = TRUE
+                         pf = parent.frame()
+                         items = sapply(ls(pf), function(i) {
+                           class(get(i, envir = pf))[1] == "IncludeItem"
+                         })
+                         this = ls(pf)[items][sapply(mget(ls(pf)[items], envir = pf),
+                                                      function(x) x$getDeleteFlag())]
+                         rm(list = this, envir = pf)
+                         message("IncludeItem object deleted!")
                        }
-               ),
+                    ),
                private = list(
                  #' @field .id
                  #' name of mzn file
-                 .id = NULL
+                 .id = NULL,
+                 #' @field .delete_flag
+                 #' used to delete items
+                 .delete_flag = FALSE
                ))
 
 #' @title Assignment Items
@@ -131,6 +150,22 @@ AssignItem = R6Class("AssignItem",
                        #' @description get the MiniZinc representation
                        c_str = function(){
                          return(sprintf("%s = %s;", private$.decl$id()$getId(), private$.e$c_str()))
+                       },
+                       #' @description delete flag for internal use
+                       getDeleteFlag = function(){
+                         return(private$.delete_flag)
+                       },
+                       #' @description delete the assignment item
+                       delete = function(){
+                         private$.delete_flag = TRUE
+                         pf = parent.frame()
+                         items = sapply(ls(pf), function(i) {
+                           class(get(i, envir = pf))[1] == "SolveItem"
+                         })
+                         this = ls(pf)[items][sapply(mget(ls(pf)[items], envir = pf),
+                                                      function(x) x$getDeleteFlag())]
+                         rm(list = this, envir = pf)
+                         message("SolveItem object deleted!")
                        }
                      ),
                      private = list(
@@ -139,5 +174,8 @@ AssignItem = R6Class("AssignItem",
                        .decl = NULL,
                        #' @field .e
                        #' value to be assigned
-                       .e = NULL
+                       .e = NULL,
+                       #' @field .delete_flag
+                       #' used to delete items
+                       .delete_flag = FALSE
                      ))

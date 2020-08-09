@@ -142,9 +142,9 @@ Set = R6Class("Set",
                 #' @description convert into MiniZinc representation
                 c_str = function(){
                   if(!is.null(private$.isv)){
-                    sprintf("%s..%s", private$.isv$getMin(), private$.isv$getMax())
+                    return(private$.isv$c_str())
                   }else if(!is.null(private$.fsv)){
-                    sprintf("%s..%s", private$.fsv$getMin(), private$.fsv$getMax())
+                    return(private$.isv$c_str())
                   }else{
                     retStr = "";
                     if(private$.et != TRUE){
@@ -945,12 +945,19 @@ TypeInst = R6Class("TypeInst",
                    public = list(
                      #' @description constuctor
                      #' @param type type of declaration
-                     #' @param indexExprVec the expression vector of indices
+                     #' @param indexExprVec expression list of indices
                      #' @param domain the domain of decision variables
                      initialize = function(type, indexExprVec = NULL, domain = NULL){
                        assertR6(type, "Type")
                        private$.type = type 
-                       assertTRUE(testList(indexExprVec, "Expression") || testNull(indexExprVec))
+                       assertTRUE(length(indexExprVec) == type$ndim() ||
+                                    testNull(indexExprVec))
+                       if(!testNull(indexExprVec)){
+                         for (i in seq(1, length(indexExprVec), 1)) {
+                           assertTRUE(testR6(indexExprVec[[i]], "IntSetVal") || 
+                                        testR6(indexExprVec[[i]], "Id")) 
+                         } 
+                       }
                        private$.indExpr = indexExprVec
                        assertTRUE(testR6(domain, "Expression") || testNull(domain))
                        private$.domain = domain

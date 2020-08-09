@@ -14,6 +14,8 @@ minimization or maximization problem
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
 \item{\code{.ann}}{annotation of the solve type}
+
+\item{\code{.delete_flag}}{used to delete items}
 }
 \if{html}{\out{</div>}}
 }
@@ -21,6 +23,8 @@ minimization or maximization problem
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
 \item{\code{.ann}}{annotation of the solve type}
+
+\item{\code{.delete_flag}}{used to delete items}
 }
 \if{html}{\out{</div>}}
 }
@@ -31,6 +35,8 @@ minimization or maximization problem
 \item \href{#method-e}{\code{SolveItem$e()}}
 \item \href{#method-st}{\code{SolveItem$st()}}
 \item \href{#method-c_str}{\code{SolveItem$c_str()}}
+\item \href{#method-getDeleteFlag}{\code{SolveItem$getDeleteFlag()}}
+\item \href{#method-delete}{\code{SolveItem$delete()}}
 \item \href{#method-clone}{\code{SolveItem$clone()}}
 }
 }
@@ -87,6 +93,26 @@ return the expression
 to string method
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{SolveItem$c_str()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getDeleteFlag"></a>}}
+\if{latex}{\out{\hypertarget{method-getDeleteFlag}{}}}
+\subsection{Method \code{getDeleteFlag()}}{
+delete flag for internal use
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SolveItem$getDeleteFlag()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-delete"></a>}}
+\if{latex}{\out{\hypertarget{method-delete}{}}}
+\subsection{Method \code{delete()}}{
+delete the solve item
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SolveItem$delete()}\if{html}{\out{</div>}}
 }
 
 }
