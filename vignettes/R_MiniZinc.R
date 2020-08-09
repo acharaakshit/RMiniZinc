@@ -61,6 +61,17 @@ cat(modString)
 dzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/knapsack/knapsack_0.dzn")
 sol = rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gecode",
                       libpath = "/snap/minizinc/current/share/minizinc", dznpath = dzn_path)
+print(sol$SOLUTIONS$OPTIMAL_SOLUTION)
+
+## -----------------------------------------------------------------------------
+# delete the item 1
+item1$delete()
+# check that item1 has been deleted
+ls(pattern = "item[^a-z]")
+# item1 reference is deleted but items vector should be updated
+items = c(item2, item3, item4, item5, item6, item7, item8, item9)
+mod = Model$new(items)
+cat(mod$mzn_string())
 
 ## ----Workflow 1, echo=FALSE, out.width = '80%'--------------------------------
 knitr::include_graphics(paste0(getwd(),"/workflows/write_model.png"))
