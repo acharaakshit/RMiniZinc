@@ -7,6 +7,7 @@ Meta
 src/Makevars
 src/*.o
 src/cpp_tests/*.o
+src/rminizinc.so
 autom4te.cache
 config.log
 config.status
