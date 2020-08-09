@@ -62,7 +62,7 @@ constuctor
 \describe{
 \item{\code{type}}{type of declaration}
 
-\item{\code{indexExprVec}}{the expression vector of indices}
+\item{\code{indexExprVec}}{expression list of indices}
 
 \item{\code{domain}}{the domain of decision variables}
 }

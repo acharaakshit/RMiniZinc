@@ -2,11 +2,11 @@
 
 ## Under Development
 
-This package is aimed towards providing the r users to use MiniZinc from within R. Currently basic integer programming problems can be solved. The package vignette contains a basic demonstration of how to create and/or solve a MiniZinc model for a wide variety of constraint programming problems, obtain the string solution or parsed solution for an existing model. Please refer to the vignette for more information. The vignette will be updated from time to time and more features will be added to the package.
+This package is aimed towards providing the r users to use MiniZinc from within R. The package vignette contains a basic demonstration of how to create and/or solve a MiniZinc model for a wide variety of constraint programming problems, obtain the string solution or parsed solution for an existing model. Please refer to the vignette for more information. 
 
 ## Getting Started
 
-One of the prerequisites to use this package is that [MiniZinc](https://www.minizinc.org/) is installed on your system and has been added to the path. The installation instructions can be found [here](https://www.minizinc.org/doc-2.4.3/en/installation.html). This package is currently available only for linux users, the installation steps for osx and windows users will be released later. 
+One of the prerequisites to use this package is that [MiniZinc](https://www.minizinc.org/) is installed on your system and has been added to the path. The installation instructions can be found [here](https://www.minizinc.org/doc-2.4.3/en/installation.html). This package is currently available only for linux users, the installation steps for osx and windows users will be released later.   
 To install minizinc : `snap install minizinc --classic` should be used. You can verify if MiniZinc is accessible from the command line by typing `minizinc`. You can use the package once you have set up MiniZinc.
 Once you have installed the snap binary, you need to build the [libminizinc](https://github.com/MiniZinc/libminizinc) library by following the steps given below:
 
@@ -59,8 +59,11 @@ Change the path in the configuration files accordingly:
 `sudo sed -i 's+../../../bin+/snap/minizinc/current/bin+g' gecode.msc`
 
 The package can be installed using  
-`R CMD INSTALL rminizinc_0.0.0.99.tar.gz --configure-args='--with-mzn=/path/to/libminizinc'` if already built or using `remotes::install_github("acharaakshit/rminizinc", configure.args="--with-mzn=/path/to/libminizinc")`
+`R CMD INSTALL rminizinc_0.0.0.99.tar.gz --configure-args='--with-mzn=/path/to/libminizinc'` if already built
+or using  
+`remotes::install_github("acharaakshit/rminizinc", configure.args="--with-mzn=/path/to/libminizinc")`  
+to directly install from github.
 
-Please note that if path arguments are not passed along with the installation, the default path `usr/local/lib` will be chosen so you will require to install libminizinc in `usr/local/lib`.
+Please note that if path arguments are not passed along with the installation, the default path `/usr/local/lib` will be chosen so you will require to install libminizinc in `/usr/local/lib`.
 
 Now, you can use the package!  

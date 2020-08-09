@@ -12,14 +12,18 @@ Declaration items in the model
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{.declExpression}}{the declaration expression}
+\item{\code{.decl}}{the declaration expression}
+
+\item{\code{.delete_flag}}{used to delete items}
 }
 \if{html}{\out{</div>}}
 }
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
-\item{\code{.declExpression}}{the declaration expression}
+\item{\code{.decl}}{the declaration expression}
+
+\item{\code{.delete_flag}}{used to delete items}
 }
 \if{html}{\out{</div>}}
 }
@@ -29,6 +33,8 @@ Declaration items in the model
 \item \href{#method-new}{\code{VarDeclItem$new()}}
 \item \href{#method-e}{\code{VarDeclItem$e()}}
 \item \href{#method-c_str}{\code{VarDeclItem$c_str()}}
+\item \href{#method-getDeleteFlag}{\code{VarDeclItem$getDeleteFlag()}}
+\item \href{#method-delete}{\code{VarDeclItem$delete()}}
 \item \href{#method-clone}{\code{VarDeclItem$clone()}}
 }
 }
@@ -72,6 +78,26 @@ get the declaration expression object
 convert the declaration to String
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{VarDeclItem$c_str()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getDeleteFlag"></a>}}
+\if{latex}{\out{\hypertarget{method-getDeleteFlag}{}}}
+\subsection{Method \code{getDeleteFlag()}}{
+delete flag for internal use
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{VarDeclItem$getDeleteFlag()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-delete"></a>}}
+\if{latex}{\out{\hypertarget{method-delete}{}}}
+\subsection{Method \code{delete()}}{
+delete the variable item
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{VarDeclItem$delete()}\if{html}{\out{</div>}}
 }
 
 }

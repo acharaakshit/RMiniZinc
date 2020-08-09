@@ -38,6 +38,9 @@ set or plain}
 \item \href{#method-kind}{\code{Type$kind()}}
 \item \href{#method-ndim}{\code{Type$ndim()}}
 \item \href{#method-isSet}{\code{Type$isSet()}}
+\item \href{#method-isIntSet}{\code{Type$isIntSet()}}
+\item \href{#method-isFloatSet}{\code{Type$isFloatSet()}}
+\item \href{#method-isBoolSet}{\code{Type$isBoolSet()}}
 \item \href{#method-clone}{\code{Type$clone()}}
 }
 }
@@ -101,6 +104,36 @@ return the number of dimensions
 return if set or not
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Type$isSet()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-isIntSet"></a>}}
+\if{latex}{\out{\hypertarget{method-isIntSet}{}}}
+\subsection{Method \code{isIntSet()}}{
+check if it's a set of int
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Type$isIntSet()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-isFloatSet"></a>}}
+\if{latex}{\out{\hypertarget{method-isFloatSet}{}}}
+\subsection{Method \code{isFloatSet()}}{
+check if it's a set of float
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Type$isFloatSet()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-isBoolSet"></a>}}
+\if{latex}{\out{\hypertarget{method-isBoolSet}{}}}
+\subsection{Method \code{isBoolSet()}}{
+check if it's a set of bool
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Type$isBoolSet()}\if{html}{\out{</div>}}
 }
 
 }

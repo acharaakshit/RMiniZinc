@@ -136,10 +136,23 @@ Solve the model using the Rcpp functions that are using the MiniZinc.
 dzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/knapsack/knapsack_0.dzn")
 sol = rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gecode",
                       libpath = "/snap/minizinc/current/share/minizinc", dznpath = dzn_path)
+print(sol$SOLUTIONS$OPTIMAL_SOLUTION)
 ```
 
+## Delete Items
 
-Currently only the knapsack problem specified above can be created using the current implementation. More problems will be supported soon.
+All the item classes have a `delete()` function which is used to delete the item. An example to demonstrate the same is shown below:
+
+```{r}
+# delete the item 1
+item1$delete()
+# check that item1 has been deleted
+ls(pattern = "item[^a-z]")
+# item1 reference is deleted but items vector should be updated
+items = c(item2, item3, item4, item5, item6, item7, item8, item9)
+mod = Model$new(items)
+cat(mod$mzn_string())
+```
 
 Now, that the basic structure of the problem is clear, we can create functions for solving different constraint programming problems.
 
@@ -329,5 +342,7 @@ solObj = rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.geco
 print(solObj$SOLUTIONS)
 ```
 
+
 The next step is to allow the users to modify a MiniZinc model using the R6 objects which will be demonstrated soon.
+
 

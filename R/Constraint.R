@@ -26,11 +26,30 @@ ConstraintItem = R6Class("ConstraintItem",
                        #' @description serialize to MiniZinc syntax
                        c_str = function(){
                          return(sprintf("constraint %s;", private$.e$c_str()))
+                      },
+                      #' @description delete flag for internal use
+                      getDeleteFlag = function(){
+                        return(private$.delete_flag)
+                      },
+                      #' @description delete the constraint item
+                      delete = function(){
+                        private$.delete_flag = TRUE
+                        pf = parent.frame()
+                        items = sapply(ls(pf), function(i) {
+                          class(get(i, envir = pf))[1] == "ConstraintItem"
+                        })
+                        this = ls(pf)[items][sapply(mget(ls(pf)[items], envir = pf),
+                                                     function(x) x$getDeleteFlag())]
+                        rm(list = this, envir = pf)
+                        message("ConstraintItem object deleted!")
                       }
                      ),
                      private = list(
-                       #' @field .expression
+                       #' @field .e
                        #' the constraint expression
-                       .e = NULL
+                       .e = NULL,
+                       #' @field .delete_flag
+                       #' used to delete items
+                       .delete_flag = FALSE
                      )
                   )

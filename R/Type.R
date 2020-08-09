@@ -39,8 +39,19 @@ Type = R6Class("Type",
                  #' @description return if set or not
                  isSet = function(){
                    return(private$.st)
+                 },
+                 #' @description check if it's a set of int
+                 isIntSet = function(){
+                   return(private$.st && testTRUE(private$.bt == "int"))
+                 },
+                 #' @description check if it's a set of float
+                 isFloatSet = function(){
+                   return(private$.st && testTRUE(private$.bt == "float"))
+                 },
+                 #' @description check if it's a set of bool
+                 isBoolSet = function(){
+                   return(private$.st && testTRUE(private$.bt == "bool"))
                  }
-                 
                ),
                private = list(
                  #' @field .bt
