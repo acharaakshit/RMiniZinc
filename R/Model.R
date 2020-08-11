@@ -11,6 +11,18 @@ Model = R6Class("Model",
                  #' @param items all items of the model 
                  initialize = function(items){
                    assert_list(items, "Item")
+                   # check if more than one solve item is present
+                   sI = 0
+                   for(i in seq(1, length(items), 1)){
+                     if(testR6(items[[i]], "SolveItem")){
+                       sI = sI+1
+                     }
+                   }
+                   if(sI>1){
+                     stop("Only one solve Item is allowed")
+                   }else if(sI == 0){
+                     warning("Atleast one solve item should be present to evaluate the model")
+                   }
                    private$.items = items
                  },
                  #' @description get the item using index
@@ -77,7 +89,7 @@ IncludeItem = R6Class("IncludeItem",
                        },
                        #' @description get the MiniZinc representation
                        c_str = function(){
-                         return(sprintf("include %s;", shQuote(private$.id, "cmd")))
+                         return(sprintf("include %s;\n", shQuote(private$.id, "cmd")))
                        },
                        #' @description delete flag for internal use
                        getDeleteFlag = function(){
@@ -149,7 +161,7 @@ AssignItem = R6Class("AssignItem",
                        },
                        #' @description get the MiniZinc representation
                        c_str = function(){
-                         return(sprintf("%s = %s;", private$.decl$id()$getId(), private$.e$c_str()))
+                         return(sprintf("%s = %s;\n", private$.decl$id()$getId(), private$.e$c_str()))
                        },
                        #' @description delete flag for internal use
                        getDeleteFlag = function(){
@@ -179,3 +191,76 @@ AssignItem = R6Class("AssignItem",
                        #' used to delete items
                        .delete_flag = FALSE
                      ))
+
+#' @title Function Items
+#' @description independent functions (that are not part of any other items)
+#' in a MiniZinc model
+#' @import R6
+#' @import checkmate
+#' @export
+FunctionItem = R6Class("FunctionItem",
+                       public = list(
+                         #' @description constructor
+                         #' @param name name of the function
+                         #' @param pars parameter declarations
+                         #' @param rt the return type ("bool par", "bool var" or other)
+                         #' @param ann annotation
+                         #' @param body body of the function
+                         initialize = function(name, pars, rt, ann = NULL, body = NULL){
+                           stop("under development currently")
+                           assertCharacter(name)
+                           private$.id = name
+                           assertList(pars, "VarDecl")
+                           for (i in seq(1, length(pars), 1)) {
+                             assertTRUE(pars[[i]]$isPar())
+                           }
+                           assertTRUE(testNull(ann) || testR6(ann, "Annotation"))
+                           private$.ann = ann
+                           assertTRUE(testNull(body) || testR6(body, "Expression"))
+                           private$.e = body
+                         },
+                         #' @description get the name of the function
+                         name = function(){
+                           return(private$.id)
+                         },
+                         #' @description get the function body
+                         b = function(){
+                           return(private$.e)
+                         },
+                         #' @description get the function annotation
+                         ann = function(){
+                           return(private$.ann)
+                         },
+                         #' @description get if the function is a test, predicate 
+                         #' or a function call itself.
+                         rtype = function(){
+                           if(private$.rt == "boolPar"){
+                             return("test")
+                           }else if(private$.rt == "boolVar"){
+                             return("predicate")
+                           }else{
+                             return("function")
+                           }
+                         },
+                         #' @description get the MiniZinc representation
+                         c_str = function(){
+                           return(sprintf("%s %s;", private$.ann, private$.e))
+                         }
+                       ),
+                       private = list(
+                         #' @field .id
+                         #' name of the function
+                         .id = NULL,
+                         #' @field .e
+                         #' expression in the function
+                         .e = NULL,
+                         #' @field .params
+                         #' parameter declarations 
+                         .params = NULL,
+                         #' @field .ann
+                         #' annotation 
+                         .ann = NULL,
+                         #' @field .rt
+                         #' return type of the function
+                         .rt = NULL
+                       ))
