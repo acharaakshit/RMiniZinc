@@ -35,8 +35,13 @@ set or plain}
 \itemize{
 \item \href{#method-new}{\code{Type$new()}}
 \item \href{#method-bt}{\code{Type$bt()}}
+\item \href{#method-st}{\code{Type$st()}}
 \item \href{#method-kind}{\code{Type$kind()}}
 \item \href{#method-ndim}{\code{Type$ndim()}}
+\item \href{#method-isInt}{\code{Type$isInt()}}
+\item \href{#method-isFloat}{\code{Type$isFloat()}}
+\item \href{#method-isBool}{\code{Type$isBool()}}
+\item \href{#method-isString}{\code{Type$isString()}}
 \item \href{#method-isSet}{\code{Type$isSet()}}
 \item \href{#method-isIntSet}{\code{Type$isIntSet()}}
 \item \href{#method-isFloatSet}{\code{Type$isFloatSet()}}
@@ -78,6 +83,16 @@ return the base type
 
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-st"></a>}}
+\if{latex}{\out{\hypertarget{method-st}{}}}
+\subsection{Method \code{st()}}{
+return if it's set type
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Type$st()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-kind"></a>}}
 \if{latex}{\out{\hypertarget{method-kind}{}}}
 \subsection{Method \code{kind()}}{
@@ -98,10 +113,50 @@ return the number of dimensions
 
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-isInt"></a>}}
+\if{latex}{\out{\hypertarget{method-isInt}{}}}
+\subsection{Method \code{isInt()}}{
+check if it's an int
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Type$isInt()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-isFloat"></a>}}
+\if{latex}{\out{\hypertarget{method-isFloat}{}}}
+\subsection{Method \code{isFloat()}}{
+check if it's a float
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Type$isFloat()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-isBool"></a>}}
+\if{latex}{\out{\hypertarget{method-isBool}{}}}
+\subsection{Method \code{isBool()}}{
+check if it's a bool
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Type$isBool()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-isString"></a>}}
+\if{latex}{\out{\hypertarget{method-isString}{}}}
+\subsection{Method \code{isString()}}{
+check if it's a string
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Type$isString()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-isSet"></a>}}
 \if{latex}{\out{\hypertarget{method-isSet}{}}}
 \subsection{Method \code{isSet()}}{
-return if set or not
+return if set in MiniZinc
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Type$isSet()}\if{html}{\out{</div>}}
 }

@@ -28,6 +28,10 @@ Type = R6Class("Type",
                  bt = function(){
                    return(private$.bt)
                  },
+                 #' @description return if it's set type
+                 st = function(){
+                   return(private$.st)
+                 },
                  #' @description return the kind 
                  kind = function(){
                    return(private$.kind)
@@ -36,9 +40,25 @@ Type = R6Class("Type",
                  ndim = function(){
                    return(private$.dim)
                  },
-                 #' @description return if set or not
+                 #' @description check if it's an int
+                 isInt = function(){
+                   return(private$.bt == "int")
+                 },
+                 #' @description check if it's a float
+                 isFloat = function(){
+                   return(private$.bt == "float")
+                 },
+                 #' @description check if it's a bool
+                 isBool = function(){
+                   return(private$.bt == "bool")
+                 },
+                 #' @description check if it's a string
+                 isString = function(){
+                   return(private$.bt == "string")
+                 },
+                 #' @description return if set in MiniZinc
                  isSet = function(){
-                   return(private$.st)
+                   return(private$.st && private$.dim == 0)
                  },
                  #' @description check if it's a set of int
                  isIntSet = function(){
