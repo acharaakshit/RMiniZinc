@@ -8,7 +8,7 @@
 #' @export
 IntDecl = function(name, kind, value = NULL){
   parTI = TypeInst$new(Type$new(base_type = "int", kind = kind))
-  return(VarDecl$new(id = name, type_inst = parTI, e = value))
+  return(VarDecl$new(name, parTI, value))
 }
 
 #' @title new float declaration
@@ -19,7 +19,7 @@ IntDecl = function(name, kind, value = NULL){
 #' @export
 FloatDecl = function(name, kind, value = NULL){
   parTI = TypeInst$new(Type$new(base_type = "float", kind = kind))
-  return(VarDecl$new(id = name, type_inst = parTI, e = value))
+  return(VarDecl$new(name, parTI, value))
 }
 
 #' @title new bool declaration
@@ -30,7 +30,7 @@ FloatDecl = function(name, kind, value = NULL){
 #' @export
 BoolDecl = function(name, kind, value = NULL){
   parTI = TypeInst$new(Type$new(base_type = "bool", kind = kind))
-  return(VarDecl$new(id = name, type_inst = parTI, e = value))
+  return(VarDecl$new(name, parTI, value))
 }
 
 #' @title new int set declaration
@@ -41,7 +41,7 @@ BoolDecl = function(name, kind, value = NULL){
 #' @export
 IntSetDecl = function(name, kind, value = NULL){
   parTI = TypeInst$new(Type$new(base_type = "int", kind = kind, set_type = TRUE))
-  return(VarDecl$new(id = name, type_inst = parTI, e = value))
+  return(VarDecl$new(name, parTI, value))
 }
 
 #' @title new set of float declaration
@@ -52,7 +52,7 @@ IntSetDecl = function(name, kind, value = NULL){
 #' @export
 FloatSetDecl = function(name, kind, value = NULL){
   parTI = TypeInst$new(Type$new(base_type = "float", kind = kind, set_type = TRUE))
-  return(VarDecl$new(id = name, type_inst = parTI, e = value))
+  return(VarDecl$new(name, parTI, value))
 }
 
 #' @title new set of bool declaration
@@ -63,7 +63,7 @@ FloatSetDecl = function(name, kind, value = NULL){
 #' @export
 BoolSetDecl = function(name, kind, value = NULL){
   parTI = TypeInst$new(Type$new(base_type = "bool", kind = kind, set_type = TRUE))
-  return(VarDecl$new(id = name, type_inst = parTI, e = value))
+  return(VarDecl$new(name, parTI, value))
 }
 
 #' @title new set of string declaration
@@ -74,7 +74,7 @@ BoolSetDecl = function(name, kind, value = NULL){
 #' @export
 StringSetDecl = function(name, kind, value = NULL){
   parTI = TypeInst$new(Type$new(base_type = "string", kind = kind, set_type = TRUE))
-  return(VarDecl$new(id = name, type_inst = parTI, e = value))
+  return(VarDecl$new(name, parTI, value))
 }
 
 #' @title new nD int array declaration
@@ -87,7 +87,7 @@ StringSetDecl = function(name, kind, value = NULL){
 #' @export
 IntArrDecl = function(name, kind, ind, value = NULL, ndim){
   parTI = TypeInst$new(Type$new(base_type = "int", kind = kind, dim = ndim), indexExprVec = ind)
-  return(VarDecl$new(id = name, type_inst = parTI, e = value))
+  return(VarDecl$new(name, parTI, value))
 }
 
 #' @title new nD float array declaration
@@ -100,7 +100,7 @@ IntArrDecl = function(name, kind, ind, value = NULL, ndim){
 #' @export
 FloatArrDecl = function(name, kind, ind, value = NULL, ndim){
   parTI = TypeInst$new(Type$new(base_type = "float", kind = kind, dim = ndim), indexExprVec = ind)
-  return(VarDecl$new(id = name, type_inst = parTI, e = value))
+  return(VarDecl$new(name, parTI, value))
 }  
 
 
@@ -114,7 +114,7 @@ FloatArrDecl = function(name, kind, ind, value = NULL, ndim){
 #' @export
 BoolArrDecl = function(name, kind, ind, value = NULL, ndim){
   parTI = TypeInst$new(Type$new(base_type = "bool", kind = kind, dim = ndim), indexExprVec = ind)
-  return(VarDecl$new(id = name, type_inst = parTI, e = value))
+  return(VarDecl$new(name, parTI, value))
 }
 
 #' @title new nD bool array declaration
@@ -127,7 +127,7 @@ BoolArrDecl = function(name, kind, ind, value = NULL, ndim){
 #' @export
 StringArrDecl = function(name, kind, ind, value = NULL, ndim){
   parTI = TypeInst$new(Type$new(base_type = "bool", kind = kind, dim = ndim), indexExprVec = ind)
-  return(VarDecl$new(id = name, type_inst = parTI, e = value))
+  return(VarDecl$new(name, parTI, value))
 }
 
 
