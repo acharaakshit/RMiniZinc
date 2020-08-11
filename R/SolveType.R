@@ -1,21 +1,18 @@
-#' @title 
-#' mention if the problem is satisfaction, minimization or maximization.
-#' @description 
-#' This is a class that will be used to specify whether the optimization problem is a satisfaction,
-#' minimization or maximization problem
+#' @title SolveItem
+#' @description specify whether the optimization problem is a satisfaction,
+#' minimization or maximization problem and/or expression to maximize/minnimize
+#' and/or annotation
 #' @import R6
 #' @import checkmate
 #' @export
 SolveItem = R6Class("SolveItem",
                     inherit = Item,
                            public = list(
-                             #' @description 
-                             #' create an instance of specify_problem class
+                             #' @description create an instance of specify_problem class
                              #' @param solve_type satisfaction, minimization or maximization
                              #' @param e expression to minimize or maximize
                              #' @param ann annotation
                              initialize = function(solve_type, e = NULL, ann = NULL){
-                                
                                   assert_choice(solve_type, .globals$objectives)
                                   private$.st = solve_type
                                   assertTRUE(testR6(ann, "Annotation") || testNull(ann))
@@ -80,10 +77,10 @@ SolveItem = R6Class("SolveItem",
                              }
                              ),
                           private = list(
-                            #' @description .e
+                            #' @field  .e
                             #' the expression to maximize or minimize
                             .e = NULL,
-                            #' @description .st
+                            #' @field  .st
                             #' the solve type
                             .st = NULL,
                             #' @field .ann
