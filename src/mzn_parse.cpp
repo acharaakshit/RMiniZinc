@@ -140,6 +140,15 @@ List mzn_parse(std::string modelString = "",
         Rcpp::warning ("Detected function without expression");
       }
       
+      // Return type of the function
+      if(fi->ti()->type().isbool() && fi->ti()->type().ispar()){
+        fnDets.push_back("test");
+        fnDetnms.push_back("FUNCTION_PREFIX");
+      }else if(fi->ti()->type().isbool() && fi->ti()->type().isvar()){
+        fnDets.push_back("predicate");
+        fnDetnms.push_back("FUNCTION_PREFIX");
+      }
+    
       if(!fi->ann().isEmpty()){
         List fnAnns;
         CharacterVector anms;
