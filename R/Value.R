@@ -32,10 +32,6 @@ IntSetVal = R6Class("IntSetVal",
                       #' @param val int value to be set
                       setMax = function(val){
                         private$.max = IntVal$new(val)
-                      },
-                      #' @description get the MiniZinc representation
-                      c_str = function(){
-                        return(sprintf("%s..%s", private$.min, private$.max))
                       }
                     ),
                     private = list(
@@ -82,10 +78,6 @@ FloatSetVal = R6Class("FloatSetVal",
                         #' @param val float value to be set
                         setMax = function(val){
                           private$.max = FloatVal(val)
-                        },
-                        #' @description get the MiniZinc representation
-                        c_str = function(){
-                          return(sprintf("%s..%s", private$.min, private$.max))
                         }
                       ),
                       private = list(

@@ -32,7 +32,6 @@ float set range in MiniZinc
 \item \href{#method-setMin}{\code{FloatSetVal$setMin()}}
 \item \href{#method-getMax}{\code{FloatSetVal$getMax()}}
 \item \href{#method-setMax}{\code{FloatSetVal$setMax()}}
-\item \href{#method-c_str}{\code{FloatSetVal$c_str()}}
 \item \href{#method-clone}{\code{FloatSetVal$clone()}}
 }
 }
@@ -108,16 +107,6 @@ set the maximum float value
 }
 \if{html}{\out{</div>}}
 }
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-c_str"></a>}}
-\if{latex}{\out{\hypertarget{method-c_str}{}}}
-\subsection{Method \code{c_str()}}{
-get the MiniZinc representation
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FloatSetVal$c_str()}\if{html}{\out{</div>}}
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}
