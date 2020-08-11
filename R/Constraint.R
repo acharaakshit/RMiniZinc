@@ -19,13 +19,19 @@ ConstraintItem = R6Class("ConstraintItem",
                          assertR6(e, "Expression")
                          private$.e = e
                        },
-                       #' @description return the constraint expression
-                       e = function(){
+                       #' @description get the constraint expression
+                       getExp = function(){
                          return(private$.e)
+                       },
+                       #' @description set the constraint expression
+                       #' @param e expression
+                       setExp = function(e){
+                         assertR6(e, "Expression")
+                         private$.e = e
                        },
                        #' @description serialize to MiniZinc syntax
                        c_str = function(){
-                         return(sprintf("constraint %s;", private$.e$c_str()))
+                         return(sprintf("constraint %s;\n", private$.e$c_str()))
                       },
                       #' @description delete flag for internal use
                       getDeleteFlag = function(){

@@ -31,7 +31,8 @@ Declaration items in the model
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{VarDeclItem$new()}}
-\item \href{#method-e}{\code{VarDeclItem$e()}}
+\item \href{#method-getDecl}{\code{VarDeclItem$getDecl()}}
+\item \href{#method-setDecl}{\code{VarDeclItem$setDecl()}}
 \item \href{#method-c_str}{\code{VarDeclItem$c_str()}}
 \item \href{#method-getDeleteFlag}{\code{VarDeclItem$getDeleteFlag()}}
 \item \href{#method-delete}{\code{VarDeclItem$delete()}}
@@ -62,19 +63,39 @@ constructor
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-e"></a>}}
-\if{latex}{\out{\hypertarget{method-e}{}}}
-\subsection{Method \code{e()}}{
-get the declaration expression object
+\if{html}{\out{<a id="method-getDecl"></a>}}
+\if{latex}{\out{\hypertarget{method-getDecl}{}}}
+\subsection{Method \code{getDecl()}}{
+get the variable declaration
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{VarDeclItem$e()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{VarDeclItem$getDecl()}\if{html}{\out{</div>}}
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-setDecl"></a>}}
+\if{latex}{\out{\hypertarget{method-setDecl}{}}}
+\subsection{Method \code{setDecl()}}{
+set the variable declaration
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{VarDeclItem$setDecl(e)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{e}}{var decl expression}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-c_str"></a>}}
 \if{latex}{\out{\hypertarget{method-c_str}{}}}
 \subsection{Method \code{c_str()}}{
+set the variable decaration
+
+
 convert the declaration to String
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{VarDeclItem$c_str()}\if{html}{\out{</div>}}

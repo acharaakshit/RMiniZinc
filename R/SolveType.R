@@ -1,17 +1,12 @@
 #' @title 
 #' mention if the problem is satisfaction, minimization or maximization.
-#' 
 #' @description 
 #' This is a class that will be used to specify whether the optimization problem is a satisfaction,
 #' minimization or maximization problem
-#' 
 #' @import R6
 #' @import checkmate
-#' 
-#' 
 #' @export
-
-SolveItem = R6Class("SolveType",
+SolveItem = R6Class("SolveItem",
                     inherit = Item,
                            public = list(
                              #' @description 
@@ -33,12 +28,27 @@ SolveItem = R6Class("SolveType",
                                   }
                                   
                                 },
-                             #' @description return the expression
-                             e =  function(){
+                             #' @description get the expression
+                             getExp =  function(){
                                return(private$.e)
                              },
-                             st = function(){
+                             #' @description set the expression
+                             #' @param e expression
+                             setExp =  function(e){
+                               assertTRUE(private$.st == "minimize" ||
+                                            private$.st == "maximize")
+                               assertR6(e, "Expression")
+                               private$.e = e
+                             },
+                             #' @description get the solve type/objective
+                             getSt = function(){
                                return(private$.st)
+                             },
+                             #' @description set the solve type/objective
+                             #' @param objective solve type
+                             setSt = function(objective){
+                               assert_choice(objective, .globals$objectives)
+                               private$.st = objective
                              },
                              #' @description to string method
                              c_str = function(){
@@ -47,9 +57,9 @@ SolveItem = R6Class("SolveType",
                                  annStr = private$.ann$c_str()
                                }
                                if(private$.st == "satisfy"){
-                                 return(sprintf("solve %s satisfy;", annStr))
+                                 return(sprintf("solve %s satisfy;\n", annStr))
                                }else{
-                                 return(sprintf("solve %s %s %s;", annStr, private$.st, private$.e$c_str()))
+                                 return(sprintf("solve %s %s %s;\n", annStr, private$.st, private$.e$c_str()))
                                }
                              },
                              #' @description delete flag for internal use

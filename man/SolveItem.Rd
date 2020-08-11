@@ -8,7 +8,7 @@ This is a class that will be used to specify whether the optimization problem is
 minimization or maximization problem
 }
 \section{Super class}{
-\code{\link[rminizinc:Item]{rminizinc::Item}} -> \code{SolveType}
+\code{\link[rminizinc:Item]{rminizinc::Item}} -> \code{SolveItem}
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
@@ -32,8 +32,10 @@ minimization or maximization problem
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{SolveItem$new()}}
-\item \href{#method-e}{\code{SolveItem$e()}}
-\item \href{#method-st}{\code{SolveItem$st()}}
+\item \href{#method-getExp}{\code{SolveItem$getExp()}}
+\item \href{#method-setExp}{\code{SolveItem$setExp()}}
+\item \href{#method-getSt}{\code{SolveItem$getSt()}}
+\item \href{#method-setSt}{\code{SolveItem$setSt()}}
 \item \href{#method-c_str}{\code{SolveItem$c_str()}}
 \item \href{#method-getDeleteFlag}{\code{SolveItem$getDeleteFlag()}}
 \item \href{#method-delete}{\code{SolveItem$delete()}}
@@ -68,23 +70,58 @@ create an instance of specify_problem class
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-e"></a>}}
-\if{latex}{\out{\hypertarget{method-e}{}}}
-\subsection{Method \code{e()}}{
-return the expression
+\if{html}{\out{<a id="method-getExp"></a>}}
+\if{latex}{\out{\hypertarget{method-getExp}{}}}
+\subsection{Method \code{getExp()}}{
+get the expression
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SolveItem$e()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SolveItem$getExp()}\if{html}{\out{</div>}}
 }
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-st"></a>}}
-\if{latex}{\out{\hypertarget{method-st}{}}}
-\subsection{Method \code{st()}}{
+\if{html}{\out{<a id="method-setExp"></a>}}
+\if{latex}{\out{\hypertarget{method-setExp}{}}}
+\subsection{Method \code{setExp()}}{
+set the expression
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SolveItem$st()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SolveItem$setExp(e)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{e}}{expression}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getSt"></a>}}
+\if{latex}{\out{\hypertarget{method-getSt}{}}}
+\subsection{Method \code{getSt()}}{
+get the solve type/objective
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SolveItem$getSt()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-setSt"></a>}}
+\if{latex}{\out{\hypertarget{method-setSt}{}}}
+\subsection{Method \code{setSt()}}{
+set the solve type/objective
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SolveItem$setSt(objective)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{objective}}{solve type}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-c_str"></a>}}

@@ -15,13 +15,20 @@ VarDeclItem = R6Class("VarDeclItem",
                           assertR6(decl, "VarDecl")
                           private$.decl = decl
                         },
-                        #' @description get the declaration expression object
-                        e = function(){
+                        #' @description get the variable declaration
+                        getDecl = function(){
                           return(private$.decl)
                         },
+                        #' @description set the variable declaration
+                        #' @param e var decl expression
+                        setDecl = function(e){
+                          assertR6(e, "VarDecl")
+                          private$.decl = e
+                        },
+                        #' @description set the variable decaration 
                         #' @description convert the declaration to String
                         c_str = function(){
-                          return(sprintf("%s;", private$.decl$c_str()))
+                          return(sprintf("%s;\n", private$.decl$c_str()))
                         },
                         #' @description delete flag for internal use
                         getDeleteFlag = function(){
@@ -37,7 +44,6 @@ VarDeclItem = R6Class("VarDeclItem",
                           this = ls(pf)[items][sapply(mget(ls(pf)[items], envir = pf),
                                                        function(x) x$getDeleteFlag())]
                           rm(list = this, envir = pf)
-                          gc()
                           message("VarDeclItem object deleted!")
                         }
                       ),

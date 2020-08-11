@@ -31,7 +31,8 @@ Constraint is a class to describe Minizinc constraints on decision variables.
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{ConstraintItem$new()}}
-\item \href{#method-e}{\code{ConstraintItem$e()}}
+\item \href{#method-getExp}{\code{ConstraintItem$getExp()}}
+\item \href{#method-setExp}{\code{ConstraintItem$setExp()}}
 \item \href{#method-c_str}{\code{ConstraintItem$c_str()}}
 \item \href{#method-getDeleteFlag}{\code{ConstraintItem$getDeleteFlag()}}
 \item \href{#method-delete}{\code{ConstraintItem$delete()}}
@@ -62,14 +63,31 @@ Creates a new instance of Constraint class.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-e"></a>}}
-\if{latex}{\out{\hypertarget{method-e}{}}}
-\subsection{Method \code{e()}}{
-return the constraint expression
+\if{html}{\out{<a id="method-getExp"></a>}}
+\if{latex}{\out{\hypertarget{method-getExp}{}}}
+\subsection{Method \code{getExp()}}{
+get the constraint expression
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ConstraintItem$e()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ConstraintItem$getExp()}\if{html}{\out{</div>}}
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-setExp"></a>}}
+\if{latex}{\out{\hypertarget{method-setExp}{}}}
+\subsection{Method \code{setExp()}}{
+set the constraint expression
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ConstraintItem$setExp(e)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{e}}{expression}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-c_str"></a>}}
