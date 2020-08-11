@@ -46,7 +46,6 @@ std::string uoStrMap(UnOpType OP){
 
 // Type details for variable declarations
 std::string vType(Type tp){
-  // if(tp.isopt()) cout << "OPT" << endl;
   if(tp.isann()) return ("annotation"); 
   //else if(tp.bt() == Type::BT_BOT) return("bot");
   //else if(tp.bt() == Type::BT_TOP) return("top");
@@ -62,12 +61,15 @@ std::string vType(Type tp){
     else return ("unknown set");
   }else if(tp.dim() >= 1  && !tp.is_set()){
     string arr_tp = to_string(tp.dim());
-    if(tp.bt() == Type::BT_INT) arr_tp.append(" dimensional array of int");
-    else if(tp.bt() == Type::BT_FLOAT) arr_tp.append(" dimensional array of float");
-    else if(tp.bt() == Type::BT_BOOL) arr_tp.append(" dimensional array of bool");
-    else if(tp.bt() == Type::BT_STRING) arr_tp.append(" dimensional array of string");
-    else arr_tp.append(" dimensional unknown array");
-    return (arr_tp);
+    if(tp.bt() == Type::BT_INT && tp.st() == Type::ST_SET) return arr_tp.append(" dimensional array of set of int");
+    else if(tp.bt() == Type::BT_FLOAT && tp.st() == Type::ST_SET) return arr_tp.append(" dimensional array of set of float");
+    else if(tp.bt() == Type::BT_BOOL && tp.st() == Type::ST_SET) return arr_tp.append(" dimensional array of set of bool");
+    else if(tp.bt() == Type::BT_STRING && tp.st() == Type::ST_SET) return arr_tp.append(" dimensional array of set of string");
+    else if(tp.bt() == Type::BT_INT) return arr_tp.append(" dimensional array of int");
+    else if(tp.bt() == Type::BT_FLOAT) return arr_tp.append(" dimensional array of float");
+    else if(tp.bt() == Type::BT_BOOL) return arr_tp.append(" dimensional array of bool");
+    else if(tp.bt() == Type::BT_STRING) return arr_tp.append(" dimensional array of string");
+    else return arr_tp.append(" dimensional unknown array");
   }
   return "type couldn't be  identified";
 }
@@ -326,7 +328,6 @@ void expDetails(MiniZinc::Expression *exp, List &expList){
     VarDecl *vd =  exp->cast<VarDecl>();
     List vdDetails;
     CharacterVector vdnms;
-    
     expDetails(vd->id(), vdDetails);
     vdnms.push_back("NAME");
     
@@ -361,16 +362,19 @@ void expDetails(MiniZinc::Expression *exp, List &expList){
     ASTExprVec<TypeInst> index_ti = nti->ranges();
     for(int s = 0; s < index_ti.size(); s++){
       List index;
-      if(index_ti.operator[](s)->domain() == NULL){
-        Rcpp::warning("could not parse array index -- is it a data type?");
-        break;
+      if(index_ti.operator[](s)->domain() != NULL){
+        expDetails(index_ti.operator[](s)->domain() , index);
+        indices.push_back(index);
+      }else{
+        index.push_back("int");
+        index.names() = CharacterVector({"UNRESTRICTED"});
+        indices.push_back(index);
       }
-      expDetails(index_ti.operator[](s)->domain() , index);
-      indices.push_back(index);
       string ix = "INDEX";
       ix.append(to_string(s+1));
       indnms.push_back(ix);
     }
+    
     if(indices.length()){
       indices.names() = indnms;
       vdDetails.push_back(indices);
