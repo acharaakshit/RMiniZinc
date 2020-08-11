@@ -29,6 +29,12 @@ getRModel = function(mznParseList){
 initItem = function(parsedList){
   if(is.null(names(parsedList)) || length(names(parsedList)) != 1){
     stop("Supply list as returned by `mzn_parse()`")
+  }else if(names(parsedList) == "INCLUDES"){
+    incList = list()
+    for (i in seq(1, length(parsedList$INCLUDES), 1)) {
+      incList = list.append(incList, IncludeItem$new(name = parsedList$INCLUDES[[i]]$INCLUDED_MZN))
+    }
+    return(incList)
   }else if(names(parsedList) == "VARIABLES"){
     vList = parsedList$VARIABLES
     vItems = c()
@@ -39,14 +45,18 @@ initItem = function(parsedList){
       if(!is.null(vList[[i]]$DETAILS$INDEX)){
         indexList = list()
         for(j in seq(1, length(vList[[i]]$DETAILS$INDEX), 1)){
-          indexList = list.append(indexList, initExpression(vList[[i]]$DETAILS$INDEX[[j]]))
-        } 
+          if(names(vList[[i]]$DETAILS$INDEX[[j]]) == "UNRESTRICTED"){
+              indexList = list.append(indexList, "int") 
+          }else{
+            indexList = list.append(indexList, initExpression(vList[[i]]$DETAILS$INDEX[[j]])) 
+          }
+        }
       }
       ti = TypeInst$new(type = vType, domain = initExpression(vList[[i]]$DETAILS$DOMAIN), 
                         indexExprVec = indexList)
       variableItems = vItems
-      vItems = c(vItems, VarDeclItem$new(decl = VarDecl$new(id =  vList[[i]]$DETAILS$NAME, type_inst = ti,
-                                                            e = initExpression(vList[[i]]$DETAILS$VALUE))))
+      vItems = c(vItems, VarDeclItem$new(decl = VarDecl$new(name =  vList[[i]]$DETAILS$NAME, type_inst = ti,
+                                                            value = initExpression(vList[[i]]$DETAILS$VALUE))))
     }
     return(vItems)
   }else if(names(parsedList) == "CONSTRAINTS"){
@@ -80,12 +90,6 @@ initItem = function(parsedList){
     return(assignList)
   }else if(names(parsedList) == "MODEL_STRING"){
     # do nothing
-  }else if(names(parsedList) == "INCLUDES"){
-    incList = list()
-    for (i in seq(1, length(parsedList$INCLUDES), 1)) {
-      incList = list.append(incList, IncludeItem$new(name = parsedList$INCLUDES[[i]]$INCLUDED_MZN))
-    }
-    return(incList)
   }else if(names(parsedList) == "OUTPUT_ITEM"){
     warning("model will be created without output item (formatting)!")
     return(NULL)
@@ -142,19 +146,23 @@ initExpression = function(pList){
     iLhs = initExpression(pList$BINARY_OPERATION$LHS)
     bOP =  gsub("'", '', pList$BINARY_OPERATION$BINARY_OPERATOR)
     iRhs = initExpression(pList$BINARY_OPERATION$RHS)
-    ob = BinOp$new(lhs_expression = iLhs, binop = bOP, rhs_expression = iRhs)
-    return(ob)
+    return(BinOp$new(lhs = iLhs, binop = bOP, rhs = iRhs))
+  }else  if(names(pList) == "UNARY_OPERATION"){
+    uExpList =  list()
+    for (i in seq(1, length(pList$UNARY_OPERATION$ARGUMENTS))) {
+      uExpList = list.append(uExpList, initExpression(pList$UNARY_OPERATION$ARGUMENTS[[i]]))
+    }
+    uOP =  gsub("'", '', pList$UNARY_OPERATION$UNARY_OPERATOR)
+    return(UnOp$new(args = uExpList, op = uOP))
   }else if(names(pList) == "FUNCTION_CALL"){
     fnId  = pList$FUNCTION_CALL$NAME
     fnArgs = list()
     for (i in seq(1, length(pList$FUNCTION_CALL$ARGUMENTS))) {
       fnArgs = list.append(fnArgs, initExpression(pList$FUNCTION_CALL$ARGUMENTS[[i]]))
     }
-    ob = Call$new(fnName = fnId, args = fnArgs)
-    return(ob) 
+    return(Call$new(fnName = fnId, args = fnArgs)) 
   }else if(names(pList) == "ID"){
-    ob = Id$new(pList$ID)
-    return(ob)
+    return(Id$new(pList$ID))
   }else if(names(pList) == "COMPREHENSION"){
     size = length(pList$COMPREHENSION$GENERATORS)
     genList = list()
@@ -170,24 +178,27 @@ initExpression = function(pList){
                                           decls = declList))
     }
     st = pList$COMPREHENSION$IS_SET
-    ob = Comprehension$new(generators = genList, set = st,
-                           e = initExpression(pList$COMPREHENSION$EXPRESSION))
-    return(ob)
+    return(Comprehension$new(generators = genList, set = st,
+                             body = initExpression(pList$COMPREHENSION$EXPRESSION)))
   }else if(names(pList) == "VARIABLE_DECLARATION"){
     indexList = NULL
-    if(!is.null(pList$VARIABLE_DECLARATION$DETAILS$INDEX)){
+    if(!is.null(pList$VARIABLE_DECLARATION$INDEX)){
       indexList = list()
-      for(j in seq(1, length(pList$VARIABLE_DECLARATION$DETAILS$INDEX), 1)){
-        indexList = list.append(indexList, initExpression(pList$VARIABLE_DECLARATION$DETAILS$INDEX[[j]]))
+      for(j in seq(1, length(pList$VARIABLE_DECLARATION$INDEX), 1)){
+        if(names(pList$VARIABLE_DECLARATION$INDEX[[j]]) == "UNRESTRICTED"){
+          indexList = list.append(indexList, "int") 
+        }else{
+          indexList = list.append(indexList, initExpression(pList$VARIABLE_DECLARATION$INDEX[[j]]))
+        }
       } 
     }
-    ti = TypeInst$new(type = Type$new(base_type = pList$VARIABLE_DECLARATION$TYPE,
-                                 kind = pList$VARIABLE_DECLARATION$KIND,), 
+    ti = TypeInst$new(type = getType(pList$VARIABLE_DECLARATION$TYPE,
+                                 kind = pList$VARIABLE_DECLARATION$KIND), 
                       domain = initExpression(pList$VARIABLE_DECLARATION$DOMAIN),
                       indexExprVec = indexList)
     
-    return(VarDecl$new(id =  pList$VARIABLE_DECLARATION$NAME, type_inst = ti,
-                        e = initExpression(pList$VARIABLE_DECLARATION$VALUE)))
+    return(VarDecl$new(name =  pList$VARIABLE_DECLARATION$NAME, type_inst = ti,
+                        value = initExpression(pList$VARIABLE_DECLARATION$VALUE)))
   }else if(names(pList) == "LET"){
     letList = list()
     for(i in seq(1, length(pList$LET$LET_EXPRESSION), 1)){
@@ -258,6 +269,14 @@ getType = function(typeStr, kind){
       return(Type$new(base_type = "string", kind = kind, dim = ndim))
     }else if(ntypeStr == " dimensional unknown array"){
       return(Type$new(base_type = "unknown", kind = kind, dim = ndim))
+    }else if(ntypeStr == " dimensional array of set of int"){
+      return(Type$new(base_type = "int", kind = kind, dim = ndim, set_type = TRUE))
+    }else if(ntypeStr == " dimensional array of set of float"){
+      return(Type$new(base_type = "float", kind = kind, dim = ndim, set_type = TRUE))
+    }else if(ntypeStr == " dimensional array of set of bool"){
+      return(Type$new(base_type = "bool", kind = kind, dim = ndim, set_type = TRUE))
+    }else if(ntypeStr == " dimensional array of set of string"){
+      return(Type$new(base_type = "string", kind = kind, dim = ndim, set_type = TRUE))
     }else {
       stop("type error (bot and top are not supported)")
     }

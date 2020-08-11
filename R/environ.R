@@ -6,6 +6,6 @@
 .globals$binopTypes =  c("+", "-", "!=", "<->", ">=", "<=", "*", ">", "<", "->", "<-", "..", "\\/", "/\\", "'not'",
                           "subset", "superset", "union", "diff", "symdiff", "intersect",
                           "^", "div", "mod", "/", "++", "xor", "in", "=")
-.globals$unopTypes = c("+", "-", "!")
+.globals$unopTypes = c("+", "-", "not")
 .globals$objectives = c("satisfy", "maximize", "minimize")
 
