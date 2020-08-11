@@ -4,16 +4,17 @@ library(rminizinc)
 # create the variable and parameter declarations
 item1 = VarDeclItem$new(decl = IntDecl(name = "n", kind = "par"))
 
-par2_val = BinOp$new(lhs_expression = Int$new(1), binop = "..", rhs_expression = item1$e()$id())
+par2_val = BinOp$new(lhs = Int$new(1), binop = "..", rhs = item1$getDecl()$id())
 item2 = VarDeclItem$new(decl = IntSetDecl(name = "OBJ", kind = "par", value = par2_val))
 
 item3 = VarDeclItem$new(decl = IntDecl(name = "capacity", kind = "par"))
 
-item4 = VarDeclItem$new(decl = IntArrDecl(name = "profit", kind = "par", ndim = 1, ind = list(item2$e()$id())))
+item4 = VarDeclItem$new(decl = IntArrDecl(name = "profit", kind = "par", ndim = 1, 
+                                          ind = list(item2$getDecl()$id())))
 
-item5 = VarDeclItem$new(decl = IntArrDecl(name = "size", kind = "par", ndim = 1, ind = list(item2$e()$id())))
+item5 = VarDeclItem$new(decl = IntArrDecl(name = "size", kind = "par", ndim = 1, ind = list(item2$getDecl()$id())))
 
-item6 = VarDeclItem$new(decl = IntArrDecl(name = "x", kind = "var", ndim = 1, ind = list(item2$e()$id())))
+item6 = VarDeclItem$new(decl = IntArrDecl(name = "x", kind = "var", ndim = 1, ind = list(item2$getDecl()$id())))
 
 ## -----------------------------------------------------------------------------
 
@@ -21,31 +22,32 @@ item6 = VarDeclItem$new(decl = IntArrDecl(name = "x", kind = "var", ndim = 1, in
 parIter = IntDecl(name = "i", kind = "par")
 
 
-gen_forall = Generator$new(IN = item2$e()$id(), decls = list(parIter))
-bop1 = BinOp$new(lhs_expression = ArrayAccess$new(v = item6$e()$id(), 
-                args= list(gen_forall$decl(1))),
-                binop = ">=", rhs_expression = Int$new(0))
+gen_forall = Generator$new(IN = item2$getDecl()$id(), decls = list(parIter))
+bop1 = BinOp$new(lhs = ArrayAccess$new(v = item6$getDecl()$id(),  args= list(gen_forall$decl(1))),
+                                                             binop = ">=", rhs = Int$new(0))
 
-Comp1 = Comprehension$new(generators = list(gen_forall), e = bop1, set = FALSE)
+Comp1 = Comprehension$new(generators = list(gen_forall), body = bop1, set = FALSE)
 cl1 = Call$new(fnName = "forall", args = list(Comp1))
 item7 = ConstraintItem$new(e = cl1)
 
-gen_sum = Generator$new(IN = item2$e()$id(), decls = list(parIter))
+gen_sum = Generator$new(IN = item2$getDecl()$id(), decls = list(parIter))
 
-bop2 = BinOp$new(lhs_expression = ArrayAccess$new(v = item5$e()$id(), args = list(gen_sum$decl(1))),                  binop = "*",  rhs_expression = ArrayAccess$new(v = item6$e()$id() , 
-                args = list(gen_sum$decl(1))))
-Comp2 = Comprehension$new(generators = list(gen_sum), e = bop2, set = FALSE)
+bop2 = BinOp$new(lhs = ArrayAccess$new(v = item5$getDecl()$id(), args = list(gen_sum$decl(1))),                  
+                 binop = "*",  rhs = ArrayAccess$new(v = item6$getDecl()$id() , 
+                 args = list(gen_sum$decl(1))))
+
+Comp2 = Comprehension$new(generators = list(gen_sum), body = bop2, set = FALSE)
 cl2 = Call$new(fnName = "sum", args = list(Comp2))
-bop3 = BinOp$new(lhs_expression = cl2, binop = "<=", rhs_expression = item3$e()$id())
+bop3 = BinOp$new(lhs = cl2, binop = "<=", rhs = item3$getDecl()$id())
 item8 = ConstraintItem$new(e = bop3)
 
 ## -----------------------------------------------------------------------------
 
-bop4 = BinOp$new(lhs_expression = ArrayAccess$new(v = item4$e()$id(), args = list(gen_sum$decl(1))),
-                      binop = "*", rhs_expression = ArrayAccess$new(v = item6$e()$id(), 
+bop4 = BinOp$new(lhs = ArrayAccess$new(v = item4$getDecl()$id(), args = list(gen_sum$decl(1))),
+                      binop = "*", rhs = ArrayAccess$new(v = item6$getDecl()$id(), 
                       args = list(gen_sum$decl(1))))
 
-Comp3 = Comprehension$new(generators = list(gen_sum), e = bop4, set = FALSE)
+Comp3 = Comprehension$new(generators = list(gen_sum), body = bop4, set = FALSE)
 
 cl3 = Call$new(fnName = "sum", args = list(Comp3))
 
