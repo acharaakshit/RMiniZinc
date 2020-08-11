@@ -2,7 +2,7 @@
 % Please edit documentation in R/Expression.R
 \name{Bool}
 \alias{Bool}
-\title{create a bool}
+\title{Bool}
 \description{
 create a bool in MiniZinc
 }
@@ -60,7 +60,6 @@ constructor
 \if{latex}{\out{\hypertarget{method-v}{}}}
 \subsection{Method \code{v()}}{
 get boolean value
-MiniZinc representation
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Bool$v()}\if{html}{\out{</div>}}
 }
@@ -70,6 +69,7 @@ MiniZinc representation
 \if{html}{\out{<a id="method-c_str"></a>}}
 \if{latex}{\out{\hypertarget{method-c_str}{}}}
 \subsection{Method \code{c_str()}}{
+get the MiniZinc representation
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Bool$c_str()}\if{html}{\out{</div>}}
 }

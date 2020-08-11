@@ -2,9 +2,9 @@
 % Please edit documentation in R/Expression.R
 \name{Float}
 \alias{Float}
-\title{create a float}
+\title{Float}
 \description{
-create an float in MiniZinc
+create a float in MiniZinc
 }
 \section{Super class}{
 \code{\link[rminizinc:Expression]{rminizinc::Expression}} -> \code{Float}
@@ -43,7 +43,7 @@ create an float in MiniZinc
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
-constructor for an int literal
+constructor
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Float$new(val)}\if{html}{\out{</div>}}
 }
@@ -51,7 +51,7 @@ constructor for an int literal
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{val}}{the value of the integer}
+\item{\code{val}}{the float value}
 }
 \if{html}{\out{</div>}}
 }
@@ -60,7 +60,7 @@ constructor for an int literal
 \if{html}{\out{<a id="method-getFloatVal"></a>}}
 \if{latex}{\out{\hypertarget{method-getFloatVal}{}}}
 \subsection{Method \code{getFloatVal()}}{
-get the integer value
+get the float value
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Float$getFloatVal()}\if{html}{\out{</div>}}
 }
@@ -70,17 +70,24 @@ get the integer value
 \if{html}{\out{<a id="method-setFloatVal"></a>}}
 \if{latex}{\out{\hypertarget{method-setFloatVal}{}}}
 \subsection{Method \code{setFloatVal()}}{
-set the integer value
-MiniZinc representation
+set the float value
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Float$setFloatVal(val)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{val}}{value to be set}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-c_str"></a>}}
 \if{latex}{\out{\hypertarget{method-c_str}{}}}
 \subsection{Method \code{c_str()}}{
+get the MiniZinc representation
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Float$c_str()}\if{html}{\out{</div>}}
 }

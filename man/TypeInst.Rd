@@ -2,9 +2,9 @@
 % Please edit documentation in R/Expression.R
 \name{TypeInst}
 \alias{TypeInst}
-\title{TypeInst class}
+\title{TypeInst}
 \description{
-type instantiation with indices, etc.
+create type instantiation with indices, etc.
 }
 \section{Super class}{
 \code{\link[rminizinc:Expression]{rminizinc::Expression}} -> \code{TypeInst}
@@ -35,7 +35,8 @@ type instantiation with indices, etc.
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{TypeInst$new()}}
-\item \href{#method-domain}{\code{TypeInst$domain()}}
+\item \href{#method-getDomain}{\code{TypeInst$getDomain()}}
+\item \href{#method-setDomain}{\code{TypeInst$setDomain()}}
 \item \href{#method-ranges}{\code{TypeInst$ranges()}}
 \item \href{#method-isArray}{\code{TypeInst$isArray()}}
 \item \href{#method-type}{\code{TypeInst$type()}}
@@ -70,12 +71,22 @@ constuctor
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-domain"></a>}}
-\if{latex}{\out{\hypertarget{method-domain}{}}}
-\subsection{Method \code{domain()}}{
-return the domain
+\if{html}{\out{<a id="method-getDomain"></a>}}
+\if{latex}{\out{\hypertarget{method-getDomain}{}}}
+\subsection{Method \code{getDomain()}}{
+get the variable domain
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{TypeInst$domain()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{TypeInst$getDomain()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-setDomain"></a>}}
+\if{latex}{\out{\hypertarget{method-setDomain}{}}}
+\subsection{Method \code{setDomain()}}{
+set the variable domain
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{TypeInst$setDomain(dom)}\if{html}{\out{</div>}}
 }
 
 }

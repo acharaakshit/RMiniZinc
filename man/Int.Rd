@@ -2,7 +2,7 @@
 % Please edit documentation in R/Expression.R
 \name{Int}
 \alias{Int}
-\title{create an integer}
+\title{Int}
 \description{
 create an integer in MiniZinc
 }
@@ -43,7 +43,7 @@ create an integer in MiniZinc
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
-constructor for an int literal
+constructor
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Int$new(val)}\if{html}{\out{</div>}}
 }
@@ -71,7 +71,6 @@ get the IntVal value
 \if{latex}{\out{\hypertarget{method-setIntVal}{}}}
 \subsection{Method \code{setIntVal()}}{
 set the IntVal value
-MiniZinc representation
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Int$setIntVal(val)}\if{html}{\out{</div>}}
 }
@@ -81,6 +80,7 @@ MiniZinc representation
 \if{html}{\out{<a id="method-c_str"></a>}}
 \if{latex}{\out{\hypertarget{method-c_str}{}}}
 \subsection{Method \code{c_str()}}{
+get the MiniZinc representation
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Int$c_str()}\if{html}{\out{</div>}}
 }

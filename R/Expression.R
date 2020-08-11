@@ -11,18 +11,15 @@ Expression = R6Class("Expression",
                            }
                          ))
 
-#' @title create an integer 
-#' 
+#' @title Int 
 #' @description create an integer in MiniZinc
-#' 
 #' @import R6 
 #' @import checkmate
-#' 
 #' @export
 Int = R6Class("Int", 
                inherit = Expression,
                public = list(
-                 #' @description constructor for an int literal
+                 #' @description constructor
                  #' @param val the value of the integer
                  initialize =  function(val){
                    private$.value = IntVal$new(val = val)
@@ -35,7 +32,7 @@ Int = R6Class("Int",
                  setIntVal = function(val){
                    private$.value = IntVal$new(val = val)
                  },
-                 #' MiniZinc representation
+                 #' @description get the MiniZinc representation
                  c_str = function(){
                    return(as.character(private$.value$v()))
                  }
@@ -46,32 +43,29 @@ Int = R6Class("Int",
                  .value = NULL
                ))
 
-#' @title create a float 
-#' 
-#' @description 
-#' create an float in MiniZinc
-#' 
+#' @title Float 
+#' @description create a float in MiniZinc
 #' @import R6 
 #' @import checkmate
 #' @export
 Float = R6Class("Float", 
                 inherit = Expression,
                 public = list(
-                 
-                 #' @description constructor for an int literal
-                 #' @param val the value of the integer
+                 #' @description constructor
+                 #' @param val the float value
                  initialize =  function(val){
                    private$.value = FloatVal$new(val = val)
                  },
-                 #' @description get the integer value
+                 #' @description get the float value
                  getFloatVal = function(){
                    return (private$.value$v())
                  },
-                 #' @description set the integer value
+                 #' @description set the float value
+                 #' @param val value to be set
                  setFloatVal = function(val){
                    private$.value = FloatVal$new(val = val)
                  },
-                 #' MiniZinc representation
+                 #' @description get the MiniZinc representation
                  c_str = function(){
                    return(as.character(private$.value$v()))
                  }
@@ -82,14 +76,10 @@ Float = R6Class("Float",
                  .value = NULL
                ))
 
-#' @title create a set
-#' 
-#' @description 
-#' create a set in MiniZinc
-#' 
+#' @title Set
+#' @description create a set in MiniZinc
 #' @import R6
 #' @import checkmate
-#' 
 #' @export
 Set = R6Class("Set",
               inherit = Expression,
@@ -109,7 +99,7 @@ Set = R6Class("Set",
                     private$.setVec = val
                   }
                 },
-                #' @description return the set expression
+                #' @description get the set expression
                 getSetVec = function(){
                   return(private$.setVec)
                 },
@@ -139,12 +129,12 @@ Set = R6Class("Set",
                   assertR6(val, "FloatSetVal")
                   private$.fsv = val
                 },
-                #' @description convert into MiniZinc representation
+                #' @description get the MiniZinc representation
                 c_str = function(){
                   if(!is.null(private$.isv)){
-                    return(private$.isv$c_str())
+                    return(sprintf("%s..%s",private$.isv$getMin(), private$.isv$getMax()))
                   }else if(!is.null(private$.fsv)){
-                    return(private$.isv$c_str())
+                    return(sprintf("%s..%s",private$.fsv$getMin(), private$.fsv$getMax()))
                   }else{
                     retStr = "";
                     if(private$.et != TRUE){
@@ -174,11 +164,8 @@ Set = R6Class("Set",
                 .et = FALSE
               ))
 
-#' @title create a bool
-#' 
-#' @description 
-#' create a bool in MiniZinc
-#' 
+#' @title Bool
+#' @description create a bool in MiniZinc
 #' @import R6
 #' @import checkmate
 #' @export
@@ -195,7 +182,7 @@ Bool = R6Class("Bool",
                  v = function(){
                     return(private$.value)
                  },
-                 #' MiniZinc representation
+                 #' @description get the MiniZinc representation
                  c_str = function(){
                    if(private$.value == TRUE){
                      return("true")  
@@ -211,11 +198,8 @@ Bool = R6Class("Bool",
                  .value = NULL
                ))
 
-#' @title string lit
-#' 
-#' @description 
-#' create a string in MiniZinc
-#' 
+#' @title String
+#' @description create a string in MiniZinc
 #' @import R6
 #' @import checkmate
 #' @export
@@ -238,7 +222,7 @@ String = R6Class("String",
                      assertCharacter(val)
                      private$.value = val
                    },
-                   #' MiniZinc representation
+                   #' @description get the MiniZinc representation
                    c_str = function(){
                      return(shQuote(private$.value, "cmd"))
                    }
@@ -251,7 +235,6 @@ String = R6Class("String",
 
 
 #' @title Id class (not exposed to the user)
-#' 
 #' @description create a new Id in MiniZinc
 #' @import R6
 #' @import checkmate
@@ -286,19 +269,15 @@ Id  = R6Class("Id",
               ))
 
 #' @title create an array 
-#' 
-#' @description 
-#' create an array in MiniZinc
-#' 
+#' @description create an array in MiniZinc
 #' @import R6 
 #' @import checkmate
 #' @export
-
 Array = R6Class("Array", 
                 inherit = Expression,
                 public = list(
                    #' @description constructor for an int literal
-                   #' @param exprVec the value of the integer
+                   #' @param exprVec list of expressions in the array
                    #' @param dims dimension expression vector
                    initialize =  function(exprVec, dims = NULL){
                      assert_list(exprVec, "Expression")
@@ -338,12 +317,9 @@ Array = R6Class("Array",
                  ))
 
 #' @title Array Access class
-#' 
-#' @description create ArrayAccess elements
-#' 
+#' @description create ArrayAccess elements in MiniZinc
 #' @import R6
 #' @import checkmate
-#' 
 #' @export
 ArrayAccess = R6Class("ArrayAccess",
                       inherit = Expression,
@@ -392,9 +368,8 @@ ArrayAccess = R6Class("ArrayAccess",
                       )
                       )
 
-#' @title Generator class
-#' 
-#' @description create a generator
+#' @title Generator 
+#' @description create a generator in MiniZinc
 #' @import R6
 #' @import checkmate
 #' @export 
@@ -402,10 +377,10 @@ Generator = R6Class("Generator",
                     inherit = Expression,
                      public = list(
                        #' @description constructor
+                       #' @param decls list of variable declarations
                        #' @param IN the in expression of generator
                        #' @param where the where expression of generator
-                       #' @param decl list of variable declarations
-                       initialize = function(IN = NULL, where = NULL, decls){
+                       initialize = function(decls, IN = NULL, where = NULL){
                          assert_true(testR6(IN, "Expression") || testNull(IN))
                          assert_true(testR6(where, "Expression") || testNull(where))
                          private$.in = IN
@@ -458,9 +433,8 @@ Generator = R6Class("Generator",
                        .where = NULL
                      ))
 
-#' @title Comprehension class
-#' 
-#' @description create a Comprehension
+#' @title Comprehension
+#' @description create a Comprehension in MiniZinc
 #' @import R6
 #' @import checkmate
 #' @export 
@@ -469,13 +443,13 @@ Comprehension = R6Class("Comprehension",
                          public = list(
                            #' @description constructor
                            #' @param generators generators of the expression
-                           #' @param e inside the comprehension
+                           #' @param body body/expression of the comprehension
                            #' @param set bool to specify if comprehension is a set.
-                           initialize = function(generators, e, set){
+                           initialize = function(generators, body, set){
                              assert_list(generators, "Generator")
                              private$.generators = generators
-                             assertR6(e, "Expression")
-                             private$.e = e
+                             assertR6(body, "Expression")
+                             private$.e = body
                              assertLogical(set)
                              private$.set = set
                            },
@@ -504,9 +478,15 @@ Comprehension = R6Class("Comprehension",
                            decl = function(igen, idecl){
                              return(private$.generators[[igen]]$decl(idecl))
                            },
-                           #' @description get the expression
-                           e = function(){
+                           #' @description get the expression/body
+                           getBody = function(){
                              return(private$.e)
+                           },
+                           #' @description set the expression/body
+                           #' @param e new expression value
+                           setBody = function(e){
+                             assertR6(e, "Expression")
+                             private$.e = e
                            },
                            #' @description check if comprehension is a set
                            isSet = function(){
@@ -540,9 +520,8 @@ Comprehension = R6Class("Comprehension",
                            .set = NULL
                          ))
 
-#' @title Binop class
-#' 
-#' @description create a binary operator expression
+#' @title BinOp 
+#' @description create a binary operation expression
 #' @import R6
 #' @import checkmate
 #' @export 
@@ -550,32 +529,44 @@ BinOp = R6Class("BinOp",
                 inherit = Expression,
                  public = list(
                    #' @description constructor
-                   #' @param lhs_expression the left hand side expression
+                   #' @param lhs the left hand side expression
                    #' @param binop the binary operator to be used
-                   #' @param rhs_expression the right hand side expression
-                   initialize  = function(lhs_expression, binop, rhs_expression){
-                        assertR6(lhs_expression, "Expression")
-                        assertR6(rhs_expression, "Expression")
+                   #' @param rhs the right hand side expression
+                   initialize  = function(lhs, binop, rhs){
+                        assertR6(lhs, "Expression")
+                        assertR6(rhs, "Expression")
                         assert_choice(binop, .globals$binopTypes)
-                        private$.lhs_exp = lhs_expression
-                        private$.rhs_exp = rhs_expression
+                        private$.lhs_exp = lhs
+                        private$.rhs_exp = rhs
                         private$.op = binop
                     },
-                   #' @description return the lhs expression
-                   lhs =  function(){
+                   #' @description get the lhs expression
+                   getLhs =  function(){
                      return(private$.lhs_exp)
                    },
-                   #' @description return the rhs expression
-                   rhs = function(){
+                   #' @description get the rhs expression
+                   getRhs = function(){
                      return(private$.rhs_exp)
                    },
                    #' @description return the operator
                    op =  function(){
                      return(private$.op)
                    },
+                   #' @description set the lhs expression
+                   #' @param e expression to set
+                   setLhs =  function(e){
+                     assertR6(e, "Expression")
+                     private$.lhs_exp = e
+                   },
+                   #' @description set the rhs expression
+                   #' @param e expression to set
+                   setRhs = function(){
+                     assertR6(e, "Expression")
+                     private$.rhs_exp = e
+                   },
                    #' @description return the MiniZinc representation
                    c_str = function(){
-                     return(sprintf("%s %s %s", private$.lhs_exp$c_str(),
+                     return(sprintf("(%s %s %s)", private$.lhs_exp$c_str(),
                                     private$.op, private$.rhs_exp$c_str()))
                    }
                  ),
@@ -592,18 +583,19 @@ BinOp = R6Class("BinOp",
                 ))
 
 
-#' @title unOp class
-#' @description Unary operator in MiniZinc
+#' @title UnOp 
+#' @description Unary operation expression in MiniZinc
 #' @import R6
 #' @import checkmate
 #' @export
 UnOp = R6Class("UnOp",
+               inherit = Expression,
                public = list(
                  #' @description constructor
                  #' @param args list of expressions
                  #' @param op unary operator
                  initialize = function(args, op){
-                   assertR6(args, "Expression")
+                   assertList(args, "Expression")
                    private$.args = args
                    assert_choice(op, .globals$unopTypes)
                    private$.op = op
@@ -617,6 +609,7 @@ UnOp = R6Class("UnOp",
                  arg = function(i){
                    return(private$.args[[i]])
                  },
+                 #' @description get the unary operator
                  op = function(){
                    return(private$.op)
                  },
@@ -624,7 +617,7 @@ UnOp = R6Class("UnOp",
                  c_str =  function(){
                    uoStr = ''
                    for(i in seq(1, length(private$.args), 1)){
-                     uoStr = paste0(uoStr, args[[i]]$c_str())
+                     uoStr = paste0(uoStr, private$.args[[i]]$c_str())
                      if(i < length(private$.args)){
                        uoStr = paste0(uoStr, ", ")
                      }
@@ -633,38 +626,41 @@ UnOp = R6Class("UnOp",
                  }
                ),
                private = list(
-                 #' @field .argExps
+                 #' @field .args
                  #' list of expression arguments
-                 .argExps = NULL,
+                 .args = NULL,
                  #' @field .op
                  #' operator to be used
                  .op = NULL
                ))
 
-#' @title Call class
-#' 
-#' @description function calls in MiniZinc
-#' 
+#' @title Call
+#' @description create function calls in MiniZinc
 #' @import R6
 #' @import checkmate
-#' 
 #' @export
 Call = R6Class("Call",
                inherit = Expression,
                public = list(
                  #' @description constructor
-                 #' @param fn_id the function id
-                 #' @param argExps the list of expressions
+                 #' @param fnName function name
+                 #' @param args the list of expressions
                  initialize =  function(fnName , args){
-                   assert_string(fnName)
+                   assertString(fnName)
                    private$.id = fnName
                    assert_list(args, "Expression")
                    private$.args = args
                    private$.nargs = length(args)
                  },
-                 #' @description the function id/string
-                 id =  function(){
+                 #' @description get the function id/string
+                 getId =  function(){
                    return(private$.id)
+                 },
+                 #' @description get the function id/string
+                 #' @param name new function name
+                 setId =  function(name){
+                   assertString(name)
+                   private$.id = name
                  },
                  #' @description get the number of arguments
                  nargs = function(){
@@ -683,7 +679,7 @@ Call = R6Class("Call",
                    private$.args[[i]] = e
                  },
                  #' @description set all the expression arguments
-                 #' @param expList
+                 #' @param expList list of expressions to set
                  setArgs = function(expList){
                    assertList(expList, "Expression")
                    private$.args = expList
@@ -712,8 +708,8 @@ Call = R6Class("Call",
                  .nargs = NULL
                ))
 
-#' @title let expression
-#' @description let expression in MiniZinc
+#' @title Let
+#' @description create let expression in MiniZinc
 #' @import R6
 #' @import checkmate
 #' @export
@@ -758,8 +754,8 @@ Let = R6Class("Let",
                 .in = NULL
               ))
 
-#' @title ITE expression
-#' @description if-then-else expressions in MiniZinc
+#' @title Ite 
+#' @description create if-then-else expressions in MiniZinc
 #' @import R6
 #' @import checkmate
 #' @export
@@ -815,33 +811,28 @@ Ite = R6Class("Ite",
                 .else = NULL
               ))
 
-#' @title class for variable declaration
-#' 
-#' @description 
-#' Contains different fields to create a variable declaration
-#' 
+#' @title VarDecl
+#' @description Contains different fields to create a variable declaration
 #' @import R6 
 #' @import checkmate
-#' 
 #' @export
 VarDecl = R6Class("VarDecl",
                   inherit = Expression,
                   public = list(
-                    #' @description initialize the VarDecl constructor
-                    #' @param type Type object
-                    #' @param e value, NULL by default
-                    #' @param id the id/name.
-                    initialize = function(e = NULL, id, type_inst){
+                    #' @description constructor
+                    #' @param type_inst type instantiation of the variable
+                    #' @param name the identifier/name
+                    #' @param value value of variable, NULL by default
+                    initialize = function(name, type_inst, value = NULL){
                       assertR6(type_inst, "TypeInst")
                       private$.ti = type_inst
-                      if(testR6(e, "Expression")){
-                        private$.e  =  e
+                      if(testR6(value, "Expression")){
+                        private$.e  =  value
                       }
-                      assert_string(id)
-                      private$.id = Id$new(id)
+                      assert_string(name)
+                      private$.id = Id$new(name)
                     },
-                    #' @description 
-                    #' the identifier
+                    #' @description get the identifier object
                     id = function(){
                       return(private$.id)
                     },
@@ -859,6 +850,11 @@ VarDecl = R6Class("VarDecl",
                       }
                       return(FALSE)
                     },
+                    #' @description overwrite the existing domain
+                    #' @param dom
+                    setDomain = function(dom){
+                      private$.ti$setDomain(dom)
+                    },
                     #' @description return string representation of MiniZinc
                     c_str = function(){
                       retStr = ""
@@ -867,26 +863,34 @@ VarDecl = R6Class("VarDecl",
                         var = "var "  
                       }
                       if(private$.ti$type()$bt() == "ann"){
+                        #annotation
                         retStr = sprintf("ann: %s",  private$.id$getId())
                       }else if(private$.ti$type()$bt() == "unknown"){
+                        # unknown base type -- has a domain
                         if(private$.ti$type()$ndim() == 0 && !private$.ti$type()$isSet()){
-                          retStr = sprintf("%s%s: %s", var, private$.ti$domain()$c_str(), private$.id$getId()) 
+                          retStr = sprintf("%s%s: %s", var, private$.ti$getDomain()$c_str(), private$.id$getId()) 
                         }else if(private$.ti$type()$isSet()){
-                          retStr = sprintf("%s set of %s: %s",var, private$.ti$domain()$c_str(),
+                          retStr = sprintf("%s set of %s: %s",var, private$.ti$getDomain()$c_str(),
                                            private$.id$getId())
                         }else{
                           indList = private$.ti$ranges()
                           indices = ""
                           for (i in seq(1, length(indList), 1)) {
-                            indices = paste0(indices, indList[[i]]$c_str())
+                            if(is.character(indList[[i]])){
+                              indices = paste0(indices, is.character(indList[[i]]))  
+                            }else{
+                              indices = paste0(indices, indList[[i]]$c_str()) 
+                            }
+                            
                             if(i < length(indList)){
                               indices = paste0(indices, ", ")
                             }
                           }
                           retStr = sprintf("array[%s] of %s%s: %s", indices, var, 
-                                           private$.ti$domain()$c_str(), private$.id$getId())
+                                           private$.ti$getDomain()$c_str(), private$.id$getId())
                         } 
                       }else{
+                        # base type known -- domain doesn't exist
                         if(private$.ti$type()$ndim() == 0 && !private$.ti$type()$isSet()){
                           retStr = sprintf("%s%s: %s", var, private$.ti$type()$bt(), private$.id$getId()) 
                         }else if(private$.ti$type()$isSet()){
@@ -896,13 +900,23 @@ VarDecl = R6Class("VarDecl",
                           indList = private$.ti$ranges()
                           indices = ""
                           for (i in seq(1, length(indList), 1)) {
-                            indices = paste0(indices, indList[[i]]$c_str())
+                            if(is.character(indList[[i]])){
+                              indices = paste0(indices, "int")  
+                            }else{
+                              indices = paste0(indices, indList[[i]]$c_str()) 
+                            }
                             if(i < length(indList)){
                               indices = paste0(indices, ", ")
                             }
                           }
+                          bt = ''
+                          if(private$.ti$type()$st()){
+                            bt = sprintf("set of %s", private$.ti$type()$bt())
+                          }else{
+                            bt = private$.ti$type()$bt()
+                          }
                           retStr = sprintf("array[%s] of %s%s: %s", indices,
-                                           var, private$.ti$type()$bt(), private$.id$getId())
+                                           var, bt, private$.id$getId())
                         } 
                       }
                       if(!is.null(private$.e)){
@@ -910,11 +924,11 @@ VarDecl = R6Class("VarDecl",
                       }
                       return(sprintf("%s", retStr))
                     },
-                    #' @description return the initialization expression
-                    e = function(){
+                    #' @description get the value
+                    value = function(){
                       return(private$.e)
                     },
-                    #' @description type of the variable declaration
+                    #' @description get the type-inst of the variable declaration
                     ti = function(){
                       return(private$.ti)
                     }
@@ -932,13 +946,10 @@ VarDecl = R6Class("VarDecl",
                   ))
 
 
-#' @title TypeInst class
-#' 
-#' @description type instantiation with indices, etc.
-#' 
+#' @title TypeInst 
+#' @description create type instantiation with indices, etc.
 #' @import R6
 #' @import checkmate
-#' 
 #' @export
 TypeInst = R6Class("TypeInst",
                    inherit = Expression,
@@ -954,17 +965,23 @@ TypeInst = R6Class("TypeInst",
                                     testNull(indexExprVec))
                        if(!testNull(indexExprVec)){
                          for (i in seq(1, length(indexExprVec), 1)) {
-                           assertTRUE(testR6(indexExprVec[[i]], "IntSetVal") || 
-                                        testR6(indexExprVec[[i]], "Id")) 
+                           assertTRUE(testR6(indexExprVec[[i]], "Expression") || 
+                                        indexExprVec[[i]] == "int") 
                          } 
                        }
                        private$.indExpr = indexExprVec
                        assertTRUE(testR6(domain, "Expression") || testNull(domain))
                        private$.domain = domain
                      },
-                     #' @description return the domain
-                     domain = function(){
+                     #' @description get the variable domain
+                     getDomain = function(){
                        return(private$.domain)
+                     }, 
+                     #' @description set the variable domain
+                     #' @param dom
+                     setDomain = function(dom){
+                       assertR6(dom,"Expression")
+                       private$.domain = dom
                      }, 
                      #' @description return the index expression vector
                      ranges = function(){
@@ -1003,7 +1020,7 @@ TypeInst = R6Class("TypeInst",
 Annotation = R6Class("Annotation",
                      public = list(
                        #' @description constructor
-                       #' @param expVec expression vector
+                       #' @param expVec vector of MiniZinc expressions
                        initialize = function(expVec){
                         assertList(expVec, "Expression")
                          private$.expVec = expVec

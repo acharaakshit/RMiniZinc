@@ -41,7 +41,7 @@ constructor
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{expVec}}{expression vector}
+\item{\code{expVec}}{vector of MiniZinc expressions}
 }
 \if{html}{\out{</div>}}
 }

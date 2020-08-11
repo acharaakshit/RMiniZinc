@@ -2,7 +2,7 @@
 % Please edit documentation in R/Expression.R
 \name{String}
 \alias{String}
-\title{string lit}
+\title{String}
 \description{
 create a string in MiniZinc
 }
@@ -78,8 +78,7 @@ set value
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{val}}{string value
-MiniZinc representation}
+\item{\code{val}}{string value}
 }
 \if{html}{\out{</div>}}
 }
@@ -88,6 +87,7 @@ MiniZinc representation}
 \if{html}{\out{<a id="method-c_str"></a>}}
 \if{latex}{\out{\hypertarget{method-c_str}{}}}
 \subsection{Method \code{c_str()}}{
+get the MiniZinc representation
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{String$c_str()}\if{html}{\out{</div>}}
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/Expression.R
 \name{Set}
 \alias{Set}
-\title{create a set}
+\title{Set}
 \description{
 create a set in MiniZinc
 }
@@ -78,7 +78,7 @@ constuctor
 \if{html}{\out{<a id="method-getSetVec"></a>}}
 \if{latex}{\out{\hypertarget{method-getSetVec}{}}}
 \subsection{Method \code{getSetVec()}}{
-return the set expression
+get the set expression
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Set$getSetVec()}\if{html}{\out{</div>}}
 }
@@ -159,7 +159,7 @@ set the float set range
 \if{html}{\out{<a id="method-c_str"></a>}}
 \if{latex}{\out{\hypertarget{method-c_str}{}}}
 \subsection{Method \code{c_str()}}{
-convert into MiniZinc representation
+get the MiniZinc representation
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Set$c_str()}\if{html}{\out{</div>}}
 }

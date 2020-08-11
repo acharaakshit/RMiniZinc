@@ -2,9 +2,9 @@
 % Please edit documentation in R/Expression.R
 \name{BinOp}
 \alias{BinOp}
-\title{Binop class}
+\title{BinOp}
 \description{
-create a binary operator expression
+create a binary operation expression
 }
 \section{Super class}{
 \code{\link[rminizinc:Expression]{rminizinc::Expression}} -> \code{BinOp}
@@ -35,9 +35,11 @@ create a binary operator expression
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{BinOp$new()}}
-\item \href{#method-lhs}{\code{BinOp$lhs()}}
-\item \href{#method-rhs}{\code{BinOp$rhs()}}
+\item \href{#method-getLhs}{\code{BinOp$getLhs()}}
+\item \href{#method-getRhs}{\code{BinOp$getRhs()}}
 \item \href{#method-op}{\code{BinOp$op()}}
+\item \href{#method-setLhs}{\code{BinOp$setLhs()}}
+\item \href{#method-setRhs}{\code{BinOp$setRhs()}}
 \item \href{#method-c_str}{\code{BinOp$c_str()}}
 \item \href{#method-clone}{\code{BinOp$clone()}}
 }
@@ -54,38 +56,38 @@ create a binary operator expression
 \subsection{Method \code{new()}}{
 constructor
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{BinOp$new(lhs_expression, binop, rhs_expression)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{BinOp$new(lhs, binop, rhs)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{lhs_expression}}{the left hand side expression}
+\item{\code{lhs}}{the left hand side expression}
 
 \item{\code{binop}}{the binary operator to be used}
 
-\item{\code{rhs_expression}}{the right hand side expression}
+\item{\code{rhs}}{the right hand side expression}
 }
 \if{html}{\out{</div>}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-lhs"></a>}}
-\if{latex}{\out{\hypertarget{method-lhs}{}}}
-\subsection{Method \code{lhs()}}{
-return the lhs expression
+\if{html}{\out{<a id="method-getLhs"></a>}}
+\if{latex}{\out{\hypertarget{method-getLhs}{}}}
+\subsection{Method \code{getLhs()}}{
+get the lhs expression
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{BinOp$lhs()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{BinOp$getLhs()}\if{html}{\out{</div>}}
 }
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-rhs"></a>}}
-\if{latex}{\out{\hypertarget{method-rhs}{}}}
-\subsection{Method \code{rhs()}}{
-return the rhs expression
+\if{html}{\out{<a id="method-getRhs"></a>}}
+\if{latex}{\out{\hypertarget{method-getRhs}{}}}
+\subsection{Method \code{getRhs()}}{
+get the rhs expression
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{BinOp$rhs()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{BinOp$getRhs()}\if{html}{\out{</div>}}
 }
 
 }
@@ -98,6 +100,40 @@ return the operator
 \if{html}{\out{<div class="r">}}\preformatted{BinOp$op()}\if{html}{\out{</div>}}
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-setLhs"></a>}}
+\if{latex}{\out{\hypertarget{method-setLhs}{}}}
+\subsection{Method \code{setLhs()}}{
+set the lhs expression
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{BinOp$setLhs(e)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{e}}{expression to set}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-setRhs"></a>}}
+\if{latex}{\out{\hypertarget{method-setRhs}{}}}
+\subsection{Method \code{setRhs()}}{
+set the rhs expression
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{BinOp$setRhs()}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{e}}{expression to set}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-c_str"></a>}}

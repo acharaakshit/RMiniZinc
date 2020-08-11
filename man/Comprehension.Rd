@@ -2,9 +2,9 @@
 % Please edit documentation in R/Expression.R
 \name{Comprehension}
 \alias{Comprehension}
-\title{Comprehension class}
+\title{Comprehension}
 \description{
-create a Comprehension
+create a Comprehension in MiniZinc
 }
 \section{Super class}{
 \code{\link[rminizinc:Expression]{rminizinc::Expression}} -> \code{Comprehension}
@@ -40,7 +40,8 @@ create a Comprehension
 \item \href{#method-In}{\code{Comprehension$In()}}
 \item \href{#method-where}{\code{Comprehension$where()}}
 \item \href{#method-decl}{\code{Comprehension$decl()}}
-\item \href{#method-e}{\code{Comprehension$e()}}
+\item \href{#method-getBody}{\code{Comprehension$getBody()}}
+\item \href{#method-setBody}{\code{Comprehension$setBody()}}
 \item \href{#method-isSet}{\code{Comprehension$isSet()}}
 \item \href{#method-c_str}{\code{Comprehension$c_str()}}
 \item \href{#method-clone}{\code{Comprehension$clone()}}
@@ -58,7 +59,7 @@ create a Comprehension
 \subsection{Method \code{new()}}{
 constructor
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Comprehension$new(generators, e, set)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Comprehension$new(generators, body, set)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -66,7 +67,7 @@ constructor
 \describe{
 \item{\code{generators}}{generators of the expression}
 
-\item{\code{e}}{inside the comprehension}
+\item{\code{body}}{body/expression of the comprehension}
 
 \item{\code{set}}{bool to specify if comprehension is a set.}
 }
@@ -154,14 +155,31 @@ get the idecl declaration of igen generator
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-e"></a>}}
-\if{latex}{\out{\hypertarget{method-e}{}}}
-\subsection{Method \code{e()}}{
-get the expression
+\if{html}{\out{<a id="method-getBody"></a>}}
+\if{latex}{\out{\hypertarget{method-getBody}{}}}
+\subsection{Method \code{getBody()}}{
+get the expression/body
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Comprehension$e()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Comprehension$getBody()}\if{html}{\out{</div>}}
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-setBody"></a>}}
+\if{latex}{\out{\hypertarget{method-setBody}{}}}
+\subsection{Method \code{setBody()}}{
+set the expression/body
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Comprehension$setBody(e)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{e}}{new expression value}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-isSet"></a>}}

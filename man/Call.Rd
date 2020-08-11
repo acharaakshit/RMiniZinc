@@ -2,9 +2,9 @@
 % Please edit documentation in R/Expression.R
 \name{Call}
 \alias{Call}
-\title{Call class}
+\title{Call}
 \description{
-function calls in MiniZinc
+create function calls in MiniZinc
 }
 \section{Super class}{
 \code{\link[rminizinc:Expression]{rminizinc::Expression}} -> \code{Call}
@@ -35,7 +35,8 @@ function calls in MiniZinc
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{Call$new()}}
-\item \href{#method-id}{\code{Call$id()}}
+\item \href{#method-getId}{\code{Call$getId()}}
+\item \href{#method-setId}{\code{Call$setId()}}
 \item \href{#method-nargs}{\code{Call$nargs()}}
 \item \href{#method-arg}{\code{Call$arg()}}
 \item \href{#method-setArg}{\code{Call$setArg()}}
@@ -62,22 +63,39 @@ constructor
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{fn_id}}{the function id}
+\item{\code{fnName}}{function name}
 
-\item{\code{argExps}}{the list of expressions}
+\item{\code{args}}{the list of expressions}
 }
 \if{html}{\out{</div>}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-id"></a>}}
-\if{latex}{\out{\hypertarget{method-id}{}}}
-\subsection{Method \code{id()}}{
-the function id/string
+\if{html}{\out{<a id="method-getId"></a>}}
+\if{latex}{\out{\hypertarget{method-getId}{}}}
+\subsection{Method \code{getId()}}{
+get the function id/string
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Call$id()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Call$getId()}\if{html}{\out{</div>}}
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-setId"></a>}}
+\if{latex}{\out{\hypertarget{method-setId}{}}}
+\subsection{Method \code{setId()}}{
+get the function id/string
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Call$setId(name)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{name}}{new function name}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-nargs"></a>}}
@@ -134,6 +152,13 @@ set all the expression arguments
 \if{html}{\out{<div class="r">}}\preformatted{Call$setArgs(expList)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{expList}}{list of expressions to set}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-c_str"></a>}}

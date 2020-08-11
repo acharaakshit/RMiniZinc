@@ -55,7 +55,7 @@ constructor for an int literal
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{exprVec}}{the value of the integer}
+\item{\code{exprVec}}{list of expressions in the array}
 
 \item{\code{dims}}{dimension expression vector}
 }

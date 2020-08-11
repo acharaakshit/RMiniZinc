@@ -2,9 +2,9 @@
 % Please edit documentation in R/Expression.R
 \name{Ite}
 \alias{Ite}
-\title{ITE expression}
+\title{Ite}
 \description{
-if-then-else expressions in MiniZinc
+create if-then-else expressions in MiniZinc
 }
 \section{Super class}{
 \code{\link[rminizinc:Expression]{rminizinc::Expression}} -> \code{Ite}

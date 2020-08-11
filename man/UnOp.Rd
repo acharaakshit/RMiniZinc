@@ -2,14 +2,17 @@
 % Please edit documentation in R/Expression.R
 \name{UnOp}
 \alias{UnOp}
-\title{unOp class}
+\title{UnOp}
 \description{
-Unary operator in MiniZinc
+Unary operation expression in MiniZinc
+}
+\section{Super class}{
+\code{\link[rminizinc:Expression]{rminizinc::Expression}} -> \code{UnOp}
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{.argExps}}{list of expression arguments}
+\item{\code{.args}}{list of expression arguments}
 
 \item{\code{.op}}{operator to be used}
 }
@@ -18,7 +21,7 @@ Unary operator in MiniZinc
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
-\item{\code{.argExps}}{list of expression arguments}
+\item{\code{.args}}{list of expression arguments}
 
 \item{\code{.op}}{operator to be used}
 }
@@ -34,6 +37,12 @@ Unary operator in MiniZinc
 \item \href{#method-c_str}{\code{UnOp$c_str()}}
 \item \href{#method-clone}{\code{UnOp$clone()}}
 }
+}
+\if{html}{
+\out{<details open ><summary>Inherited methods</summary>}
+\itemize{
+}
+\out{</details>}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}
@@ -85,6 +94,7 @@ get the ith expression argument
 \if{html}{\out{<a id="method-op"></a>}}
 \if{latex}{\out{\hypertarget{method-op}{}}}
 \subsection{Method \code{op()}}{
+get the unary operator
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{UnOp$op()}\if{html}{\out{</div>}}
 }

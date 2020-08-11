@@ -2,9 +2,9 @@
 % Please edit documentation in R/Expression.R
 \name{Generator}
 \alias{Generator}
-\title{Generator class}
+\title{Generator}
 \description{
-create a generator
+create a generator in MiniZinc
 }
 \section{Super class}{
 \code{\link[rminizinc:Expression]{rminizinc::Expression}} -> \code{Generator}
@@ -54,17 +54,17 @@ create a generator
 \subsection{Method \code{new()}}{
 constructor
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Generator$new(IN = NULL, where = NULL, decls)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Generator$new(decls, IN = NULL, where = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
+\item{\code{decls}}{list of variable declarations}
+
 \item{\code{IN}}{the in expression of generator}
 
 \item{\code{where}}{the where expression of generator}
-
-\item{\code{decl}}{list of variable declarations}
 }
 \if{html}{\out{</div>}}
 }

@@ -4,7 +4,7 @@
 \alias{ArrayAccess}
 \title{Array Access class}
 \description{
-create ArrayAccess elements
+create ArrayAccess elements in MiniZinc
 }
 \section{Super class}{
 \code{\link[rminizinc:Expression]{rminizinc::Expression}} -> \code{ArrayAccess}

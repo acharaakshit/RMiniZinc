@@ -2,9 +2,9 @@
 % Please edit documentation in R/Expression.R
 \name{Let}
 \alias{Let}
-\title{let expression}
+\title{Let}
 \description{
-let expression in MiniZinc
+create let expression in MiniZinc
 }
 \section{Super class}{
 \code{\link[rminizinc:Expression]{rminizinc::Expression}} -> \code{Let}

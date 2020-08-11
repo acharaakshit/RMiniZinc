@@ -2,7 +2,7 @@
 % Please edit documentation in R/Expression.R
 \name{VarDecl}
 \alias{VarDecl}
-\title{class for variable declaration}
+\title{VarDecl}
 \description{
 Contains different fields to create a variable declaration
 }
@@ -38,8 +38,9 @@ Contains different fields to create a variable declaration
 \item \href{#method-id}{\code{VarDecl$id()}}
 \item \href{#method-isPar}{\code{VarDecl$isPar()}}
 \item \href{#method-isVar}{\code{VarDecl$isVar()}}
+\item \href{#method-setDomain}{\code{VarDecl$setDomain()}}
 \item \href{#method-c_str}{\code{VarDecl$c_str()}}
-\item \href{#method-e}{\code{VarDecl$e()}}
+\item \href{#method-value}{\code{VarDecl$value()}}
 \item \href{#method-ti}{\code{VarDecl$ti()}}
 \item \href{#method-clone}{\code{VarDecl$clone()}}
 }
@@ -54,19 +55,19 @@ Contains different fields to create a variable declaration
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
-initialize the VarDecl constructor
+constructor
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{VarDecl$new(e = NULL, id, type_inst)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{VarDecl$new(name, type_inst, value = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{e}}{value, NULL by default}
+\item{\code{name}}{the identifier/name}
 
-\item{\code{id}}{the id/name.}
+\item{\code{type_inst}}{type instantiation of the variable}
 
-\item{\code{type}}{Type object}
+\item{\code{value}}{value of variable, NULL by default}
 }
 \if{html}{\out{</div>}}
 }
@@ -75,7 +76,7 @@ initialize the VarDecl constructor
 \if{html}{\out{<a id="method-id"></a>}}
 \if{latex}{\out{\hypertarget{method-id}{}}}
 \subsection{Method \code{id()}}{
-the identifier
+get the identifier object
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{VarDecl$id()}\if{html}{\out{</div>}}
 }
@@ -102,6 +103,16 @@ check if it's a decision variable
 
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-setDomain"></a>}}
+\if{latex}{\out{\hypertarget{method-setDomain}{}}}
+\subsection{Method \code{setDomain()}}{
+overwrite the existing domain
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{VarDecl$setDomain(dom)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-c_str"></a>}}
 \if{latex}{\out{\hypertarget{method-c_str}{}}}
 \subsection{Method \code{c_str()}}{
@@ -112,12 +123,12 @@ return string representation of MiniZinc
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-e"></a>}}
-\if{latex}{\out{\hypertarget{method-e}{}}}
-\subsection{Method \code{e()}}{
-return the initialization expression
+\if{html}{\out{<a id="method-value"></a>}}
+\if{latex}{\out{\hypertarget{method-value}{}}}
+\subsection{Method \code{value()}}{
+get the value
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{VarDecl$e()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{VarDecl$value()}\if{html}{\out{</div>}}
 }
 
 }
@@ -125,7 +136,7 @@ return the initialization expression
 \if{html}{\out{<a id="method-ti"></a>}}
 \if{latex}{\out{\hypertarget{method-ti}{}}}
 \subsection{Method \code{ti()}}{
-type of the variable declaration
+get the type-inst of the variable declaration
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{VarDecl$ti()}\if{html}{\out{</div>}}
 }
