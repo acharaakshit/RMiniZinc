@@ -1,4 +1,3 @@
-library(stringr) 
 test_that("type compatibility is detected correctly",{
   expect_error(set_params(modData = 1, modify_mzn = "A"))
   expect_error(mzn_parse(mznpath = 1))
@@ -9,10 +8,10 @@ test_that("jobshop problems are solved without issues",{
   # for devtools::test()
   mznName = "../../inst/extdata/mzn_examples/jobshop/jobshop_0.mzn"
   
-  if(str_detect(getwd(), c("rminizinc.Rcheck")) && !str_detect(getwd(), c("RMiniZinc"))){
+  if(stringr::str_detect(getwd(), c("rminizinc.Rcheck")) && !stringr::str_detect(getwd(), c("RMiniZinc"))){
     # for R CMD CHECK
     mznName = paste0(dirname(dirname(dirname(getwd()))), "/RMiniZinc/inst/extdata/mzn_examples/jobshop/jobshop_0.mzn")
-  }else if(str_detect(getwd(), c("rminizinc.Rcheck")) && str_detect(getwd(), c("RMiniZinc"))){
+  }else if(stringr::str_detect(getwd(), c("rminizinc.Rcheck")) && stringr::str_detect(getwd(), c("RMiniZinc"))){
     # for travis build
     mznName = paste0(dirname(dirname(dirname(getwd()))), "/inst/extdata/mzn_examples/jobshop/jobshop_0.mzn") 
   }
@@ -57,10 +56,10 @@ test_that("production planning problems are solved",{
   # for devtools::test()
   mznName = "../../inst/extdata/mzn_examples/production_planning/prod_plan_0.mzn"
   
-  if(str_detect(getwd(), c("rminizinc.Rcheck")) && !str_detect(getwd(), c("RMiniZinc"))){
+  if(stringr::str_detect(getwd(), c("rminizinc.Rcheck")) && !stringr::str_detect(getwd(), c("RMiniZinc"))){
     # for R CMD CHECK
     mznName = paste0(dirname(dirname(dirname(getwd()))), "/RMiniZinc/inst/extdata/mzn_examples/production_planning/prod_plan_0.mzn")
-  }else if(str_detect(getwd(), c("rminizinc.Rcheck")) && str_detect(getwd(), c("RMiniZinc"))){
+  }else if(stringr::str_detect(getwd(), c("rminizinc.Rcheck")) && stringr::str_detect(getwd(), c("RMiniZinc"))){
     # for travis build
     mznName = paste0(dirname(dirname(dirname(getwd()))), "/inst/extdata/mzn_examples/production_planning/prod_plan_0.mzn") 
   }
@@ -124,10 +123,10 @@ test_that("assignment problems can be solved", {
   # for devtools::test()
   mznName = "../../inst/extdata/mzn_examples/assign/assign_inverse.mzn"
   
-  if(str_detect(getwd(), c("rminizinc.Rcheck")) && !str_detect(getwd(), c("RMiniZinc"))){
+  if(stringr::str_detect(getwd(), c("rminizinc.Rcheck")) && !stringr::str_detect(getwd(), c("RMiniZinc"))){
     # for R CMD CHECK
     mznName = paste0(dirname(dirname(dirname(getwd()))), "/RMiniZinc/inst/extdata/mzn_examples/assign/assign_inverse.mzn")
-  }else if(str_detect(getwd(), c("rminizinc.Rcheck")) && str_detect(getwd(), c("RMiniZinc"))){
+  }else if(stringr::str_detect(getwd(), c("rminizinc.Rcheck")) && stringr::str_detect(getwd(), c("RMiniZinc"))){
     # for travis build
     mznName = paste0(dirname(dirname(dirname(getwd()))), "/inst/extdata/mzn_examples/assign/assign_inverse.mzn") 
   }
@@ -173,10 +172,10 @@ test_that("crazy set problems can be solved", {
   # for devtools::test()
   mznName = "../../inst/extdata/mzn_examples/crazy_sets/crazy_sets.mzn"
   
-  if(str_detect(getwd(), c("rminizinc.Rcheck")) && !str_detect(getwd(), c("RMiniZinc"))){
+  if(stringr::str_detect(getwd(), c("rminizinc.Rcheck")) && !stringr::str_detect(getwd(), c("RMiniZinc"))){
     # for R CMD CHECK
     mznName = paste0(dirname(dirname(dirname(getwd()))), "/RMiniZinc/inst/extdata/mzn_examples/crazy_sets/crazy_sets.mzn")
-  }else if(str_detect(getwd(), c("rminizinc.Rcheck")) && str_detect(getwd(), c("RMiniZinc"))){
+  }else if(stringr::str_detect(getwd(), c("rminizinc.Rcheck")) && stringr::str_detect(getwd(), c("RMiniZinc"))){
     # for travis build
     mznName = paste0(dirname(dirname(dirname(getwd()))), "/inst/extdata/mzn_examples/crazy_sets/crazy_sets.mzn") 
   }
