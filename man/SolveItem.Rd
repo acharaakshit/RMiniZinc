@@ -2,10 +2,11 @@
 % Please edit documentation in R/SolveType.R
 \name{SolveItem}
 \alias{SolveItem}
-\title{mention if the problem is satisfaction, minimization or maximization.}
+\title{SolveItem}
 \description{
-This is a class that will be used to specify whether the optimization problem is a satisfaction,
-minimization or maximization problem
+specify whether the optimization problem is a satisfaction,
+minimization or maximization problem and/or expression to maximize/minnimize
+and/or annotation
 }
 \section{Super class}{
 \code{\link[rminizinc:Item]{rminizinc::Item}} -> \code{SolveItem}
@@ -13,6 +14,10 @@ minimization or maximization problem
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
+\item{\code{.e}}{the expression to maximize or minimize}
+
+\item{\code{.st}}{the solve type}
+
 \item{\code{.ann}}{annotation of the solve type}
 
 \item{\code{.delete_flag}}{used to delete items}
@@ -22,6 +27,10 @@ minimization or maximization problem
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
+\item{\code{.e}}{the expression to maximize or minimize}
+
+\item{\code{.st}}{the solve type}
+
 \item{\code{.ann}}{annotation of the solve type}
 
 \item{\code{.delete_flag}}{used to delete items}
