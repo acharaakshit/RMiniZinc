@@ -3,6 +3,7 @@
 ^\.travis\.yml$
 ^doc$
 ^Meta$
+^Readme\.md$
 LICENSE
 ^\.travis\.yml$
 ^aclocal.m4$

@@ -50,7 +50,7 @@ MiniZinc::Model* helper_parse(std::string modelString, std::string modelStringNa
     slash = dirPath.find_last_of("/");
     dirPath = (slash != npos) ? dirPath.substr(0, slash) : dirPath;
     string dest = dirPath;
-    cout << dest << " dest";
+    cout << dest << " dest" << endl;
     if(dirPath.find("RMiniZinc") != npos){
       // for travis
       Path = dest;
@@ -64,8 +64,10 @@ MiniZinc::Model* helper_parse(std::string modelString, std::string modelStringNa
     Rcpp::Function get_makevarspath = rprojroot["find_package_root_file"];
     Path = Rcpp::as<string>(get_makevarspath());
   }
+  Path.append("/src/Makevars");
+  cout << Path << " Final Path" << endl;
   // check if Makevars exists
-  ifstream mkvrs(Path.append("/src/Makevars"));
+  ifstream mkvrs(Path);
   if(mkvrs.fail()){
     Rcpp::stop("could't find Makevars"); 
   }
