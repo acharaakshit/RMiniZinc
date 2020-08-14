@@ -12,10 +12,26 @@
 
 <meta name="author" content="Akshit Achara" />
 
-<meta name="date" content="2020-08-11" />
+<meta name="date" content="2020-08-14" />
 
 <title>MiniZinc Interface for R</title>
 
+<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
+// v0.0.1
+// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
+
+document.addEventListener('DOMContentLoaded', function() {
+  const codeList = document.getElementsByClassName("sourceCode");
+  for (var i = 0; i < codeList.length; i++) {
+    var linkList = codeList[i].getElementsByTagName('a');
+    for (var j = 0; j < linkList.length; j++) {
+      if (linkList[j].innerHTML === "") {
+        linkList[j].setAttribute('aria-hidden', 'true');
+      }
+    }
+  }
+});
+</script>
 
 
 <style type="text/css">code{white-space: pre;}</style>
@@ -303,7 +319,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">MiniZinc Interface for R</h1>
 <h4 class="author">Akshit Achara</h4>
-<h4 class="date">2020-08-11</h4>
+<h4 class="date">2020-08-14</h4>
 
 
 
@@ -456,7 +472,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 </div>
 <div id="parse-model-set-missing-parameters-and-solve" class="section level2">
 <h2>Parse Model, Set Missing Parameters and Solve</h2>
-<p>A parser function <code>mzn_parse</code> has also been implemented which can be used to detect possible syntax errors and get the smallest of details before the MiniZinc model is evaluated. This function can either take the path of a model file path or it can take a string model and returns a list with different elements like: <code>MODEL_STRING</code> which is the string representation of the model and <code>VARIABLES</code> which are the variable declaration details, <code>CONSTRAINTS</code> which are the constraint details of a model, <code>SOLVE_TYPE</code> which contains the information about the solve type of the problem, <code>FUNCTION_ITEMS</code> contains the function information, <code>ASSIGNMENTS</code> contains the assignment information, <code>INCLUDES</code> contains information about the included mzn files and <code>OUTPUT_ITEM</code> contains the information about the output formatting. Each component (Variable Declarations, Constraints, Solve Items, Assignment Items, Include Items, Functions and Assignments) in a MiniZinc model is considered as an item. The <code>ITEM_NO</code> for each element is also returned.</p>
+<p>A parser function <code>mzn_parse</code> has also been implemented which can be used to detect possible syntax errors and get the smallest of details before the MiniZinc model is evaluated. This function can either take the path of a model file path or it can take a string model and returns a list with different elements like: <code>MODEL_STRING</code> which is the string representation of the model and <code>VARIABLES</code> which are the variable declaration details, <code>CONSTRAINTS</code> which are the constraint details of a model, <code>SOLVE_TYPE</code> which contains the information about the solve type of the problem, <code>FUNCTION_ITEMS</code> contains the function information, <code>ASSIGNMENTS</code> contains the assignment information, <code>INCLUDES</code> contains information about the included mzn files and <code>OUTPUT_ITEM</code> contains the information about the output formatting. Each component (Variable Declarations, Constraints, Solve Items, Assignment Items, Include Items, Functions and Assignments) in a MiniZinc model is considered as an item. The <code>ITEM_NO</code> for each element is also returned. If your model includes an mzn file, you can provide custom paths of the folders where the included files are present. The default mzn files (in the std folder) provided along with libminizinc will be included by default.</p>
 <p>The Information about the naming of the elements returned is described in the following figures:</p>
 <div id="model-items" class="section level3">
 <h3>Model Items</h3>
@@ -530,19 +546,19 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb14-2"><a href="#cb14-2"></a>mzn_path =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">dirname</span>(<span class="kw">getwd</span>()), <span class="st">&quot;/inst/extdata/mzn_examples/jobshop/jobshop_0.mzn&quot;</span>)</span>
 <span id="cb14-3"><a href="#cb14-3"></a></span>
 <span id="cb14-4"><a href="#cb14-4"></a><span class="co"># parse the model</span></span>
-<span id="cb14-5"><a href="#cb14-5"></a>parseObj=rminizinc<span class="op">:::</span><span class="kw">mzn_parse</span>(<span class="dt">mznpath =</span> mzn_path)</span>
-<span id="cb14-6"><a href="#cb14-6"></a></span>
-<span id="cb14-7"><a href="#cb14-7"></a><span class="co"># get the modelString</span></span>
-<span id="cb14-8"><a href="#cb14-8"></a>modString =<span class="st"> </span>parseObj<span class="op">$</span>MODEL_STRING</span>
-<span id="cb14-9"><a href="#cb14-9"></a></span>
-<span id="cb14-10"><a href="#cb14-10"></a><span class="co"># dzn file path</span></span>
-<span id="cb14-11"><a href="#cb14-11"></a>dzn_path =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">dirname</span>(<span class="kw">getwd</span>()), <span class="st">&quot;/inst/extdata/mzn_examples/jobshop/jobshop.dzn&quot;</span>)</span>
-<span id="cb14-12"><a href="#cb14-12"></a></span>
-<span id="cb14-13"><a href="#cb14-13"></a><span class="co"># R List object containing the solutions</span></span>
-<span id="cb14-14"><a href="#cb14-14"></a>solObj =<span class="st"> </span>rminizinc<span class="op">:::</span><span class="kw">mzn_eval</span>(<span class="dt">modelString =</span> modString, <span class="dt">solver =</span> <span class="st">&quot;org.gecode.gecode&quot;</span>,</span>
-<span id="cb14-15"><a href="#cb14-15"></a>                     <span class="dt">libpath =</span> <span class="st">&quot;/snap/minizinc/current/share/minizinc&quot;</span>, <span class="dt">dznpath =</span> dzn_path)</span>
-<span id="cb14-16"><a href="#cb14-16"></a><span class="co"># get all the solutions</span></span>
-<span id="cb14-17"><a href="#cb14-17"></a><span class="kw">print</span>(solObj<span class="op">$</span>SOLUTIONS)</span></code></pre></div>
+<span id="cb14-5"><a href="#cb14-5"></a>parseObj=rminizinc<span class="op">:::</span><span class="kw">mzn_parse</span>(<span class="dt">mznpath =</span> mzn_path)</span></code></pre></div>
+<pre><code>## Using default include path</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="co"># get the modelString</span></span>
+<span id="cb16-2"><a href="#cb16-2"></a>modString =<span class="st"> </span>parseObj<span class="op">$</span>MODEL_STRING</span>
+<span id="cb16-3"><a href="#cb16-3"></a></span>
+<span id="cb16-4"><a href="#cb16-4"></a><span class="co"># dzn file path</span></span>
+<span id="cb16-5"><a href="#cb16-5"></a>dzn_path =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">dirname</span>(<span class="kw">getwd</span>()), <span class="st">&quot;/inst/extdata/mzn_examples/jobshop/jobshop.dzn&quot;</span>)</span>
+<span id="cb16-6"><a href="#cb16-6"></a></span>
+<span id="cb16-7"><a href="#cb16-7"></a><span class="co"># R List object containing the solutions</span></span>
+<span id="cb16-8"><a href="#cb16-8"></a>solObj =<span class="st"> </span>rminizinc<span class="op">:::</span><span class="kw">mzn_eval</span>(<span class="dt">modelString =</span> modString, <span class="dt">solver =</span> <span class="st">&quot;org.gecode.gecode&quot;</span>,</span>
+<span id="cb16-9"><a href="#cb16-9"></a>                     <span class="dt">libpath =</span> <span class="st">&quot;/snap/minizinc/current/share/minizinc&quot;</span>, <span class="dt">dznpath =</span> dzn_path)</span>
+<span id="cb16-10"><a href="#cb16-10"></a><span class="co"># get all the solutions</span></span>
+<span id="cb16-11"><a href="#cb16-11"></a><span class="kw">print</span>(solObj<span class="op">$</span>SOLUTIONS)</span></code></pre></div>
 <pre><code>## $OPTIMAL_SOLUTION
 ## $OPTIMAL_SOLUTION$s
 ## $OPTIMAL_SOLUTION$s[[1]]
@@ -554,25 +570,26 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ## $OPTIMAL_SOLUTION$s[[3]]
 ## [1]  0  6  9 13</code></pre>
 <p>The data can also be provided as a list of values of parameters where the names of the list must be the names(whole or part) of the parameters whose values are missing. The names of the parameters whose values are missing can be obtained using the function <code>getMissingPars</code>. Alternatively, if the user wishes to provide a data file, it can be provided to the function <code>mzn_eval()</code>.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="co"># file path</span></span>
-<span id="cb16-2"><a href="#cb16-2"></a>mzn_path =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">dirname</span>(<span class="kw">getwd</span>()), <span class="st">&quot;/inst/extdata/mzn_examples/knapsack/knapsack_0.mzn&quot;</span>)</span>
-<span id="cb16-3"><a href="#cb16-3"></a></span>
-<span id="cb16-4"><a href="#cb16-4"></a><span class="co"># get missing parameter values</span></span>
-<span id="cb16-5"><a href="#cb16-5"></a>missingVals=rminizinc<span class="op">:::</span><span class="kw">getMissingPars</span>( <span class="dt">mznpath =</span> mzn_path)</span>
-<span id="cb16-6"><a href="#cb16-6"></a><span class="kw">print</span>(missingVals)</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="co"># file path</span></span>
+<span id="cb18-2"><a href="#cb18-2"></a>mzn_path =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">dirname</span>(<span class="kw">getwd</span>()), <span class="st">&quot;/inst/extdata/mzn_examples/knapsack/knapsack_0.mzn&quot;</span>)</span>
+<span id="cb18-3"><a href="#cb18-3"></a></span>
+<span id="cb18-4"><a href="#cb18-4"></a><span class="co"># get missing parameter values</span></span>
+<span id="cb18-5"><a href="#cb18-5"></a>missingVals=rminizinc<span class="op">:::</span><span class="kw">getMissingPars</span>( <span class="dt">mznpath =</span> mzn_path)</span></code></pre></div>
+<pre><code>## Using default include path</code></pre>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="kw">print</span>(missingVals)</span></code></pre></div>
 <pre><code>## [1] &quot;n&quot;        &quot;capacity&quot; &quot;profit&quot;   &quot;size&quot;</code></pre>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="co"># list of the data</span></span>
-<span id="cb18-2"><a href="#cb18-2"></a>pVals =<span class="st"> </span><span class="kw">list</span>(<span class="dv">3</span>, <span class="dv">9</span>, <span class="kw">c</span>(<span class="dv">15</span>,<span class="dv">10</span>,<span class="dv">7</span>), <span class="kw">c</span>(<span class="dv">4</span>,<span class="dv">3</span>,<span class="dv">2</span>))</span>
-<span id="cb18-3"><a href="#cb18-3"></a><span class="kw">names</span>(pVals) =<span class="st"> </span>missingVals</span>
-<span id="cb18-4"><a href="#cb18-4"></a></span>
-<span id="cb18-5"><a href="#cb18-5"></a><span class="co"># set the missing parameters</span></span>
-<span id="cb18-6"><a href="#cb18-6"></a>modString =<span class="st"> </span>rminizinc<span class="op">:::</span><span class="kw">set_params</span>(<span class="dt">modData =</span> pVals,<span class="dt">mznpath =</span> mzn_path, <span class="dt">modify_mzn =</span> <span class="ot">FALSE</span>)</span>
-<span id="cb18-7"><a href="#cb18-7"></a></span>
-<span id="cb18-8"><a href="#cb18-8"></a><span class="co"># R List object containing the solutions</span></span>
-<span id="cb18-9"><a href="#cb18-9"></a>solObj =<span class="st"> </span>rminizinc<span class="op">:::</span><span class="kw">mzn_eval</span>(<span class="dt">modelString =</span> modString, <span class="dt">solver =</span> <span class="st">&quot;org.gecode.gecode&quot;</span>,</span>
-<span id="cb18-10"><a href="#cb18-10"></a>                     <span class="dt">libpath =</span> <span class="st">&quot;/snap/minizinc/current/share/minizinc&quot;</span>)</span>
-<span id="cb18-11"><a href="#cb18-11"></a><span class="co"># get all the solutions</span></span>
-<span id="cb18-12"><a href="#cb18-12"></a><span class="kw">print</span>(solObj<span class="op">$</span>SOLUTIONS)</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="co"># list of the data</span></span>
+<span id="cb22-2"><a href="#cb22-2"></a>pVals =<span class="st"> </span><span class="kw">list</span>(<span class="dv">3</span>, <span class="dv">9</span>, <span class="kw">c</span>(<span class="dv">15</span>,<span class="dv">10</span>,<span class="dv">7</span>), <span class="kw">c</span>(<span class="dv">4</span>,<span class="dv">3</span>,<span class="dv">2</span>))</span>
+<span id="cb22-3"><a href="#cb22-3"></a><span class="kw">names</span>(pVals) =<span class="st"> </span>missingVals</span>
+<span id="cb22-4"><a href="#cb22-4"></a></span>
+<span id="cb22-5"><a href="#cb22-5"></a><span class="co"># set the missing parameters</span></span>
+<span id="cb22-6"><a href="#cb22-6"></a>modString =<span class="st"> </span>rminizinc<span class="op">:::</span><span class="kw">set_params</span>(<span class="dt">modData =</span> pVals,<span class="dt">mznpath =</span> mzn_path, <span class="dt">modify_mzn =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
+<pre><code>## Using default include path</code></pre>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a><span class="co"># R List object containing the solutions</span></span>
+<span id="cb24-2"><a href="#cb24-2"></a>solObj =<span class="st"> </span>rminizinc<span class="op">:::</span><span class="kw">mzn_eval</span>(<span class="dt">modelString =</span> modString, <span class="dt">solver =</span> <span class="st">&quot;org.gecode.gecode&quot;</span>,</span>
+<span id="cb24-3"><a href="#cb24-3"></a>                     <span class="dt">libpath =</span> <span class="st">&quot;/snap/minizinc/current/share/minizinc&quot;</span>)</span>
+<span id="cb24-4"><a href="#cb24-4"></a><span class="co"># get all the solutions</span></span>
+<span id="cb24-5"><a href="#cb24-5"></a><span class="kw">print</span>(solObj<span class="op">$</span>SOLUTIONS)</span></code></pre></div>
 <pre><code>## $SOLUTION0
 ## $SOLUTION0$x
 ## [1] 0 0 0
@@ -609,22 +626,22 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <p>Some examples of how to use these functions to solve optimization problems can be found in <code>mzn_examples</code> which are taken from <a href="https://github.com/MiniZinc/minizinc-examples">minizinc-examples</a>.</p>
 <p>NOTE: Please don’t include output formatting in the mzn files or the solutions might not be parsed properly.</p>
 <p>The named list returned by <code>mzn_parse()</code> can be used to initialize all the R6 classes required to create the model that was parsed. This will help the user to use a lot of functions to understand, manipulate and use the model using the R6 objects. <code>getRModel()</code> is used to initialize all the relevant objects using named list returned by <code>mzn_parse()</code>. The support is only available for basic models currently but the scope will be increased soon.</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="co"># mzn file path</span></span>
-<span id="cb20-2"><a href="#cb20-2"></a>mzn_path =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">dirname</span>(<span class="kw">getwd</span>()), <span class="st">&quot;/inst/extdata/mzn_examples/production_planning/prod_plan_0.mzn&quot;</span>)</span>
-<span id="cb20-3"><a href="#cb20-3"></a></span>
-<span id="cb20-4"><a href="#cb20-4"></a><span class="co"># parse the model</span></span>
-<span id="cb20-5"><a href="#cb20-5"></a>parseObj=rminizinc<span class="op">:::</span><span class="kw">mzn_parse</span>(<span class="dt">mznpath =</span> mzn_path)</span>
-<span id="cb20-6"><a href="#cb20-6"></a></span>
-<span id="cb20-7"><a href="#cb20-7"></a>modString =<span class="st"> </span><span class="kw">getRModel</span>(parseObj)<span class="op">$</span><span class="kw">mzn_string</span>()</span>
-<span id="cb20-8"><a href="#cb20-8"></a></span>
-<span id="cb20-9"><a href="#cb20-9"></a><span class="co"># dzn file path</span></span>
-<span id="cb20-10"><a href="#cb20-10"></a>dzn_path =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">dirname</span>(<span class="kw">getwd</span>()), <span class="st">&quot;/inst/extdata/mzn_examples/production_planning/prod_plan_0.dzn&quot;</span>)</span>
-<span id="cb20-11"><a href="#cb20-11"></a></span>
-<span id="cb20-12"><a href="#cb20-12"></a><span class="co"># R List object containing the solutions</span></span>
-<span id="cb20-13"><a href="#cb20-13"></a>solObj =<span class="st"> </span>rminizinc<span class="op">:::</span><span class="kw">mzn_eval</span>(<span class="dt">modelString =</span> modString, <span class="dt">solver =</span> <span class="st">&quot;org.gecode.gecode&quot;</span>,</span>
-<span id="cb20-14"><a href="#cb20-14"></a>                     <span class="dt">libpath =</span> <span class="st">&quot;/snap/minizinc/current/share/minizinc&quot;</span>, <span class="dt">dznpath =</span> dzn_path)</span>
-<span id="cb20-15"><a href="#cb20-15"></a><span class="co"># get all the solutions</span></span>
-<span id="cb20-16"><a href="#cb20-16"></a><span class="kw">print</span>(solObj<span class="op">$</span>SOLUTIONS)</span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="co"># mzn file path</span></span>
+<span id="cb26-2"><a href="#cb26-2"></a>mzn_path =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">dirname</span>(<span class="kw">getwd</span>()), <span class="st">&quot;/inst/extdata/mzn_examples/production_planning/prod_plan_0.mzn&quot;</span>)</span>
+<span id="cb26-3"><a href="#cb26-3"></a></span>
+<span id="cb26-4"><a href="#cb26-4"></a><span class="co"># parse the model</span></span>
+<span id="cb26-5"><a href="#cb26-5"></a>parseObj=rminizinc<span class="op">:::</span><span class="kw">mzn_parse</span>(<span class="dt">mznpath =</span> mzn_path)</span></code></pre></div>
+<pre><code>## Using default include path</code></pre>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a>modString =<span class="st"> </span><span class="kw">getRModel</span>(parseObj)<span class="op">$</span><span class="kw">mzn_string</span>()</span>
+<span id="cb28-2"><a href="#cb28-2"></a></span>
+<span id="cb28-3"><a href="#cb28-3"></a><span class="co"># dzn file path</span></span>
+<span id="cb28-4"><a href="#cb28-4"></a>dzn_path =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">dirname</span>(<span class="kw">getwd</span>()), <span class="st">&quot;/inst/extdata/mzn_examples/production_planning/prod_plan_0.dzn&quot;</span>)</span>
+<span id="cb28-5"><a href="#cb28-5"></a></span>
+<span id="cb28-6"><a href="#cb28-6"></a><span class="co"># R List object containing the solutions</span></span>
+<span id="cb28-7"><a href="#cb28-7"></a>solObj =<span class="st"> </span>rminizinc<span class="op">:::</span><span class="kw">mzn_eval</span>(<span class="dt">modelString =</span> modString, <span class="dt">solver =</span> <span class="st">&quot;org.gecode.gecode&quot;</span>,</span>
+<span id="cb28-8"><a href="#cb28-8"></a>                     <span class="dt">libpath =</span> <span class="st">&quot;/snap/minizinc/current/share/minizinc&quot;</span>, <span class="dt">dznpath =</span> dzn_path)</span>
+<span id="cb28-9"><a href="#cb28-9"></a><span class="co"># get all the solutions</span></span>
+<span id="cb28-10"><a href="#cb28-10"></a><span class="kw">print</span>(solObj<span class="op">$</span>SOLUTIONS)</span></code></pre></div>
 <pre><code>## $SOLUTION0
 ## $SOLUTION0$produce
 ## [1] 0 0
