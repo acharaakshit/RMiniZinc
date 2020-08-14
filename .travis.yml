@@ -32,7 +32,8 @@ jobs:
         - cd $TRAVIS_BUILD_DIR;
       script:
         - R CMD build .
-        - R CMD check *tar.gz --install-args='--configure-args=--with-mzn=/usr/local/lib/libminizinc'
+        - R CMD INSTALL *tar.gz
+        - R CMD check *tar.gz 
       addons:
         snaps:
           - minizinc --classic
