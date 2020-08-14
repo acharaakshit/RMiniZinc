@@ -52,8 +52,8 @@ List sol_parse(std::string solutionString) {
   for(int nsol=0; nsol< solutions.size(); nsol++){
     
     solutionString = solutions[nsol];
-    Rcpp::Environment base("package:rjson");
-    Rcpp::Function fromJSON_cpp = base["fromJSON"];  
+    Rcpp::Environment rjson("package:rjson");
+    Rcpp::Function fromJSON_cpp = rjson["fromJSON"];  
     retVal.push_back(fromJSON_cpp(solutionString));
     string track_nsol = "SOLUTION";
     track_nsol.append(to_string(nsol));
