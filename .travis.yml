@@ -9,6 +9,7 @@ jobs:
         - ls;
         - ls /home/travis/build/acharaakshit;
         - ls /home/travis/build/acharaakshit/RMiniZinc;
+        - ls /home/travis/build/acharaakshit/RMiniZinc/src;
         - cd /usr/local/lib;
         - sudo git clone https://github.com/MiniZinc/libminizinc.git; 
         - cd libminizinc/;
@@ -29,6 +30,9 @@ jobs:
         - cd;
         - echo $TRAVIS_BUILD_DIR;
         - cd $TRAVIS_BUILD_DIR;
+      script:
+        - R CMD build .
+        - R CMD check *tar.gz --install-args='--configure-args=--with-mzn=/usr/local/lib/libminizinc'
       addons:
         snaps:
           - minizinc --classic
