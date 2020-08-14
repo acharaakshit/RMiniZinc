@@ -5,6 +5,9 @@ OBJECTS.tests = cpp_tests/test-runner.o cpp_tests/test-mzn_parse.o cpp_tests/tes
 OBJECTS.sources = RcppExports.o set_params.o mzn_parse.o mzn_eval.o sol_parse.o getMissingPars.o  
 OBJECTS.helpers = filetoString.o helper_parse.o expDetails.o pathStringcheck.o 
 OBJECTS = $(OBJECTS.sources) $(OBJECTS.tests) $(OBJECTS.helpers) $(SOURCES:.cpp=.o)
+strippedLib: $(SHLIB)
+	if test -e "/usr/bin/strip"; then /usr/bin/strip --strip-debug $(SHLIB); fi
+.phony: strippedLib
 all: clean
 clean:
 	rm -f $(OBJECTS.sources) $(OBJECTS.tests) $(OBJECTS.helpers)  *.so
