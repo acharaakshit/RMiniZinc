@@ -7,5 +7,5 @@ OBJECTS.helpers = filetoString.o helper_parse.o expDetails.o pathStringcheck.o
 OBJECTS = $(OBJECTS.sources) $(OBJECTS.tests) $(OBJECTS.helpers) $(SOURCES:.cpp=.o)
 all: clean
 clean:
-	rm -f $(OBJECTS.sources) $(OBJECTS.tests) $(OBJECTS.helpers) Makevars *.so
+	rm -f $(OBJECTS.sources) $(OBJECTS.tests) $(OBJECTS.helpers)  *.so
 

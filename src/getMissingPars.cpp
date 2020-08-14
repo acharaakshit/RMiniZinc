@@ -1,6 +1,5 @@
-#include <Rcpp.h>
 #include "helper_parse.h"
-#include "filetoString.h"
+#include "pathStringcheck.h"
 
 using namespace Rcpp;
 using namespace std;
@@ -16,24 +15,20 @@ using namespace MiniZinc;
 //' @param modelString the string representation of a MiniZinc model
 //' @param mznpath the path of the MiniZinc model mzn file
 //' @param modelStringName the custom name of the mzn string
+//' @param includePath path of the included mzn in the model if it exists.
 // [[Rcpp::export]]
-Rcpp::CharacterVector getMissingPars(std::string modelString="",
-                                     std::string mznpath="",
-                                     std::string modelStringName="missing_pars.mzn"){
-  if(modelString.empty() && mznpath.empty()){
-    Rcpp::stop("PROVIDE EITHER modelString OR mznfilename");
-  }else if(!modelString.empty() && !mznpath.empty()){
-    Rcpp::stop("PROVIDE ONLY ONE OF modelString OR mznfilename");
-  }else if(mznpath.length()){
-    // check file extension
-    if(!(mznpath.substr(mznpath.find_last_of(".") + 1) == "mzn" ))
-      Rcpp::stop("file extention is not mzn");
-    //convert to string 
-    modelString = filetoString(mznpath);
+Rcpp::CharacterVector getMissingPars(std::string modelString = "",
+                                     std::string mznpath = "",
+                                     std::string modelStringName = "missing_pars.h",
+                                     Nullable<std::vector<std::string>> includePath = R_NilValue){
+  
+  modelString  = pathStringcheck(modelString, mznpath);
+  vector<string> ip;
+  if(!Rf_isNull(includePath)){
+    ip = Rcpp::as<vector<string>>(includePath);
   }
-  
-  Model *model = helper_parse(modelString, modelStringName);  
-  
+  Model *model = helper_parse(modelString, modelStringName, ip);  
+
   CharacterVector missingPars;
   NumericVector indexPars;
   vector<Item*> items;

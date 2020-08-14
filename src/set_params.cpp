@@ -1,4 +1,3 @@
-#include <Rcpp.h>
 #include <fstream>
 #include <minizinc/prettyprinter.hh>
 #include "pathStringcheck.h"
@@ -21,12 +20,19 @@ using namespace MiniZinc;
 //' @param modelString string representation of the MiniZinc model
 //' @param mznpath path of the mzn file to read the model
 //' @param modify_mzn if the user wants to modify the mzn parameters.
+//' @param includePath path of the included mzn in the model if it exists.
 // [[Rcpp::export]]
 std::string set_params(List modData, std::string modelString = "",
-                       std::string mznpath = "", bool modify_mzn = false) {
+                       std::string mznpath = "", bool modify_mzn = false,
+                       Nullable<std::vector<std::string>> includePath = R_NilValue) {
+  
   
   modelString  = pathStringcheck(modelString, mznpath);
-  Model *model = helper_parse(modelString,  "set_params.mzn");
+  vector<string> ip;
+  if(!Rf_isNull(includePath)){
+    ip = Rcpp::as<vector<string>>(includePath);
+  }
+  Model *model = helper_parse(modelString, "set_params.mzn", ip);  
   
   vector<Item*> items;
   NumericVector nameIndexMap; 

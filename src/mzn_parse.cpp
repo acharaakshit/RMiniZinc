@@ -1,4 +1,3 @@
-#include <Rcpp.h>
 #include <minizinc/ast.hh>
 #include <minizinc/hash.hh>
 #include <minizinc/prettyprinter.hh>
@@ -10,26 +9,31 @@ using namespace Rcpp;
 using namespace std;
 using namespace MiniZinc;
 
-using namespace Rcpp;
-
 //' @title MiniZinc syntax parser
 //' 
 //' @description parses the MiniZinc syntax into R objects
 //'
 //' @importFrom Rcpp sourceCpp
+//' @import rprojroot
 //' @export mzn_parse
 //' @useDynLib rminizinc, .registration=TRUE
 //' @param modelString string representation of the MiniZinc model.
 //' @param mznpath the path of model mzn.
 //' @param modelStringName the name of model string.
+//' @param includePath path of the included mzn in the model if it exists.
 // [[Rcpp::export]]
-List mzn_parse(std::string modelString = "", 
-                      std::string mznpath = "",
-                      std::string  modelStringName = "mzn_parse.mzn"){
+List mzn_parse(std::string modelString = "",
+               std::string mznpath = "",
+               std::string  modelStringName = "mzn_parse.mzn",
+               Nullable<std::vector<std::string>> includePath = R_NilValue){
   
   modelString  = pathStringcheck(modelString, mznpath);
-  Model *model = helper_parse(modelString, modelStringName);
+  vector<string> ip;
+  if(!Rf_isNull(includePath)){
+    ip = Rcpp::as<vector<string>>(includePath);
+  }
   
+  Model *model = helper_parse(modelString, modelStringName, ip);  
   
   // get all the items and the names of all the parameters and map to the item numbers
   vector<Item*> items;
@@ -112,7 +116,7 @@ List mzn_parse(std::string modelString = "",
         slvAnns.names() = anms;
         slvDetails.push_back(slvAnns);
         slvnms.push_back("ANNOTATION");
-     }
+      }
       slvDetails.names() = slvnms;
       objective.push_back(objectiv);
       objnms.push_back("OBJECTIVE");
@@ -148,7 +152,7 @@ List mzn_parse(std::string modelString = "",
         fnDets.push_back("predicate");
         fnDetnms.push_back("FUNCTION_PREFIX");
       }
-    
+      
       if(!fi->ann().isEmpty()){
         List fnAnns;
         CharacterVector anms;
@@ -180,7 +184,7 @@ List mzn_parse(std::string modelString = "",
         fplnms.push_back("NAME");
         fnParList.push_back(vType(pe->type()));
         fplnms.push_back("TYPE");
-      
+        
         Expression *dExp = pe->ti()->domain();
         if(dExp!=NULL){
           List varDomain;
@@ -339,5 +343,3 @@ List mzn_parse(std::string modelString = "",
   retVal.names() = retValNames;
   return retVal;
 }
-
-

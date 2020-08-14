@@ -4,7 +4,12 @@
 \alias{mzn_parse}
 \title{MiniZinc syntax parser}
 \usage{
-mzn_parse(modelString = "", mznpath = "", modelStringName = "mzn_parse.mzn")
+mzn_parse(
+  modelString = "",
+  mznpath = "",
+  modelStringName = "mzn_parse.mzn",
+  includePath = NULL
+)
 }
 \arguments{
 \item{modelString}{string representation of the MiniZinc model.}
@@ -12,6 +17,8 @@ mzn_parse(modelString = "", mznpath = "", modelStringName = "mzn_parse.mzn")
 \item{mznpath}{the path of model mzn.}
 
 \item{modelStringName}{the name of model string.}
+
+\item{includePath}{path of the included mzn in the model if it exists.}
 }
 \description{
 parses the MiniZinc syntax into R objects

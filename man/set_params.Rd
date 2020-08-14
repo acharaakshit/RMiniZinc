@@ -4,7 +4,13 @@
 \alias{set_params}
 \title{assign the missing parameters to the model}
 \usage{
-set_params(modData, modelString = "", mznpath = "", modify_mzn = FALSE)
+set_params(
+  modData,
+  modelString = "",
+  mznpath = "",
+  modify_mzn = FALSE,
+  includePath = NULL
+)
 }
 \arguments{
 \item{modData}{list containing the parameter values.}
@@ -14,6 +20,8 @@ set_params(modData, modelString = "", mznpath = "", modify_mzn = FALSE)
 \item{mznpath}{path of the mzn file to read the model}
 
 \item{modify_mzn}{if the user wants to modify the mzn parameters.}
+
+\item{includePath}{path of the included mzn in the model if it exists.}
 }
 \description{
 assign the missing parameters to the model

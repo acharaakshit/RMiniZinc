@@ -24,8 +24,9 @@ filetoString <- function(filepath) {
 #' @param modelString the string representation of a MiniZinc model
 #' @param mznpath the path of the MiniZinc model mzn file
 #' @param modelStringName the custom name of the mzn string
-getMissingPars <- function(modelString = "", mznpath = "", modelStringName = "missing_pars.mzn") {
-    .Call(`_rminizinc_getMissingPars`, modelString, mznpath, modelStringName)
+#' @param includePath path of the included mzn in the model if it exists.
+getMissingPars <- function(modelString = "", mznpath = "", modelStringName = "missing_pars.h", includePath = NULL) {
+    .Call(`_rminizinc_getMissingPars`, modelString, mznpath, modelStringName, includePath)
 }
 
 #' @title MiniZinc model evaluation
@@ -50,13 +51,15 @@ mzn_eval <- function(solver, libpath, modelString = "", mznpath = "", dznpath = 
 #' @description parses the MiniZinc syntax into R objects
 #'
 #' @importFrom Rcpp sourceCpp
+#' @import rprojroot
 #' @export mzn_parse
 #' @useDynLib rminizinc, .registration=TRUE
 #' @param modelString string representation of the MiniZinc model.
 #' @param mznpath the path of model mzn.
 #' @param modelStringName the name of model string.
-mzn_parse <- function(modelString = "", mznpath = "", modelStringName = "mzn_parse.mzn") {
-    .Call(`_rminizinc_mzn_parse`, modelString, mznpath, modelStringName)
+#' @param includePath path of the included mzn in the model if it exists.
+mzn_parse <- function(modelString = "", mznpath = "", modelStringName = "mzn_parse.mzn", includePath = NULL) {
+    .Call(`_rminizinc_mzn_parse`, modelString, mznpath, modelStringName, includePath)
 }
 
 #' @title assign the missing parameters to the model
@@ -71,8 +74,9 @@ mzn_parse <- function(modelString = "", mznpath = "", modelStringName = "mzn_par
 #' @param modelString string representation of the MiniZinc model
 #' @param mznpath path of the mzn file to read the model
 #' @param modify_mzn if the user wants to modify the mzn parameters.
-set_params <- function(modData, modelString = "", mznpath = "", modify_mzn = FALSE) {
-    .Call(`_rminizinc_set_params`, modData, modelString, mznpath, modify_mzn)
+#' @param includePath path of the included mzn in the model if it exists.
+set_params <- function(modData, modelString = "", mznpath = "", modify_mzn = FALSE, includePath = NULL) {
+    .Call(`_rminizinc_set_params`, modData, modelString, mznpath, modify_mzn, includePath)
 }
 
 #' @title parse the solution

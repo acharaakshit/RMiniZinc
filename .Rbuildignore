@@ -8,4 +8,5 @@ LICENSE
 ^aclocal.m4$
 \.o$
 \.so$
-
+.dll$
+Makevars$

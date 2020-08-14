@@ -7,7 +7,8 @@
 getMissingPars(
   modelString = "",
   mznpath = "",
-  modelStringName = "missing_pars.mzn"
+  modelStringName = "missing_pars.h",
+  includePath = NULL
 )
 }
 \arguments{
@@ -16,6 +17,8 @@ getMissingPars(
 \item{mznpath}{the path of the MiniZinc model mzn file}
 
 \item{modelStringName}{the custom name of the mzn string}
+
+\item{includePath}{path of the included mzn in the model if it exists.}
 }
 \description{
 get the names of missing parameters in a model
