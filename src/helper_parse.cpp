@@ -39,45 +39,12 @@ MiniZinc::Model* helper_parse(std::string modelString, std::string modelStringNa
   vector<SyntaxError> se;
   Model *model;
   
-  char* path = getenv("PWD");
-  string Path = (string) path;
-  string mznpath;
-  static const size_t npos = -1;
-  size_t slash = Path.find_last_of("/");
-  string dirPath = (slash != npos) ? Path.substr(0, slash) : Path;  
-  if(dirPath.find("rminizinc.Rcheck") != npos){
-    
-    slash = dirPath.find_last_of("/");
-    dirPath = (slash != npos) ? dirPath.substr(0, slash) : dirPath;
-    string dest = dirPath;
-    cout << dest << " dest" << endl;
-    if(dirPath.find("RMiniZinc") != npos){
-      // for travis
-      Path = dest;
-    }else{
-      // for R CMD CHECK
-      Path = dest.append("/RMiniZinc"); 
-    }
-    cout << Path << " P" << endl;
-  }else{
-    Rcpp::Environment rprojroot("package:rprojroot");
-    Rcpp::Function get_makevarspath = rprojroot["find_package_root_file"];
-    Path = Rcpp::as<string>(get_makevarspath());
-  }
-  Path.append("/src/Makevars");
-  cout << Path << " Final Path" << endl;
-  // check if Makevars exists
-  ifstream mkvrs(Path);
-  if(mkvrs.fail()){
-    Rcpp::stop("could't find Makevars"); 
-  }
-  
-  std::string mk;
+  Rcpp::Environment utils("package:utils");
+  Rcpp::Function utils_cpp = utils["data"];  
+  utils_cpp("config");
+  std::string mk =  Rcpp::as<string>(Environment::global_env()["pkg_flags"]);
   mk.reserve(50);    
-  for(int i = 0; i < 2; ++i)
-    getline(mkvrs, mk);
 
-  std::getline(mkvrs, mk);
   size_t start = mk.find("-L");
   size_t end = mk.find("libminizinc", start);
   string sub = mk.substr(start + 2, end - start - 2);
