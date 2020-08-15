@@ -14,7 +14,6 @@ using namespace MiniZinc;
 //' @description parses the MiniZinc syntax into R objects
 //'
 //' @importFrom Rcpp sourceCpp
-//' @import rprojroot
 //' @export mzn_parse
 //' @useDynLib rminizinc, .registration=TRUE
 //' @param modelString string representation of the MiniZinc model.
