@@ -30,10 +30,6 @@ jobs:
         - cd;
         - echo $TRAVIS_BUILD_DIR;
         - cd $TRAVIS_BUILD_DIR;
-      script:
-        - R CMD build .
-        - R CMD INSTALL *tar.gz
-        - R CMD check *tar.gz 
       addons:
         snaps:
           - minizinc --classic
