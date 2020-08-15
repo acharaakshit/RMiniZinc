@@ -10,7 +10,7 @@ License: LGPL (>= 2.1)
 Encoding: UTF-8
 LazyData: TRUE
 RoxygenNote: 7.1.1
-Depends: rjson
+Depends: R (>= 3.5.0), rjson
 Imports: R6, checkmate, Rcpp, rlang, rlist
 LinkingTo: Rcpp, testthat
 Suggests: knitr, rmarkdown, testthat, stringr
