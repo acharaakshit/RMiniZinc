@@ -8,9 +8,9 @@ Description: R users can use the package to solve constraint programming problem
     directly, modify existing MiniZinc models and also create their own models.
 License: LGPL (>= 2.1)
 Encoding: UTF-8
-LazyData: true
+LazyData: TRUE
 RoxygenNote: 7.1.1
-Depends: rjson, rprojroot
+Depends: R (>= 3.5.0), rjson
 Imports: R6, checkmate, Rcpp, rlang, rlist
 LinkingTo: Rcpp, testthat
 Suggests: knitr, rmarkdown, testthat, stringr

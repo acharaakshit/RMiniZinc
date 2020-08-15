@@ -6,6 +6,10 @@ jobs:
       language: R
       sudo: required
       before_install:
+        - ls;
+        - ls /home/travis/build/acharaakshit;
+        - ls /home/travis/build/acharaakshit/RMiniZinc;
+        - ls /home/travis/build/acharaakshit/RMiniZinc/src;
         - cd /usr/local/lib;
         - sudo git clone https://github.com/MiniZinc/libminizinc.git; 
         - cd libminizinc/;
