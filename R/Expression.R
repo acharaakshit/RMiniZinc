@@ -34,7 +34,7 @@ Int = R6Class("Int",
                  },
                  #' @description get the MiniZinc representation
                  c_str = function(){
-                   return(as.character(private$.value$v()))
+                   return(format(private$.value$v(), scientific = FALSE))
                  }
                ),
                private = list(
@@ -862,10 +862,7 @@ VarDecl = R6Class("VarDecl",
                       if (self$isVar()){
                         var = "var "  
                       }
-                      if(private$.ti$type()$bt() == "ann"){
-                        #annotation
-                        retStr = sprintf("ann: %s",  private$.id$getId())
-                      }else if(private$.ti$type()$bt() == "unknown"){
+                      if(private$.ti$type()$bt() == "unknown"){
                         # unknown base type -- has a domain
                         if(private$.ti$type()$ndim() == 0 && !private$.ti$type()$isSet()){
                           retStr = sprintf("%s%s: %s", var, private$.ti$getDomain()$c_str(), private$.id$getId()) 
@@ -877,15 +874,15 @@ VarDecl = R6Class("VarDecl",
                           indices = ""
                           for (i in seq(1, length(indList), 1)) {
                             if(is.character(indList[[i]])){
-                              indices = paste0(indices, is.character(indList[[i]]))  
+                              indices = paste0(indices, "int")  
                             }else{
                               indices = paste0(indices, indList[[i]]$c_str()) 
                             }
-                            
                             if(i < length(indList)){
                               indices = paste0(indices, ", ")
                             }
                           }
+                          # print(indices)
                           retStr = sprintf("array[%s] of %s%s: %s", indices, var, 
                                            private$.ti$getDomain()$c_str(), private$.id$getId())
                         } 
@@ -894,8 +891,8 @@ VarDecl = R6Class("VarDecl",
                         if(private$.ti$type()$ndim() == 0 && !private$.ti$type()$isSet()){
                           retStr = sprintf("%s%s: %s", var, private$.ti$type()$bt(), private$.id$getId()) 
                         }else if(private$.ti$type()$isSet()){
-                          retStr = sprintf("set of %s%s: %s",private$.ti$type()$bt(),
-                                           var, private$.id$getId())
+                          retStr = sprintf("set of %s%s: %s", var, private$.ti$type()$bt(),
+                                          private$.id$getId())
                         }else{
                           indList = private$.ti$ranges()
                           indices = ""
@@ -919,6 +916,7 @@ VarDecl = R6Class("VarDecl",
                                            var, bt, private$.id$getId())
                         } 
                       }
+                      
                       if(!is.null(private$.e)){
                         return(sprintf("%s = %s", retStr, private$.e$c_str()))
                       }
