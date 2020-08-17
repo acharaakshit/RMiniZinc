@@ -1,6 +1,3 @@
-# contains variable declarations
-variableItems = c()
-
 #' @title init all classes
 #' @description given the return value of
 #' `mzn_parse()`, it creates a model in R
@@ -10,14 +7,26 @@ variableItems = c()
 #' @param mznParseList list input
 getRModel = function(mznParseList){
   items = c()
-  for (i in seq(1, length(mznParseList), 1)) {
-    item = initItem(mznParseList[i])
-    if(!is.null(item)){
-      items = c(items, initItem(mznParseList[i]))
-    }
+  if(length(mznParseList) == 1 && names(mznParseList) == "ASSIGNMENTS"){
+    stop("Variable declarations should be provided with assignment items")
   }
-  mod = Model$new(items = items)
-  return(mod)
+  for (i in seq(1, length(mznParseList), 1)) {
+      if(names(mznParseList[i]) != "OUTPUT_ITEM"){
+        items = c(items, initItem(mznParseList[i])) 
+      }else{
+        warning("Output items are not supported! Model will be returned without the output item")
+      }
+  }
+  if("variable_r_m_z_n_Items" %in% ls(.GlobalEnv)){
+    rm("variable_r_m_z_n_Items", envir = .GlobalEnv)
+    gc()
+  }
+  if(length(items)){
+    mod = Model$new(items = items)
+    return(mod) 
+  }else{
+    stop("No items found -- did you pass just an Output item and/or model string to parse?")
+  }
 }
 
 #' @title initialize R6 from parsed (not to be exposed)
@@ -30,34 +39,21 @@ initItem = function(parsedList){
   if(is.null(names(parsedList)) || length(names(parsedList)) != 1){
     stop("Supply list as returned by `mzn_parse()`")
   }else if(names(parsedList) == "INCLUDES"){
-    incList = list()
+    incList = c()
     for (i in seq(1, length(parsedList$INCLUDES), 1)) {
-      incList = list.append(incList, IncludeItem$new(name = parsedList$INCLUDES[[i]]$INCLUDED_MZN))
+      incList = c(incList, IncludeItem$new(name = parsedList$INCLUDES[[i]]$INCLUDED_MZN))
     }
     return(incList)
   }else if(names(parsedList) == "VARIABLES"){
     vList = parsedList$VARIABLES
     vItems = c()
     for (i in seq(1, length(vList), 1)) {
-      dets = vList$DETAILS
-      vType = getType(typeStr = vList[[i]]$DETAILS$TYPE, kind = vList[[i]]$DETAILS$KIND )
-      indexList = NULL
-      if(!is.null(vList[[i]]$DETAILS$INDEX)){
-        indexList = list()
-        for(j in seq(1, length(vList[[i]]$DETAILS$INDEX), 1)){
-          if(names(vList[[i]]$DETAILS$INDEX[[j]]) == "UNRESTRICTED"){
-              indexList = list.append(indexList, "int") 
-          }else{
-            indexList = list.append(indexList, initExpression(vList[[i]]$DETAILS$INDEX[[j]])) 
-          }
-        }
-      }
-      ti = TypeInst$new(type = vType, domain = initExpression(vList[[i]]$DETAILS$DOMAIN), 
-                        indexExprVec = indexList)
-      variableItems = vItems
+      ti = initExpression(vList[[i]]$DETAILS["TYPE_INST"])
       vItems = c(vItems, VarDeclItem$new(decl = VarDecl$new(name =  vList[[i]]$DETAILS$NAME, type_inst = ti,
                                                             value = initExpression(vList[[i]]$DETAILS$VALUE))))
     }
+    variable_r_m_z_n_Items <<- c()
+    variable_r_m_z_n_Items <<- vItems
     return(vItems)
   }else if(names(parsedList) == "CONSTRAINTS"){
     cList = parsedList$CONSTRAINTS
@@ -75,13 +71,28 @@ initItem = function(parsedList){
     exp = initExpression(pList = parsedList$SOLVE_TYPE$DETAILS$EXPRESSION)
     return(SolveItem$new(solve_type = sit$OBJECTIVE, e = exp, ann = ann))
   }else if(names(parsedList) == "FUNCTION_ITEMS"){
-    
+    fnList = c()
+    for(i in seq(1, length(parsedList$FUNCTION_ITEMS), 1)){
+      v_decls = c()
+      vDecls = parsedList$FUNCTION_ITEMS[[i]]$DETAILS$DECLARATIONS
+      for (j in seq(1, length(vDecls), 1)) {
+        ti = initExpression(vDecls[[j]]["TYPE_INST"])
+        v_decls = c(v_decls, VarDecl$new(name = vDecls[[j]]$NAME, type_inst = ti,
+                                         value = vDecls[[j]]$VALUE))
+      }
+      fnList = c(fnList, FunctionItem$new(name = parsedList$FUNCTION_ITEMS[[i]]$FUNCTION_NAME,
+                                          decls = v_decls, 
+                                          rt = initExpression(parsedList$FUNCTION_ITEMS[[i]]$DETAILS["TYPE_INST"]), 
+                                          body = initExpression(parsedList$FUNCTION_ITEMS[[i]]$DETAILS$EXPRESSION),
+                                          ann = initExpression(parsedList$FUNCTION_ITEMS[[i]]$DETAILS["ANNOTATION"])))
+    }
+    return(fnList)
   }else if(names(parsedList) == "ASSIGNMENTS"){
     assignList = c()
     for (i in seq(1, length(parsedList$ASSIGNMENTS), 1)) {
-      for (j in seq(1, length(variableItems), 1)) {
-        if(variableItems[[j]]$e()$id()$getId() == parsedList$ASSIGNMENTS[[i]]$NAME){
-          aItem  = AssignItem$new(decl = variableItems[[j]]$e(), 
+      for (j in seq(1, length(variable_r_m_z_n_Items), 1)) {
+        if(variable_r_m_z_n_Items[[j]]$getDecl()$id()$getId() == parsedList$ASSIGNMENTS[[i]]$NAME){
+          aItem  = AssignItem$new(decl = variable_r_m_z_n_Items[[j]]$getDecl(), 
                                   value = initExpression(parsedList$ASSIGNMENTS[[i]]$VALUE))
         }
       }
@@ -90,11 +101,8 @@ initItem = function(parsedList){
     return(assignList)
   }else if(names(parsedList) == "MODEL_STRING"){
     # do nothing
-  }else if(names(parsedList) == "OUTPUT_ITEM"){
-    warning("model will be created without output item (formatting)!")
-    return(NULL)
   }else{
-    stop("Not supported yet")
+    stop("Incorrect named list passed: Please provide the list returned by mzn_parse()")
   }
 }
 
@@ -110,7 +118,7 @@ initItem = function(parsedList){
 #' @import rlist
 #' @param pList list from mzn_parse to initialise objects
 initExpression = function(pList){
-  if(is.null(names(pList))){
+  if(is.null(pList) || is.na(names(pList)) || is.null(names(pList))){
     #warning("NULL argument")
     return(NULL)
   }else if(names(pList) == "INT"){
@@ -180,25 +188,6 @@ initExpression = function(pList){
     st = pList$COMPREHENSION$IS_SET
     return(Comprehension$new(generators = genList, set = st,
                              body = initExpression(pList$COMPREHENSION$EXPRESSION)))
-  }else if(names(pList) == "VARIABLE_DECLARATION"){
-    indexList = NULL
-    if(!is.null(pList$VARIABLE_DECLARATION$INDEX)){
-      indexList = list()
-      for(j in seq(1, length(pList$VARIABLE_DECLARATION$INDEX), 1)){
-        if(names(pList$VARIABLE_DECLARATION$INDEX[[j]]) == "UNRESTRICTED"){
-          indexList = list.append(indexList, "int") 
-        }else{
-          indexList = list.append(indexList, initExpression(pList$VARIABLE_DECLARATION$INDEX[[j]]))
-        }
-      } 
-    }
-    ti = TypeInst$new(type = getType(pList$VARIABLE_DECLARATION$TYPE,
-                                 kind = pList$VARIABLE_DECLARATION$KIND), 
-                      domain = initExpression(pList$VARIABLE_DECLARATION$DOMAIN),
-                      indexExprVec = indexList)
-    
-    return(VarDecl$new(name =  pList$VARIABLE_DECLARATION$NAME, type_inst = ti,
-                        value = initExpression(pList$VARIABLE_DECLARATION$VALUE)))
   }else if(names(pList) == "LET"){
     letList = list()
     for(i in seq(1, length(pList$LET$LET_EXPRESSION), 1)){
@@ -228,6 +217,28 @@ initExpression = function(pList){
       thenList = list.append(thenList, initExpression(pList$IF_THEN_ELSE$THEN[[i]]))
     }
     return(Ite$new(ifs = ifList, thens = thenList, Else = initExpression(pList$IF_THEN_ELSE$ELSE)))
+  }else if(names(pList) == "VARIABLE_DECLARATION"){
+    
+    ti = initExpression(pList$VARIABLE_DECLARATION["TYPE_INST"])
+    
+    return(VarDecl$new(name =  pList$VARIABLE_DECLARATION$NAME, type_inst = ti,
+                       value = initExpression(pList$VARIABLE_DECLARATION$VALUE)))
+  }else if(names(pList) == "TYPE_INST"){
+    indexList = NULL
+    if(!is.null(pList$TYPE_INST$INDEX)){
+      indexList = list()
+      for(j in seq(1, length(pList$TYPE_INST$INDEX), 1)){
+        if(names(pList$TYPE_INST$INDEX[[j]]) == "UNRESTRICTED"){
+          indexList = list.append(indexList, "int") 
+        }else{
+          indexList = list.append(indexList, initExpression(pList$TYPE_INST$INDEX[[j]]))
+        }
+      } 
+    }
+    return(TypeInst$new(type = getType(pList$TYPE_INST$TYPE,
+                                     kind = pList$TYPE_INST$KIND), 
+                      domain = initExpression(pList$TYPE_INST$DOMAIN),
+                      indexExprVec = indexList))
   }else{
     print(names(pList))
     stop("not supported!")
@@ -239,12 +250,13 @@ initExpression = function(pList){
 #' @param typeStr type string returned by `parse_mzn()`.
 #' @param kind par or var
 getType = function(typeStr, kind){
-  if(typeStr == "annotation"){
-    return(Type$new(base_type = "ann", kind =  kind))
-  }else if(typeStr %in% c("int", "float", "bool", "string")){
-    return(Type$new(base_type = typeStr, kind =  kind))
+  if(typeStr == "unknown"){
+    print("Mujhe koi nahi jaanta")
+  }
+  if(typeStr %in% c("int", "float", "bool", "string", "unknown", "ann")){
+    return(Type$new(base_type = typeStr, kind = kind))
   }else if(typeStr == "set of int"){
-    Type$new(base_type = "int", kind = kind,set_type = TRUE)
+    Type$new(base_type = "int", kind = kind, set_type = TRUE)
   }else if(typeStr == "set of float"){
     return(Type$new(base_type = "float", kind = kind, set_type = TRUE))
   }else if(typeStr == "set of bool"){
