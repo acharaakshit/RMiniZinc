@@ -7,7 +7,7 @@ OBJECTS.helpers=filetoString.o helper_parse.o expDetails.o pathStringcheck.o
 OBJECTS=$(OBJECTS.sources) $(OBJECTS.tests) $(OBJECTS.helpers) $(SOURCES:.cpp=.o)
 strippedLib: clean $(SHLIB)
 	if test -e "/usr/bin/strip"; then /usr/bin/strip --strip-debug $(SHLIB); fi
-	$(R_HOME)/bin/Rscript -e "pkg_flags <- '@MZN_LIBS@'; save(pkg_flags,file='../data/config.RData')"
+	$(R_HOME)/bin/Rscript -e "LIBMINIZINC_PATH <- '@MZN_LIBS@'; save(LIBMINIZINC_PATH, file='../data/config.RData')"
 clean:
 	rm -f $(OBJECTS) Makevars *.so
 .phony: strippedLib clean

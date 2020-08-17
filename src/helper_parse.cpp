@@ -42,7 +42,7 @@ MiniZinc::Model* helper_parse(std::string modelString, std::string modelStringNa
   Rcpp::Environment utils("package:utils");
   Rcpp::Function utils_cpp = utils["data"];  
   utils_cpp("config");
-  std::string mk =  Rcpp::as<string>(Environment::global_env()["pkg_flags"]);
+  std::string mk =  Rcpp::as<string>(Environment::global_env()["LIBMINIZINC_PATH"]);
   mk.reserve(50);    
 
   size_t start = mk.find("-L");
