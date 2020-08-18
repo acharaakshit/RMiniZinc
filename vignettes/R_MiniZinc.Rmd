@@ -241,8 +241,8 @@ Each parent has different properties that define it's structure. The properties 
 *Description*: `UNARY_OPERATOR` are the unary operators in MiniZinc and `ARGUMENTS` contain a list of expressions.
 
 *Name*: `VARIABLE_DECLARATION`  
-*Components*: `NAME`, `KIND`, `TYPE`, `DOMAIN` and `VALUE`  
-*Description*: `NAME`, `KIND` and `TYPE` are strings representing the name, kind and type of the variable and `DOMAIN` and `VALUE` are expressions representing domain and value of the variable declaration.
+*Components*: `NAME`, `TYPE_INST` (`KIND`, `TYPE`, `DOMAIN`, `INDEX`) and `VALUE`  
+*Description*: `NAME`, `KIND` and `TYPE` are strings representing the name, kind and type of the variable and `DOMAIN` and `VALUE` are expressions representing domain and value of the variable declaration. `TYPE_INST` contains the `KIND`, `TYPE`, `DOMAIN` and `INDEX`.
 
 *Name*: `ARRAY_ACCESS`   
 *Components*: `NAME` and `ARGUMENTS`   
@@ -346,5 +346,6 @@ print(solObj$SOLUTIONS)
 ```
 
 The next step is to allow the users to modify a MiniZinc model using the R6 objects which will be demonstrated soon.
+
 
 
