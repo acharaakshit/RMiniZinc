@@ -133,7 +133,7 @@ print(solObj$SOLUTIONS)
 mzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/production_planning/prod_plan_0.mzn")
 
 # parse the model
-parseObj=rminizinc:::mzn_parse(mznpath = mzn_path)
+parseObj = rminizinc:::mzn_parse(mznpath = mzn_path)
 
 modString = getRModel(parseObj)$mzn_string()
 

@@ -25,8 +25,8 @@ test_that("jobshop problems are solved without issues",{
   for(i in seq(1, nVars, 1)){
     nDecl = as.symbol(paste0("DECL",i))
     v = c(v, parseInfo$VARIABLES[[nDecl]][["DETAILS"]][["NAME"]])
-    k = c(k , parseInfo$VARIABLES[[nDecl]][["DETAILS"]][["KIND"]])
-    t = c(t, parseInfo$VARIABLES[[nDecl]][["DETAILS"]][["TYPE"]])
+    k = c(k , parseInfo$VARIABLES[[nDecl]][["DETAILS"]][["TYPE_INST"]][["KIND"]])
+    t = c(t, parseInfo$VARIABLES[[nDecl]][["DETAILS"]][["TYPE_INST"]][["TYPE"]])
   }
   expect_equal(v, c("n", "JOB", "m", "MACH", "TASK", "d", "mc", "maxt", "s", "makespan"))
   expect_equal(k, c("par", "par", "par", "par", "par", "par", "par",
@@ -73,8 +73,8 @@ test_that("production planning problems are solved",{
   for(i in seq(1, nVars, 1)){
     nDecl = as.symbol(paste0("DECL",i))
     v = c(v, parseInfo$VARIABLES[[nDecl]][["DETAILS"]][["NAME"]])
-    k = c(k , parseInfo$VARIABLES[[nDecl]][["DETAILS"]][["KIND"]])
-    t = c(t, parseInfo$VARIABLES[[nDecl]][["DETAILS"]][["TYPE"]])
+    k = c(k , parseInfo$VARIABLES[[nDecl]][["DETAILS"]][["TYPE_INST"]][["KIND"]])
+    t = c(t, parseInfo$VARIABLES[[nDecl]][["DETAILS"]][["TYPE_INST"]][["TYPE"]])
   }
   
   expect_equal(v, c("nproducts", "Products", "profit", "pname", "nresources",
@@ -140,8 +140,8 @@ test_that("assignment problems can be solved", {
   for(i in seq(1, nVars, 1)){
     nDecl = as.symbol(paste0("DECL",i))
     v = c(v, parseInfo$VARIABLES[[nDecl]][["DETAILS"]][["NAME"]])
-    k = c(k , parseInfo$VARIABLES[[nDecl]][["DETAILS"]][["KIND"]])
-    t = c(t, parseInfo$VARIABLES[[nDecl]][["DETAILS"]][["TYPE"]])
+    k = c(k , parseInfo$VARIABLES[[nDecl]][["DETAILS"]][["TYPE_INST"]][["KIND"]])
+    t = c(t, parseInfo$VARIABLES[[nDecl]][["DETAILS"]][["TYPE_INST"]][["TYPE"]])
   }
   expect_equal(v, c("n", "DOM", "m", "COD", "profit", "task", "worker"))
   expect_equal(k, c("par", "par", "par", "par", "par",
@@ -189,8 +189,8 @@ test_that("crazy set problems can be solved", {
   for(i in seq(1, nVars, 1)){
     nDecl = as.symbol(paste0("DECL",i))
     v = c(v, parseInfo$VARIABLES[[nDecl]][["DETAILS"]][["NAME"]])
-    k = c(k , parseInfo$VARIABLES[[nDecl]][["DETAILS"]][["KIND"]])
-    t = c(t, parseInfo$VARIABLES[[nDecl]][["DETAILS"]][["TYPE"]])
+    k = c(k , parseInfo$VARIABLES[[nDecl]][["DETAILS"]][["TYPE_INST"]][["KIND"]])
+    t = c(t, parseInfo$VARIABLES[[nDecl]][["DETAILS"]][["TYPE_INST"]][["TYPE"]])
   }
   expect_equal(v,c("n", "NUMBER", "c", "m", "s", "x"))
   expect_equal(k, c("par", "par", "par", "par", "var",
@@ -200,16 +200,16 @@ test_that("crazy set problems can be solved", {
   expect_equal(parseInfo$CONSTRAINTS$CONSTRAINT1$DETAILS$FUNCTION_CALL$NAME, "forall")
   
   expect_equal(parseInfo$CONSTRAINTS$CONSTRAINT1$DETAILS$FUNCTION_CALL$ARGUMENTS$ARG1$COMPREHENSION$GENERATORS$GENERATOR1$DECLARATIONS$DECL1$VARIABLE_DECLARATION$NAME, "i")
-  expect_equal(parseInfo$CONSTRAINTS$CONSTRAINT1$DETAILS$FUNCTION_CALL$ARGUMENTS$ARG1$COMPREHENSION$GENERATORS$GENERATOR1$DECLARATIONS$DECL1$VARIABLE_DECLARATION$KIND, "par")
-  expect_equal(parseInfo$CONSTRAINTS$CONSTRAINT1$DETAILS$FUNCTION_CALL$ARGUMENTS$ARG1$COMPREHENSION$GENERATORS$GENERATOR1$DECLARATIONS$DECL1$VARIABLE_DECLARATION$TYPE, "int")
+  expect_equal(parseInfo$CONSTRAINTS$CONSTRAINT1$DETAILS$FUNCTION_CALL$ARGUMENTS$ARG1$COMPREHENSION$GENERATORS$GENERATOR1$DECLARATIONS$DECL1$VARIABLE_DECLARATION$TYPE_INST$KIND, "par")
+  expect_equal(parseInfo$CONSTRAINTS$CONSTRAINT1$DETAILS$FUNCTION_CALL$ARGUMENTS$ARG1$COMPREHENSION$GENERATORS$GENERATOR1$DECLARATIONS$DECL1$VARIABLE_DECLARATION$TYPE_INST$TYPE, "int")
   
   expect_equal(parseInfo$CONSTRAINTS$CONSTRAINT1$DETAILS$FUNCTION_CALL$ARGUMENTS$ARG1$COMPREHENSION$GENERATORS$GENERATOR1$DECLARATIONS$DECL2$VARIABLE_DECLARATION$NAME, "j")
-  expect_equal(parseInfo$CONSTRAINTS$CONSTRAINT1$DETAILS$FUNCTION_CALL$ARGUMENTS$ARG1$COMPREHENSION$GENERATORS$GENERATOR1$DECLARATIONS$DECL2$VARIABLE_DECLARATION$KIND, "par")
-  expect_equal(parseInfo$CONSTRAINTS$CONSTRAINT1$DETAILS$FUNCTION_CALL$ARGUMENTS$ARG1$COMPREHENSION$GENERATORS$GENERATOR1$DECLARATIONS$DECL2$VARIABLE_DECLARATION$TYPE, "int")
+  expect_equal(parseInfo$CONSTRAINTS$CONSTRAINT1$DETAILS$FUNCTION_CALL$ARGUMENTS$ARG1$COMPREHENSION$GENERATORS$GENERATOR1$DECLARATIONS$DECL2$VARIABLE_DECLARATION$TYPE_INST$KIND, "par")
+  expect_equal(parseInfo$CONSTRAINTS$CONSTRAINT1$DETAILS$FUNCTION_CALL$ARGUMENTS$ARG1$COMPREHENSION$GENERATORS$GENERATOR1$DECLARATIONS$DECL2$VARIABLE_DECLARATION$TYPE_INST$TYPE, "int")
   
   expect_equal(parseInfo$CONSTRAINTS$CONSTRAINT1$DETAILS$FUNCTION_CALL$ARGUMENTS$ARG1$COMPREHENSION$GENERATORS$GENERATOR1$DECLARATIONS$DECL3$VARIABLE_DECLARATION$NAME, "k")
-  expect_equal(parseInfo$CONSTRAINTS$CONSTRAINT1$DETAILS$FUNCTION_CALL$ARGUMENTS$ARG1$COMPREHENSION$GENERATORS$GENERATOR1$DECLARATIONS$DECL3$VARIABLE_DECLARATION$KIND, "par")
-  expect_equal(parseInfo$CONSTRAINTS$CONSTRAINT1$DETAILS$FUNCTION_CALL$ARGUMENTS$ARG1$COMPREHENSION$GENERATORS$GENERATOR1$DECLARATIONS$DECL3$VARIABLE_DECLARATION$TYPE, "int")
+  expect_equal(parseInfo$CONSTRAINTS$CONSTRAINT1$DETAILS$FUNCTION_CALL$ARGUMENTS$ARG1$COMPREHENSION$GENERATORS$GENERATOR1$DECLARATIONS$DECL3$VARIABLE_DECLARATION$TYPE_INST$KIND, "par")
+  expect_equal(parseInfo$CONSTRAINTS$CONSTRAINT1$DETAILS$FUNCTION_CALL$ARGUMENTS$ARG1$COMPREHENSION$GENERATORS$GENERATOR1$DECLARATIONS$DECL3$VARIABLE_DECLARATION$TYPE_INST$TYPE, "int")
   
   expect_equal(parseInfo$CONSTRAINTS$CONSTRAINT1$DETAILS$FUNCTION_CALL$ARGUMENTS$ARG1$COMPREHENSION$GENERATORS$GENERATOR1$IN$BINARY_OPERATION$LHS$INT, 1)
   expect_equal(parseInfo$CONSTRAINTS$CONSTRAINT1$DETAILS$FUNCTION_CALL$ARGUMENTS$ARG1$COMPREHENSION$GENERATORS$GENERATOR1$IN$BINARY_OPERATION$BINARY_OPERATOR, "'..'")
