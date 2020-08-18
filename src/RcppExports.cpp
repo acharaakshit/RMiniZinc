@@ -20,8 +20,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // mzn_eval
-List mzn_eval(std::string solver, std::string libpath, std::string modelString, std::string mznpath, std::string dznpath, bool all_solutions);
-RcppExport SEXP _rminizinc_mzn_eval(SEXP solverSEXP, SEXP libpathSEXP, SEXP modelStringSEXP, SEXP mznpathSEXP, SEXP dznpathSEXP, SEXP all_solutionsSEXP) {
+List mzn_eval(std::string solver, std::string libpath, std::string modelString, std::string mznpath, std::string dznpath, bool all_solutions, int time_limit);
+RcppExport SEXP _rminizinc_mzn_eval(SEXP solverSEXP, SEXP libpathSEXP, SEXP modelStringSEXP, SEXP mznpathSEXP, SEXP dznpathSEXP, SEXP all_solutionsSEXP, SEXP time_limitSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -31,7 +31,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< std::string >::type mznpath(mznpathSEXP);
     Rcpp::traits::input_parameter< std::string >::type dznpath(dznpathSEXP);
     Rcpp::traits::input_parameter< bool >::type all_solutions(all_solutionsSEXP);
-    rcpp_result_gen = Rcpp::wrap(mzn_eval(solver, libpath, modelString, mznpath, dznpath, all_solutions));
+    Rcpp::traits::input_parameter< int >::type time_limit(time_limitSEXP);
+    rcpp_result_gen = Rcpp::wrap(mzn_eval(solver, libpath, modelString, mznpath, dznpath, all_solutions, time_limit));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -80,7 +81,7 @@ RcppExport SEXP run_testthat_tests();
 
 static const R_CallMethodDef CallEntries[] = {
     {"_rminizinc_getMissingPars", (DL_FUNC) &_rminizinc_getMissingPars, 4},
-    {"_rminizinc_mzn_eval", (DL_FUNC) &_rminizinc_mzn_eval, 6},
+    {"_rminizinc_mzn_eval", (DL_FUNC) &_rminizinc_mzn_eval, 7},
     {"_rminizinc_mzn_parse", (DL_FUNC) &_rminizinc_mzn_parse, 4},
     {"_rminizinc_set_params", (DL_FUNC) &_rminizinc_set_params, 5},
     {"_rminizinc_sol_parse", (DL_FUNC) &_rminizinc_sol_parse, 1},
