@@ -7,6 +7,44 @@ using namespace std;
 using namespace MiniZinc;
 using namespace Rcpp;
 
+
+// convert contents of file to string
+std::string filetoString(std::string filepath) {
+  string modelString;
+  try{
+    ifstream getMzn;
+    getMzn.open(filepath);
+    if (!getMzn)
+      throw std::runtime_error("Could not open file");
+    string content( (std::istreambuf_iterator<char>(getMzn) ),
+                    (std::istreambuf_iterator<char>() ) );
+    modelString = content;
+  }catch(std::exception &e){
+    string errorStr = e.what();
+    errorStr.append(": ");
+    errorStr.append(filepath);
+    Rcpp::stop(errorStr);
+  }
+  if(modelString.empty()) Rcpp::stop("Empty file given");
+  return modelString;
+}
+
+// check if mznpath or model string is passed and take appropriate action
+std::string pathStringcheck(std::string modelString, std::string mznpath){
+  if(modelString.empty() && mznpath.empty()){
+    Rcpp::stop("PROVIDE EITHER modelString OR mznfilename");
+  }else if(!modelString.empty() && !mznpath.empty()){
+    Rcpp::stop("PROVIDE ONLY ONE OF modelString OR mznfilename");
+  }else if(mznpath.length()){
+    // check file extension
+    if(!(mznpath.substr(mznpath.find_last_of(".") + 1) == "mzn" ))
+      Rcpp::stop("file extention is not mzn");
+    //convert to string 
+    modelString = filetoString(mznpath);
+  }
+  return (modelString);
+}
+
 // helper function to check if provided directory path is correct
 int dirExists(const char* const path){
   struct stat info;

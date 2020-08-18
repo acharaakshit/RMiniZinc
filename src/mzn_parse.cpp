@@ -1,7 +1,6 @@
 #include <minizinc/ast.hh>
 #include <minizinc/hash.hh>
 #include <minizinc/prettyprinter.hh>
-#include "pathStringcheck.h"
 #include "helper_parse.h"
 #include "expDetails.h"
 

@@ -5,17 +5,6 @@
 
 using namespace Rcpp;
 
-// filetoString
-std::string filetoString(std::string filepath);
-RcppExport SEXP _rminizinc_filetoString(SEXP filepathSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< std::string >::type filepath(filepathSEXP);
-    rcpp_result_gen = Rcpp::wrap(filetoString(filepath));
-    return rcpp_result_gen;
-END_RCPP
-}
 // getMissingPars
 Rcpp::CharacterVector getMissingPars(std::string modelString, std::string mznpath, std::string modelStringName, Nullable<std::vector<std::string>> includePath);
 RcppExport SEXP _rminizinc_getMissingPars(SEXP modelStringSEXP, SEXP mznpathSEXP, SEXP modelStringNameSEXP, SEXP includePathSEXP) {
@@ -90,7 +79,6 @@ END_RCPP
 RcppExport SEXP run_testthat_tests();
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_rminizinc_filetoString", (DL_FUNC) &_rminizinc_filetoString, 1},
     {"_rminizinc_getMissingPars", (DL_FUNC) &_rminizinc_getMissingPars, 4},
     {"_rminizinc_mzn_eval", (DL_FUNC) &_rminizinc_mzn_eval, 6},
     {"_rminizinc_mzn_parse", (DL_FUNC) &_rminizinc_mzn_parse, 4},

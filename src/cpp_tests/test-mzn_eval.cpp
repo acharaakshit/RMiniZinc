@@ -2,7 +2,7 @@
 #include <Rcpp.h>
 #include <libgen.h>
 #include "../src/mzn_eval.h"
-#include "../src/filetoString.h"
+#include "../src/helper_parse.h"
 
 using namespace Rcpp;
 using namespace std;

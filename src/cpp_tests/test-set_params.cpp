@@ -1,8 +1,8 @@
 #include <testthat.h>
 #include <Rcpp.h>
 #include <libgen.h>
-#include <../src/set_params.h>
-#include "../src/filetoString.h"
+#include "../src/set_params.h"
+#include "../src/helper_parse.h"
 
 using namespace std;
 using namespace Rcpp;
