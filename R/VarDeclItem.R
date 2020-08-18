@@ -1,10 +1,7 @@
 #' @title The variable declaration item
-#' 
 #' @description Declaration items in the model
-#' 
 #' @import R6
 #' @import checkmate
-#' 
 #' @export
 VarDeclItem = R6Class("VarDeclItem",
                       inherit = Item,
@@ -25,6 +22,10 @@ VarDeclItem = R6Class("VarDeclItem",
                           assertR6(e, "VarDecl")
                           private$.decl = e
                         },
+                        #' @description get the identifier object for the variable 
+                        id =  function(){
+                          return(private$.decl$id())
+                        },
                         #' @description set the variable decaration 
                         #' @description convert the declaration to String
                         c_str = function(){
@@ -42,7 +43,7 @@ VarDeclItem = R6Class("VarDeclItem",
                             class(get(i, envir = pf))[1] == "VarDeclItem"
                           })
                           this = ls(pf)[items][sapply(mget(ls(pf)[items], envir = pf),
-                                                       function(x) x$getDeleteFlag())]
+                                                      function(x) x$getDeleteFlag())]
                           rm(list = this, envir = pf)
                           message("VarDeclItem object deleted!")
                         }
@@ -54,5 +55,4 @@ VarDeclItem = R6Class("VarDeclItem",
                         #' @field .delete_flag
                         #' used to delete items
                         .delete_flag = FALSE
-                      )
-                    )
+                      ))
