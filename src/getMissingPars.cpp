@@ -1,5 +1,4 @@
 #include "helper_parse.h"
-#include "pathStringcheck.h"
 
 using namespace Rcpp;
 using namespace std;

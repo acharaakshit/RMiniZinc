@@ -1,7 +1,6 @@
-#include <Rcpp.h>
 #include <minizinc/solver.hh>
 #include "sol_parse.h"
-#include "pathStringcheck.h"
+#include "helper_parse.h"
 
 using namespace std;
 using namespace MiniZinc;

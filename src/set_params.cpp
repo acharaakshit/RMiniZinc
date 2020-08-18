@@ -1,6 +1,5 @@
 #include <fstream>
 #include <minizinc/prettyprinter.hh>
-#include "pathStringcheck.h"
 #include "helper_parse.h"
 
 
