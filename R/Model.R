@@ -130,7 +130,7 @@ AssignItem = R6Class("AssignItem",
                        #' @param value expression to be assigned
                        initialize = function(decl, value){
                          assertR6(decl, "VarDecl")
-                         assertNull(decl$e())
+                         assertNull(decl$value())
                          assertR6(value, "Expression")
                          private$.decl = decl
                          private$.e = value
@@ -141,7 +141,7 @@ AssignItem = R6Class("AssignItem",
                        },
                        #' @description get the value
                        getV = function(){
-                         return(private$.decl$e())
+                         return(private$.e())
                        },
                        #' @description set the value
                        #' @param  val value/expression to be set
@@ -199,25 +199,25 @@ AssignItem = R6Class("AssignItem",
 #' @import checkmate
 #' @export
 FunctionItem = R6Class("FunctionItem",
+                       inherit = Item,
                        public = list(
                          #' @description constructor
                          #' @param name name of the function
-                         #' @param pars parameter declarations
+                         #' @param decls parameter declarations
                          #' @param rt the return type ("bool par", "bool var" or other)
                          #' @param ann annotation
                          #' @param body body of the function
-                         initialize = function(name, pars, rt, ann = NULL, body = NULL){
-                           stop("under development currently")
+                         initialize = function(name, decls, rt, ann = NULL, body = NULL){
                            assertCharacter(name)
                            private$.id = name
-                           assertList(pars, "VarDecl")
-                           for (i in seq(1, length(pars), 1)) {
-                             assertTRUE(pars[[i]]$isPar())
-                           }
+                           assertList(decls, "VarDecl")
+                           private$.decls = decls
                            assertTRUE(testNull(ann) || testR6(ann, "Annotation"))
                            private$.ann = ann
                            assertTRUE(testNull(body) || testR6(body, "Expression"))
                            private$.e = body
+                           assertR6(rt, "TypeInst")
+                           private$.ti = rt
                          },
                          #' @description get the name of the function
                          name = function(){
@@ -234,17 +234,92 @@ FunctionItem = R6Class("FunctionItem",
                          #' @description get if the function is a test, predicate 
                          #' or a function call itself.
                          rtype = function(){
-                           if(private$.rt == "boolPar"){
-                             return("test")
-                           }else if(private$.rt == "boolVar"){
-                             return("predicate")
-                           }else{
-                             return("function")
-                           }
+                           return(private$.rt)
                          },
                          #' @description get the MiniZinc representation
                          c_str = function(){
-                           return(sprintf("%s %s;", private$.ann, private$.e))
+                           v_decls = ''
+                           for(i in seq(1, length(private$.decls), 1)){
+                             v_decls = paste0(v_decls, private$.decls[[i]]$c_str())
+                             if(i < length(private$.decls)){
+                               v_decls = paste0(v_decls, ", ")
+                             }
+                           }
+                           fnPrefix = ''
+                           # set prefix according to type instantiation
+                           if(private$.ti$type()$kind() == "par" && private$.ti$type()$bt() == "bool"){
+                             fnPrefix = 'test'
+                           }else if(private$.ti$type()$kind() == "var" && private$.ti$type()$bt() == "bool"){
+                             fnPrefix = 'predicate'
+                           }else{
+                             # not supported currently
+                             fnPrefix = "function "
+                             var = ''
+                             if(private$.ti$type()$kind() == "var"){
+                                var = "var "
+                             }
+                             
+                             if(private$.ti$type()$bt() == "unknown"){
+                               # unknown base type -- has a domain
+                               if(private$.ti$type()$ndim() == 0 && !private$.ti$type()$isSet()){
+                                 fnPrefix = sprintf("%s %s %s: ", fnPrefix, var, private$.ti$getDomain()$c_str()) 
+                               }else if(private$.ti$type()$isSet()){
+                                 fnPrefix = sprintf("%s %s set of %s: ", fnPrefix, var,
+                                                    private$.ti$getDomain()$c_str())
+                               }else{
+                                 indList = private$.ti$ranges()
+                                 indices = ""
+                                 for (i in seq(1, length(indList), 1)) {
+                                   if(is.character(indList[[i]])){
+                                     indices = paste0(indices, is.character(indList[[i]]))  
+                                   }else{
+                                     indices = paste0(indices, indList[[i]]$c_str()) 
+                                   }
+                                   
+                                   if(i < length(indList)){
+                                     indices = paste0(indices, ", ")
+                                   }
+                                 }
+                                 fnPrefix = sprintf("%s array[%s] of %s%s: ", fnPrefix, indices, var, 
+                                                  private$.ti$getDomain()$c_str())
+                               } 
+                             }else{
+                               # base type known -- domain doesn't exist
+                               if(private$.ti$type()$ndim() == 0 && !private$.ti$type()$isSet()){
+                                 fnPrefix = sprintf("%s %s%s:", fnPrefix, var, private$.ti$type()$bt()) 
+                               }else if(private$.ti$type()$isSet()){
+                                 fnPrefix = sprintf("%s set of %s%s:", fnPrefix, var, private$.ti$type()$bt())
+                               }else{
+                                 indList = private$.ti$ranges()
+                                 indices = ""
+                                 for (i in seq(1, length(indList), 1)) {
+                                   if(is.character(indList[[i]])){
+                                     indices = paste0(indices, "int")  
+                                   }else{
+                                     indices = paste0(indices, indList[[i]]$c_str()) 
+                                   }
+                                   if(i < length(indList)){
+                                     indices = paste0(indices, ", ")
+                                   }
+                                 }
+                                 bt = ''
+                                 if(private$.ti$type()$st()){
+                                   bt = sprintf("set of %s", private$.ti$type()$bt())
+                                 }else{
+                                   bt = private$.ti$type()$bt()
+                                 }
+                                 fnPrefix = sprintf("%s array[%s] of %s%s:", fnPrefix, indices,
+                                                  var, bt)
+                               } 
+                             }
+                           }
+                           
+                           if(testNull(private$.ann)){
+                             return(sprintf("%s %s(%s) = %s;", fnPrefix, private$.id, v_decls,
+                                           private$.e$c_str())) 
+                           }else{
+                             return(sprintf("%s %s %s;", fnPrefix, private$.id, private$.ann$c_str())) 
+                           }
                          }
                        ),
                        private = list(
@@ -254,13 +329,13 @@ FunctionItem = R6Class("FunctionItem",
                          #' @field .e
                          #' expression in the function
                          .e = NULL,
-                         #' @field .params
+                         #' @field .decls
                          #' parameter declarations 
-                         .params = NULL,
+                         .decls = NULL,
                          #' @field .ann
                          #' annotation 
                          .ann = NULL,
-                         #' @field .rt
+                         #' @field .ti
                          #' return type of the function
-                         .rt = NULL
+                         .ti = NULL
                        ))

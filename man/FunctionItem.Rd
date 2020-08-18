@@ -7,6 +7,9 @@
 independent functions (that are not part of any other items)
 in a MiniZinc model
 }
+\section{Super class}{
+\code{\link[rminizinc:Item]{rminizinc::Item}} -> \code{FunctionItem}
+}
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
@@ -14,11 +17,11 @@ in a MiniZinc model
 
 \item{\code{.e}}{expression in the function}
 
-\item{\code{.params}}{parameter declarations}
+\item{\code{.decls}}{parameter declarations}
 
 \item{\code{.ann}}{annotation}
 
-\item{\code{.rt}}{return type of the function}
+\item{\code{.ti}}{return type of the function}
 }
 \if{html}{\out{</div>}}
 }
@@ -29,11 +32,11 @@ in a MiniZinc model
 
 \item{\code{.e}}{expression in the function}
 
-\item{\code{.params}}{parameter declarations}
+\item{\code{.decls}}{parameter declarations}
 
 \item{\code{.ann}}{annotation}
 
-\item{\code{.rt}}{return type of the function}
+\item{\code{.ti}}{return type of the function}
 }
 \if{html}{\out{</div>}}
 }
@@ -49,13 +52,19 @@ in a MiniZinc model
 \item \href{#method-clone}{\code{FunctionItem$clone()}}
 }
 }
+\if{html}{
+\out{<details open ><summary>Inherited methods</summary>}
+\itemize{
+}
+\out{</details>}
+}
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
 constructor
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FunctionItem$new(name, pars, rt, ann = NULL, body = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FunctionItem$new(name, decls, rt, ann = NULL, body = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -63,7 +72,7 @@ constructor
 \describe{
 \item{\code{name}}{name of the function}
 
-\item{\code{pars}}{parameter declarations}
+\item{\code{decls}}{parameter declarations}
 
 \item{\code{rt}}{the return type ("bool par", "bool var" or other)}
 

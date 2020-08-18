@@ -142,15 +142,10 @@ List mzn_parse(std::string modelString = "",
       }else{
         Rcpp::warning ("Detected function without expression");
       }
-      
-      // Return type of the function
-      if(fi->ti()->type().isbool() && fi->ti()->type().ispar()){
-        fnDets.push_back("test");
-        fnDetnms.push_back("FUNCTION_PREFIX");
-      }else if(fi->ti()->type().isbool() && fi->ti()->type().isvar()){
-        fnDets.push_back("predicate");
-        fnDetnms.push_back("FUNCTION_PREFIX");
-      }
+      // if(fi->ti()->type().isvar()) cout << " VF" << endl;
+      // return the return type-inst information
+      expDetails(fi->ti(), fnDets);
+      fnDetnms.push_back("TYPE_INST");
       
       if(!fi->ann().isEmpty()){
         List fnAnns;
@@ -175,43 +170,17 @@ List mzn_parse(std::string modelString = "",
       CharacterVector fpnms;
       ASTExprVec<VarDecl> pars = fi->params();
       for(int k = 0; k < pars.size();k++){
-        List fnParList;
         CharacterVector fplnms;
         
-        VarDecl *pe = pars.operator[](k);
-        fnParList.push_back(pe->id()->v().c_str());
-        fplnms.push_back("NAME");
-        fnParList.push_back(vType(pe->type()));
-        fplnms.push_back("TYPE");
-        
-        Expression *dExp = pe->ti()->domain();
-        if(dExp!=NULL){
-          List varDomain;
-          expDetails(dExp, varDomain);
-          if(varDomain.length()){
-            fnParList.push_back(varDomain);
-            fplnms.push_back("DOMAIN");
-          }
-        }
-        
-        Expression *vExp = pe->e();
-        if(vExp != NULL){
-          List varVal;
-          expDetails(vExp, varVal);
-          fnParList.push_back(varVal);
-          fplnms.push_back("VALUE");
-        }
-        fnParList.names() = fplnms;
-        fnParLists.push_back(fnParList);
-        
+        Expression *pd = pars.operator[](k);
+        expDetails(pd, fnParLists);
         string fp = "DECL";
         fp.append(to_string(k+1));
         fpnms.push_back(fp);
       }
-      
       fnParLists.names() = fpnms;
       fnDets.push_back(fnParLists);
-      fnDetnms.push_back("PARAMETER_DECLARATIONS");
+      fnDetnms.push_back("DECLARATIONS");
       fnDets.names() = fnDetnms;
       fnDetails.push_back(fnDets);
       fnDetails.push_back(i);

@@ -330,36 +330,53 @@ void expDetails(MiniZinc::Expression *exp, List &expList){
     CharacterVector vdnms;
     expDetails(vd->id(), vdDetails);
     vdnms.push_back("NAME");
+  
+    // vdDetails.push_back(vType(vd->type()));
+    // vdnms.push_back("TYPE");
+    
+    expDetails(vd->ti(), vdDetails);
+    vdnms.push_back("TYPE_INST");
+    
+    Expression *vExp = vd->e();
+    if(vExp != NULL){
+      List varVal;
+      expDetails(vExp, varVal);
+      vdDetails.push_back(varVal);
+      vdnms.push_back("VALUE");
+    }
+    vdDetails.names() = vdnms;
+    
+    expList.push_back(vdDetails);
+    expList.names() = CharacterVector({"VARIABLE_DECLARATION"});
+  }else if(exp->eid() == Expression::E_TI){
+    // to be supported soon
+    TypeInst *tExp = exp->cast<TypeInst>();
+    List TI;
+    CharacterVector tinms;
     
     // decision variables or parameters
-    if(vd->type().ispar()){
+    if(tExp->type().ispar()){
       //parameter
-      vdDetails.push_back("par");
-    }else if(vd->type().isvar()){
-      //decision variables
-      vdDetails.push_back("var");
+      TI.push_back("par");
     }else{
-      vdDetails.push_back("OTHER");
+      //decision variables
+      TI.push_back("var");
     }
-    vdnms.push_back("KIND");
+    tinms.push_back("KIND");
     
-    vdDetails.push_back(vType(vd->type()));
-    vdnms.push_back("TYPE");
-    
-    Expression *dExp = vd->ti()->domain();
+    Expression *dExp = tExp->domain();
     if(dExp!=NULL){
       List varDomain;
       expDetails(dExp, varDomain);
       if(varDomain.length()){
-        vdDetails.push_back(varDomain);
-        vdnms.push_back("DOMAIN");
+        TI.push_back(varDomain);
+        tinms.push_back("DOMAIN");
       }
     }
     
     List indices;
     CharacterVector indnms;
-    TypeInst *nti = vd->ti();
-    ASTExprVec<TypeInst> index_ti = nti->ranges();
+    ASTExprVec<TypeInst> index_ti = tExp->ranges();
     for(int s = 0; s < index_ti.size(); s++){
       List index;
       if(index_ti.operator[](s)->domain() != NULL){
@@ -377,21 +394,16 @@ void expDetails(MiniZinc::Expression *exp, List &expList){
     
     if(indices.length()){
       indices.names() = indnms;
-      vdDetails.push_back(indices);
-      vdnms.push_back("INDEX");
+      TI.push_back(indices);
+      tinms.push_back("INDEX");
     }
     
-    Expression *vExp = vd->e();
-    if(vExp != NULL){
-      List varVal;
-      expDetails(vExp, varVal);
-      vdDetails.push_back(varVal);
-      vdnms.push_back("VALUE");
-    }
-    vdDetails.names() = vdnms;
+    TI.push_back(vType(tExp->type()));
+    tinms.push_back("TYPE");
     
-    expList.push_back(vdDetails);
-    expList.names() = CharacterVector({"VARIABLE_DECLARATION"});
+    TI.names() = tinms;
+    expList.push_back(TI);
+    expList.names() = CharacterVector({"TYPE_INST"});
   }else{
     if(expList.length())
       Rcpp::warning("Expression couldn't be parsed entirely");

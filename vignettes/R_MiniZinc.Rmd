@@ -325,12 +325,13 @@ NOTE: Please don't include output formatting in the mzn files or the solutions m
 
 The named list returned by `mzn_parse()` can be used to initialize all the R6 classes required to create the model that was parsed. This will help the user to use a lot of functions to understand, manipulate and use the model using the R6 objects. `getRModel()` is used to initialize all the relevant objects using named list returned by `mzn_parse()`. The support is only available for basic models currently but the scope will be increased soon.
 
+
 ```{r}
 # mzn file path
 mzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/production_planning/prod_plan_0.mzn")
 
 # parse the model
-parseObj=rminizinc:::mzn_parse(mznpath = mzn_path)
+parseObj = rminizinc:::mzn_parse(mznpath = mzn_path)
 
 modString = getRModel(parseObj)$mzn_string()
 
@@ -343,7 +344,6 @@ solObj = rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.geco
 # get all the solutions
 print(solObj$SOLUTIONS)
 ```
-
 
 The next step is to allow the users to modify a MiniZinc model using the R6 objects which will be demonstrated soon.
 
