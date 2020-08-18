@@ -1,3 +1,5 @@
+r_m_z_n = env()
+
 #' @title init all classes
 #' @description given the return value of
 #' `mzn_parse()`, it creates a model in R
@@ -10,6 +12,9 @@ getRModel = function(mznParseList){
   if(length(mznParseList) == 1 && names(mznParseList) == "ASSIGNMENTS"){
     stop("Variable declarations should be provided with assignment items")
   }
+  # keep track of variables for assignments
+  r_m_z_n$r_m_z_n_variableItems = NULL
+  assign("r_m_z_n_variableItems", NULL, envir = r_m_z_n)
   for (i in seq(1, length(mznParseList), 1)) {
       if(names(mznParseList[i]) != "OUTPUT_ITEM"){
         items = c(items, initItem(mznParseList[i])) 
@@ -17,10 +22,8 @@ getRModel = function(mznParseList){
         warning("Output items are not supported! Model will be returned without the output item")
       }
   }
-  if("variable_r_m_z_n_Items" %in% ls(.GlobalEnv)){
-    rm("variable_r_m_z_n_Items", envir = .GlobalEnv)
+    rm("r_m_z_n_variableItems", envir = r_m_z_n)
     gc()
-  }
   if(length(items)){
     mod = Model$new(items = items)
     return(mod) 
@@ -52,8 +55,7 @@ initItem = function(parsedList){
       vItems = c(vItems, VarDeclItem$new(decl = VarDecl$new(name =  vList[[i]]$DETAILS$NAME, type_inst = ti,
                                                             value = initExpression(vList[[i]]$DETAILS$VALUE))))
     }
-    variable_r_m_z_n_Items <<- c()
-    variable_r_m_z_n_Items <<- vItems
+    assign("r_m_z_n_variableItems", vItems, envir = r_m_z_n) 
     return(vItems)
   }else if(names(parsedList) == "CONSTRAINTS"){
     cList = parsedList$CONSTRAINTS
@@ -89,10 +91,11 @@ initItem = function(parsedList){
     return(fnList)
   }else if(names(parsedList) == "ASSIGNMENTS"){
     assignList = c()
+    variableItems = get(r_m_z_n_variableItems, envir = r_m_z_n)
     for (i in seq(1, length(parsedList$ASSIGNMENTS), 1)) {
-      for (j in seq(1, length(variable_r_m_z_n_Items), 1)) {
-        if(variable_r_m_z_n_Items[[j]]$getDecl()$id()$getId() == parsedList$ASSIGNMENTS[[i]]$NAME){
-          aItem  = AssignItem$new(decl = variable_r_m_z_n_Items[[j]]$getDecl(), 
+      for (j in seq(1, length(variableItems), 1)) {
+        if(variableItems[[j]]$getDecl()$id()$getId() == parsedList$ASSIGNMENTS[[i]]$NAME){
+          aItem  = AssignItem$new(decl = variableItems[[j]]$getDecl(), 
                                   value = initExpression(parsedList$ASSIGNMENTS[[i]]$VALUE))
         }
       }
