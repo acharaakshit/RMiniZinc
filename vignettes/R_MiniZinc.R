@@ -4,17 +4,17 @@ library(rminizinc)
 # create the variable and parameter declarations
 item1 = VarDeclItem$new(decl = IntDecl(name = "n", kind = "par"))
 
-par2_val = BinOp$new(lhs = Int$new(1), binop = "..", rhs = item1$getDecl()$id())
+par2_val = BinOp$new(lhs = Int$new(1), binop = "..", rhs = item1$id())
 item2 = VarDeclItem$new(decl = IntSetDecl(name = "OBJ", kind = "par", value = par2_val))
 
 item3 = VarDeclItem$new(decl = IntDecl(name = "capacity", kind = "par"))
 
 item4 = VarDeclItem$new(decl = IntArrDecl(name = "profit", kind = "par", ndim = 1, 
-                                          ind = list(item2$getDecl()$id())))
+                                          ind = list(item2$id())))
 
-item5 = VarDeclItem$new(decl = IntArrDecl(name = "size", kind = "par", ndim = 1, ind = list(item2$getDecl()$id())))
+item5 = VarDeclItem$new(decl = IntArrDecl(name = "size", kind = "par", ndim = 1, ind =                                                            list(item2$id())))
 
-item6 = VarDeclItem$new(decl = IntArrDecl(name = "x", kind = "var", ndim = 1, ind = list(item2$getDecl()$id())))
+item6 = VarDeclItem$new(decl = IntArrDecl(name = "x", kind = "var", ndim = 1, ind = list(item2$id())))
 
 ## -----------------------------------------------------------------------------
 
@@ -22,29 +22,29 @@ item6 = VarDeclItem$new(decl = IntArrDecl(name = "x", kind = "var", ndim = 1, in
 parIter = IntDecl(name = "i", kind = "par")
 
 
-gen_forall = Generator$new(IN = item2$getDecl()$id(), decls = list(parIter))
-bop1 = BinOp$new(lhs = ArrayAccess$new(v = item6$getDecl()$id(),  args= list(gen_forall$decl(1))),
+gen_forall = Generator$new(IN = item2$id(), decls = list(parIter))
+bop1 = BinOp$new(lhs = ArrayAccess$new(v = item6$id(),  args= list(gen_forall$decl(1))),
                                                              binop = ">=", rhs = Int$new(0))
 
 Comp1 = Comprehension$new(generators = list(gen_forall), body = bop1, set = FALSE)
 cl1 = Call$new(fnName = "forall", args = list(Comp1))
 item7 = ConstraintItem$new(e = cl1)
 
-gen_sum = Generator$new(IN = item2$getDecl()$id(), decls = list(parIter))
+gen_sum = Generator$new(IN = item2$id(), decls = list(parIter))
 
-bop2 = BinOp$new(lhs = ArrayAccess$new(v = item5$getDecl()$id(), args = list(gen_sum$decl(1))),                  
-                 binop = "*",  rhs = ArrayAccess$new(v = item6$getDecl()$id() , 
+bop2 = BinOp$new(lhs = ArrayAccess$new(v = item5$id(), args = list(gen_sum$decl(1))),                  
+                 binop = "*",  rhs = ArrayAccess$new(v = item6$id() , 
                  args = list(gen_sum$decl(1))))
 
 Comp2 = Comprehension$new(generators = list(gen_sum), body = bop2, set = FALSE)
 cl2 = Call$new(fnName = "sum", args = list(Comp2))
-bop3 = BinOp$new(lhs = cl2, binop = "<=", rhs = item3$getDecl()$id())
+bop3 = BinOp$new(lhs = cl2, binop = "<=", rhs = item3$id())
 item8 = ConstraintItem$new(e = bop3)
 
 ## -----------------------------------------------------------------------------
 
-bop4 = BinOp$new(lhs = ArrayAccess$new(v = item4$getDecl()$id(), args = list(gen_sum$decl(1))),
-                      binop = "*", rhs = ArrayAccess$new(v = item6$getDecl()$id(), 
+bop4 = BinOp$new(lhs = ArrayAccess$new(v = item4$id(), args = list(gen_sum$decl(1))),
+                      binop = "*", rhs = ArrayAccess$new(v = item6$id(), 
                       args = list(gen_sum$decl(1))))
 
 Comp3 = Comprehension$new(generators = list(gen_sum), body = bop4, set = FALSE)
@@ -94,15 +94,20 @@ mzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/jobshop/jobshop_
 # parse the model
 parseObj=rminizinc:::mzn_parse(mznpath = mzn_path)
 
-# get the modelString
-modString = parseObj$MODEL_STRING
+## -----------------------------------------------------------------------------
+missingPars = getMissingPars(modelString = parseObj$MODEL_STRING)
+print(missingPars)
 
-# dzn file path
-dzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/jobshop/jobshop.dzn")
+## -----------------------------------------------------------------------------
+pVals = list(3, 4, c(3, 3, 4, 4, 4, 3, 2, 2, 3, 3, 3, 4), 
+             c(1, 2, 3, 4, 1, 3, 2, 4, 4, 2, 1, 3))
+names(pVals) = missingPars
+modString = set_params(modData = pVals, mznpath = mzn_path)
 
+## -----------------------------------------------------------------------------
 # R List object containing the solutions
 solObj = rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gecode",
-                     libpath = "/snap/minizinc/current/share/minizinc", dznpath = dzn_path)
+                     libpath = "/snap/minizinc/current/share/minizinc")
 # get all the solutions
 print(solObj$SOLUTIONS)
 

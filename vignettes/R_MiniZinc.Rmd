@@ -1,6 +1,6 @@
 ---
 title: "MiniZinc Interface for R"
-author: Akshit Achara 
+author: "Akshit Achara, Lars Kotthoff" 
 date: "`r Sys.Date()`"
 output: 
   rmarkdown::html_vignette
@@ -28,7 +28,7 @@ Please make sure to install MiniZinc on your operating system and also ensure th
 
 ## Variables
 
-There are two types of variables in MiniZinc -- decision variables and parameters. 
+There are two types of variables in MiniZinc namely, decision variables and parameters. 
 
 The data types of variables can be single types i.e integers (int), floating point numbers (float), Booleans (bool) and strings (string) and collections i.e sets, enums and arrays (upto 6 dimensional arrays).
 
@@ -43,24 +43,24 @@ The type information of the declaration is stored in an object of class Type whi
 
 Easy to use declaration functions have been created for the users to declare variables and parameters of different data types. Examples of how to declare variables is shown below.
 
-Here are examples of how we can create parameters and decision variables.
+Let's create parameters and decision variables.
 ```{r}
 library(rminizinc)
 
 # create the variable and parameter declarations
 item1 = VarDeclItem$new(decl = IntDecl(name = "n", kind = "par"))
 
-par2_val = BinOp$new(lhs = Int$new(1), binop = "..", rhs = item1$getDecl()$id())
+par2_val = BinOp$new(lhs = Int$new(1), binop = "..", rhs = item1$id())
 item2 = VarDeclItem$new(decl = IntSetDecl(name = "OBJ", kind = "par", value = par2_val))
 
 item3 = VarDeclItem$new(decl = IntDecl(name = "capacity", kind = "par"))
 
 item4 = VarDeclItem$new(decl = IntArrDecl(name = "profit", kind = "par", ndim = 1, 
-                                          ind = list(item2$getDecl()$id())))
+                                          ind = list(item2$id())))
 
-item5 = VarDeclItem$new(decl = IntArrDecl(name = "size", kind = "par", ndim = 1, ind = list(item2$getDecl()$id())))
+item5 = VarDeclItem$new(decl = IntArrDecl(name = "size", kind = "par", ndim = 1, ind =                                                            list(item2$id())))
 
-item6 = VarDeclItem$new(decl = IntArrDecl(name = "x", kind = "var", ndim = 1, ind = list(item2$getDecl()$id())))
+item6 = VarDeclItem$new(decl = IntArrDecl(name = "x", kind = "var", ndim = 1, ind = list(item2$id())))
 ```
 
 ## Constraints
@@ -77,23 +77,23 @@ Create constraints:
 parIter = IntDecl(name = "i", kind = "par")
 
 
-gen_forall = Generator$new(IN = item2$getDecl()$id(), decls = list(parIter))
-bop1 = BinOp$new(lhs = ArrayAccess$new(v = item6$getDecl()$id(),  args= list(gen_forall$decl(1))),
+gen_forall = Generator$new(IN = item2$id(), decls = list(parIter))
+bop1 = BinOp$new(lhs = ArrayAccess$new(v = item6$id(),  args= list(gen_forall$decl(1))),
                                                              binop = ">=", rhs = Int$new(0))
 
 Comp1 = Comprehension$new(generators = list(gen_forall), body = bop1, set = FALSE)
 cl1 = Call$new(fnName = "forall", args = list(Comp1))
 item7 = ConstraintItem$new(e = cl1)
 
-gen_sum = Generator$new(IN = item2$getDecl()$id(), decls = list(parIter))
+gen_sum = Generator$new(IN = item2$id(), decls = list(parIter))
 
-bop2 = BinOp$new(lhs = ArrayAccess$new(v = item5$getDecl()$id(), args = list(gen_sum$decl(1))),                  
-                 binop = "*",  rhs = ArrayAccess$new(v = item6$getDecl()$id() , 
+bop2 = BinOp$new(lhs = ArrayAccess$new(v = item5$id(), args = list(gen_sum$decl(1))),                  
+                 binop = "*",  rhs = ArrayAccess$new(v = item6$id() , 
                  args = list(gen_sum$decl(1))))
 
 Comp2 = Comprehension$new(generators = list(gen_sum), body = bop2, set = FALSE)
 cl2 = Call$new(fnName = "sum", args = list(Comp2))
-bop3 = BinOp$new(lhs = cl2, binop = "<=", rhs = item3$getDecl()$id())
+bop3 = BinOp$new(lhs = cl2, binop = "<=", rhs = item3$id())
 item8 = ConstraintItem$new(e = bop3)
 ```
 
@@ -107,8 +107,8 @@ An example is shown below:
 
 ```{r}
 
-bop4 = BinOp$new(lhs = ArrayAccess$new(v = item4$getDecl()$id(), args = list(gen_sum$decl(1))),
-                      binop = "*", rhs = ArrayAccess$new(v = item6$getDecl()$id(), 
+bop4 = BinOp$new(lhs = ArrayAccess$new(v = item4$id(), args = list(gen_sum$decl(1))),
+                      binop = "*", rhs = ArrayAccess$new(v = item6$id(), 
                       args = list(gen_sum$decl(1))))
 
 Comp3 = Comprehension$new(generators = list(gen_sum), body = bop4, set = FALSE)
@@ -120,7 +120,7 @@ item9 = SolveItem$new(solve_type = "maximize", e = cl3)
 
 ## Create the model
 
-Currently only three types of items can be created in a MiniZinc model namely: Variable Declarations, Constraints and Solve Items. The model is created by combining these items.
+The model is created by combining these items.
 
 Combine all the items to create a MiniZinc model
 ```{r}
@@ -172,6 +172,8 @@ knitr::include_graphics(paste0(getwd(),"/workflows/API.png"))
 
 ## Parse Model, Set Missing Parameters and Solve 
 
+### Parse a MiniZinc model
+
 A parser function `mzn_parse` has also been implemented which can be used to detect possible syntax errors and get the smallest of details before the MiniZinc model is evaluated. This function can either take the path of a model file path or it can take a string model and returns a list with different elements like: `MODEL_STRING` which is the string representation of the model and `VARIABLES` which are the variable declaration details, `CONSTRAINTS` which are the constraint details of a model, `SOLVE_TYPE` which contains the information about the solve type of the problem, `FUNCTION_ITEMS` contains the function information, `ASSIGNMENTS` contains the assignment information, `INCLUDES` contains information about the included mzn files and `OUTPUT_ITEM` contains the information about the output formatting. Each component (Variable Declarations, Constraints, Solve Items, Assignment Items, Include Items, Functions and Assignments) in a MiniZinc model is considered as an item. The `ITEM_NO` for each element is also returned. If your model includes an mzn file, you can provide custom paths of the folders where the included files are present. The default mzn files (in the std folder) provided along with libminizinc will be included by default.
 
 The Information about the naming of the elements returned is described in the following figures:
@@ -180,7 +182,7 @@ The Information about the naming of the elements returned is described in the fo
 
 *Name*: `VARIABLES`    
 *Components*: `DECL<n>` is the list of declaration with components `DETAILS` and `ITEM_NO`  
-*Description*: `DETAILS` are the details of a variable declaration namely: `NAME`, `TYPE`, `KIND`, `DOMAIN` and `VALUE` and `ITEM_NO` is the item number of the variable declaration in the model.  
+*Description*: `DETAILS` are the details of a variable declaration namely: `NAME`, `TYPE_INST` and `VALUE` and `ITEM_NO` is the item number of the variable declaration in the model.  
 
 *Name*: `CONSTRAINTS`  
 *Components*: `CONSTRAINT<n>` is the list of constraints with components: `DETAILS` and `ITEM_NO`.    
@@ -188,7 +190,7 @@ The Information about the naming of the elements returned is described in the fo
 
 *Name*: `FUNCTION_ITEMS`  
 *Components*: `FUNCTION<n>` is the list of functions with components: `DETAILS` and `ITEM_NO`.    
-*Description*: `DETAILS` are the details that can `EXPRESSION`, `ANNOTATION` or `PARAMETER_DECLARATIONS`.    
+*Description*: `DETAILS` are the details that can `EXPRESSION`, `ANNOTATION`, `TYPE_INST` `PARAMETER_DECLARATIONS`.    
 
 *Name*: `SOLVE_TYPE`  
 *Components*: `DETAILS`, `OBJECTIVE` and `ITEM_NO`  
@@ -268,11 +270,7 @@ Each parent has different properties that define it's structure. The properties 
 *Components*: `ELEMENT<n>` where n is the serial number of the element.  
 *Description*: `ELEMENT<n>` is an expression.
 
-The function `set_params()` can be used to set the missing parameters of the model. Any number of missing parameters can be set. The values for n dimensional arrays or sets can be provided as vectors like c(1,2,..,n). The indices of the arrays will be automatically retrieved and the values of the arrays will be stored as `arraynd()` functions. Set ranges will be supported soon. The missing parameters can be obtained using `getMissingPars()`. 
-
-The function `mzn_eval()` is used to evaluate a MiniZinc model and returns the solution string and a list of solutions if they were parsed without any error by the function `sol_parse()` otherwise it returns the solution string and an appropriate error. The optimal solution if found can be accessed using `OBJ$SOLUTIONS$OPTIMAL_SOLUTION` and the best solution can be accessed using `OBJ$SOLUTIONS$BEST_SOLUTION`. More details about the functions can be obtained using `?mzn_eval` and `?sol_parse`. 
-
-A sample job shop problem has been solved below:
+Now, let's parse a job shop model:
 
 ```{r}
 # mzn file path
@@ -280,21 +278,48 @@ mzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/jobshop/jobshop_
 
 # parse the model
 parseObj=rminizinc:::mzn_parse(mznpath = mzn_path)
+```
 
-# get the modelString
-modString = parseObj$MODEL_STRING
+Look at the contents of parseObj for more understanding of the model.
 
-# dzn file path
-dzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/jobshop/jobshop.dzn")
+### Find the Missing Parameters
 
+The missing parameters can be obtained using `getMissingPars()`
+
+```{r}
+missingPars = getMissingPars(modelString = parseObj$MODEL_STRING)
+print(missingPars)
+```
+
+### Set Values of Missing Parameters 
+
+The function `set_params()` can be used to set the missing parameters of the model. Any number of missing parameters from 1 to the number of missing parameters can be set. The values for n dimensional arrays or sets can be provided as vectors like c(1, 2, .., n). The indices of the arrays will be automatically retrieved and the values of the arrays will be stored as `arraynd()` functions. The values should be provided as a named list where the names of each value is the name of the paramaeter. The string representation of the updated model will be returned on call. In case an mzn file path is provided it can also be updated after setting the values by setting `modifyMZN` to `TRUE`.
+
+```{r}
+pVals = list(3, 4, c(3, 3, 4, 4, 4, 3, 2, 2, 3, 3, 3, 4), 
+             c(1, 2, 3, 4, 1, 3, 2, 4, 4, 2, 1, 3))
+names(pVals) = missingPars
+modString = set_params(modData = pVals, mznpath = mzn_path)
+```
+
+### Solve the Model
+
+The function `mzn_eval()` is used to evaluate a MiniZinc model and returns the solution string and a list of solutions if they were parsed without any error by the function `sol_parse()` otherwise it returns the solution string and an appropriate error. The parsed solutions are a named list where elements are of type `OBJ$SOLUTIONS$SOLUTION<n>$<VARIABLE_NAME>`. The optimal solution if found can be accessed using `OBJ$SOLUTIONS$OPTIMAL_SOLUTION` and the best solution can be accessed using `OBJ$SOLUTIONS$BEST_SOLUTION`. More details about the functions can be obtained using `?mzn_eval` and `?sol_parse`.
+
+The solver that should be used to solve the model needs to be specified by the user (default is Gecode)
+and the libpath (path of the MiniZinc executable) should also be provided. If the user wishes to provide a data file, it's path can be provided to the argument `dznpath`.  A time limit (in ms) can also be provided to the argument `time_limit`. (default is 300000 ms)
+
+A sample job shop problem has been solved below:
+
+```{r}
 # R List object containing the solutions
 solObj = rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gecode",
-                     libpath = "/snap/minizinc/current/share/minizinc", dznpath = dzn_path)
+                     libpath = "/snap/minizinc/current/share/minizinc")
 # get all the solutions
 print(solObj$SOLUTIONS)
 ```
 
-The data can also be provided as a list of values of parameters where the names of the list must be the names(whole or part) of the parameters whose values are missing. The names of the parameters whose values are missing can be obtained using the function `getMissingPars`. Alternatively, if the user wishes to provide a data file, it can be provided to the function `mzn_eval()`. 
+Let's solve another problem.
 
 ```{r}
 # file path
@@ -323,8 +348,7 @@ Some examples of how to use these functions to solve optimization problems can b
 
 NOTE: Please don't include output formatting in the mzn files or the solutions might not be parsed properly.
 
-The named list returned by `mzn_parse()` can be used to initialize all the R6 classes required to create the model that was parsed. This will help the user to use a lot of functions to understand, manipulate and use the model using the R6 objects. `getRModel()` is used to initialize all the relevant objects using named list returned by `mzn_parse()`. The support is only available for basic models currently but the scope will be increased soon.
-
+The named list returned by `mzn_parse()` can be used to initialize all the R6 classes in the MiniZinc API mirror required to create the model that was parsed. This will help the user to use a lot of functions to understand, manipulate and use the model using the R6 objects. `getRModel()` is used to initialize all the relevant objects using named list returned by `mzn_parse()`.
 
 ```{r}
 # mzn file path
