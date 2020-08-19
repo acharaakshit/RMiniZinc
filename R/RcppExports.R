@@ -49,10 +49,10 @@ mzn_parse <- function(modelString = "", mznpath = "", modelStringName = "mzn_par
     .Call(`_rminizinc_mzn_parse`, modelString, mznpath, modelStringName, includePath)
 }
 
-#' @title assign the missing parameters to the model
+#' @title assign values to the missing parameters
 #' 
-#' @desciption the missing parameters found from parse_mzn can be assigned 
-#' in this function
+#' @desciption missing parameters can be assigned 
+#' values.
 #' 
 #' @importFrom Rcpp sourceCpp
 #' @export set_params

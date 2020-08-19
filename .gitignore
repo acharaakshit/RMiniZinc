@@ -4,7 +4,6 @@
 .Ruserdata
 doc
 Meta
-src/Makevars
 src/*.o
 src/cpp_tests/*.o
 src/*.so
