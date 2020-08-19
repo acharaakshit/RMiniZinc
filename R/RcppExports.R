@@ -29,8 +29,9 @@ getMissingPars <- function(modelString = "", mznpath = "", modelStringName = "mi
 #' @param mznpath the path of the MiniZinc model file.
 #' @param dznpath path of the datafile to be used.
 #' @param all_solutions bool to specify if all solutions are specified.
-mzn_eval <- function(solver, libpath, modelString = "", mznpath = "", dznpath = "", all_solutions = TRUE) {
-    .Call(`_rminizinc_mzn_eval`, solver, libpath, modelString, mznpath, dznpath, all_solutions)
+#' @param time_limit stop after <time_limit> milliseconds
+mzn_eval <- function(solver, libpath, modelString = "", mznpath = "", dznpath = "", all_solutions = TRUE, time_limit = 300000L) {
+    .Call(`_rminizinc_mzn_eval`, solver, libpath, modelString, mznpath, dznpath, all_solutions, time_limit)
 }
 
 #' @title MiniZinc syntax parser

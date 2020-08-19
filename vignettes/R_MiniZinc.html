@@ -12,7 +12,7 @@
 
 <meta name="author" content="Akshit Achara" />
 
-<meta name="date" content="2020-08-18" />
+<meta name="date" content="2020-08-19" />
 
 <title>MiniZinc Interface for R</title>
 
@@ -319,7 +319,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">MiniZinc Interface for R</h1>
 <h4 class="author">Akshit Achara</h4>
-<h4 class="date">2020-08-18</h4>
+<h4 class="date">2020-08-19</h4>
 
 
 
@@ -334,30 +334,30 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 </div>
 <div id="variables" class="section level2">
 <h2>Variables</h2>
-<p>There are two types of variables in MiniZinc – decision variables and parameters.</p>
+<p>There are two types of variables in MiniZinc namely, decision variables and parameters.</p>
 <p>The data types of variables can be single types i.e integers (int), floating point numbers (float), Booleans (bool) and strings (string) and collections i.e sets, enums and arrays (upto 6 dimensional arrays).</p>
 <p>Parameter is used to specify a parameter in a given problem and they are assigned a fixed value or expression.</p>
 <p>Decision variables are the unknowns that Minizinc model is finding solutions for. We do not need to give them a value, but instead we give them a domain of possible values. Sometimes expressions involving other variables and parameters are also assigned to decision variables. Decision variables need to satisfy a set of constraints which form the core of the problem.</p>
 <p>To create a variable declaration one needs to understand the elements of R6 classes that will be used to create the variables.</p>
 <p>The type information of the declaration is stored in an object of class Type which holds information like base type, number of dimensions, etc. The type inst is stored in an object of TypeInst class which contains the type information as well as the index or domain in case the variable is an array or decision variable with domain respectively. The value assigned to the variable declaration is stored in an object of sub classes of super class Expression that can be Int, Float, Array, or other Expression sub classes that result in a value of corresponding type.</p>
 <p>Easy to use declaration functions have been created for the users to declare variables and parameters of different data types. Examples of how to declare variables is shown below.</p>
-<p>Here are examples of how we can create parameters and decision variables.</p>
+<p>Let’s create parameters and decision variables.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(rminizinc)</span>
 <span id="cb1-2"><a href="#cb1-2"></a></span>
 <span id="cb1-3"><a href="#cb1-3"></a><span class="co"># create the variable and parameter declarations</span></span>
 <span id="cb1-4"><a href="#cb1-4"></a>item1 =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">decl =</span> <span class="kw">IntDecl</span>(<span class="dt">name =</span> <span class="st">&quot;n&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;par&quot;</span>))</span>
 <span id="cb1-5"><a href="#cb1-5"></a></span>
-<span id="cb1-6"><a href="#cb1-6"></a>par2_val =<span class="st"> </span>BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs =</span> Int<span class="op">$</span><span class="kw">new</span>(<span class="dv">1</span>), <span class="dt">binop =</span> <span class="st">&quot;..&quot;</span>, <span class="dt">rhs =</span> item1<span class="op">$</span><span class="kw">getDecl</span>()<span class="op">$</span><span class="kw">id</span>())</span>
+<span id="cb1-6"><a href="#cb1-6"></a>par2_val =<span class="st"> </span>BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs =</span> Int<span class="op">$</span><span class="kw">new</span>(<span class="dv">1</span>), <span class="dt">binop =</span> <span class="st">&quot;..&quot;</span>, <span class="dt">rhs =</span> item1<span class="op">$</span><span class="kw">id</span>())</span>
 <span id="cb1-7"><a href="#cb1-7"></a>item2 =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">decl =</span> <span class="kw">IntSetDecl</span>(<span class="dt">name =</span> <span class="st">&quot;OBJ&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;par&quot;</span>, <span class="dt">value =</span> par2_val))</span>
 <span id="cb1-8"><a href="#cb1-8"></a></span>
 <span id="cb1-9"><a href="#cb1-9"></a>item3 =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">decl =</span> <span class="kw">IntDecl</span>(<span class="dt">name =</span> <span class="st">&quot;capacity&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;par&quot;</span>))</span>
 <span id="cb1-10"><a href="#cb1-10"></a></span>
 <span id="cb1-11"><a href="#cb1-11"></a>item4 =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">decl =</span> <span class="kw">IntArrDecl</span>(<span class="dt">name =</span> <span class="st">&quot;profit&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;par&quot;</span>, <span class="dt">ndim =</span> <span class="dv">1</span>, </span>
-<span id="cb1-12"><a href="#cb1-12"></a>                                          <span class="dt">ind =</span> <span class="kw">list</span>(item2<span class="op">$</span><span class="kw">getDecl</span>()<span class="op">$</span><span class="kw">id</span>())))</span>
+<span id="cb1-12"><a href="#cb1-12"></a>                                          <span class="dt">ind =</span> <span class="kw">list</span>(item2<span class="op">$</span><span class="kw">id</span>())))</span>
 <span id="cb1-13"><a href="#cb1-13"></a></span>
-<span id="cb1-14"><a href="#cb1-14"></a>item5 =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">decl =</span> <span class="kw">IntArrDecl</span>(<span class="dt">name =</span> <span class="st">&quot;size&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;par&quot;</span>, <span class="dt">ndim =</span> <span class="dv">1</span>, <span class="dt">ind =</span> <span class="kw">list</span>(item2<span class="op">$</span><span class="kw">getDecl</span>()<span class="op">$</span><span class="kw">id</span>())))</span>
+<span id="cb1-14"><a href="#cb1-14"></a>item5 =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">decl =</span> <span class="kw">IntArrDecl</span>(<span class="dt">name =</span> <span class="st">&quot;size&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;par&quot;</span>, <span class="dt">ndim =</span> <span class="dv">1</span>, <span class="dt">ind =</span>                                                            <span class="kw">list</span>(item2<span class="op">$</span><span class="kw">id</span>())))</span>
 <span id="cb1-15"><a href="#cb1-15"></a></span>
-<span id="cb1-16"><a href="#cb1-16"></a>item6 =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">decl =</span> <span class="kw">IntArrDecl</span>(<span class="dt">name =</span> <span class="st">&quot;x&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;var&quot;</span>, <span class="dt">ndim =</span> <span class="dv">1</span>, <span class="dt">ind =</span> <span class="kw">list</span>(item2<span class="op">$</span><span class="kw">getDecl</span>()<span class="op">$</span><span class="kw">id</span>())))</span></code></pre></div>
+<span id="cb1-16"><a href="#cb1-16"></a>item6 =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">decl =</span> <span class="kw">IntArrDecl</span>(<span class="dt">name =</span> <span class="st">&quot;x&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;var&quot;</span>, <span class="dt">ndim =</span> <span class="dv">1</span>, <span class="dt">ind =</span> <span class="kw">list</span>(item2<span class="op">$</span><span class="kw">id</span>())))</span></code></pre></div>
 </div>
 <div id="constraints" class="section level2">
 <h2>Constraints</h2>
@@ -368,31 +368,31 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb2-2"><a href="#cb2-2"></a>parIter =<span class="st"> </span><span class="kw">IntDecl</span>(<span class="dt">name =</span> <span class="st">&quot;i&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;par&quot;</span>)</span>
 <span id="cb2-3"><a href="#cb2-3"></a></span>
 <span id="cb2-4"><a href="#cb2-4"></a></span>
-<span id="cb2-5"><a href="#cb2-5"></a>gen_forall =<span class="st"> </span>Generator<span class="op">$</span><span class="kw">new</span>(<span class="dt">IN =</span> item2<span class="op">$</span><span class="kw">getDecl</span>()<span class="op">$</span><span class="kw">id</span>(), <span class="dt">decls =</span> <span class="kw">list</span>(parIter))</span>
-<span id="cb2-6"><a href="#cb2-6"></a>bop1 =<span class="st"> </span>BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> item6<span class="op">$</span><span class="kw">getDecl</span>()<span class="op">$</span><span class="kw">id</span>(),  <span class="dt">args=</span> <span class="kw">list</span>(gen_forall<span class="op">$</span><span class="kw">decl</span>(<span class="dv">1</span>))),</span>
+<span id="cb2-5"><a href="#cb2-5"></a>gen_forall =<span class="st"> </span>Generator<span class="op">$</span><span class="kw">new</span>(<span class="dt">IN =</span> item2<span class="op">$</span><span class="kw">id</span>(), <span class="dt">decls =</span> <span class="kw">list</span>(parIter))</span>
+<span id="cb2-6"><a href="#cb2-6"></a>bop1 =<span class="st"> </span>BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> item6<span class="op">$</span><span class="kw">id</span>(),  <span class="dt">args=</span> <span class="kw">list</span>(gen_forall<span class="op">$</span><span class="kw">decl</span>(<span class="dv">1</span>))),</span>
 <span id="cb2-7"><a href="#cb2-7"></a>                                                             <span class="dt">binop =</span> <span class="st">&quot;&gt;=&quot;</span>, <span class="dt">rhs =</span> Int<span class="op">$</span><span class="kw">new</span>(<span class="dv">0</span>))</span>
 <span id="cb2-8"><a href="#cb2-8"></a></span>
 <span id="cb2-9"><a href="#cb2-9"></a>Comp1 =<span class="st"> </span>Comprehension<span class="op">$</span><span class="kw">new</span>(<span class="dt">generators =</span> <span class="kw">list</span>(gen_forall), <span class="dt">body =</span> bop1, <span class="dt">set =</span> <span class="ot">FALSE</span>)</span>
 <span id="cb2-10"><a href="#cb2-10"></a>cl1 =<span class="st"> </span>Call<span class="op">$</span><span class="kw">new</span>(<span class="dt">fnName =</span> <span class="st">&quot;forall&quot;</span>, <span class="dt">args =</span> <span class="kw">list</span>(Comp1))</span>
 <span id="cb2-11"><a href="#cb2-11"></a>item7 =<span class="st"> </span>ConstraintItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">e =</span> cl1)</span>
 <span id="cb2-12"><a href="#cb2-12"></a></span>
-<span id="cb2-13"><a href="#cb2-13"></a>gen_sum =<span class="st"> </span>Generator<span class="op">$</span><span class="kw">new</span>(<span class="dt">IN =</span> item2<span class="op">$</span><span class="kw">getDecl</span>()<span class="op">$</span><span class="kw">id</span>(), <span class="dt">decls =</span> <span class="kw">list</span>(parIter))</span>
+<span id="cb2-13"><a href="#cb2-13"></a>gen_sum =<span class="st"> </span>Generator<span class="op">$</span><span class="kw">new</span>(<span class="dt">IN =</span> item2<span class="op">$</span><span class="kw">id</span>(), <span class="dt">decls =</span> <span class="kw">list</span>(parIter))</span>
 <span id="cb2-14"><a href="#cb2-14"></a></span>
-<span id="cb2-15"><a href="#cb2-15"></a>bop2 =<span class="st"> </span>BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> item5<span class="op">$</span><span class="kw">getDecl</span>()<span class="op">$</span><span class="kw">id</span>(), <span class="dt">args =</span> <span class="kw">list</span>(gen_sum<span class="op">$</span><span class="kw">decl</span>(<span class="dv">1</span>))),                  </span>
-<span id="cb2-16"><a href="#cb2-16"></a>                 <span class="dt">binop =</span> <span class="st">&quot;*&quot;</span>,  <span class="dt">rhs =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> item6<span class="op">$</span><span class="kw">getDecl</span>()<span class="op">$</span><span class="kw">id</span>() , </span>
+<span id="cb2-15"><a href="#cb2-15"></a>bop2 =<span class="st"> </span>BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> item5<span class="op">$</span><span class="kw">id</span>(), <span class="dt">args =</span> <span class="kw">list</span>(gen_sum<span class="op">$</span><span class="kw">decl</span>(<span class="dv">1</span>))),                  </span>
+<span id="cb2-16"><a href="#cb2-16"></a>                 <span class="dt">binop =</span> <span class="st">&quot;*&quot;</span>,  <span class="dt">rhs =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> item6<span class="op">$</span><span class="kw">id</span>() , </span>
 <span id="cb2-17"><a href="#cb2-17"></a>                 <span class="dt">args =</span> <span class="kw">list</span>(gen_sum<span class="op">$</span><span class="kw">decl</span>(<span class="dv">1</span>))))</span>
 <span id="cb2-18"><a href="#cb2-18"></a></span>
 <span id="cb2-19"><a href="#cb2-19"></a>Comp2 =<span class="st"> </span>Comprehension<span class="op">$</span><span class="kw">new</span>(<span class="dt">generators =</span> <span class="kw">list</span>(gen_sum), <span class="dt">body =</span> bop2, <span class="dt">set =</span> <span class="ot">FALSE</span>)</span>
 <span id="cb2-20"><a href="#cb2-20"></a>cl2 =<span class="st"> </span>Call<span class="op">$</span><span class="kw">new</span>(<span class="dt">fnName =</span> <span class="st">&quot;sum&quot;</span>, <span class="dt">args =</span> <span class="kw">list</span>(Comp2))</span>
-<span id="cb2-21"><a href="#cb2-21"></a>bop3 =<span class="st"> </span>BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs =</span> cl2, <span class="dt">binop =</span> <span class="st">&quot;&lt;=&quot;</span>, <span class="dt">rhs =</span> item3<span class="op">$</span><span class="kw">getDecl</span>()<span class="op">$</span><span class="kw">id</span>())</span>
+<span id="cb2-21"><a href="#cb2-21"></a>bop3 =<span class="st"> </span>BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs =</span> cl2, <span class="dt">binop =</span> <span class="st">&quot;&lt;=&quot;</span>, <span class="dt">rhs =</span> item3<span class="op">$</span><span class="kw">id</span>())</span>
 <span id="cb2-22"><a href="#cb2-22"></a>item8 =<span class="st"> </span>ConstraintItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">e =</span> bop3)</span></code></pre></div>
 </div>
 <div id="solve-type" class="section level2">
 <h2>Solve Type</h2>
 <p>The constraint programming problem can be of three types, namely: Satisfaction , Minimization and Maximization. Satisfaction problems produce all the solutions that satisfy the constraints whereas minimization and maximization problems produce the solution which minimizes and maximizes the given arithmetic expression.</p>
 <p>An example is shown below:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>bop4 =<span class="st"> </span>BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> item4<span class="op">$</span><span class="kw">getDecl</span>()<span class="op">$</span><span class="kw">id</span>(), <span class="dt">args =</span> <span class="kw">list</span>(gen_sum<span class="op">$</span><span class="kw">decl</span>(<span class="dv">1</span>))),</span>
-<span id="cb3-2"><a href="#cb3-2"></a>                      <span class="dt">binop =</span> <span class="st">&quot;*&quot;</span>, <span class="dt">rhs =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> item6<span class="op">$</span><span class="kw">getDecl</span>()<span class="op">$</span><span class="kw">id</span>(), </span>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>bop4 =<span class="st"> </span>BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> item4<span class="op">$</span><span class="kw">id</span>(), <span class="dt">args =</span> <span class="kw">list</span>(gen_sum<span class="op">$</span><span class="kw">decl</span>(<span class="dv">1</span>))),</span>
+<span id="cb3-2"><a href="#cb3-2"></a>                      <span class="dt">binop =</span> <span class="st">&quot;*&quot;</span>, <span class="dt">rhs =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> item6<span class="op">$</span><span class="kw">id</span>(), </span>
 <span id="cb3-3"><a href="#cb3-3"></a>                      <span class="dt">args =</span> <span class="kw">list</span>(gen_sum<span class="op">$</span><span class="kw">decl</span>(<span class="dv">1</span>))))</span>
 <span id="cb3-4"><a href="#cb3-4"></a></span>
 <span id="cb3-5"><a href="#cb3-5"></a>Comp3 =<span class="st"> </span>Comprehension<span class="op">$</span><span class="kw">new</span>(<span class="dt">generators =</span> <span class="kw">list</span>(gen_sum), <span class="dt">body =</span> bop4, <span class="dt">set =</span> <span class="ot">FALSE</span>)</span>
@@ -403,7 +403,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 </div>
 <div id="create-the-model" class="section level2">
 <h2>Create the model</h2>
-<p>Currently only three types of items can be created in a MiniZinc model namely: Variable Declarations, Constraints and Solve Items. The model is created by combining these items.</p>
+<p>The model is created by combining these items.</p>
 <p>Combine all the items to create a MiniZinc model</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>items  =<span class="st"> </span><span class="kw">c</span>(item1, item2, item3, item4, item5, item6, item7, item8, item9)</span>
 <span id="cb4-2"><a href="#cb4-2"></a>mod =<span class="st"> </span>Model<span class="op">$</span><span class="kw">new</span>(<span class="dt">items =</span> items)</span>
@@ -472,13 +472,16 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 </div>
 <div id="parse-model-set-missing-parameters-and-solve" class="section level2">
 <h2>Parse Model, Set Missing Parameters and Solve</h2>
+<div id="parse-a-minizinc-model" class="section level3">
+<h3>Parse a MiniZinc model</h3>
 <p>A parser function <code>mzn_parse</code> has also been implemented which can be used to detect possible syntax errors and get the smallest of details before the MiniZinc model is evaluated. This function can either take the path of a model file path or it can take a string model and returns a list with different elements like: <code>MODEL_STRING</code> which is the string representation of the model and <code>VARIABLES</code> which are the variable declaration details, <code>CONSTRAINTS</code> which are the constraint details of a model, <code>SOLVE_TYPE</code> which contains the information about the solve type of the problem, <code>FUNCTION_ITEMS</code> contains the function information, <code>ASSIGNMENTS</code> contains the assignment information, <code>INCLUDES</code> contains information about the included mzn files and <code>OUTPUT_ITEM</code> contains the information about the output formatting. Each component (Variable Declarations, Constraints, Solve Items, Assignment Items, Include Items, Functions and Assignments) in a MiniZinc model is considered as an item. The <code>ITEM_NO</code> for each element is also returned. If your model includes an mzn file, you can provide custom paths of the folders where the included files are present. The default mzn files (in the std folder) provided along with libminizinc will be included by default.</p>
 <p>The Information about the naming of the elements returned is described in the following figures:</p>
+</div>
 <div id="model-items" class="section level3">
 <h3>Model Items</h3>
 <p><em>Name</em>: <code>VARIABLES</code><br />
 <em>Components</em>: <code>DECL&lt;n&gt;</code> is the list of declaration with components <code>DETAILS</code> and <code>ITEM_NO</code><br />
-<em>Description</em>: <code>DETAILS</code> are the details of a variable declaration namely: <code>NAME</code>, <code>TYPE</code>, <code>KIND</code>, <code>DOMAIN</code> and <code>VALUE</code> and <code>ITEM_NO</code> is the item number of the variable declaration in the model.</p>
+<em>Description</em>: <code>DETAILS</code> are the details of a variable declaration namely: <code>NAME</code>, <code>TYPE_INST</code> and <code>VALUE</code> and <code>ITEM_NO</code> is the item number of the variable declaration in the model.</p>
 <p><em>Name</em>: <code>CONSTRAINTS</code><br />
 <em>Components</em>: <code>CONSTRAINT&lt;n&gt;</code> is the list of constraints with components: <code>DETAILS</code> and <code>ITEM_NO</code>.<br />
 <em>Description</em>: <code>DETAILS</code> are the details about the expressions.</p>
@@ -519,8 +522,8 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <em>Components</em>: <code>UNARY_OPERATOR</code> and <code>ARGUMENTS</code><br />
 <em>Description</em>: <code>UNARY_OPERATOR</code> are the unary operators in MiniZinc and <code>ARGUMENTS</code> contain a list of expressions.</p>
 <p><em>Name</em>: <code>VARIABLE_DECLARATION</code><br />
-<em>Components</em>: <code>NAME</code>, <code>KIND</code>, <code>TYPE</code>, <code>DOMAIN</code> and <code>VALUE</code><br />
-<em>Description</em>: <code>NAME</code>, <code>KIND</code> and <code>TYPE</code> are strings representing the name, kind and type of the variable and <code>DOMAIN</code> and <code>VALUE</code> are expressions representing domain and value of the variable declaration.</p>
+<em>Components</em>: <code>NAME</code>, <code>TYPE_INST</code> (<code>KIND</code>, <code>TYPE</code>, <code>DOMAIN</code>, <code>INDEX</code>) and <code>VALUE</code><br />
+<em>Description</em>: <code>NAME</code>, <code>KIND</code> and <code>TYPE</code> are strings representing the name, kind and type of the variable and <code>DOMAIN</code> and <code>VALUE</code> are expressions representing domain and value of the variable declaration. <code>TYPE_INST</code> contains the <code>KIND</code>, <code>TYPE</code>, <code>DOMAIN</code> and <code>INDEX</code>.</p>
 <p><em>Name</em>: <code>ARRAY_ACCESS</code><br />
 <em>Components</em>: <code>NAME</code> and <code>ARGUMENTS</code><br />
 <em>Description</em>: <code>NAME</code> is the name of the variable and <code>ARGUMENTS</code> is the list of expressions that represent the indices.</p>
@@ -539,26 +542,39 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <p><em>Name</em>: <code>ARRAY</code><br />
 <em>Components</em>: <code>ELEMENT&lt;n&gt;</code> where n is the serial number of the element.<br />
 <em>Description</em>: <code>ELEMENT&lt;n&gt;</code> is an expression.</p>
-<p>The function <code>set_params()</code> can be used to set the missing parameters of the model. Any number of missing parameters can be set. The values for n dimensional arrays or sets can be provided as vectors like c(1,2,..,n). The indices of the arrays will be automatically retrieved and the values of the arrays will be stored as <code>arraynd()</code> functions. Set ranges will be supported soon. The missing parameters can be obtained using <code>getMissingPars()</code>.</p>
-<p>The function <code>mzn_eval()</code> is used to evaluate a MiniZinc model and returns the solution string and a list of solutions if they were parsed without any error by the function <code>sol_parse()</code> otherwise it returns the solution string and an appropriate error. The optimal solution if found can be accessed using <code>OBJ$SOLUTIONS$OPTIMAL_SOLUTION</code> and the best solution can be accessed using <code>OBJ$SOLUTIONS$BEST_SOLUTION</code>. More details about the functions can be obtained using <code>?mzn_eval</code> and <code>?sol_parse</code>.</p>
-<p>A sample job shop problem has been solved below:</p>
+<p>Now, let’s parse a job shop model:</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="co"># mzn file path</span></span>
 <span id="cb14-2"><a href="#cb14-2"></a>mzn_path =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">dirname</span>(<span class="kw">getwd</span>()), <span class="st">&quot;/inst/extdata/mzn_examples/jobshop/jobshop_0.mzn&quot;</span>)</span>
 <span id="cb14-3"><a href="#cb14-3"></a></span>
 <span id="cb14-4"><a href="#cb14-4"></a><span class="co"># parse the model</span></span>
 <span id="cb14-5"><a href="#cb14-5"></a>parseObj=rminizinc<span class="op">:::</span><span class="kw">mzn_parse</span>(<span class="dt">mznpath =</span> mzn_path)</span></code></pre></div>
 <pre><code>## Using default include path: /usr/local/lib/libminizinc/share/minizinc/std</code></pre>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="co"># get the modelString</span></span>
-<span id="cb16-2"><a href="#cb16-2"></a>modString =<span class="st"> </span>parseObj<span class="op">$</span>MODEL_STRING</span>
-<span id="cb16-3"><a href="#cb16-3"></a></span>
-<span id="cb16-4"><a href="#cb16-4"></a><span class="co"># dzn file path</span></span>
-<span id="cb16-5"><a href="#cb16-5"></a>dzn_path =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">dirname</span>(<span class="kw">getwd</span>()), <span class="st">&quot;/inst/extdata/mzn_examples/jobshop/jobshop.dzn&quot;</span>)</span>
-<span id="cb16-6"><a href="#cb16-6"></a></span>
-<span id="cb16-7"><a href="#cb16-7"></a><span class="co"># R List object containing the solutions</span></span>
-<span id="cb16-8"><a href="#cb16-8"></a>solObj =<span class="st"> </span>rminizinc<span class="op">:::</span><span class="kw">mzn_eval</span>(<span class="dt">modelString =</span> modString, <span class="dt">solver =</span> <span class="st">&quot;org.gecode.gecode&quot;</span>,</span>
-<span id="cb16-9"><a href="#cb16-9"></a>                     <span class="dt">libpath =</span> <span class="st">&quot;/snap/minizinc/current/share/minizinc&quot;</span>, <span class="dt">dznpath =</span> dzn_path)</span>
-<span id="cb16-10"><a href="#cb16-10"></a><span class="co"># get all the solutions</span></span>
-<span id="cb16-11"><a href="#cb16-11"></a><span class="kw">print</span>(solObj<span class="op">$</span>SOLUTIONS)</span></code></pre></div>
+<p>Look at the contents of parseObj for more understanding of the model.</p>
+</div>
+</div>
+<div id="find-the-missing-parameters" class="section level3">
+<h3>Find the missing parameters</h3>
+<p>The missing parameters can be obtained using <code>getMissingPars()</code></p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>missingPars =<span class="st"> </span><span class="kw">getMissingPars</span>(<span class="dt">modelString =</span> parseObj<span class="op">$</span>MODEL_STRING)</span></code></pre></div>
+<pre><code>## Using default include path: /usr/local/lib/libminizinc/share/minizinc/std</code></pre>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="kw">print</span>(missingPars)</span></code></pre></div>
+<pre><code>## [1] &quot;n&quot;  &quot;m&quot;  &quot;d&quot;  &quot;mc&quot;</code></pre>
+<p>The function <code>set_params()</code> can be used to set the missing parameters of the model. Any number of missing parameters from 1 to the number of missing parameters can be set. The values for n dimensional arrays or sets can be provided as vectors like c(1, 2, .., n). The indices of the arrays will be automatically retrieved and the values of the arrays will be stored as <code>arraynd()</code> functions. The values should be provided as a named list where the names of each value is the name of the paramaeter. The string representation of the updated model will be returned on call. In case an mzn file path is provided it can also be updated after setting the values by setting <code>modifyMZN</code> to <code>TRUE</code>.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a>pVals =<span class="st"> </span><span class="kw">list</span>(<span class="dv">3</span>, <span class="dv">4</span>, <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">4</span>), </span>
+<span id="cb20-2"><a href="#cb20-2"></a>             <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">3</span>))</span>
+<span id="cb20-3"><a href="#cb20-3"></a><span class="kw">names</span>(pVals) =<span class="st"> </span>missingPars</span>
+<span id="cb20-4"><a href="#cb20-4"></a>modString =<span class="st"> </span><span class="kw">set_params</span>(<span class="dt">modData =</span> pVals, <span class="dt">mznpath =</span> mzn_path)</span></code></pre></div>
+<pre><code>## Using default include path: /usr/local/lib/libminizinc/share/minizinc/std</code></pre>
+<pre><code>## Warning in set_params(modData = pVals, mznpath = mzn_path): Data Type is Unknown
+## -- coercing to int</code></pre>
+<p>The function <code>mzn_eval()</code> is used to evaluate a MiniZinc model and returns the solution string and a list of solutions if they were parsed without any error by the function <code>sol_parse()</code> otherwise it returns the solution string and an appropriate error. The parsed solutions are a named list where elements are of type <code>OBJ$SOLUTIONS$SOLUTION&lt;n&gt;$&lt;VARIABLE_NAME&gt;</code>. The optimal solution if found can be accessed using <code>OBJ$SOLUTIONS$OPTIMAL_SOLUTION</code> and the best solution can be accessed using <code>OBJ$SOLUTIONS$BEST_SOLUTION</code>. More details about the functions can be obtained using <code>?mzn_eval</code> and <code>?sol_parse</code>.</p>
+<p>The solver that should be used to solve the model needs to be specified by the user (default is Gecode) and the libpath (path of the MiniZinc executable) should also be provided. If the user wishes to provide a data file, it’s path can be provided to the argument <code>dznpath</code>.</p>
+<p>A sample job shop problem has been solved below:</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="co"># R List object containing the solutions</span></span>
+<span id="cb23-2"><a href="#cb23-2"></a>solObj =<span class="st"> </span>rminizinc<span class="op">:::</span><span class="kw">mzn_eval</span>(<span class="dt">modelString =</span> modString, <span class="dt">solver =</span> <span class="st">&quot;org.gecode.gecode&quot;</span>,</span>
+<span id="cb23-3"><a href="#cb23-3"></a>                     <span class="dt">libpath =</span> <span class="st">&quot;/snap/minizinc/current/share/minizinc&quot;</span>)</span>
+<span id="cb23-4"><a href="#cb23-4"></a><span class="co"># get all the solutions</span></span>
+<span id="cb23-5"><a href="#cb23-5"></a><span class="kw">print</span>(solObj<span class="op">$</span>SOLUTIONS)</span></code></pre></div>
 <pre><code>## $OPTIMAL_SOLUTION
 ## $OPTIMAL_SOLUTION$s
 ## $OPTIMAL_SOLUTION$s[[1]]
@@ -569,27 +585,27 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ## 
 ## $OPTIMAL_SOLUTION$s[[3]]
 ## [1]  0  6  9 13</code></pre>
-<p>The data can also be provided as a list of values of parameters where the names of the list must be the names(whole or part) of the parameters whose values are missing. The names of the parameters whose values are missing can be obtained using the function <code>getMissingPars</code>. Alternatively, if the user wishes to provide a data file, it can be provided to the function <code>mzn_eval()</code>.</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="co"># file path</span></span>
-<span id="cb18-2"><a href="#cb18-2"></a>mzn_path =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">dirname</span>(<span class="kw">getwd</span>()), <span class="st">&quot;/inst/extdata/mzn_examples/knapsack/knapsack_0.mzn&quot;</span>)</span>
-<span id="cb18-3"><a href="#cb18-3"></a></span>
-<span id="cb18-4"><a href="#cb18-4"></a><span class="co"># get missing parameter values</span></span>
-<span id="cb18-5"><a href="#cb18-5"></a>missingVals=rminizinc<span class="op">:::</span><span class="kw">getMissingPars</span>( <span class="dt">mznpath =</span> mzn_path)</span></code></pre></div>
+<p>Let’s solve another problem.</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="co"># file path</span></span>
+<span id="cb25-2"><a href="#cb25-2"></a>mzn_path =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">dirname</span>(<span class="kw">getwd</span>()), <span class="st">&quot;/inst/extdata/mzn_examples/knapsack/knapsack_0.mzn&quot;</span>)</span>
+<span id="cb25-3"><a href="#cb25-3"></a></span>
+<span id="cb25-4"><a href="#cb25-4"></a><span class="co"># get missing parameter values</span></span>
+<span id="cb25-5"><a href="#cb25-5"></a>missingVals=rminizinc<span class="op">:::</span><span class="kw">getMissingPars</span>( <span class="dt">mznpath =</span> mzn_path)</span></code></pre></div>
 <pre><code>## Using default include path: /usr/local/lib/libminizinc/share/minizinc/std</code></pre>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="kw">print</span>(missingVals)</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="kw">print</span>(missingVals)</span></code></pre></div>
 <pre><code>## [1] &quot;n&quot;        &quot;capacity&quot; &quot;profit&quot;   &quot;size&quot;</code></pre>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="co"># list of the data</span></span>
-<span id="cb22-2"><a href="#cb22-2"></a>pVals =<span class="st"> </span><span class="kw">list</span>(<span class="dv">3</span>, <span class="dv">9</span>, <span class="kw">c</span>(<span class="dv">15</span>,<span class="dv">10</span>,<span class="dv">7</span>), <span class="kw">c</span>(<span class="dv">4</span>,<span class="dv">3</span>,<span class="dv">2</span>))</span>
-<span id="cb22-3"><a href="#cb22-3"></a><span class="kw">names</span>(pVals) =<span class="st"> </span>missingVals</span>
-<span id="cb22-4"><a href="#cb22-4"></a></span>
-<span id="cb22-5"><a href="#cb22-5"></a><span class="co"># set the missing parameters</span></span>
-<span id="cb22-6"><a href="#cb22-6"></a>modString =<span class="st"> </span>rminizinc<span class="op">:::</span><span class="kw">set_params</span>(<span class="dt">modData =</span> pVals,<span class="dt">mznpath =</span> mzn_path, <span class="dt">modify_mzn =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a><span class="co"># list of the data</span></span>
+<span id="cb29-2"><a href="#cb29-2"></a>pVals =<span class="st"> </span><span class="kw">list</span>(<span class="dv">3</span>, <span class="dv">9</span>, <span class="kw">c</span>(<span class="dv">15</span>,<span class="dv">10</span>,<span class="dv">7</span>), <span class="kw">c</span>(<span class="dv">4</span>,<span class="dv">3</span>,<span class="dv">2</span>))</span>
+<span id="cb29-3"><a href="#cb29-3"></a><span class="kw">names</span>(pVals) =<span class="st"> </span>missingVals</span>
+<span id="cb29-4"><a href="#cb29-4"></a></span>
+<span id="cb29-5"><a href="#cb29-5"></a><span class="co"># set the missing parameters</span></span>
+<span id="cb29-6"><a href="#cb29-6"></a>modString =<span class="st"> </span>rminizinc<span class="op">:::</span><span class="kw">set_params</span>(<span class="dt">modData =</span> pVals,<span class="dt">mznpath =</span> mzn_path, <span class="dt">modify_mzn =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
 <pre><code>## Using default include path: /usr/local/lib/libminizinc/share/minizinc/std</code></pre>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a><span class="co"># R List object containing the solutions</span></span>
-<span id="cb24-2"><a href="#cb24-2"></a>solObj =<span class="st"> </span>rminizinc<span class="op">:::</span><span class="kw">mzn_eval</span>(<span class="dt">modelString =</span> modString, <span class="dt">solver =</span> <span class="st">&quot;org.gecode.gecode&quot;</span>,</span>
-<span id="cb24-3"><a href="#cb24-3"></a>                     <span class="dt">libpath =</span> <span class="st">&quot;/snap/minizinc/current/share/minizinc&quot;</span>)</span>
-<span id="cb24-4"><a href="#cb24-4"></a><span class="co"># get all the solutions</span></span>
-<span id="cb24-5"><a href="#cb24-5"></a><span class="kw">print</span>(solObj<span class="op">$</span>SOLUTIONS)</span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a><span class="co"># R List object containing the solutions</span></span>
+<span id="cb31-2"><a href="#cb31-2"></a>solObj =<span class="st"> </span>rminizinc<span class="op">:::</span><span class="kw">mzn_eval</span>(<span class="dt">modelString =</span> modString, <span class="dt">solver =</span> <span class="st">&quot;org.gecode.gecode&quot;</span>,</span>
+<span id="cb31-3"><a href="#cb31-3"></a>                     <span class="dt">libpath =</span> <span class="st">&quot;/snap/minizinc/current/share/minizinc&quot;</span>)</span>
+<span id="cb31-4"><a href="#cb31-4"></a><span class="co"># get all the solutions</span></span>
+<span id="cb31-5"><a href="#cb31-5"></a><span class="kw">print</span>(solObj<span class="op">$</span>SOLUTIONS)</span></code></pre></div>
 <pre><code>## $SOLUTION0
 ## $SOLUTION0$x
 ## [1] 0 0 0
@@ -625,23 +641,23 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ## [1] 1 1 1</code></pre>
 <p>Some examples of how to use these functions to solve optimization problems can be found in <code>mzn_examples</code> which are taken from <a href="https://github.com/MiniZinc/minizinc-examples">minizinc-examples</a>.</p>
 <p>NOTE: Please don’t include output formatting in the mzn files or the solutions might not be parsed properly.</p>
-<p>The named list returned by <code>mzn_parse()</code> can be used to initialize all the R6 classes required to create the model that was parsed. This will help the user to use a lot of functions to understand, manipulate and use the model using the R6 objects. <code>getRModel()</code> is used to initialize all the relevant objects using named list returned by <code>mzn_parse()</code>. The support is only available for basic models currently but the scope will be increased soon.</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="co"># mzn file path</span></span>
-<span id="cb26-2"><a href="#cb26-2"></a>mzn_path =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">dirname</span>(<span class="kw">getwd</span>()), <span class="st">&quot;/inst/extdata/mzn_examples/production_planning/prod_plan_0.mzn&quot;</span>)</span>
-<span id="cb26-3"><a href="#cb26-3"></a></span>
-<span id="cb26-4"><a href="#cb26-4"></a><span class="co"># parse the model</span></span>
-<span id="cb26-5"><a href="#cb26-5"></a>parseObj =<span class="st"> </span>rminizinc<span class="op">:::</span><span class="kw">mzn_parse</span>(<span class="dt">mznpath =</span> mzn_path)</span></code></pre></div>
+<p>The named list returned by <code>mzn_parse()</code> can be used to initialize all the R6 classes in the MiniZinc API mirror required to create the model that was parsed. This will help the user to use a lot of functions to understand, manipulate and use the model using the R6 objects. <code>getRModel()</code> is used to initialize all the relevant objects using named list returned by <code>mzn_parse()</code>.</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a><span class="co"># mzn file path</span></span>
+<span id="cb33-2"><a href="#cb33-2"></a>mzn_path =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">dirname</span>(<span class="kw">getwd</span>()), <span class="st">&quot;/inst/extdata/mzn_examples/production_planning/prod_plan_0.mzn&quot;</span>)</span>
+<span id="cb33-3"><a href="#cb33-3"></a></span>
+<span id="cb33-4"><a href="#cb33-4"></a><span class="co"># parse the model</span></span>
+<span id="cb33-5"><a href="#cb33-5"></a>parseObj =<span class="st"> </span>rminizinc<span class="op">:::</span><span class="kw">mzn_parse</span>(<span class="dt">mznpath =</span> mzn_path)</span></code></pre></div>
 <pre><code>## Using default include path: /usr/local/lib/libminizinc/share/minizinc/std</code></pre>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a>modString =<span class="st"> </span><span class="kw">getRModel</span>(parseObj)<span class="op">$</span><span class="kw">mzn_string</span>()</span></code></pre></div>
-<pre><code>## Warning in rm(&quot;r_m_z_n_variableItems&quot;): object &#39;r_m_z_n_variableItems&#39; not found</code></pre>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a><span class="co"># dzn file path</span></span>
-<span id="cb30-2"><a href="#cb30-2"></a>dzn_path =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">dirname</span>(<span class="kw">getwd</span>()), <span class="st">&quot;/inst/extdata/mzn_examples/production_planning/prod_plan_0.dzn&quot;</span>)</span>
-<span id="cb30-3"><a href="#cb30-3"></a></span>
-<span id="cb30-4"><a href="#cb30-4"></a><span class="co"># R List object containing the solutions</span></span>
-<span id="cb30-5"><a href="#cb30-5"></a>solObj =<span class="st"> </span>rminizinc<span class="op">:::</span><span class="kw">mzn_eval</span>(<span class="dt">modelString =</span> modString, <span class="dt">solver =</span> <span class="st">&quot;org.gecode.gecode&quot;</span>,</span>
-<span id="cb30-6"><a href="#cb30-6"></a>                     <span class="dt">libpath =</span> <span class="st">&quot;/snap/minizinc/current/share/minizinc&quot;</span>, <span class="dt">dznpath =</span> dzn_path)</span>
-<span id="cb30-7"><a href="#cb30-7"></a><span class="co"># get all the solutions</span></span>
-<span id="cb30-8"><a href="#cb30-8"></a><span class="kw">print</span>(solObj<span class="op">$</span>SOLUTIONS)</span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a>modString =<span class="st"> </span><span class="kw">getRModel</span>(parseObj)<span class="op">$</span><span class="kw">mzn_string</span>()</span>
+<span id="cb35-2"><a href="#cb35-2"></a></span>
+<span id="cb35-3"><a href="#cb35-3"></a><span class="co"># dzn file path</span></span>
+<span id="cb35-4"><a href="#cb35-4"></a>dzn_path =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">dirname</span>(<span class="kw">getwd</span>()), <span class="st">&quot;/inst/extdata/mzn_examples/production_planning/prod_plan_0.dzn&quot;</span>)</span>
+<span id="cb35-5"><a href="#cb35-5"></a></span>
+<span id="cb35-6"><a href="#cb35-6"></a><span class="co"># R List object containing the solutions</span></span>
+<span id="cb35-7"><a href="#cb35-7"></a>solObj =<span class="st"> </span>rminizinc<span class="op">:::</span><span class="kw">mzn_eval</span>(<span class="dt">modelString =</span> modString, <span class="dt">solver =</span> <span class="st">&quot;org.gecode.gecode&quot;</span>,</span>
+<span id="cb35-8"><a href="#cb35-8"></a>                     <span class="dt">libpath =</span> <span class="st">&quot;/snap/minizinc/current/share/minizinc&quot;</span>, <span class="dt">dznpath =</span> dzn_path)</span>
+<span id="cb35-9"><a href="#cb35-9"></a><span class="co"># get all the solutions</span></span>
+<span id="cb35-10"><a href="#cb35-10"></a><span class="kw">print</span>(solObj<span class="op">$</span>SOLUTIONS)</span></code></pre></div>
 <pre><code>## $SOLUTION0
 ## $SOLUTION0$produce
 ## [1] 0 0
@@ -697,7 +713,6 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ## $OPTIMAL_SOLUTION$used
 ## [1] 900   4 450 500 150</code></pre>
 <p>The next step is to allow the users to modify a MiniZinc model using the R6 objects which will be demonstrated soon.</p>
-</div>
 </div>
 </div>
 

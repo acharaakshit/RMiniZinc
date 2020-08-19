@@ -10,7 +10,8 @@ mzn_eval(
   modelString = "",
   mznpath = "",
   dznpath = "",
-  all_solutions = TRUE
+  all_solutions = TRUE,
+  time_limit = 300000L
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ mzn_eval(
 \item{dznpath}{path of the datafile to be used.}
 
 \item{all_solutions}{bool to specify if all solutions are specified.}
+
+\item{time_limit}{stop after <time_limit> milliseconds}
 }
 \description{
 evaluates the MiniZinc model

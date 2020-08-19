@@ -19,10 +19,11 @@ using namespace Rcpp;
 //' @param mznpath the path of the MiniZinc model file.
 //' @param dznpath path of the datafile to be used.
 //' @param all_solutions bool to specify if all solutions are specified.
+//' @param time_limit stop after <time_limit> milliseconds
 // [[Rcpp::export]]
 List mzn_eval(std::string solver, std::string libpath,std::string modelString = "", 
                        std::string mznpath = "", std::string dznpath = "",
-                       bool all_solutions = true){
+                       bool all_solutions = true, int time_limit = 300000){
   
   modelString = pathStringcheck(modelString, mznpath);
   
@@ -32,7 +33,8 @@ List mzn_eval(std::string solver, std::string libpath,std::string modelString = 
     Rcpp:stop("only Gecode solver is supported for now");
   try {
     MznSolver slv(sol_strn, Rcpp::Rcerr);
-    vector<std::string> options({"--stdlib-dir", libpath, "--solver", solver, "--output-mode", "json"});
+    vector<std::string> options({"--stdlib-dir", libpath, "--solver", solver,
+                                "--output-mode", "json", "--time-limit", to_string(time_limit)});
     if(!dznpath.empty()) options.push_back(dznpath);
     if(all_solutions) options.push_back("-a");
     slv.run(options,modelString, "minizinc", "model.mzn");
