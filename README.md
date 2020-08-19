@@ -1,71 +1,63 @@
-# RMiniZinc
+# MINIZINC INTERFACE FOR R
 
 [![Build Status](https://travis-ci.org/acharaakshit/RMiniZinc.svg?branch=master)](https://travis-ci.org/acharaakshit/RMiniZinc)
 
-## Introduction
+### TABLE OF CONTENTS
 
-This package is aimed towards providing the r users to use MiniZinc from within R. The package vignette contains a basic demonstration of how to create and/or solve a MiniZinc model for a wide variety of constraint programming problems, obtain the string solution or parsed solution for an existing model. Please refer to the vignette for more information. 
+* [INTRODUCTION](#INTRODUCTION)
+* [INSTALLATION](#INSTALLATION)
+* [FEATURES](#FEATURES)
+* [SCOPE OF FEATURES](#SCOPE-OF-FEATURES)
+* [PROJECT STATUS](#PROJECT-STATUS)
+* [ACKNOWLEDGMENT](#ACKNOWLEDGMENT)
 
-## Getting Started
+### INTRODUCTION
 
-One of the prerequisites to use this package is that [MiniZinc](https://www.minizinc.org/) is installed on your system and has been added to the path. The installation instructions can be found [here](https://www.minizinc.org/doc-2.4.3/en/installation.html). This package is currently available only for linux users, the installation steps for osx and windows users will be released later.   
-To install minizinc : `snap install minizinc --classic` should be used. You can verify if MiniZinc is accessible from the command line by typing `minizinc`. You can use the package once you have set up MiniZinc.
-Once you have installed the snap binary, you need to build the [libminizinc](https://github.com/MiniZinc/libminizinc) library by following the steps given below:
+**rminizinc** is aimed towards providing the R users an interface to [MiniZinc](https://www.minizinc.org/). Various functionalities are providing for users that are comfortable with MiniZinc and use some results in their analysis in R and for users that are less confident in MiniZinc and want to create MiniZinc models and obtain results using R. The package [vignette](https://github.com/acharaakshit/RMiniZinc/blob/master/vignettes/R_MiniZinc.Rmd) contains a basic demonstration of all the features of the package and explains how to interpret the results.
 
-Clone the repository:
+### INSTALLATION
 
-`sudo git clone https://github.com/MiniZinc/libminizinc.git`
+This package is currently available only for Linux users, the support for OSX and Windows users will be added soon.   
 
-Now go to the libminizinc folder:
+* **Setting up MiniZinc**
+  * `snap install minizinc --classic`
+  * Install and set up [libminizinc]((https://github.com/MiniZinc/libminizinc.git))
+    * `sudo git clone https://github.com/MiniZinc/libminizinc.git`
+    * `cd libminizinc/`  
+    * `sudo sed -i '3 i set(CMAKE_POSITION_INDEPENDENT_CODE ON)' CMakeLists.txt`
+    * `sudo cmake CMakeLists.txt`
+    * `sudo make`
+    * `sudo make install`
+    * `sudo cp -r /snap/minizinc/current/share/minizinc/solvers  /path/to/libminizinc/share/minizinc`
+    * `cd share/minizinc/solvers`
+    * `sudo sed -i 's+../../../bin+/snap/minizinc/current/bin+g' gecode.msc`
+    * `export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/path/to/libminizinc`
+    * `sudo echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/path/to/libminizinc' >> ~/.bashrc`
+    * `sudo ldconfig`
+    * `sudo sed -i 's+../../../bin+/snap/minizinc/current/bin+g' gecode.msc`
 
-`cd libminizinc/`  
+* **Install rminizinc**
+  * `remotes::install_github("acharaakshit/rminizinc", configure.args="--with-mzn=/path/to/libminizinc")`  
+  * Please note that if path arguments are not passed along with the installation (as `--with-mzn`), the default path `/usr/local/lib` will be chosen so you will require to install libminizinc in `/usr/local/lib`.
 
-Set the flag to prevent the relocation errors while integrating the library with Rcpp:
+### FEATURES
 
-`sudo sed -i '3 i set(CMAKE_POSITION_INDEPENDENT_CODE ON)' CMakeLists.txt`
+    * Parse a MiniZinc model and get the details as a named list in R.
+    * Find the model parameters which have not been assigned a value yet.
+    * Set the values of unassigned parameters. (Scope needs to be extended)
+    * Solve a model and get parsed solutions as a named list in R.
+    * Create your own MiniZinc in R using the [R6](https://adv-r.hadley.nz/r6.html) classes from MiniZinc API mirror.
+    * Use the setter and getter functions of R6 classes to manipulate a model.
+    * Use the named list returned after parsing to initialize all the relevant objects in R, manipulate the model and serialize back to MiniZinc.
 
-Now, build the library (make sure you have `cmake` installed on your system):
+### SCOPE OF FEATURES
 
-`sudo cmake CMakeLists.txt`
+The features have been tested over a wide variety of problems but doesn't cover MiniZinc in its entirety. Please feel free to [open an issue](https://docs.github.com/en/enterprise/2.15/user/articles/creating-an-issue) or submit a PR if you find any problems in the package.
 
-`sudo make`
+### PROJECT STATUS
 
-`sudo make install`
+**Under Development**: Please note that the project is in it's early development stage and all the features haven't been tested for all of MiniZinc.
 
-Now you need to put the solver configurations from the MiniZinc binary to the libminizinc solvers:
-
-`sudo cp -r /snap/minizinc/current/share/minizinc/solvers  /path/to/libminizinc/share/minizinc`
-
-`cd share/minizinc/solvers`
-
-Change the paths accordingly in the library (Currently the package is only using Gecode solver to solve CP problems):
-
-`sudo sed -i 's+../../../bin+/snap/minizinc/current/bin+g' gecode.msc`
-
-Now, the library is built and you need to add it to the path:
-
-`export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/path/to/libminizinc`
-
-`sudo echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/path/to/libminizinc' >> ~/.bashrc`
-
-`sudo ldconfig`
-
-Other than solving CP problems using the libminizinc library, the package also uses the command line, so, you need to add the solvers from your binary to the path where minizinc can find them:
-
-`sudo cp -r /snap/minizinc/current/share/minizinc/. /usr/local/share/minizinc/`
-
-`cd /usr/local/share/minizinc/solvers`
-
-Change the path in the configuration files accordingly:
-
-`sudo sed -i 's+../../../bin+/snap/minizinc/current/bin+g' gecode.msc`
-
-The package can be installed using  
-`R CMD INSTALL rminizinc_0.0.0.99.tar.gz --configure-args='--with-mzn=/path/to/libminizinc'` if already built
-or using  
-`remotes::install_github("acharaakshit/rminizinc", configure.args="--with-mzn=/path/to/libminizinc")`  
-to directly install from github.
-
-Please note that if path arguments are not passed along with the installation, the default path `/usr/local/lib` will be chosen so you will require to install libminizinc in `/usr/local/lib`.
-
-Now, you can use the package!  
+### ACKNOWLEDGMENT
+  * Thanks to my mentor [Lars Kotthoff](https://github.com/larskotthoff) and co-mentors [Hans W Borchers](https://github.com/hwborchers) and [Guido Tack](https://github.com/guidotack) who helped me make key decisions for the project. Special thanks to [Jip Dekker](https://github.com/Dekker1) for solving my queries regarding libminizinc.
+  * I would like to thank all the developers of libminizinc.
