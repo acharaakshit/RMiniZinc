@@ -1,6 +1,6 @@
 #include <testthat.h>
 #include <Rcpp.h>
-#include "../src/getMissingPars.h"
+#include "../src/get_missing_pars.h"
 
 using namespace Rcpp;
 using namespace std;
@@ -31,7 +31,7 @@ context("verify the missing values"){
       mznpath = "../../inst/extdata/mzn_examples/knapsack/knapsack_0.mzn";
     }
     // missing parameter checks
-    CharacterVector missingVals = getMissingPars("", mznpath);
+    CharacterVector missingVals = get_missing_pars("", mznpath);
     expect_true(missingVals.size() == 4);
     
     vector<string> compareWith = {"n", "capacity", "profit", "size"};
@@ -62,7 +62,7 @@ context("verify the missing values"){
       mznpath = "../../inst/extdata/mzn_examples/knapsack/knapsack_2(bool).mzn";
     }
     // missing parameter checks
-    CharacterVector missingVals = getMissingPars("", mznpath);
+    CharacterVector missingVals = get_missing_pars("", mznpath);
     expect_true(missingVals.size() == 4);
     
     vector<string> compareWith = {"n", "capacity", "profit", "size"};
@@ -93,7 +93,7 @@ context("verify the missing values"){
       mznpath = "../../inst/extdata/mzn_examples/knapsack/knapsack_3(set_concise).mzn";
     }
     // missing parameter checks
-    CharacterVector missingVals = getMissingPars("", mznpath);
+    CharacterVector missingVals = get_missing_pars("", mznpath);
     expect_true(missingVals.size() == 4);
     
     vector<string> compareWith = {"n", "capacity", "profit", "size"};

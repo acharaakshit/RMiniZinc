@@ -1,6 +1,6 @@
 library(rminizinc)
 
-getMissingPars(mznpath = "inst/extdata/mzn_examples/Hamiltonian/Hamiltonian.mzn")
+get_missing_pars(mznpath = "inst/extdata/mzn_examples/Hamiltonian/Hamiltonian.mzn")
 
 pVals = list(G = c(1, 7,  1, 8,  1, 9,  1,10,
                           2, 3,  2, 9,  2,10,

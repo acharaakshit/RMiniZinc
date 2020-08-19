@@ -2,7 +2,7 @@
 #include <minizinc/hash.hh>
 #include <minizinc/prettyprinter.hh>
 #include "helper_parse.h"
-#include "expDetails.h"
+#include "exp_details.h"
 
 using namespace Rcpp;
 using namespace std;
@@ -58,7 +58,7 @@ List mzn_parse(std::string modelString = "",
     itemTrack.append(to_string(i + 1));
     if(items[i]->iid() == Item::II_VD){
       List variableDetails;
-      expDetails(items[i]->cast<VarDeclI>()->e(), variableDetails);
+      exp_details(items[i]->cast<VarDeclI>()->e(), variableDetails);
       variableDetails.push_back(i);
       variableDetails.names() = CharacterVector({"DETAILS", "ITEM_NO"});
       variables.push_back(variableDetails);
@@ -67,7 +67,7 @@ List mzn_parse(std::string modelString = "",
       List constraintInfo;
       Expression *cExp = items[i]->cast<ConstraintI>()->e();
       List cstDetails;
-      expDetails(cExp, cstDetails);
+      exp_details(cExp, cstDetails);
       constraintInfo.push_back(cstDetails);
       constraintInfo.push_back(i);
       constraintInfo.names() = CharacterVector({"DETAILS", "ITEM_NO"});
@@ -90,7 +90,7 @@ List mzn_parse(std::string modelString = "",
         }
         try{
           List slvExp;
-          expDetails(ci->e(), slvExp);
+          exp_details(ci->e(), slvExp);
           slvDetails.push_back(slvExp);
           slvnms.push_back("EXPRESSION");
         }catch(std::exception &e){
@@ -104,7 +104,7 @@ List mzn_parse(std::string modelString = "",
         for(ExpressionSetIter si = ci->ann().begin(); si != ci->ann().end(); ++si){
           List slvAnn;
           Expression *e = *si;
-          expDetails(e, slvAnn);
+          exp_details(e, slvAnn);
           slvAnns.push_back(slvAnn);
           string ann = "ARG";
           ann.append(to_string(annCount+1));
@@ -135,7 +135,7 @@ List mzn_parse(std::string modelString = "",
       
       if(fi->e() != NULL){
         List fnExp;
-        expDetails(fi->e(), fnExp);
+        exp_details(fi->e(), fnExp);
         fnDets.push_back(fnExp);
         fnDetnms.push_back("EXPRESSION");
       }else{
@@ -143,7 +143,7 @@ List mzn_parse(std::string modelString = "",
       }
       // if(fi->ti()->type().isvar()) cout << " VF" << endl;
       // return the return type-inst information
-      expDetails(fi->ti(), fnDets);
+      exp_details(fi->ti(), fnDets);
       fnDetnms.push_back("TYPE_INST");
       
       if(!fi->ann().isEmpty()){
@@ -153,7 +153,7 @@ List mzn_parse(std::string modelString = "",
         for(ExpressionSetIter si = fi->ann().begin(); si != fi->ann().end(); ++si){
           List fnAnn;
           Expression *e = *si;
-          expDetails(e, fnAnn);
+          exp_details(e, fnAnn);
           fnAnns.push_back(fnAnn);
           string ann = "ARG";
           ann.append(to_string(annCount+1));
@@ -172,7 +172,7 @@ List mzn_parse(std::string modelString = "",
         CharacterVector fplnms;
         
         Expression *pd = pars.operator[](k);
-        expDetails(pd, fnParLists);
+        exp_details(pd, fnParLists);
         string fp = "DECL";
         fp.append(to_string(k+1));
         fpnms.push_back(fp);
@@ -197,14 +197,14 @@ List mzn_parse(std::string modelString = "",
       Rcpp::warning("The model includes output formatting -- remove if parsed solutions are desired");
       List oput;
       OutputI *ot  = items[i]->cast<OutputI>();
-      expDetails(ot->e() , oput);
+      exp_details(ot->e() , oput);
       output.push_back(oput);
       output.push_back(i);
       output.names() = CharacterVector({"DETAILS", "ITEM_NO"});
     }else if(items[i]->iid() == Item::II_ASN){
       List assignExp;
       Expression *aExp = items[i]->cast<AssignI>()->e();
-      expDetails(aExp, assignExp);
+      exp_details(aExp, assignExp);
       List assignDetails;
       assignDetails.push_back(items[i]->cast<AssignI>()->id().c_str());
       assignDetails.push_back(assignExp);

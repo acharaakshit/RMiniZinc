@@ -95,7 +95,7 @@ mzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/jobshop/jobshop_
 parseObj=rminizinc:::mzn_parse(mznpath = mzn_path)
 
 ## -----------------------------------------------------------------------------
-missingPars = getMissingPars(modelString = parseObj$MODEL_STRING)
+missingPars = get_missing_pars(modelString = parseObj$MODEL_STRING)
 print(missingPars)
 
 ## -----------------------------------------------------------------------------
@@ -116,7 +116,7 @@ print(solObj$SOLUTIONS)
 mzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/knapsack/knapsack_0.mzn")
 
 # get missing parameter values
-missingVals=rminizinc:::getMissingPars( mznpath = mzn_path)
+missingVals=rminizinc:::get_missing_pars( mznpath = mzn_path)
 print(missingVals)
 
 # list of the data

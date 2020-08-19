@@ -1,12 +1,12 @@
 #include <Rcpp.h>
-#include "expDetails.h"
+#include "exp_details.h"
 
 using namespace Rcpp;
 using namespace MiniZinc;
 using namespace std;
 
 // mapping of BinOp type with strings
-std::string boStrMap(BinOpType OP){
+std::string bo_str_map(BinOpType OP){
   if(OP == BinOpType::BOT_DOTDOT) return "'..'";
   else if(OP == BinOpType::BOT_MINUS) return "'-'";
   else if(OP == BinOpType::BOT_PLUS) return "'+'" ;
@@ -38,14 +38,14 @@ std::string boStrMap(BinOpType OP){
 }
 
 // mapping of UnOp type with strings
-std::string uoStrMap(UnOpType OP){
+std::string uo_str_map(UnOpType OP){
   if(OP == UnOpType::UOT_PLUS) return "'+'";
   else if(OP == UnOpType::UOT_MINUS) return "'-'";
   else return "'not'";
 }
 
 // Type details for variable declarations
-std::string vType(Type tp){
+std::string get_type(Type tp){
   if(tp.isann()) return ("annotation"); 
   //else if(tp.bt() == Type::BT_BOT) return("bot");
   //else if(tp.bt() == Type::BT_TOP) return("top");
@@ -74,7 +74,7 @@ std::string vType(Type tp){
   return "type couldn't be  identified";
 }
 
-void expDetails(MiniZinc::Expression *exp, List &expList){
+void exp_details(MiniZinc::Expression *exp, List &expList){
   if(exp == NULL){
    Rcpp::stop("Parse error"); 
   }if(exp->eid() == Expression::E_COMP){
@@ -95,7 +95,7 @@ void expDetails(MiniZinc::Expression *exp, List &expList){
         for(int j = 0; j < cp->n_decls(i); j++){
           List declList;
           Expression *vd = cp->decl(i, j);
-          expDetails(vd, declList);
+          exp_details(vd, declList);
           declLists.push_back(declList);
           string vn = "DECL";
           vn.append(to_string(j+1));
@@ -110,13 +110,13 @@ void expDetails(MiniZinc::Expression *exp, List &expList){
         
         // in expression for this generator
         if(inExp != NULL){
-          expDetails(inExp, inList);
+          exp_details(inExp, inList);
           Gentr.push_back(inList);
           gtrnms.push_back("IN");
         }
         // where expression for this generator
         if(whereExp != NULL){
-          expDetails(whereExp, whereList);
+          exp_details(whereExp, whereList);
           Gentr.push_back(whereList);
           gtrnms.push_back("WHERE");
         }
@@ -134,7 +134,7 @@ void expDetails(MiniZinc::Expression *exp, List &expList){
     Comp.names() = CharacterVector({"GENERATORS", "SET"}); 
     List cExp;
     if(exp->cast<Comprehension>()->e() != NULL){
-      expDetails(exp->cast<Comprehension>()->e() , cExp);
+      exp_details(exp->cast<Comprehension>()->e() , cExp);
       Comp.push_back(cExp);
       Comp.names() = CharacterVector({"GENERATORS", "IS_SET", "EXPRESSION"}); 
     }
@@ -161,7 +161,7 @@ void expDetails(MiniZinc::Expression *exp, List &expList){
       CharacterVector stnms;
       for(int p = 0; p < expVec.size(); p++){
         List setVec;
-        expDetails(expVec.operator[](p), setVec);
+        exp_details(expVec.operator[](p), setVec);
         setVecs.push_back(setVec);
         string st = "ELEMENT";
         st.append(to_string(p+1));
@@ -193,7 +193,7 @@ void expDetails(MiniZinc::Expression *exp, List &expList){
     for(int p = 0;p < al->getVec().size(); p++ ){
       // get the expression form of each element
       List ArrVec;
-      expDetails(al->getVec().operator[](p), ArrVec);
+      exp_details(al->getVec().operator[](p), ArrVec);
       ArrVecs.push_back(ArrVec);
       string av = "ELEMENT";
       av.append(to_string(p+1));
@@ -208,7 +208,7 @@ void expDetails(MiniZinc::Expression *exp, List &expList){
     List cnms;
     for(int k = 0; k < cl->n_args(); k++){
       List cArg;
-      expDetails(cl->arg(k), cArg);
+      exp_details(cl->arg(k), cArg);
       cArgs.push_back(cArg);
       string ct = "ARG";
       ct.append(to_string(k+1));
@@ -224,12 +224,12 @@ void expDetails(MiniZinc::Expression *exp, List &expList){
   }else if(exp->eid() == Expression::E_BINOP){
     BinOp *boExp = exp->cast<BinOp>();
     List boLhs;
-    expDetails(boExp->lhs(), boLhs);
+    exp_details(boExp->lhs(), boLhs);
     List boRhs;
-    expDetails(boExp->rhs(), boRhs);
+    exp_details(boExp->rhs(), boRhs);
     List boList;
     boList.push_back(boLhs);
-    boList.push_back(boStrMap(boExp->op()));
+    boList.push_back(bo_str_map(boExp->op()));
     boList.push_back(boRhs);
     boList.names() = CharacterVector({"LHS", "BINARY_OPERATOR", "RHS"});
     expList.push_back(boList);
@@ -240,7 +240,7 @@ void expDetails(MiniZinc::Expression *exp, List &expList){
     CharacterVector uonms;
     for(int i=0; i < uo->n_args(); i++) {
       List uoArg;
-      expDetails(uo->arg(i), uoArg);
+      exp_details(uo->arg(i), uoArg);
       uoArgs.push_back(uoArg);
       string ut = "ARG";
       ut.append(to_string(i+1));
@@ -248,7 +248,7 @@ void expDetails(MiniZinc::Expression *exp, List &expList){
     }
     uoArgs.names() = uonms;
     List uoList;
-    uoList.push_back(uoStrMap(uo->op()));
+    uoList.push_back(uo_str_map(uo->op()));
     uoList.push_back(uoArgs);
     uoList.names() = CharacterVector({"UNARY_OPERATOR", "ARGUMENTS"});
     expList.push_back(uoList);
@@ -256,13 +256,13 @@ void expDetails(MiniZinc::Expression *exp, List &expList){
   }else if(exp->eid() == Expression::E_LET){
     Let *lt = exp->cast<Let>();
     List inExp;
-    expDetails(lt->in(), inExp); 
+    exp_details(lt->in(), inExp); 
     List ltExps;
     CharacterVector ltnms;
     ASTExprVec<Expression> letVec = lt->let();
     for(int i = 0; i< letVec.size(); i++ ){
       List ltExp;
-      expDetails(letVec.operator[](i), ltExp);
+      exp_details(letVec.operator[](i), ltExp);
       ltExps.push_back(ltExp);
       string lt = "LET";
       lt.append(to_string(i+1));
@@ -276,13 +276,13 @@ void expDetails(MiniZinc::Expression *exp, List &expList){
     expList.names() = CharacterVector({"LET"});
   }else if(exp->eid() == Expression::E_ARRAYACCESS){
     List aaDetails;
-    expDetails(exp->cast<ArrayAccess>()->v(), aaDetails);
+    exp_details(exp->cast<ArrayAccess>()->v(), aaDetails);
     const ASTExprVec<Expression> astExp = exp->cast<ArrayAccess>()->idx();
     List aaArgs;
     CharacterVector aanms;
     for(int i = 0; i < astExp.size(); i++){
       List aaArg;
-      expDetails(astExp.operator[](i), aaArg);
+      exp_details(astExp.operator[](i), aaArg);
       aaArgs.push_back(aaArg);
       string aa = "ARG";
       aa.append(to_string(i+1));
@@ -303,14 +303,14 @@ void expDetails(MiniZinc::Expression *exp, List &expList){
     CharacterVector thennms;
     for(int i=0; i < ite->size(); i++){
       List ifExp;
-      expDetails(ite->e_if(i), ifExp);
+      exp_details(ite->e_if(i), ifExp);
       ifExps.push_back(ifExp);
       string iF = "IF";
       iF.append(to_string(i+1));
       ifnms.push_back(iF);
       
       List thenExp;
-      expDetails(ite->e_then(i), thenExp);
+      exp_details(ite->e_then(i), thenExp);
       thenExps.push_back(thenExp);
       string then = "THEN";
       then.append(to_string(i+1));
@@ -319,7 +319,7 @@ void expDetails(MiniZinc::Expression *exp, List &expList){
     ifExps.names() = ifnms;
     thenExps.names() = thennms;
     List elseExp;
-    expDetails(ite->e_else(), elseExp);
+    exp_details(ite->e_else(), elseExp);
     List iteList = {ifExps, thenExps, elseExp};
     iteList.names() = CharacterVector({"IF", "THEN", "ELSE"});
     expList.push_back(iteList);
@@ -328,19 +328,17 @@ void expDetails(MiniZinc::Expression *exp, List &expList){
     VarDecl *vd =  exp->cast<VarDecl>();
     List vdDetails;
     CharacterVector vdnms;
-    expDetails(vd->id(), vdDetails);
+    exp_details(vd->id(), vdDetails);
     vdnms.push_back("NAME");
-  
     // vdDetails.push_back(vType(vd->type()));
     // vdnms.push_back("TYPE");
-    
-    expDetails(vd->ti(), vdDetails);
+    exp_details(vd->ti(), vdDetails);
     vdnms.push_back("TYPE_INST");
     
     Expression *vExp = vd->e();
     if(vExp != NULL){
       List varVal;
-      expDetails(vExp, varVal);
+      exp_details(vExp, varVal);
       vdDetails.push_back(varVal);
       vdnms.push_back("VALUE");
     }
@@ -367,7 +365,7 @@ void expDetails(MiniZinc::Expression *exp, List &expList){
     Expression *dExp = tExp->domain();
     if(dExp!=NULL){
       List varDomain;
-      expDetails(dExp, varDomain);
+      exp_details(dExp, varDomain);
       if(varDomain.length()){
         TI.push_back(varDomain);
         tinms.push_back("DOMAIN");
@@ -380,7 +378,7 @@ void expDetails(MiniZinc::Expression *exp, List &expList){
     for(int s = 0; s < index_ti.size(); s++){
       List index;
       if(index_ti.operator[](s)->domain() != NULL){
-        expDetails(index_ti.operator[](s)->domain() , index);
+        exp_details(index_ti.operator[](s)->domain() , index);
         indices.push_back(index);
       }else{
         index.push_back("int");
@@ -398,7 +396,7 @@ void expDetails(MiniZinc::Expression *exp, List &expList){
       tinms.push_back("INDEX");
     }
     
-    TI.push_back(vType(tExp->type()));
+    TI.push_back(get_type(tExp->type()));
     tinms.push_back("TYPE");
     
     TI.names() = tinms;

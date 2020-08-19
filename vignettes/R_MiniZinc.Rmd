@@ -284,10 +284,10 @@ Look at the contents of parseObj for more understanding of the model.
 
 ### Find the Missing Parameters
 
-The missing parameters can be obtained using `getMissingPars()`
+The missing parameters can be obtained using `get_missing_pars()`
 
 ```{r}
-missingPars = getMissingPars(modelString = parseObj$MODEL_STRING)
+missingPars = get_missing_pars(modelString = parseObj$MODEL_STRING)
 print(missingPars)
 ```
 
@@ -326,7 +326,7 @@ Let's solve another problem.
 mzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/knapsack/knapsack_0.mzn")
 
 # get missing parameter values
-missingVals=rminizinc:::getMissingPars( mznpath = mzn_path)
+missingVals=rminizinc:::get_missing_pars( mznpath = mzn_path)
 print(missingVals)
 
 # list of the data

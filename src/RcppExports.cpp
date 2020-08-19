@@ -5,9 +5,9 @@
 
 using namespace Rcpp;
 
-// getMissingPars
-Rcpp::CharacterVector getMissingPars(std::string modelString, std::string mznpath, std::string modelStringName, Nullable<std::vector<std::string>> includePath);
-RcppExport SEXP _rminizinc_getMissingPars(SEXP modelStringSEXP, SEXP mznpathSEXP, SEXP modelStringNameSEXP, SEXP includePathSEXP) {
+// get_missing_pars
+Rcpp::CharacterVector get_missing_pars(std::string modelString, std::string mznpath, std::string modelStringName, Nullable<std::vector<std::string>> includePath);
+RcppExport SEXP _rminizinc_get_missing_pars(SEXP modelStringSEXP, SEXP mznpathSEXP, SEXP modelStringNameSEXP, SEXP includePathSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -15,7 +15,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< std::string >::type mznpath(mznpathSEXP);
     Rcpp::traits::input_parameter< std::string >::type modelStringName(modelStringNameSEXP);
     Rcpp::traits::input_parameter< Nullable<std::vector<std::string>> >::type includePath(includePathSEXP);
-    rcpp_result_gen = Rcpp::wrap(getMissingPars(modelString, mznpath, modelStringName, includePath));
+    rcpp_result_gen = Rcpp::wrap(get_missing_pars(modelString, mznpath, modelStringName, includePath));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -80,7 +80,7 @@ END_RCPP
 RcppExport SEXP run_testthat_tests();
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_rminizinc_getMissingPars", (DL_FUNC) &_rminizinc_getMissingPars, 4},
+    {"_rminizinc_get_missing_pars", (DL_FUNC) &_rminizinc_get_missing_pars, 4},
     {"_rminizinc_mzn_eval", (DL_FUNC) &_rminizinc_mzn_eval, 7},
     {"_rminizinc_mzn_parse", (DL_FUNC) &_rminizinc_mzn_parse, 4},
     {"_rminizinc_set_params", (DL_FUNC) &_rminizinc_set_params, 5},

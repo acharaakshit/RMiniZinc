@@ -6,14 +6,14 @@
 #' @description get the names of missing parameters in a model
 #' 
 #' @importFrom Rcpp sourceCpp
-#' @export getMissingPars
+#' @export get_missing_pars
 #' @useDynLib rminizinc, .registration=TRUE
 #' @param modelString the string representation of a MiniZinc model
 #' @param mznpath the path of the MiniZinc model mzn file
 #' @param modelStringName the custom name of the mzn string
 #' @param includePath path of the included mzn in the model if it exists.
-getMissingPars <- function(modelString = "", mznpath = "", modelStringName = "missing_pars.h", includePath = NULL) {
-    .Call(`_rminizinc_getMissingPars`, modelString, mznpath, modelStringName, includePath)
+get_missing_pars <- function(modelString = "", mznpath = "", modelStringName = "missing_pars.h", includePath = NULL) {
+    .Call(`_rminizinc_get_missing_pars`, modelString, mznpath, modelStringName, includePath)
 }
 
 #' @title MiniZinc model evaluation

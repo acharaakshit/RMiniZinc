@@ -9,14 +9,14 @@ using namespace MiniZinc;
 //' @description get the names of missing parameters in a model
 //' 
 //' @importFrom Rcpp sourceCpp
-//' @export getMissingPars
+//' @export get_missing_pars
 //' @useDynLib rminizinc, .registration=TRUE
 //' @param modelString the string representation of a MiniZinc model
 //' @param mznpath the path of the MiniZinc model mzn file
 //' @param modelStringName the custom name of the mzn string
 //' @param includePath path of the included mzn in the model if it exists.
 // [[Rcpp::export]]
-Rcpp::CharacterVector getMissingPars(std::string modelString = "",
+Rcpp::CharacterVector get_missing_pars(std::string modelString = "",
                                      std::string mznpath = "",
                                      std::string modelStringName = "missing_pars.h",
                                      Nullable<std::vector<std::string>> includePath = R_NilValue){

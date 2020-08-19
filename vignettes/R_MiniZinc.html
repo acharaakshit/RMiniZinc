@@ -10,7 +10,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<meta name="author" content="Akshit Achara" />
+<meta name="author" content="Akshit Achara, Lars Kotthoff" />
 
 <meta name="date" content="2020-08-19" />
 
@@ -318,7 +318,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 <h1 class="title toc-ignore">MiniZinc Interface for R</h1>
-<h4 class="author">Akshit Achara</h4>
+<h4 class="author">Akshit Achara, Lars Kotthoff</h4>
 <h4 class="date">2020-08-19</h4>
 
 
@@ -487,7 +487,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <em>Description</em>: <code>DETAILS</code> are the details about the expressions.</p>
 <p><em>Name</em>: <code>FUNCTION_ITEMS</code><br />
 <em>Components</em>: <code>FUNCTION&lt;n&gt;</code> is the list of functions with components: <code>DETAILS</code> and <code>ITEM_NO</code>.<br />
-<em>Description</em>: <code>DETAILS</code> are the details that can <code>EXPRESSION</code>, <code>ANNOTATION</code> or <code>PARAMETER_DECLARATIONS</code>.</p>
+<em>Description</em>: <code>DETAILS</code> are the details that can <code>EXPRESSION</code>, <code>ANNOTATION</code>, <code>TYPE_INST</code> <code>PARAMETER_DECLARATIONS</code>.</p>
 <p><em>Name</em>: <code>SOLVE_TYPE</code><br />
 <em>Components</em>: <code>DETAILS</code>, <code>OBJECTIVE</code> and <code>ITEM_NO</code><br />
 <em>Description</em>: <code>DETAILS</code> are the details that can <code>EXPRESSION</code> or <code>ANNOTATION</code>, <code>OBJECTIVE</code> can be “satisfy”, “minimize” or “maximize”.</p>
@@ -553,12 +553,15 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 </div>
 </div>
 <div id="find-the-missing-parameters" class="section level3">
-<h3>Find the missing parameters</h3>
-<p>The missing parameters can be obtained using <code>getMissingPars()</code></p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>missingPars =<span class="st"> </span><span class="kw">getMissingPars</span>(<span class="dt">modelString =</span> parseObj<span class="op">$</span>MODEL_STRING)</span></code></pre></div>
+<h3>Find the Missing Parameters</h3>
+<p>The missing parameters can be obtained using <code>get_missing_pars()</code></p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>missingPars =<span class="st"> </span><span class="kw">get_missing_pars</span>(<span class="dt">modelString =</span> parseObj<span class="op">$</span>MODEL_STRING)</span></code></pre></div>
 <pre><code>## Using default include path: /usr/local/lib/libminizinc/share/minizinc/std</code></pre>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="kw">print</span>(missingPars)</span></code></pre></div>
 <pre><code>## [1] &quot;n&quot;  &quot;m&quot;  &quot;d&quot;  &quot;mc&quot;</code></pre>
+</div>
+<div id="set-values-of-missing-parameters" class="section level3">
+<h3>Set Values of Missing Parameters</h3>
 <p>The function <code>set_params()</code> can be used to set the missing parameters of the model. Any number of missing parameters from 1 to the number of missing parameters can be set. The values for n dimensional arrays or sets can be provided as vectors like c(1, 2, .., n). The indices of the arrays will be automatically retrieved and the values of the arrays will be stored as <code>arraynd()</code> functions. The values should be provided as a named list where the names of each value is the name of the paramaeter. The string representation of the updated model will be returned on call. In case an mzn file path is provided it can also be updated after setting the values by setting <code>modifyMZN</code> to <code>TRUE</code>.</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a>pVals =<span class="st"> </span><span class="kw">list</span>(<span class="dv">3</span>, <span class="dv">4</span>, <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">4</span>), </span>
 <span id="cb20-2"><a href="#cb20-2"></a>             <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">3</span>))</span>
@@ -567,8 +570,11 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <pre><code>## Using default include path: /usr/local/lib/libminizinc/share/minizinc/std</code></pre>
 <pre><code>## Warning in set_params(modData = pVals, mznpath = mzn_path): Data Type is Unknown
 ## -- coercing to int</code></pre>
+</div>
+<div id="solve-the-model-1" class="section level3">
+<h3>Solve the Model</h3>
 <p>The function <code>mzn_eval()</code> is used to evaluate a MiniZinc model and returns the solution string and a list of solutions if they were parsed without any error by the function <code>sol_parse()</code> otherwise it returns the solution string and an appropriate error. The parsed solutions are a named list where elements are of type <code>OBJ$SOLUTIONS$SOLUTION&lt;n&gt;$&lt;VARIABLE_NAME&gt;</code>. The optimal solution if found can be accessed using <code>OBJ$SOLUTIONS$OPTIMAL_SOLUTION</code> and the best solution can be accessed using <code>OBJ$SOLUTIONS$BEST_SOLUTION</code>. More details about the functions can be obtained using <code>?mzn_eval</code> and <code>?sol_parse</code>.</p>
-<p>The solver that should be used to solve the model needs to be specified by the user (default is Gecode) and the libpath (path of the MiniZinc executable) should also be provided. If the user wishes to provide a data file, it’s path can be provided to the argument <code>dznpath</code>.</p>
+<p>The solver that should be used to solve the model needs to be specified by the user (default is Gecode) and the libpath (path of the MiniZinc executable) should also be provided. If the user wishes to provide a data file, it’s path can be provided to the argument <code>dznpath</code>. A time limit (in ms) can also be provided to the argument <code>time_limit</code>. (default is 300000 ms)</p>
 <p>A sample job shop problem has been solved below:</p>
 <div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="co"># R List object containing the solutions</span></span>
 <span id="cb23-2"><a href="#cb23-2"></a>solObj =<span class="st"> </span>rminizinc<span class="op">:::</span><span class="kw">mzn_eval</span>(<span class="dt">modelString =</span> modString, <span class="dt">solver =</span> <span class="st">&quot;org.gecode.gecode&quot;</span>,</span>
@@ -590,7 +596,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb25-2"><a href="#cb25-2"></a>mzn_path =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">dirname</span>(<span class="kw">getwd</span>()), <span class="st">&quot;/inst/extdata/mzn_examples/knapsack/knapsack_0.mzn&quot;</span>)</span>
 <span id="cb25-3"><a href="#cb25-3"></a></span>
 <span id="cb25-4"><a href="#cb25-4"></a><span class="co"># get missing parameter values</span></span>
-<span id="cb25-5"><a href="#cb25-5"></a>missingVals=rminizinc<span class="op">:::</span><span class="kw">getMissingPars</span>( <span class="dt">mznpath =</span> mzn_path)</span></code></pre></div>
+<span id="cb25-5"><a href="#cb25-5"></a>missingVals=rminizinc<span class="op">:::</span><span class="kw">get_missing_pars</span>( <span class="dt">mznpath =</span> mzn_path)</span></code></pre></div>
 <pre><code>## Using default include path: /usr/local/lib/libminizinc/share/minizinc/std</code></pre>
 <div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="kw">print</span>(missingVals)</span></code></pre></div>
 <pre><code>## [1] &quot;n&quot;        &quot;capacity&quot; &quot;profit&quot;   &quot;size&quot;</code></pre>

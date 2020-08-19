@@ -37,7 +37,7 @@ test_that("jobshop problems are solved without issues",{
 
   expect_length(parseInfo$CONSTRAINTS, 2)
   
-  missingPars = getMissingPars(mznpath = mznName)
+  missingPars = get_missing_pars(mznpath = mznName)
   expect_equal(missingPars, c("n", "m", "d", "mc"))
   
   pVals = list(3, 4, c(3,3,4,4,4,3,2,2,3,3,3,4),
@@ -46,7 +46,7 @@ test_that("jobshop problems are solved without issues",{
   
   modString = set_params(modData = pVals, mznpath = mznName, modify_mzn = FALSE)
   #print(modString)
-  expect_length(getMissingPars(modelString = modString), 0)
+  expect_length(get_missing_pars(modelString = modString), 0)
   
   mzn_eval(solver = "org.gecode.gecode", libpath = "/snap/minizinc/current/share/minizinc",
            modelString = modString)  
@@ -94,7 +94,7 @@ test_that("production planning problems are solved",{
   expect_equal(parseInfo$SOLVE_TYPE$OBJECTIVE, "maximize")
   
   # get the names of missing parameters
-  missingnames = getMissingPars(mznpath = mznName)
+  missingnames = get_missing_pars(mznpath = mznName)
   
   # set the values of these missing parameters
   pVals = list(2,c(400, 500), c("banana-cake", "chocolate-cake"), 5, c(4000, 6, 2000, 500, 500),
@@ -105,7 +105,7 @@ test_that("production planning problems are solved",{
   
   modString = set_params(modData = pVals, mznpath= mznName, modify_mzn = FALSE)
   
-  expect_length(getMissingPars(modelString = modString), 0)
+  expect_length(get_missing_pars(modelString = modString), 0)
   
   # evaluate the function and get the solutions
   solution = mzn_eval(modelString = modString, solver = "org.gecode.gecode",
@@ -152,7 +152,7 @@ test_that("assignment problems can be solved", {
   expect_equal(parseInfo$INCLUDES$INCLUDE1$INCLUDED_MZN, "inverse.mzn")
   expect_equal(parseInfo$SOLVE_TYPE$OBJECTIVE, "maximize")
   
-  missingPars = getMissingPars(mznpath = mznName)
+  missingPars = get_missing_pars(mznpath = mznName)
   expect_equal(missingPars, c("n", "m", "profit"))
   
   pVals = list(4, 4, c(7, 1, 3, 4, 8, 2, 5, 1, 4, 3, 7, 2, 3, 1, 6, 3))
@@ -231,7 +231,7 @@ test_that("crazy set problems can be solved", {
   expect_equal(parseInfo$SOLVE_TYPE$OBJECTIVE, "satisfy")
   
  
-  missingPars = getMissingPars(mznpath = mznName)
+  missingPars = get_missing_pars(mznpath = mznName)
   
   pVals = list(10, 4, 4)
   names(pVals) = missingPars

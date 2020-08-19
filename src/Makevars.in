@@ -1,9 +1,9 @@
 CXX_STD = CXX11
 PKG_CPPFLAGS = -I. @MZN_INCLUDE@
 PKG_LIBS = @MZN_LIBS@  
-OBJECTS.tests = cpp_tests/test-runner.o cpp_tests/test-mzn_parse.o cpp_tests/test-set_params.o cpp_tests/test-mzn_eval.o cpp_tests/test-sol_parse.o  cpp_tests/test-getMissingPars.o 
-OBJECTS.sources = RcppExports.o set_params.o mzn_parse.o mzn_eval.o sol_parse.o getMissingPars.o  
-OBJECTS.helpers = helper_parse.o expDetails.o
+OBJECTS.tests = cpp_tests/test-runner.o cpp_tests/test-mzn_parse.o cpp_tests/test-set_params.o cpp_tests/test-mzn_eval.o cpp_tests/test-sol_parse.o  cpp_tests/test-get_missing_pars.o 
+OBJECTS.sources = RcppExports.o set_params.o mzn_parse.o mzn_eval.o sol_parse.o get_missing_pars.o  
+OBJECTS.helpers = helper_parse.o exp_details.o
 OBJECTS=$(OBJECTS.sources) $(OBJECTS.tests) $(OBJECTS.helpers) $(SOURCES:.cpp=.o)
 strippedLib: clean $(SHLIB)
 	if test -e "/usr/bin/strip"; then /usr/bin/strip --strip-debug $(SHLIB); fi
