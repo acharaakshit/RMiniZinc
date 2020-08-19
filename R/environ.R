@@ -8,4 +8,4 @@
                           "^", "div", "mod", "/", "++", "xor", "in", "=")
 .globals$unopTypes = c("+", "-", "not")
 .globals$objectives = c("satisfy", "maximize", "minimize")
-
+.globals$help_track_decls = NULL
