@@ -49,7 +49,7 @@ create an array in MiniZinc
 \subsection{Method \code{new()}}{
 constructor for an int literal
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Array$new(exprVec, dims = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Array$new(exprVec, dimranges = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -57,7 +57,7 @@ constructor for an int literal
 \describe{
 \item{\code{exprVec}}{list of expressions in the array}
 
-\item{\code{dims}}{dimension expression vector}
+\item{\code{dimranges}}{list of min and max index of each dimension}
 }
 \if{html}{\out{</div>}}
 }
@@ -76,7 +76,7 @@ get the number of dimensions
 \if{html}{\out{<a id="method-getDim"></a>}}
 \if{latex}{\out{\hypertarget{method-getDim}{}}}
 \subsection{Method \code{getDim()}}{
-get the ith dimension vector
+get the ith element from vector
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Array$getDim(i)}\if{html}{\out{</div>}}
 }

@@ -278,33 +278,71 @@ Array = R6Class("Array",
                 public = list(
                    #' @description constructor for an int literal
                    #' @param exprVec list of expressions in the array
-                   #' @param dims dimension expression vector
-                   initialize =  function(exprVec, dims = NULL){
+                   #' @param dimranges list of min and max index of each dimension
+                   initialize =  function(exprVec, dimranges = NULL){
                      assert_list(exprVec, "Expression")
                      private$.exprVec = exprVec
-                     assertTRUE(testList(dims, "Expression") || testNull(dims))
-                     private$.dims = dims 
+                     if(testNull(dimranges)){
+                       message("dimensions not provided: initializing as 1d Array with
+                               min index 1 and max index <number_of_elements>")
+                       private$.dims = list(IntSetVal$new(imin = 1, imax = length(exprVec)))
+                     }else{
+                       assertList(dimranges, "IntSetVal") 
+                       assertTRUE(length(dimranges) > 0)
+                       if(length(dimranges) > 2){
+                         stop("3 or higher dimensional sliced array literals not supported")
+                       }
+                       dim_sum = 1
+                       for (i in seq(1, length(dimranges), 1)) {
+                           x = dimranges[[i]]
+                           dim_sum = dim_sum * (x$getMax() - x$getMin() + 1)
+                        }
+                       assertTRUE(dim_sum == length(exprVec))
+                       private$.dims = dimranges 
+                     }
                    },
                    #' @description get the number of dimensions
                    ndims = function(){
-                     return (length(private$.exprVec))
+                     return (length(private$.dims))
                    },
-                   #' @description get the ith dimension vector
+                   #' @description get the ith element from vector
                    #' @param i index
                    getDim = function(i){
-                     assert_true(i >= 1 && i <= length(dims))
-                     return(private$.dims[i])
+                     return(private$.exprVec[[i]])
                    },
                    #' @description return the MiniZinc representation
                    c_str = function(){
                      retStr = ""
-                     for (i in seq(1, length(private$.exprVec), 1)) {
-                       retStr = paste0(retStr, private$.exprVec[[i]]$c_str())
-                       if(i < length(private$.exprVec)){
-                         retStr = paste0(retStr, ", ")
+                     if(length(private$.dims) == 2){
+                       retStr = "|"
+                       dim1 = private$.dims[[1]]$getMax() - private$.dims[[1]]$getMin() + 1
+                       dim2 = private$.dims[[2]]$getMax() - private$.dims[[2]]$getMin() + 1
+                       print(dim1)
+                       print(dim2)
+                       slice_flag = 1
+                       for (i in seq(1, length(private$.exprVec), 1)) {
+                           if(slice_flag == 2){
+                              slice_flag = 1 
+                           }
+                           retStr = paste0(retStr, private$.exprVec[[i]]$c_str())
+                           if((i %% dim2 == 0 && slice_flag %% 2 != 0) || 
+                              (i %% dim1 == 0 && slice_flag %% 2 == 0)){
+                             slice_flag = 2
+                             retStr = paste0(retStr, "|\n")
+                           }else{
+                             retStr = paste0(retStr, ", ")
+                           }
+                         }
+                     }else{
+                       for (i in seq(1, length(private$.exprVec), 1)) {
+                         retStr = paste0(retStr, private$.exprVec[[i]]$c_str())
+                         if(i < length(private$.exprVec)){
+                           retStr = paste0(retStr, ", ")
+                         }
                        }
-                     }
-                     return(sprintf("[%s]", retStr))
+                      }
+                       
+                    return(sprintf("[%s]", retStr))
                    }
                  ),
                  private = list(

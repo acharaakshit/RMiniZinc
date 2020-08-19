@@ -267,8 +267,9 @@ Each parent has different properties that define it's structure. The properties 
 *Description*: `MIN` , `MAX` and `ELEMENT<n>` are all expression types (mostly basic expressions).
 
 *Name*: `ARRAY`  
-*Components*: `ELEMENT<n>` where n is the serial number of the element.  
-*Description*: `ELEMENT<n>` is an expression.
+*Components*: `ELEMENTS` and `DIM_SIZE`  
+*Description*: `ELEMENTS` have sub fields to type `ELEMENT<n>` where n is the serial number of the element and `DIM_SIZE` has sub fields `DIM<n>` which have the `MIN` and `MAX` index value of each dimension.
+
 
 Now, let's parse a job shop model:
 

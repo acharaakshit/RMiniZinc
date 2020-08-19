@@ -190,6 +190,15 @@ void exp_details(MiniZinc::Expression *exp, List &expList){
     ArrayLit *al = exp->cast<ArrayLit>();
     List ArrVecs;
     CharacterVector arrnms;
+    List AlDim;
+    CharacterVector aldimnms;
+    for(int i = 0; i < al->dims(); i++){
+      AlDim.push_back(IntegerVector::create(Named("MIN",al->min(i)), Named("MAX")=al->max(i)));
+      string d = "DIM";
+      d.append(to_string(i+1));
+      aldimnms.push_back(d);
+    }
+    AlDim.names() = aldimnms;
     for(int p = 0;p < al->getVec().size(); p++ ){
       // get the expression form of each element
       List ArrVec;
@@ -200,7 +209,8 @@ void exp_details(MiniZinc::Expression *exp, List &expList){
       arrnms.push_back(av);
     }
     ArrVecs.names() = arrnms;
-    expList.push_back(ArrVecs);
+    List AV = List::create(Named("DIM_SIZE") = AlDim , _["ELEMENTS"] = ArrVecs);
+    expList.push_back(AV);
     expList.names() = CharacterVector({"ARRAY"});
   }else if(exp->eid() == Expression::E_CALL){ 
     Call *cl = exp->cast<Call>();

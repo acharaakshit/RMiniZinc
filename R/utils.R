@@ -171,11 +171,16 @@ initExpression = function(pList){
     }
     return(Annotation$new(expVec = expObjs))
   }else if(names(pList) == "ARRAY"){
-    expList = list()
-    for (i in seq(1, length(pList$ARRAY), 1)) {
-      expList = list.append(expList, initExpression(pList$ARRAY[[i]]))
+    dims  = c()
+    for (i in seq(1, length(pList$ARRAY$DIM_SIZE), 1)) {
+      dims = c(dims, IntSetVal$new(imin =  pList$ARRAY$DIM_SIZE[[i]][["MIN"]],
+                                  imax = pList$ARRAY$DIM_SIZE[[i]][["MAX"]]))
     }
-    return(Array$new(exprVec = expList))
+    expList = list()
+    for (i in seq(1, length(pList$ARRAY$ELEMENTS), 1)) {
+      expList = list.append(expList, initExpression(pList$ARRAY$ELEMENTS[[i]]))
+    }
+    return(Array$new(exprVec = expList, dimranges = dims))
   }else if(names(pList) == "IF_THEN_ELSE"){
     ifList = list()
     for (i in seq(1, length(pList$IF_THEN_ELSE$IF), 1)) {
