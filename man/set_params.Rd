@@ -2,7 +2,7 @@
 % Please edit documentation in R/RcppExports.R
 \name{set_params}
 \alias{set_params}
-\title{assign the missing parameters to the model}
+\title{assign values to the missing parameters}
 \usage{
 set_params(
   modData,
@@ -24,5 +24,5 @@ set_params(
 \item{includePath}{path of the included mzn in the model if it exists.}
 }
 \description{
-assign the missing parameters to the model
+assign values to the missing parameters
 }

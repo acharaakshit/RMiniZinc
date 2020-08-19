@@ -2,15 +2,14 @@
 #include <minizinc/prettyprinter.hh>
 #include "helper_parse.h"
 
-
 using namespace std;
 using namespace Rcpp;
 using namespace MiniZinc;
   
-//' @title assign the missing parameters to the model
+//' @title assign values to the missing parameters
 //' 
-//' @desciption the missing parameters found from parse_mzn can be assigned 
-//' in this function
+//' @desciption missing parameters can be assigned 
+//' values.
 //' 
 //' @importFrom Rcpp sourceCpp
 //' @export set_params
@@ -76,11 +75,24 @@ std::string set_params(List modData, std::string modelString = "",
       }else if(tp.isfloat()){
         vd->e(FloatLit::a(FloatVal((float)modData[i])));
       }else if(tp.isbool()){
-        BoolLit *bl = new BoolLit(items[nameIndexMap[index]]->loc(),(bool)modData[i]);
-        vd->e(bl);
+        vd->e(new BoolLit(items[nameIndexMap[index]]->loc(),(bool)modData[i]));
       }else if(tp.isstring()){
         string sV = modData[i];
         StringLit *sl = new StringLit(items[nameIndexMap[index]]->loc(), sV);
+      }else if(tp.bt() == Type::BT_UNKNOWN && !tp.is_set() && tp.dim() == 0){
+        Type ntp = vd->ti()->domain()->type();
+        if(ntp.isfloat()){
+          vd->e(FloatLit::a(FloatVal((float)modData[i])));
+        }else if(ntp.isbool()){
+          vd->e(new BoolLit(items[nameIndexMap[index]]->loc(),(bool)modData[i]));
+        }else if(ntp.isstring()){
+          string sV = modData[i];
+          StringLit *sl = new StringLit(items[nameIndexMap[index]]->loc(), sV);
+        }else{
+          if(ntp.isint()) 
+            Rcpp::warning("Couldn't identify base data Type -- coercing to int");
+          vd->e(IntLit::a(IntVal((int)modData[i])));
+        }
       }else if(tp.is_set()){
         NumericVector setVal = modData[i];
         CharacterVector stNms = setVal.names();
@@ -134,19 +146,35 @@ std::string set_params(List modData, std::string modelString = "",
         for( int k = 0; k < index_ti.size(); k++){
           Expression *ind_exp = index_ti.operator[](k);
           callVec.push_back(ind_exp);
-        }
+        } 
         vector<Expression*> expVec;
         if(tp.st() == Type::ST_PLAIN && tp.ot() == Type::OT_PRESENT && tp.bt() == Type::BT_INT){
             // 1 dimensional integer array
-            NumericVector arrVal= modData[i];
+            IntegerVector arrVal= modData[i];
             for(int it = 0;it < arrVal.length();it++)
               expVec.push_back(IntLit::a(arrVal[it]));
         }else if(tp.st() == Type::ST_PLAIN && tp.ot() == Type::OT_PRESENT && tp.bt() == Type::BT_UNKNOWN){
-            // array index is not a value but a variable
-            Rcpp::warning("Data Type is Unknown -- coercing to int");
-            NumericVector arrVal= modData[i];
-            for(int it = 0;it < arrVal.length();it++)
-              expVec.push_back(IntLit::a(arrVal[it]));
+            Type ntp = vd->ti()->domain()->type();
+            if(ntp.isfloat()){
+              NumericVector arrVal= modData[i];
+              for(int it = 0;it < arrVal.length();it++)
+                expVec.push_back(IntLit::a(arrVal[it]));
+            }else if(ntp.isbool()){
+              LogicalVector arrVal= modData[i];
+              for(int it = 0;it < arrVal.length();it++)
+                expVec.push_back(new BoolLit(items[nameIndexMap[index]]->loc(), arrVal[it]));  
+            }else if(ntp.isstring()){
+              StringVector arrStrVal = modData[i];
+              for(int it = 0;it < arrStrVal.length();it++){
+                expVec.push_back(new StringLit(items[nameIndexMap[index]]->loc(),(string)arrStrVal[it]));   
+              }
+            }else{
+              if(ntp.isint()) 
+                Rcpp::warning("Couldn't identify base data Type -- coercing to int");
+              IntegerVector arrVal= modData[i];
+              for(int it = 0;it < arrVal.length();it++)
+                expVec.push_back(IntLit::a(arrVal[it])); 
+            }
           }else if(tp.st() == Type::ST_PLAIN && tp.ot() == Type::OT_PRESENT && tp.bt() == Type::BT_BOOL){
             // 1 dimensional bool array
             LogicalVector arrVal= modData[i];
