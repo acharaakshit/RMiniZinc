@@ -59,11 +59,52 @@ mod = Model$new(items = items)
 modString = mod$mzn_string()
 cat(modString)
 
+## ---- results = 'hold'--------------------------------------------------------
+declItem = VarDeclItem$new(mzn_str = "set of int: WORKSHEET = 0..worksheets-1;")
+sprintf("Is this a parameter? %s", declItem$getDecl()$isPar())
+sprintf("Is this a set? %s", declItem$getDecl()$ti()$type()$isSet())
+sprintf("Base type of set: %s", declItem$getDecl()$ti()$type()$bt())
+sprintf("Name: %s", declItem$id()$getId())
+sprintf("Value: %s", declItem$getDecl()$value()$c_str())
+
+## ---- results = 'hold'--------------------------------------------------------
+CstrItem = ConstraintItem$new(mzn_str = "constraint forall (i in PREC)
+                  (let { WORKSHEET: w1 = preceeds[i];
+		                     WORKSHEET: w2 = succeeds[i]; } in
+                   g[w1] * e[w1] <= d[w2] + days * (1 - g[w2]));")
+sprintf("Expression involved: %s", CstrItem$getExp()$c_str())
+sprintf("Call function name: %s", CstrItem$getExp()$getName())
+sprintf("Number of Arguments: %s", CstrItem$getExp()$nargs())
+sprintf("Class of Argument: %s",  class(CstrItem$getExp()$arg(1))[1])
+sprintf("Number of Generators: %s", CstrItem$getExp()$nargs())
+sprintf("Generator: %s", CstrItem$getExp()$arg(1)$gen_i(1)$c_str())
+sprintf("Comprehension body: %s", CstrItem$getExp()$arg(1)$getBody()$c_str())
+
+## ---- results = 'hold'--------------------------------------------------------
+SlvItem = SolveItem$new(mzn_str = "solve 
+    :: int_search(
+        [ if j = 1 then g[import_first[i]] else -d[import_first[i]] endif  | i in 1..worksheets, j in 1..2], 
+        input_order, indomain_max, complete)
+    maximize objective;")
+sprintf("Objective: %s", SlvItem$getSt())
+cat(sprintf("Annotation: %s", SlvItem$getAnn()$c_str()))
+
 ## -----------------------------------------------------------------------------
-dzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/knapsack/knapsack_0.dzn")
-sol = rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gecode",
-                      libpath = "/snap/minizinc/current/share/minizinc", dznpath = dzn_path)
-print(sol$SOLUTIONS$OPTIMAL_SOLUTION)
+aDeclItem = VarDeclItem$new(mzn_str = "int: n;")
+aItem = AssignItem$new(decl = aDeclItem$getDecl(), mzn_str = "n = 8;")
+sprintf("Value: %s", aItem$getValue()$c_str())
+
+## ---- results = 'hold'--------------------------------------------------------
+fnItem = FunctionItem$new(mzn_str = "predicate nonoverlap(var int:s1, var int:d1,
+                     var int:s2, var int:d2)=
+          s1 + d1 <= s2 \\/ s2 + d2 <= s1;")
+sprintf("Function name: %s", fnItem$name())
+sprintf("No of function declarations: %s", length(fnItem$decls()))
+sprintf("Function expression: %s", fnItem$body()$c_str())
+
+## -----------------------------------------------------------------------------
+iItem = IncludeItem$new(mzn_str = "include \"cumulative.mzn\" ;")
+sprintf("Included mzn name: %s", iItem$getmznName())
 
 ## -----------------------------------------------------------------------------
 # delete the item 1
@@ -74,12 +115,6 @@ ls(pattern = "item[^a-z]")
 items = c(item2, item3, item4, item5, item6, item7, item8, item9)
 mod = Model$new(items)
 cat(mod$mzn_string())
-
-## ----Workflow 1, echo=FALSE, out.width = '80%'--------------------------------
-knitr::include_graphics(paste0(getwd(),"/workflows/write_model.png"))
-
-## ----Workflow 2, echo=FALSE, out.width = '80%'--------------------------------
-knitr::include_graphics(paste0(getwd(),"/workflows/API.png"))
 
 ## ----BASIC EXPRESSIONS, echo=FALSE, out.width = '80%'-------------------------
 knitr::include_graphics(paste0(getwd(),"/workflows/Basic_Types.png"))
@@ -150,4 +185,18 @@ solObj = rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.geco
                      libpath = "/snap/minizinc/current/share/minizinc", dznpath = dzn_path)
 # get all the solutions
 print(solObj$SOLUTIONS)
+
+## ---- results = 'hold'--------------------------------------------------------
+vd = VarDomainDecl(name = "n", dom = Set$new(IntSetVal$new(imin = 1, imax = 2)))
+sprintf("The current declaration is: %s", vd$c_str())
+vd$setDomain(Set$new(IntSetVal$new(imin = 3, imax = 5)))
+sprintf("The modified declaration is: %s", vd$c_str())
+
+## ---- results = 'hold'--------------------------------------------------------
+vItem = VarDeclItem$new(mzn_str = "set of int: a = {1, 2, 3, 4};") 
+cItem = ConstraintItem$new(mzn_str = "constraint sum(a) < 10;")
+sprintf("The current constraint is: %s", cItem$c_str())
+cItem$setExp(BinOp$new(lhs = Call$new(fnName = "max", args = list(vItem$getDecl()$id())),
+                       binop = "<", rhs = Int$new(10)))
+sprintf("The modified constraint is: %s", cItem$c_str())
 

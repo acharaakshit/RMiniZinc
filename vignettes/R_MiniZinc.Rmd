@@ -13,7 +13,7 @@ vignette: >
 
 ## Introduction
 
-MiniZinc is a free and open-source constraint modeling language. Constraint satisfaction and discrete optimization problems can be formulated in a high-level modeling language. Models are compiled into an intermediate representation that is understood by a wide range of solvers. MiniZinc itself provides several solvers, for instance GeCode. The existing packages in R are not powerful enough to solve even mid-sized problems in combinatorial optimization
+MiniZinc is a free and open-source constraint modeling language. Constraint satisfaction and discrete optimization problems can be formulated in a high-level modeling language. Models are compiled into an intermediate representation that is understood by a wide range of solvers. MiniZinc itself provides several solvers, for instance GeCode. The existing packages in R are not powerful enough to solve even mid-sized problems in combinatorial optimization.
 
 There are implementations of an Interface to MiniZinc in Python like MiniZinc Python and pymzn and JMiniZinc for Java but such an interface does not exist for R.
 
@@ -23,7 +23,7 @@ It's important to understand R6 classes before getting into the details. If you 
 
 It would be nice to go through this [manual](https://www.minizinc.org/tutorial/minizinc-tute.pdf) to understand more about MiniZinc. This is mainly for those who are interested in contributing to the package.
 
-Please make sure to install MiniZinc on your operating system and also ensure that minizinc is accessible from command line by typing 'minizinc' on the command line without the single quotes. The installation instructions can be found at [instructions](https://www.minizinc.org/doc-2.4.3/en/installation.html)
+Please make sure to install MiniZinc on your operating system and also ensure that minizinc is accessible from command line by typing 'minizinc' on the command line without the single quotes. The installation instructions can be found [here](https://www.minizinc.org/doc-2.4.3/en/installation.html).
 
 
 ## Variables
@@ -38,12 +38,8 @@ Decision variables are the unknowns that Minizinc model is finding solutions for
 
 To create a variable declaration one needs to understand the elements of R6 classes that will be used to create the variables.
 
-
-The type information of the declaration is stored in an object of class Type which holds information like base type, number of dimensions, etc. The type inst is stored in an object of TypeInst class which contains the type information as well as the index or domain in case the variable is an array or decision variable with domain respectively. The value assigned to the variable declaration is stored in an object of sub classes of super class Expression that can be Int, Float, Array, or other Expression sub classes that result in a value of corresponding type.
-
 Easy to use declaration functions have been created for the users to declare variables and parameters of different data types. Examples of how to declare variables is shown below.
 
-Let's create parameters and decision variables.
 ```{r}
 library(rminizinc)
 
@@ -101,7 +97,7 @@ item8 = ConstraintItem$new(e = bop3)
 ## Solve Type
 
 The constraint programming problem can be of three types, namely: Satisfaction , Minimization and Maximization.
-Satisfaction problems produce all the solutions that satisfy the constraints whereas minimization and maximization problems produce the solution which minimizes and maximizes the given arithmetic expression.
+Satisfaction problems produce all the solutions that satisfy the constraints whereas minimization and maximization problems produce the solution which minimizes and maximizes the given expression.
 
 An example is shown below:
 
@@ -118,11 +114,10 @@ cl3 = Call$new(fnName = "sum", args = list(Comp3))
 item9 = SolveItem$new(solve_type = "maximize", e = cl3)
 ```
 
-## Create the model
+## Create the Model
 
-The model is created by combining these items.
+Combine all the items to create a MiniZinc model.
 
-Combine all the items to create a MiniZinc model
 ```{r}
 items  = c(item1, item2, item3, item4, item5, item6, item7, item8, item9)
 mod = Model$new(items = items)
@@ -130,15 +125,75 @@ modString = mod$mzn_string()
 cat(modString)
 ```
 
-## Solve the model
+## Create Items Using Strings 
 
-Solve the model using the Rcpp functions that are using the MiniZinc.
+The strings containing MiniZinc syntax of items can be directly supplied to the constructors to initialize the objects. If strings are supplied, no other argument should be supplied to any of the Item classes except for `AssignItem` where you need to provided the associated variable declaration for the assignment.
+
+### Varaible Item
+
+```{r, results = 'hold'}
+declItem = VarDeclItem$new(mzn_str = "set of int: WORKSHEET = 0..worksheets-1;")
+sprintf("Is this a parameter? %s", declItem$getDecl()$isPar())
+sprintf("Is this a set? %s", declItem$getDecl()$ti()$type()$isSet())
+sprintf("Base type of set: %s", declItem$getDecl()$ti()$type()$bt())
+sprintf("Name: %s", declItem$id()$getId())
+sprintf("Value: %s", declItem$getDecl()$value()$c_str())
+```
+
+### Constraint Item
+
+```{r, results = 'hold'}
+CstrItem = ConstraintItem$new(mzn_str = "constraint forall (i in PREC)
+                  (let { WORKSHEET: w1 = preceeds[i];
+		                     WORKSHEET: w2 = succeeds[i]; } in
+                   g[w1] * e[w1] <= d[w2] + days * (1 - g[w2]));")
+sprintf("Expression involved: %s", CstrItem$getExp()$c_str())
+sprintf("Call function name: %s", CstrItem$getExp()$getName())
+sprintf("Number of Arguments: %s", CstrItem$getExp()$nargs())
+sprintf("Class of Argument: %s",  class(CstrItem$getExp()$arg(1))[1])
+sprintf("Number of Generators: %s", CstrItem$getExp()$nargs())
+sprintf("Generator: %s", CstrItem$getExp()$arg(1)$gen_i(1)$c_str())
+sprintf("Comprehension body: %s", CstrItem$getExp()$arg(1)$getBody()$c_str())
+```
+
+### Solve Item
+
+```{r, results = 'hold'}
+SlvItem = SolveItem$new(mzn_str = "solve 
+    :: int_search(
+        [ if j = 1 then g[import_first[i]] else -d[import_first[i]] endif  | i in 1..worksheets, j in 1..2], 
+        input_order, indomain_max, complete)
+    maximize objective;")
+sprintf("Objective: %s", SlvItem$getSt())
+cat(sprintf("Annotation: %s", SlvItem$getAnn()$c_str()))
+```
+
+### Assignment Item
+
+The declaration associated with the assignment should also be provided along with the assignment string. Make sure that the declaration doesn't have a value.
 
 ```{r}
-dzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/knapsack/knapsack_0.dzn")
-sol = rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gecode",
-                      libpath = "/snap/minizinc/current/share/minizinc", dznpath = dzn_path)
-print(sol$SOLUTIONS$OPTIMAL_SOLUTION)
+aDeclItem = VarDeclItem$new(mzn_str = "int: n;")
+aItem = AssignItem$new(decl = aDeclItem$getDecl(), mzn_str = "n = 8;")
+sprintf("Value: %s", aItem$getValue()$c_str())
+```
+
+### Function Item
+
+```{r, results = 'hold'}
+fnItem = FunctionItem$new(mzn_str = "predicate nonoverlap(var int:s1, var int:d1,
+                     var int:s2, var int:d2)=
+          s1 + d1 <= s2 \\/ s2 + d2 <= s1;")
+sprintf("Function name: %s", fnItem$name())
+sprintf("No of function declarations: %s", length(fnItem$decls()))
+sprintf("Function expression: %s", fnItem$body()$c_str())
+```
+
+### Include Item
+
+```{r}
+iItem = IncludeItem$new(mzn_str = "include \"cumulative.mzn\" ;")
+sprintf("Included mzn name: %s", iItem$getmznName())
 ```
 
 ## Delete Items
@@ -156,23 +211,9 @@ mod = Model$new(items)
 cat(mod$mzn_string())
 ```
 
-Now, that the basic structure of the problem is clear, we can create functions for solving different constraint programming problems.
-
-The workflow of the approach used above is given below:
-```{r Workflow 1, echo=FALSE, out.width = '80%'}
-knitr::include_graphics(paste0(getwd(),"/workflows/write_model.png"))
-```
-
-This approach is helpful for R users who have little understanding of MiniZinc.
-
-The next approach is to use the MiniZinc C++ API. This involves giving the MiniZinc model to the Rcpp function, evaluate the results and return them back to R. The workflow can be seen below:
-```{r Workflow 2, echo=FALSE, out.width = '80%'}
-knitr::include_graphics(paste0(getwd(),"/workflows/API.png"))
-```
-
 ## Parse Model, Set Missing Parameters and Solve 
 
-### Parse a MiniZinc model
+### Parse a MiniZinc Model
 
 A parser function `mzn_parse` has also been implemented which can be used to detect possible syntax errors and get the smallest of details before the MiniZinc model is evaluated. This function can either take the path of a model file path or it can take a string model and returns a list with different elements like: `MODEL_STRING` which is the string representation of the model and `VARIABLES` which are the variable declaration details, `CONSTRAINTS` which are the constraint details of a model, `SOLVE_TYPE` which contains the information about the solve type of the problem, `FUNCTION_ITEMS` contains the function information, `ASSIGNMENTS` contains the assignment information, `INCLUDES` contains information about the included mzn files and `OUTPUT_ITEM` contains the information about the output formatting. Each component (Variable Declarations, Constraints, Solve Items, Assignment Items, Include Items, Functions and Assignments) in a MiniZinc model is considered as an item. The `ITEM_NO` for each element is also returned. If your model includes an mzn file, you can provide custom paths of the folders where the included files are present. The default mzn files (in the std folder) provided along with libminizinc will be included by default.
 
@@ -217,7 +258,7 @@ These are the expressions that lie at the lowest level when parsing any expressi
 knitr::include_graphics(paste0(getwd(),"/workflows/Basic_Types.png"))
 ```
 
-### Parent_Expressions
+### Parent Expressions
 
 These are the expressions that are above the basic types in hierarchy and can have sub expressions that can be either basic expressions or parent expressions.
 
@@ -271,7 +312,7 @@ Each parent has different properties that define it's structure. The properties 
 *Description*: `ELEMENTS` have sub fields to type `ELEMENT<n>` where n is the serial number of the element and `DIM_SIZE` has sub fields `DIM<n>` which have the `MIN` and `MAX` index value of each dimension.
 
 
-Now, let's parse a job shop model:
+Now, let's solve a job shop model:
 
 ```{r}
 # mzn file path
@@ -370,7 +411,25 @@ solObj = rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.geco
 print(solObj$SOLUTIONS)
 ```
 
-The next step is to allow the users to modify a MiniZinc model using the R6 objects which will be demonstrated soon.
 
+## Modify Variable Domain
 
+```{r, results = 'hold'}
+vd = VarDomainDecl(name = "n", dom = Set$new(IntSetVal$new(imin = 1, imax = 2)))
+sprintf("The current declaration is: %s", vd$c_str())
+vd$setDomain(Set$new(IntSetVal$new(imin = 3, imax = 5)))
+sprintf("The modified declaration is: %s", vd$c_str())
+```
 
+## Modify Constraints
+
+There are various getter and setter functions for the expression classes that can be used to modify existing constraints. For example:
+
+```{r, results = 'hold'}
+vItem = VarDeclItem$new(mzn_str = "set of int: a = {1, 2, 3, 4};") 
+cItem = ConstraintItem$new(mzn_str = "constraint sum(a) < 10;")
+sprintf("The current constraint is: %s", cItem$c_str())
+cItem$setExp(BinOp$new(lhs = Call$new(fnName = "max", args = list(vItem$getDecl()$id())),
+                       binop = "<", rhs = Int$new(10)))
+sprintf("The modified constraint is: %s", cItem$c_str())
+```
