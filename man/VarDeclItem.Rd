@@ -52,13 +52,15 @@ Declaration items in the model
 \subsection{Method \code{new()}}{
 constructor
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{VarDeclItem$new(decl)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{VarDeclItem$new(decl = NULL, mzn_str = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{decl}}{the declaration expression object}
+
+\item{\code{mzn_str}}{string representation of variable declaration item}
 }
 \if{html}{\out{</div>}}
 }

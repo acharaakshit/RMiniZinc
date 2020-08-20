@@ -51,13 +51,15 @@ include files in MiniZinc
 \subsection{Method \code{new()}}{
 constructor
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{IncludeItem$new(name)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{IncludeItem$new(name = NULL, mzn_str = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{name}}{name of the file to include
+\item{\code{name}}{name of the file to include}
+
+\item{\code{mzn_str}}{string representation of Include Item
 get file name
 set the file name}
 }

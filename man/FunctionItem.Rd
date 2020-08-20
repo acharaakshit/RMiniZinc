@@ -4,7 +4,7 @@
 \alias{FunctionItem}
 \title{Function Items}
 \description{
-independent functions (that are not part of any other items)
+Independent functions (that are not part of any other items)
 in a MiniZinc model
 }
 \section{Super class}{
@@ -45,7 +45,8 @@ in a MiniZinc model
 \itemize{
 \item \href{#method-new}{\code{FunctionItem$new()}}
 \item \href{#method-name}{\code{FunctionItem$name()}}
-\item \href{#method-b}{\code{FunctionItem$b()}}
+\item \href{#method-decls}{\code{FunctionItem$decls()}}
+\item \href{#method-body}{\code{FunctionItem$body()}}
 \item \href{#method-ann}{\code{FunctionItem$ann()}}
 \item \href{#method-rtype}{\code{FunctionItem$rtype()}}
 \item \href{#method-c_str}{\code{FunctionItem$c_str()}}
@@ -64,7 +65,14 @@ in a MiniZinc model
 \subsection{Method \code{new()}}{
 constructor
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FunctionItem$new(name, decls, rt, ann = NULL, body = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FunctionItem$new(
+  name = NULL,
+  decls = NULL,
+  rt = NULL,
+  ann = NULL,
+  body = NULL,
+  mzn_str = NULL
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -72,13 +80,15 @@ constructor
 \describe{
 \item{\code{name}}{name of the function}
 
-\item{\code{decls}}{parameter declarations}
+\item{\code{decls}}{variable declarations}
 
 \item{\code{rt}}{the return type ("bool par", "bool var" or other)}
 
 \item{\code{ann}}{annotation}
 
 \item{\code{body}}{body of the function}
+
+\item{\code{mzn_str}}{string representation of Function Item}
 }
 \if{html}{\out{</div>}}
 }
@@ -94,12 +104,22 @@ get the name of the function
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-b"></a>}}
-\if{latex}{\out{\hypertarget{method-b}{}}}
-\subsection{Method \code{b()}}{
+\if{html}{\out{<a id="method-decls"></a>}}
+\if{latex}{\out{\hypertarget{method-decls}{}}}
+\subsection{Method \code{decls()}}{
+get the list of declarations
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FunctionItem$decls()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-body"></a>}}
+\if{latex}{\out{\hypertarget{method-body}{}}}
+\subsection{Method \code{body()}}{
 get the function body
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FunctionItem$b()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FunctionItem$body()}\if{html}{\out{</div>}}
 }
 
 }

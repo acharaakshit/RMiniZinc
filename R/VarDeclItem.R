@@ -1,16 +1,27 @@
 #' @title The variable declaration item
 #' @description Declaration items in the model
-#' @import R6
-#' @import checkmate
 #' @export
 VarDeclItem = R6Class("VarDeclItem",
                       inherit = Item,
                       public = list(
                         #' @description constructor
                         #' @param decl the declaration expression object
-                        initialize =  function(decl){
-                          assertR6(decl, "VarDecl")
-                          private$.decl = decl
+                        #' @param mzn_str string representation of variable declaration item
+                        initialize =  function(decl = NULL, mzn_str = NULL){
+                          if(testCharacter(mzn_str)){
+                            assertNull(decl)
+                            parsedList = suppressWarnings(mzn_parse(modelString = mzn_str))
+                            if(!testTRUE(length(parsedList) == 2 &&
+                                      length(parsedList$VARIABLES) == 1 &&
+                                      names(parsedList$VARIABLES) == "DECL1")){
+                              stop("pass only single variable declaration")
+                            }
+                            vdList = list(VARIABLE_DECLARATION = parsedList$VARIABLES$DECL1$DETAILS)
+                            private$.decl = initExpression(vdList)
+                          }else{
+                            assertR6(decl, "VarDecl")
+                            private$.decl = decl 
+                          }
                         },
                         #' @description get the variable declaration
                         getDecl = function(){

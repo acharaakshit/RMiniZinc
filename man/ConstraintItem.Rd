@@ -4,7 +4,7 @@
 \alias{ConstraintItem}
 \title{Constraint Class}
 \description{
-Constraint is a class to describe Minizinc constraints on decision variables.
+Describe Minizinc constraints on decision variables.
 }
 \section{Super class}{
 \code{\link[rminizinc:Item]{rminizinc::Item}} -> \code{ConstraintItem}
@@ -51,13 +51,15 @@ Constraint is a class to describe Minizinc constraints on decision variables.
 \subsection{Method \code{new()}}{
 Creates a new instance of Constraint class.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ConstraintItem$new(e)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ConstraintItem$new(e = NULL, mzn_str = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{e}}{The expression for the constraint}
+\item{\code{e}}{The expression for the constraint (used if e is NULL)}
+
+\item{\code{mzn_str}}{string representation of Constraint item}
 }
 \if{html}{\out{</div>}}
 }
