@@ -130,5 +130,25 @@ StringArrDecl = function(name, kind, ind, value = NULL, ndim){
   return(VarDecl$new(name, parTI, value))
 }
 
+#' @title declare 0-D variable with domain
+#' @description declare a 0 dimensional (int, float, bool or string) variable with domain 
+#' @param name variable name
+#' @param dom domain
+#' @export
+VarDomainDecl = function(name, dom){
+  parTI = TypeInst$new(Type$new(base_type = "unknown", kind = "var"), domain = dom)
+  return(VarDecl$new(name = name, type_inst = parTI))
+}
 
+#' @title declare nD array with domain
+#' @description declare a n dimensional array declaration with domain 
+#' @param name variable name
+#' @param kind variable or parameter
+#' @param dom domain
+#' @param ndim number of dimensions
+#' @export
+ArrDomainDecl = function(name, kind, dom, ndim){
+  parTI = TypeInst$new(Type$new(base_type = "unknown", kind = kind, dim = ndim), domain = dom)
+  return(VarDecl$new(name = name, type_inst = parTI))
+}
 
