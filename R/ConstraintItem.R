@@ -1,18 +1,28 @@
 #' @title Constraint Class
 #' @description
-#' Constraint is a class to describe Minizinc constraints on decision variables.
-#' @import R6
-#' @import checkmate
+#' Describe Minizinc constraints on decision variables.
 #' @export
 ConstraintItem = R6Class("ConstraintItem",
                          inherit = Item,
                          public = list(
                            #' @description
                            #' Creates a new instance of Constraint class.
-                           #' @param e The expression for the constraint
-                           initialize = function(e) {
-                             assertR6(e, "Expression")
-                             private$.e = e
+                           #' @param e The expression for the constraint (used if e is NULL)
+                           #' @param mzn_str string representation of Constraint item
+                           initialize = function(e = NULL, mzn_str = NULL){
+                             if(testCharacter(mzn_str)){
+                               assertNull(e)
+                               parsedList = suppressWarnings(mzn_parse(modelString = mzn_str))
+                               if(!testTRUE(length(parsedList) == 2 &&
+                                           length(parsedList$CONSTRAINTS) == 1 &&
+                                           names(parsedList$CONSTRAINTS) == "CONSTRAINT1")){
+                                 stop("pass only single constraint")
+                               }
+                               private$.e = initExpression(parsedList$CONSTRAINTS$CONSTRAINT1$DETAILS)
+                             }else{
+                               assertR6(e, "Expression")
+                               private$.e = e 
+                             }
                            },
                            #' @description get the constraint expression
                            getExp = function(){

@@ -1,16 +1,25 @@
 #' @title Include Items
 #' @description include files in MiniZinc
-#' @import R6
-#' @import checkmate
 #' @export
 IncludeItem = R6Class("IncludeItem",
                       inherit = Item,
                       public = list(
                         #' @description constructor
                         #' @param name name of the file to include
-                        initialize = function(name){
-                          assertCharacter(name)
-                          private$.id = name
+                        #' @param mzn_str string representation of Include Item
+                        initialize = function(name = NULL, mzn_str = NULL){
+                          if(testCharacter(mzn_str)){
+                            assertNull(name)
+                            parsedList = suppressWarnings(mzn_parse(modelString = mzn_str))
+                            if(!testTRUE(length(parsedList) == 2 &&
+                                         names(parsedList$INCLUDES) == "INCLUDE1")){
+                              stop("only single include item should be provided")
+                            }
+                            private$.id = parsedList$INCLUDES$INCLUDE1$INCLUDED_MZN
+                          }else{
+                            assertCharacter(name)
+                            private$.id = name 
+                          }
                         },
                         #' get file name
                         getmznName = function(){

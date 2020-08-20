@@ -4,10 +4,10 @@
 \alias{getType}
 \title{initialized type (not exposed to user)}
 \usage{
-getType(typeStr, kind)
+getType(type_str, kind)
 }
 \arguments{
-\item{typeStr}{type string returned by `parse_mzn()`.}
+\item{type_str}{type string returned by `parse_mzn()`.}
 
 \item{kind}{par or var}
 }

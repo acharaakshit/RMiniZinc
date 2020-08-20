@@ -2,7 +2,7 @@
 % Please edit documentation in R/Value.R
 \name{FloatVal}
 \alias{FloatVal}
-\title{FloatVal class}
+\title{FloatVal class (not exposed to user)}
 \description{
 create a Float Value in MiniZinc
 }

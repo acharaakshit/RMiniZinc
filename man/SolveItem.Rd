@@ -42,7 +42,9 @@ and/or annotation
 \itemize{
 \item \href{#method-new}{\code{SolveItem$new()}}
 \item \href{#method-getExp}{\code{SolveItem$getExp()}}
+\item \href{#method-getAnn}{\code{SolveItem$getAnn()}}
 \item \href{#method-setExp}{\code{SolveItem$setExp()}}
+\item \href{#method-setAnn}{\code{SolveItem$setAnn()}}
 \item \href{#method-getSt}{\code{SolveItem$getSt()}}
 \item \href{#method-setSt}{\code{SolveItem$setSt()}}
 \item \href{#method-c_str}{\code{SolveItem$c_str()}}
@@ -63,7 +65,7 @@ and/or annotation
 \subsection{Method \code{new()}}{
 create an instance of specify_problem class
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SolveItem$new(solve_type, e = NULL, ann = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SolveItem$new(solve_type = NULL, e = NULL, ann = NULL, mzn_str = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -74,6 +76,8 @@ create an instance of specify_problem class
 \item{\code{e}}{expression to minimize or maximize}
 
 \item{\code{ann}}{annotation}
+
+\item{\code{mzn_str}}{string representation of Solve Item}
 }
 \if{html}{\out{</div>}}
 }
@@ -82,9 +86,19 @@ create an instance of specify_problem class
 \if{html}{\out{<a id="method-getExp"></a>}}
 \if{latex}{\out{\hypertarget{method-getExp}{}}}
 \subsection{Method \code{getExp()}}{
-get the expression
+get the expression (or NULL)
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{SolveItem$getExp()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getAnn"></a>}}
+\if{latex}{\out{\hypertarget{method-getAnn}{}}}
+\subsection{Method \code{getAnn()}}{
+get the annotation (or NULL)
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SolveItem$getAnn()}\if{html}{\out{</div>}}
 }
 
 }
@@ -101,6 +115,23 @@ set the expression
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{e}}{expression}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-setAnn"></a>}}
+\if{latex}{\out{\hypertarget{method-setAnn}{}}}
+\subsection{Method \code{setAnn()}}{
+set the annotation
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SolveItem$setAnn(ann)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{ann}}{annotation}
 }
 \if{html}{\out{</div>}}
 }

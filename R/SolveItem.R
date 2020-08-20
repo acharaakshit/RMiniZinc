@@ -2,8 +2,6 @@
 #' @description specify whether the optimization problem is a satisfaction,
 #' minimization or maximization problem and/or expression to maximize/minnimize
 #' and/or annotation
-#' @import R6
-#' @import checkmate
 #' @export
 SolveItem = R6Class("SolveItem",
                     inherit = Item,
@@ -12,22 +10,45 @@ SolveItem = R6Class("SolveItem",
                              #' @param solve_type satisfaction, minimization or maximization
                              #' @param e expression to minimize or maximize
                              #' @param ann annotation
-                             initialize = function(solve_type, e = NULL, ann = NULL){
-                                  assert_choice(solve_type, .globals$objectives)
-                                  private$.st = solve_type
-                                  assertTRUE(testR6(ann, "Annotation") || testNull(ann))
-                                  private$.ann = ann
-                                  if(test_choice(solve_type, "satisfy")){
-                                    assert_null(e)
-                                  }else{
-                                    assertR6(e, "Expression")
-                                    private$.e = e
-                                  }
-                                  
+                             #' @param mzn_str string representation of Solve Item
+                             initialize = function(solve_type = NULL, e = NULL, ann = NULL, mzn_str = NULL){
+                              if(testCharacter(mzn_str)){
+                                assertTRUE(testNull(solve_type) &&
+                                             testNull(e) &&
+                                             testNull(ann))
+                                parsedList = suppressMessages(suppressWarnings(invisible(mzn_parse(modelString = mzn_str))))
+                                 if(!testTRUE(length(parsedList) == 2 &&
+                                             all(names(parsedList) == c("SOLVE_TYPE", "MODEL_STRING")))){
+                                  stop("provide only single solve item")  
+                                 } 
+                                 private$.st = parsedList$SOLVE_TYPE$OBJECTIVE
+                                 if(private$.st == "SATISFY"){
+                                   if(!testNull(parsedList$SOLVE_TYPE$DETAILS$EXPRESSION)){
+                                     stop("satisfaction solve item should not have an expression")
+                                   }
+                                 }
+                                 private$.e = initExpression(parsedList$SOLVE_TYPE$DETAILS$EXPRESSION)
+                                 private$.ann = initExpression(parsedList$SOLVE_TYPE$DETAILS["ANNOTATION"])
+                               }else{
+                                 assert_choice(solve_type, .globals$objectives)
+                                 private$.st = solve_type
+                                 assertTRUE(testR6(ann, "Annotation") || testNull(ann))
+                                 private$.ann = ann
+                                 if(test_choice(solve_type, "satisfy")){
+                                   assert_null(e)
+                                 }else{
+                                   assertR6(e, "Expression")
+                                   private$.e = e
+                                 }
+                               }
                                 },
-                             #' @description get the expression
+                             #' @description get the expression (or NULL)
                              getExp =  function(){
                                return(private$.e)
+                             },
+                             #' @description get the annotation (or NULL)
+                             getAnn =  function(){
+                               return(private$.ann)
                              },
                              #' @description set the expression
                              #' @param e expression
@@ -36,6 +57,12 @@ SolveItem = R6Class("SolveItem",
                                             private$.st == "maximize")
                                assertR6(e, "Expression")
                                private$.e = e
+                             },
+                             #' @description set the annotation
+                             #' @param ann annotation
+                             setAnn =  function(ann){
+                               assertR6(ann, "Annotation")
+                               private$.ann = ann
                              },
                              #' @description get the solve type/objective
                              getSt = function(){

@@ -1,32 +1,46 @@
 #' @title Assignment Items
 #' @description assignments in MiniZinc
-#' @import R6
-#' @import checkmate
 #' @export
 AssignItem = R6Class("AssignItem",
                      inherit = Item,
                      public = list(
                        #' @description constructor
-                       #' @param decl declaration associated with assignment
-                       #' @param value expression to be assigned
-                       initialize = function(decl, value){
-                         assertR6(decl, "VarDecl")
-                         assertNull(decl$value())
-                         assertR6(value, "Expression")
-                         private$.decl = decl
-                         private$.e = value
+                       #' @param decl declaration associated with assignment.
+                       #' @param value expression to be assigned.
+                       #' @param mzn_str string representation of Assignment Item
+                       initialize = function(decl, value = NULL, mzn_str = NULL){
+                         if(testCharacter(mzn_str)){
+                           parsedList = suppressWarnings(mzn_parse(modelString = mzn_str))
+                           if(!testTRUE(length(parsedList) == 2) &&
+                              names(parsedList$ASSIGNMENTS) == "ASSIGNMENT1"){
+                             stop("Supply only a single assignment item in mzn_str")
+                           }
+                           private$.e = initExpression(parsedList$ASSIGNMENTS$ASSIGNMENT1$VALUE)
+                           assertR6(decl, "VarDecl")
+                           assertNull(decl$value())
+                           if(!testTRUE(parsedList$ASSIGNMENTS$ASSIGNMENT1$NAME == decl$id()$getId())){
+                             stop("the names of supplied declaration and assignment don't match")
+                           }
+                           private$.decl = decl
+                         }else{
+                           assertR6(decl, "VarDecl")
+                           assertNull(decl$value())
+                           assertR6(value, "Expression")
+                           private$.decl = decl
+                           private$.e = value 
+                         }
                        },
                        #' @description  get the name of assigned variable
                        id = function(){
                          return(private$.decl$id())
                        },
                        #' @description get the value
-                       getV = function(){
-                         return(private$.e())
+                       getValue = function(){
+                         return(private$.e)
                        },
                        #' @description set the value
                        #' @param  val value/expression to be set
-                       setV = function(val){
+                       setValue = function(val){
                          assertR6(val, "Expression")
                          private$.e = val
                        },

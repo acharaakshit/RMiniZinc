@@ -88,9 +88,6 @@ MiniZinc::Model* helper_parse(std::string modelString, std::string modelStringNa
   string sub = mk.substr(start + 2, end - start - 2);
   sub.append("libminizinc/share/minizinc/std");
   includePath.push_back(sub);
-  if(includePath.size() == 1){
-    Rcout << "Using default include path: " << sub << endl;
-  }
   try{
     std::stringstream ss;
     //change the underlying buffer and save the old buffer

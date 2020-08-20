@@ -36,8 +36,8 @@ assignments in MiniZinc
 \itemize{
 \item \href{#method-new}{\code{AssignItem$new()}}
 \item \href{#method-id}{\code{AssignItem$id()}}
-\item \href{#method-getV}{\code{AssignItem$getV()}}
-\item \href{#method-setV}{\code{AssignItem$setV()}}
+\item \href{#method-getValue}{\code{AssignItem$getValue()}}
+\item \href{#method-setValue}{\code{AssignItem$setValue()}}
 \item \href{#method-getDecl}{\code{AssignItem$getDecl()}}
 \item \href{#method-setDecl}{\code{AssignItem$setDecl()}}
 \item \href{#method-c_str}{\code{AssignItem$c_str()}}
@@ -58,15 +58,17 @@ assignments in MiniZinc
 \subsection{Method \code{new()}}{
 constructor
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AssignItem$new(decl, value)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AssignItem$new(decl, value = NULL, mzn_str = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{decl}}{declaration associated with assignment}
+\item{\code{decl}}{declaration associated with assignment.}
 
-\item{\code{value}}{expression to be assigned}
+\item{\code{value}}{expression to be assigned.}
+
+\item{\code{mzn_str}}{string representation of Assignment Item}
 }
 \if{html}{\out{</div>}}
 }
@@ -82,22 +84,22 @@ get the name of assigned variable
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-getV"></a>}}
-\if{latex}{\out{\hypertarget{method-getV}{}}}
-\subsection{Method \code{getV()}}{
+\if{html}{\out{<a id="method-getValue"></a>}}
+\if{latex}{\out{\hypertarget{method-getValue}{}}}
+\subsection{Method \code{getValue()}}{
 get the value
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AssignItem$getV()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AssignItem$getValue()}\if{html}{\out{</div>}}
 }
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-setV"></a>}}
-\if{latex}{\out{\hypertarget{method-setV}{}}}
-\subsection{Method \code{setV()}}{
+\if{html}{\out{<a id="method-setValue"></a>}}
+\if{latex}{\out{\hypertarget{method-setValue}{}}}
+\subsection{Method \code{setValue()}}{
 set the value
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AssignItem$setV(val)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AssignItem$setValue(val)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

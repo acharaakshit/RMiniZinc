@@ -214,51 +214,51 @@ initExpression = function(pList){
                         domain = initExpression(pList$TYPE_INST$DOMAIN),
                         indexExprVec = indexList))
   }else{
-    print(names(pList))
+    # print(names(pList)) # for debugging
     stop("not supported!")
   }
 }
 
 #' @title initialized type (not exposed to user)
 #' @description  helper function to initialise the type
-#' @param typeStr type string returned by `parse_mzn()`.
+#' @param type_str type string returned by `parse_mzn()`.
 #' @param kind par or var
-getType = function(typeStr, kind){
-  if(typeStr %in% c("int", "float", "bool", "string", "unknown", "ann")){
-    return(Type$new(base_type = typeStr, kind = kind))
-  }else if(typeStr == "set of int"){
+getType = function(type_str, kind){
+  if(type_str %in% c("int", "float", "bool", "string", "unknown", "ann")){
+    return(Type$new(base_type = type_str, kind = kind))
+  }else if(type_str == "set of int"){
     Type$new(base_type = "int", kind = kind, set_type = TRUE)
-  }else if(typeStr == "set of float"){
+  }else if(type_str == "set of float"){
     return(Type$new(base_type = "float", kind = kind, set_type = TRUE))
-  }else if(typeStr == "set of bool"){
+  }else if(type_str == "set of bool"){
     return(Type$new(base_type = "bool", kind = kind, set_type = TRUE))
-  }else if(typeStr == "set of string"){
+  }else if(type_str == "set of string"){
     return(Type$new(base_type = "string", kind = kind, set_type = TRUE))
-  }else if(typeStr == "unknown set"){
+  }else if(type_str == "unknown set"){
     return(Type$new(base_type = "unknown", kind = kind, set_type = TRUE))
-  }else if(typeStr == "type couldn't be  identified"){
+  }else if(type_str == "type couldn't be  identified"){
     return(Type$new(base_type = "unknown", kind = kind))
     #stop("variable declaration not supported yet!")
   }else{
-    ndim = substring(typeStr,1,1)
-    ntypeStr = substring(typeStr, 2)
-    if(ntypeStr == " dimensional array of int"){
+    ndim = substring(type_str,1,1)
+    ntype_str = substring(type_str, 2)
+    if(ntype_str == " dimensional array of int"){
       return(Type$new(base_type = "int", kind = kind, dim = ndim ))
-    }else if(ntypeStr == " dimensional array of float"){
+    }else if(ntype_str == " dimensional array of float"){
       return(Type$new(base_type = "float", kind = kind, dim = ndim))
-    }else if(ntypeStr == " dimensional array of bool"){
+    }else if(ntype_str == " dimensional array of bool"){
       return(Type$new(base_type = "bool", kind = kind, dim = ndim))
-    }else if(ntypeStr == " dimensional array of string"){
+    }else if(ntype_str == " dimensional array of string"){
       return(Type$new(base_type = "string", kind = kind, dim = ndim))
-    }else if(ntypeStr == " dimensional unknown array"){
+    }else if(ntype_str == " dimensional unknown array"){
       return(Type$new(base_type = "unknown", kind = kind, dim = ndim))
-    }else if(ntypeStr == " dimensional array of set of int"){
+    }else if(ntype_str == " dimensional array of set of int"){
       return(Type$new(base_type = "int", kind = kind, dim = ndim, set_type = TRUE))
-    }else if(ntypeStr == " dimensional array of set of float"){
+    }else if(ntype_str == " dimensional array of set of float"){
       return(Type$new(base_type = "float", kind = kind, dim = ndim, set_type = TRUE))
-    }else if(ntypeStr == " dimensional array of set of bool"){
+    }else if(ntype_str == " dimensional array of set of bool"){
       return(Type$new(base_type = "bool", kind = kind, dim = ndim, set_type = TRUE))
-    }else if(ntypeStr == " dimensional array of set of string"){
+    }else if(ntype_str == " dimensional array of set of string"){
       return(Type$new(base_type = "string", kind = kind, dim = ndim, set_type = TRUE))
     }else {
       stop("type error -- not indentified")

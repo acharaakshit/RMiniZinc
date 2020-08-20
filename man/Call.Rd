@@ -35,8 +35,8 @@ create function calls in MiniZinc
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{Call$new()}}
-\item \href{#method-getId}{\code{Call$getId()}}
-\item \href{#method-setId}{\code{Call$setId()}}
+\item \href{#method-getName}{\code{Call$getName()}}
+\item \href{#method-setName}{\code{Call$setName()}}
 \item \href{#method-nargs}{\code{Call$nargs()}}
 \item \href{#method-arg}{\code{Call$arg()}}
 \item \href{#method-setArg}{\code{Call$setArg()}}
@@ -71,22 +71,22 @@ constructor
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-getId"></a>}}
-\if{latex}{\out{\hypertarget{method-getId}{}}}
-\subsection{Method \code{getId()}}{
+\if{html}{\out{<a id="method-getName"></a>}}
+\if{latex}{\out{\hypertarget{method-getName}{}}}
+\subsection{Method \code{getName()}}{
 get the function id/string
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Call$getId()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Call$getName()}\if{html}{\out{</div>}}
 }
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-setId"></a>}}
-\if{latex}{\out{\hypertarget{method-setId}{}}}
-\subsection{Method \code{setId()}}{
+\if{html}{\out{<a id="method-setName"></a>}}
+\if{latex}{\out{\hypertarget{method-setName}{}}}
+\subsection{Method \code{setName()}}{
 get the function id/string
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Call$setId(name)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Call$setName(name)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

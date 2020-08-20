@@ -2,7 +2,7 @@
 % Please edit documentation in R/Value.R
 \name{IntVal}
 \alias{IntVal}
-\title{IntVal class}
+\title{IntVal class (not exposed to user)}
 \description{
 create an Integer Value in MiniZinc
 }

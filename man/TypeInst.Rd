@@ -89,6 +89,13 @@ set the variable domain
 \if{html}{\out{<div class="r">}}\preformatted{TypeInst$setDomain(dom)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{dom}}{domain expression to be set}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ranges"></a>}}
