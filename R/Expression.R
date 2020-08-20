@@ -1,7 +1,5 @@
 #' @title function to generate an expression 
 #' @description This class can be used to represent an expression. 
-#' 
-#' @import R6
 #' @export
 Expression = R6Class("Expression",
                          public = list(
@@ -13,8 +11,6 @@ Expression = R6Class("Expression",
 
 #' @title Int 
 #' @description create an integer in MiniZinc
-#' @import R6 
-#' @import checkmate
 #' @export
 Int = R6Class("Int", 
                inherit = Expression,
@@ -45,8 +41,6 @@ Int = R6Class("Int",
 
 #' @title Float 
 #' @description create a float in MiniZinc
-#' @import R6 
-#' @import checkmate
 #' @export
 Float = R6Class("Float", 
                 inherit = Expression,
@@ -166,8 +160,6 @@ Set = R6Class("Set",
 
 #' @title Bool
 #' @description create a bool in MiniZinc
-#' @import R6
-#' @import checkmate
 #' @export
 Bool = R6Class("Bool",
                inherit = Expression,
@@ -200,8 +192,6 @@ Bool = R6Class("Bool",
 
 #' @title String
 #' @description create a string in MiniZinc
-#' @import R6
-#' @import checkmate
 #' @export
 String = R6Class("String",
                  inherit = Expression,
@@ -236,8 +226,6 @@ String = R6Class("String",
 
 #' @title Id class (not exposed to the user)
 #' @description create a new Id in MiniZinc
-#' @import R6
-#' @import checkmate
 Id  = R6Class("Id",
               inherit = Expression,
               public = list(
@@ -270,8 +258,6 @@ Id  = R6Class("Id",
 
 #' @title create an array 
 #' @description create an array in MiniZinc
-#' @import R6 
-#' @import checkmate
 #' @export
 Array = R6Class("Array", 
                 inherit = Expression,
@@ -354,10 +340,8 @@ Array = R6Class("Array",
                    .dims = NULL
                  ))
 
-#' @title Array Access class
+#' @title Array Access
 #' @description create ArrayAccess elements in MiniZinc
-#' @import R6
-#' @import checkmate
 #' @export
 ArrayAccess = R6Class("ArrayAccess",
                       inherit = Expression,
@@ -408,8 +392,6 @@ ArrayAccess = R6Class("ArrayAccess",
 
 #' @title Generator 
 #' @description create a generator in MiniZinc
-#' @import R6
-#' @import checkmate
 #' @export 
 Generator = R6Class("Generator",
                     inherit = Expression,
@@ -473,8 +455,6 @@ Generator = R6Class("Generator",
 
 #' @title Comprehension
 #' @description create a Comprehension in MiniZinc
-#' @import R6
-#' @import checkmate
 #' @export 
 Comprehension = R6Class("Comprehension",
                         inherit = Expression,
@@ -560,8 +540,6 @@ Comprehension = R6Class("Comprehension",
 
 #' @title BinOp 
 #' @description create a binary operation expression
-#' @import R6
-#' @import checkmate
 #' @export 
 BinOp = R6Class("BinOp",
                 inherit = Expression,
@@ -623,8 +601,6 @@ BinOp = R6Class("BinOp",
 
 #' @title UnOp 
 #' @description Unary operation expression in MiniZinc
-#' @import R6
-#' @import checkmate
 #' @export
 UnOp = R6Class("UnOp",
                inherit = Expression,
@@ -674,8 +650,6 @@ UnOp = R6Class("UnOp",
 
 #' @title Call
 #' @description create function calls in MiniZinc
-#' @import R6
-#' @import checkmate
 #' @export
 Call = R6Class("Call",
                inherit = Expression,
@@ -691,12 +665,12 @@ Call = R6Class("Call",
                    private$.nargs = length(args)
                  },
                  #' @description get the function id/string
-                 getId =  function(){
+                 getName =  function(){
                    return(private$.id)
                  },
                  #' @description get the function id/string
                  #' @param name new function name
-                 setId =  function(name){
+                 setName =  function(name){
                    assertString(name)
                    private$.id = name
                  },
@@ -748,8 +722,6 @@ Call = R6Class("Call",
 
 #' @title Let
 #' @description create let expression in MiniZinc
-#' @import R6
-#' @import checkmate
 #' @export
 Let = R6Class("Let",
               inherit = Expression,
@@ -794,8 +766,6 @@ Let = R6Class("Let",
 
 #' @title Ite 
 #' @description create if-then-else expressions in MiniZinc
-#' @import R6
-#' @import checkmate
 #' @export
 Ite = R6Class("Ite",
               inherit = Expression,
@@ -851,8 +821,6 @@ Ite = R6Class("Ite",
 
 #' @title VarDecl
 #' @description Contains different fields to create a variable declaration
-#' @import R6 
-#' @import checkmate
 #' @export
 VarDecl = R6Class("VarDecl",
                   inherit = Expression,
@@ -889,10 +857,15 @@ VarDecl = R6Class("VarDecl",
                       return(FALSE)
                     },
                     #' @description overwrite the existing domain
-                    #' @param dom
+                    #' @param dom domain expression to be set
                     setDomain = function(dom){
                       private$.ti$setDomain(dom)
                     },
+                    #' @description get the variable domain
+                    getDomain = function(){
+                      return(private$.ti$getDomain())
+                    }, 
+                    #' @description get the domain of the variable
                     #' @description return string representation of MiniZinc
                     c_str = function(){
                       retStr = ""
@@ -984,8 +957,6 @@ VarDecl = R6Class("VarDecl",
 
 #' @title TypeInst 
 #' @description create type instantiation with indices, etc.
-#' @import R6
-#' @import checkmate
 #' @export
 TypeInst = R6Class("TypeInst",
                    inherit = Expression,
@@ -1014,7 +985,7 @@ TypeInst = R6Class("TypeInst",
                        return(private$.domain)
                      }, 
                      #' @description set the variable domain
-                     #' @param dom
+                     #' @param dom domain expression to be set
                      setDomain = function(dom){
                        assertR6(dom,"Expression")
                        private$.domain = dom
@@ -1050,8 +1021,6 @@ TypeInst = R6Class("TypeInst",
 
 #' @title Annotation
 #' @description create Annotations in MiniZinc
-#' @import R6
-#' @import checkmate
 #' @export
 Annotation = R6Class("Annotation",
                      public = list(

@@ -1,9 +1,5 @@
 #' @title Integer set value
-#' 
 #' @description integer range set value in MiniZinc
-#' 
-#' @import R6
-#' @import checkmate
 #' @export
 IntSetVal = R6Class("IntSetVal",
                     public = list(
@@ -44,12 +40,8 @@ IntSetVal = R6Class("IntSetVal",
                     ))
 
 
-#' @title Float set value
-#' 
+#' @title Float set value 
 #' @description float set range in MiniZinc
-#' 
-#' @import R6
-#' @import checkmate
 #' @export
 FloatSetVal = R6Class("FloatSetVal",
                       public = list(
@@ -89,12 +81,8 @@ FloatSetVal = R6Class("FloatSetVal",
                         .max = NULL
                       ))
 
-#' @title IntVal class
-#' 
+#' @title IntVal class (not exposed to user)
 #' @description create an Integer Value in MiniZinc
-#' 
-#' @import R6
-#' @import checkmate
 IntVal =  R6Class("IntVal",
                   public = list(
                     #' @description constructor
@@ -115,12 +103,8 @@ IntVal =  R6Class("IntVal",
                     .val = NULL
                   ))
 
-#' @title FloatVal class
-#' 
+#' @title FloatVal class (not exposed to user)
 #' @description create a Float Value in MiniZinc
-#' 
-#' @import R6
-#' @import checkmate
 FloatVal = R6Class("FloatVal",
                    public = list(
                      #' @description constructor

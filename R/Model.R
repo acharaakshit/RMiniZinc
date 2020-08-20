@@ -44,7 +44,7 @@ Model = R6Class("Model",
                  }
                  ),
                 private = list(
-                  #' @field parameters
-                  #' vector of variable declarations of the model
+                  #' @field .items
+                  #' list of items in the model
                  .items = NULL
                 ))

@@ -3,8 +3,8 @@
 #' `mzn_parse()`, it creates a model in R
 #' using the API mirror
 #' @import rlist
-#' @export
 #' @param mznParseList list input
+#' @export
 getRModel = function(mznParseList){
   items = c()
   if(length(mznParseList) == 1 && names(mznParseList) == "ASSIGNMENTS"){

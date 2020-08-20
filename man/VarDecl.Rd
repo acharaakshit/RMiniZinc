@@ -39,6 +39,7 @@ Contains different fields to create a variable declaration
 \item \href{#method-isPar}{\code{VarDecl$isPar()}}
 \item \href{#method-isVar}{\code{VarDecl$isVar()}}
 \item \href{#method-setDomain}{\code{VarDecl$setDomain()}}
+\item \href{#method-getDomain}{\code{VarDecl$getDomain()}}
 \item \href{#method-c_str}{\code{VarDecl$c_str()}}
 \item \href{#method-value}{\code{VarDecl$value()}}
 \item \href{#method-ti}{\code{VarDecl$ti()}}
@@ -111,11 +112,31 @@ overwrite the existing domain
 \if{html}{\out{<div class="r">}}\preformatted{VarDecl$setDomain(dom)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{dom}}{domain expression to be set}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getDomain"></a>}}
+\if{latex}{\out{\hypertarget{method-getDomain}{}}}
+\subsection{Method \code{getDomain()}}{
+get the variable domain
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{VarDecl$getDomain()}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-c_str"></a>}}
 \if{latex}{\out{\hypertarget{method-c_str}{}}}
 \subsection{Method \code{c_str()}}{
+get the domain of the variable
+
+
 return string representation of MiniZinc
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{VarDecl$c_str()}\if{html}{\out{</div>}}

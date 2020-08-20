@@ -9,14 +9,14 @@ This class will take all the objects required to create a MiniZinc model.
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{parameters}}{vector of variable declarations of the model}
+\item{\code{.items}}{list of items in the model}
 }
 \if{html}{\out{</div>}}
 }
 \section{Active bindings}{
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
-\item{\code{parameters}}{vector of variable declarations of the model}
+\item{\code{.items}}{list of items in the model}
 }
 \if{html}{\out{</div>}}
 }
