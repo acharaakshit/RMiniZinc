@@ -17,6 +17,9 @@ IncludeItem = R6Class("IncludeItem",
                             }
                             private$.id = parsedList$INCLUDES$INCLUDE1$INCLUDED_MZN
                           }else{
+                            if(substr(name, nchar(name)-4+1, nchar(name)) != ".mzn"){
+                              stop("name should be an mzn file")
+                            }
                             assertCharacter(name)
                             private$.id = name 
                           }

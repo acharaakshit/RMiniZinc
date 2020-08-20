@@ -20,21 +20,21 @@
 This package is currently available only for Linux users, the support for OSX and Windows users will be added soon.   
 
 * **Setting up MiniZinc**
-      `snap install minizinc --classic`
+  * `snap install minizinc --classic`
   * Install and set up [libminizinc]((https://github.com/MiniZinc/libminizinc.git))
-        `sudo git clone https://github.com/MiniZinc/libminizinc.git`
-        `cd libminizinc/`  
-        `sudo sed -i '3 i set(CMAKE_POSITION_INDEPENDENT_CODE ON)' CMakeLists.txt`
-        `sudo cmake CMakeLists.txt`
-        `sudo make`
-        `sudo make install`
-        `sudo cp -r /snap/minizinc/current/share/minizinc/solvers  /path/to/libminizinc/share/minizinc`
-        `cd share/minizinc/solvers`
-        `sudo sed -i 's+../../../bin+/snap/minizinc/current/bin+g' gecode.msc`
-        `export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/path/to/libminizinc`
-        `sudo echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/path/to/libminizinc' >> ~/.bashrc`
-        `sudo ldconfig`
-        `sudo sed -i 's+../../../bin+/snap/minizinc/current/bin+g' gecode.msc`
+    * `sudo git clone https://github.com/MiniZinc/libminizinc.git`
+    * `cd libminizinc/`  
+    *  `sudo sed -i '3 i set(CMAKE_POSITION_INDEPENDENT_CODE ON)' CMakeLists.txt`
+    * `sudo cmake CMakeLists.txt`
+    * `sudo make`
+    * `sudo make install`
+    * `sudo cp -r /snap/minizinc/current/share/minizinc/solvers  /path/to/libminizinc/share/minizinc`
+    * `cd share/minizinc/solvers`
+    * `sudo sed -i 's+../../../bin+/snap/minizinc/current/bin+g' gecode.msc`
+    * `export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/path/to/libminizinc`
+    * `sudo echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/path/to/libminizinc' >> ~/.bashrc`
+    * `sudo ldconfig`
+    * `sudo sed -i 's+../../../bin+/snap/minizinc/current/bin+g' gecode.msc`
 
 * **Install rminizinc**
   * `remotes::install_github("acharaakshit/rminizinc", configure.args="--with-mzn=/path/to/libminizinc")`  
