@@ -2,7 +2,7 @@
 % Please edit documentation in R/Expression.R
 \name{ArrayAccess}
 \alias{ArrayAccess}
-\title{Array Access class}
+\title{Array Access}
 \description{
 create ArrayAccess elements in MiniZinc
 }
