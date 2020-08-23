@@ -12,7 +12,7 @@
 
 <meta name="author" content="Akshit Achara, Lars Kotthoff" />
 
-<meta name="date" content="2020-08-20" />
+<meta name="date" content="2020-08-22" />
 
 <title>MiniZinc Interface for R</title>
 
@@ -319,7 +319,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">MiniZinc Interface for R</h1>
 <h4 class="author">Akshit Achara, Lars Kotthoff</h4>
-<h4 class="date">2020-08-20</h4>
+<h4 class="date">2020-08-22</h4>
 
 
 
@@ -450,10 +450,10 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb8-5"><a href="#cb8-5"></a><span class="kw">sprintf</span>(<span class="st">&quot;Expression involved: %s&quot;</span>, CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">c_str</span>())</span>
 <span id="cb8-6"><a href="#cb8-6"></a><span class="kw">sprintf</span>(<span class="st">&quot;Call function name: %s&quot;</span>, CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">getName</span>())</span>
 <span id="cb8-7"><a href="#cb8-7"></a><span class="kw">sprintf</span>(<span class="st">&quot;Number of Arguments: %s&quot;</span>, CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">nargs</span>())</span>
-<span id="cb8-8"><a href="#cb8-8"></a><span class="kw">sprintf</span>(<span class="st">&quot;Class of Argument: %s&quot;</span>,  <span class="kw">class</span>(CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">arg</span>(<span class="dv">1</span>))[<span class="dv">1</span>])</span>
+<span id="cb8-8"><a href="#cb8-8"></a><span class="kw">sprintf</span>(<span class="st">&quot;Class of Argument: %s&quot;</span>,  <span class="kw">class</span>(CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">getArg</span>(<span class="dv">1</span>))[<span class="dv">1</span>])</span>
 <span id="cb8-9"><a href="#cb8-9"></a><span class="kw">sprintf</span>(<span class="st">&quot;Number of Generators: %s&quot;</span>, CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">nargs</span>())</span>
-<span id="cb8-10"><a href="#cb8-10"></a><span class="kw">sprintf</span>(<span class="st">&quot;Generator: %s&quot;</span>, CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">arg</span>(<span class="dv">1</span>)<span class="op">$</span><span class="kw">gen_i</span>(<span class="dv">1</span>)<span class="op">$</span><span class="kw">c_str</span>())</span>
-<span id="cb8-11"><a href="#cb8-11"></a><span class="kw">sprintf</span>(<span class="st">&quot;Comprehension body: %s&quot;</span>, CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">arg</span>(<span class="dv">1</span>)<span class="op">$</span><span class="kw">getBody</span>()<span class="op">$</span><span class="kw">c_str</span>())</span></code></pre></div>
+<span id="cb8-10"><a href="#cb8-10"></a><span class="kw">sprintf</span>(<span class="st">&quot;Generator: %s&quot;</span>, CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">getArg</span>(<span class="dv">1</span>)<span class="op">$</span><span class="kw">gen_i</span>(<span class="dv">1</span>)<span class="op">$</span><span class="kw">c_str</span>())</span>
+<span id="cb8-11"><a href="#cb8-11"></a><span class="kw">sprintf</span>(<span class="st">&quot;Comprehension body: %s&quot;</span>, CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">getArg</span>(<span class="dv">1</span>)<span class="op">$</span><span class="kw">getBody</span>()<span class="op">$</span><span class="kw">c_str</span>())</span></code></pre></div>
 <pre><code>## [1] &quot;Expression involved: forall([let {WORKSHEET: w1 = preceeds[i], WORKSHEET: w2 = succeeds[i]} in ((g[w1] * e[w1]) &lt;= (d[w2] + (days * (1 - g[w2])))) | i in PREC ])&quot;
 ## [1] &quot;Call function name: forall&quot;
 ## [1] &quot;Number of Arguments: 1&quot;

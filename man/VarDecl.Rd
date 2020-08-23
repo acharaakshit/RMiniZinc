@@ -6,6 +6,11 @@
 \description{
 Contains different fields to create a variable declaration
 }
+\examples{
+newVarDecl = VarDecl$new(name = "n", 
+type_inst = TypeInst$new(Type$new(base_type = "int", kind = "par")))
+newVarDecl$c_str()
+}
 \section{Super class}{
 \code{\link[rminizinc:Expression]{rminizinc::Expression}} -> \code{VarDecl}
 }

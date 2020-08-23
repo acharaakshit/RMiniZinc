@@ -6,6 +6,10 @@
 \description{
 create a generator in MiniZinc
 }
+\examples{
+newGen = Generator$new(IN = IntSetDecl(name = "SET", kind = "par"), 
+decls = list(IntDecl(name = "i", kind = "par")))
+}
 \section{Super class}{
 \code{\link[rminizinc:Expression]{rminizinc::Expression}} -> \code{Generator}
 }

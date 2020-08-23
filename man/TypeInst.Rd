@@ -6,6 +6,10 @@
 \description{
 create type instantiation with indices, etc.
 }
+\examples{
+TypeInst$new(type = Type$new(base_type = "int", kind = "par" ,dim = 1), 
+             domain = Set$new(IntSetVal$new(2,5)))
+}
 \section{Super class}{
 \code{\link[rminizinc:Expression]{rminizinc::Expression}} -> \code{TypeInst}
 }
