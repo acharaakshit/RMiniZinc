@@ -75,10 +75,10 @@ CstrItem = ConstraintItem$new(mzn_str = "constraint forall (i in PREC)
 sprintf("Expression involved: %s", CstrItem$getExp()$c_str())
 sprintf("Call function name: %s", CstrItem$getExp()$getName())
 sprintf("Number of Arguments: %s", CstrItem$getExp()$nargs())
-sprintf("Class of Argument: %s",  class(CstrItem$getExp()$arg(1))[1])
+sprintf("Class of Argument: %s",  class(CstrItem$getExp()$getArg(1))[1])
 sprintf("Number of Generators: %s", CstrItem$getExp()$nargs())
-sprintf("Generator: %s", CstrItem$getExp()$arg(1)$gen_i(1)$c_str())
-sprintf("Comprehension body: %s", CstrItem$getExp()$arg(1)$getBody()$c_str())
+sprintf("Generator: %s", CstrItem$getExp()$getArg(1)$gen_i(1)$c_str())
+sprintf("Comprehension body: %s", CstrItem$getExp()$getArg(1)$getBody()$c_str())
 
 ## ---- results = 'hold'--------------------------------------------------------
 SlvItem = SolveItem$new(mzn_str = "solve 

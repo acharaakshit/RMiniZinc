@@ -6,6 +6,12 @@
 \description{
 create an integer in MiniZinc
 }
+\examples{
+newInt = Int$new(10)
+newInt$c_str()
+newInt$setIntVal(newInt$getIntVal() + 20)
+newInt$c_str()
+}
 \section{Super class}{
 \code{\link[rminizinc:Expression]{rminizinc::Expression}} -> \code{Int}
 }

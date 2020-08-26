@@ -2,9 +2,9 @@
 % Please edit documentation in R/Expression.R
 \name{Expression}
 \alias{Expression}
-\title{function to generate an expression}
+\title{Expression (Abstract class -- should not be initialized)}
 \description{
-This class can be used to represent an expression.
+This class represents an expression.
 }
 \section{Methods}{
 \subsection{Public methods}{

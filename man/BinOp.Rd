@@ -6,6 +6,14 @@
 \description{
 create a binary operation expression
 }
+\examples{
+newBinOp = BinOp$new(lhs = Int$new(2), binop = "+", rhs = Int$new(5))
+newBinOp$c_str()
+newBinOp$setLhs(Int$new(5))
+newBinOp$setOp("-")
+newBinOp$setRhs(Int$new(2))
+newBinOp$c_str()
+}
 \section{Super class}{
 \code{\link[rminizinc:Expression]{rminizinc::Expression}} -> \code{BinOp}
 }
@@ -36,8 +44,8 @@ create a binary operation expression
 \itemize{
 \item \href{#method-new}{\code{BinOp$new()}}
 \item \href{#method-getLhs}{\code{BinOp$getLhs()}}
-\item \href{#method-getRhs}{\code{BinOp$getRhs()}}
-\item \href{#method-op}{\code{BinOp$op()}}
+\item \href{#method-getOp}{\code{BinOp$getOp()}}
+\item \href{#method-setOp}{\code{BinOp$setOp()}}
 \item \href{#method-setLhs}{\code{BinOp$setLhs()}}
 \item \href{#method-setRhs}{\code{BinOp$setRhs()}}
 \item \href{#method-c_str}{\code{BinOp$c_str()}}
@@ -82,24 +90,31 @@ get the lhs expression
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-getRhs"></a>}}
-\if{latex}{\out{\hypertarget{method-getRhs}{}}}
-\subsection{Method \code{getRhs()}}{
-get the rhs expression
+\if{html}{\out{<a id="method-getOp"></a>}}
+\if{latex}{\out{\hypertarget{method-getOp}{}}}
+\subsection{Method \code{getOp()}}{
+get the operator
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{BinOp$getRhs()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{BinOp$getOp()}\if{html}{\out{</div>}}
 }
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-op"></a>}}
-\if{latex}{\out{\hypertarget{method-op}{}}}
-\subsection{Method \code{op()}}{
-return the operator
+\if{html}{\out{<a id="method-setOp"></a>}}
+\if{latex}{\out{\hypertarget{method-setOp}{}}}
+\subsection{Method \code{setOp()}}{
+set the operator
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{BinOp$op()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{BinOp$setOp(binop)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{op}}{binary operator to be set}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-setLhs"></a>}}
@@ -124,7 +139,7 @@ set the lhs expression
 \subsection{Method \code{setRhs()}}{
 set the rhs expression
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{BinOp$setRhs()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{BinOp$setRhs(e)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

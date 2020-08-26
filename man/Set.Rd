@@ -6,6 +6,15 @@
 \description{
 create a set in MiniZinc
 }
+\examples{
+newIntSet = Set$new(val = IntSetVal$new(1,5))
+newIntSet$c_str()
+newIntSet$setIsv(IntSetVal$new(2,6))
+newIntSet$c_str()
+newFloatSet = Set$new(val = FloatSetVal$new(1.1,5.1))
+newFloatSet$c_str()
+newFloatSet$setFsv(FloatSetVal$new(1.2,4.1))
+}
 \section{Super class}{
 \code{\link[rminizinc:Expression]{rminizinc::Expression}} -> \code{Set}
 }

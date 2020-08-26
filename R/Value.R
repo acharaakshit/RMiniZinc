@@ -18,6 +18,7 @@ IntSetVal = R6Class("IntSetVal",
                       #' @description set the minimum IntVal
                       #' @param val int value to be set
                       setMin = function(val){
+                        assertTRUE(val <= private$.max$v())
                         private$.min = IntVal$new(val)
                       },
                       #' @description get the maximum IntVal
@@ -27,6 +28,7 @@ IntSetVal = R6Class("IntSetVal",
                       #' @description set the maximum IntVal
                       #' @param val int value to be set
                       setMax = function(val){
+                        assertTRUE(val >= private$.min$v())
                         private$.max = IntVal$new(val)
                       }
                     ),
@@ -49,8 +51,8 @@ FloatSetVal = R6Class("FloatSetVal",
                         #' @param fmin the minimum FloatVal
                         #' @param fmax the maximum FloatVal
                         initialize = function(fmin, fmax){
-                          private$.min = FloatVal(fmin)
-                          private$.max = FloatVal(fmax)
+                          private$.min = FloatVal$new(fmin)
+                          private$.max = FloatVal$new(fmax)
                           assert_true(private$.max$v() >= private$.min$v())
                         },
                         #' @description get the minimum float value
