@@ -12,13 +12,14 @@ ConstraintItem = R6Class("ConstraintItem",
                            initialize = function(e = NULL, mzn_str = NULL){
                              if(testCharacter(mzn_str)){
                                assertNull(e)
-                               parsedList = suppressWarnings(mzn_parse(modelString = mzn_str))
-                               if(!testTRUE(length(parsedList) == 2 &&
-                                           length(parsedList$CONSTRAINTS) == 1 &&
-                                           names(parsedList$CONSTRAINTS) == "CONSTRAINT1")){
+                               parsedR6 = suppressWarnings(mzn_parse(model_string = mzn_str))
+                               if(!testR6(parsedR6, "Model") &&
+                                  parsedR6$nitems() != 1 &&
+                                  !testR6(parsedR6$item_i(1), "ConstraintItem")){
                                  stop("pass only single constraint")
                                }
-                               private$.e = initExpression(parsedList$CONSTRAINTS$CONSTRAINT1$DETAILS)
+                               citem = parsedR6$item_i(1)
+                               private$.e = citem$getExp()
                              }else{
                                assertR6(e, "Expression")
                                private$.e = e 

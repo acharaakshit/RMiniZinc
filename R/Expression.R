@@ -303,8 +303,6 @@ Array = R6Class("Array",
                        retStr = "|"
                        dim1 = private$.dims[[1]]$getMax() - private$.dims[[1]]$getMin() + 1
                        dim2 = private$.dims[[2]]$getMax() - private$.dims[[2]]$getMin() + 1
-                       print(dim1)
-                       print(dim2)
                        slice_flag = 1
                        for (i in seq(1, length(private$.exprVec), 1)) {
                            if(slice_flag == 2){
@@ -314,7 +312,7 @@ Array = R6Class("Array",
                            if((i %% dim2 == 0 && slice_flag %% 2 != 0) || 
                               (i %% dim1 == 0 && slice_flag %% 2 == 0)){
                              slice_flag = 2
-                             retStr = paste0(retStr, "|\n")
+                             retStr = paste0(retStr, "\n|")
                            }else{
                              retStr = paste0(retStr, ", ")
                            }
@@ -934,8 +932,14 @@ VarDecl = R6Class("VarDecl",
                       return(sprintf("%s", retStr))
                     },
                     #' @description get the value
-                    value = function(){
+                    getValue = function(){
                       return(private$.e)
+                    },
+                    #' @description set the value
+                    #' @param val expression to be set
+                    setValue = function(val){
+                      assertR6(val, "Expression")
+                      private$.e = val
                     },
                     #' @description get the type-inst of the variable declaration
                     ti = function(){

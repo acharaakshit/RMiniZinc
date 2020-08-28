@@ -15,23 +15,21 @@ using namespace MiniZinc;
 //' @importFrom Rcpp sourceCpp
 //' @export mzn_parse
 //' @useDynLib rminizinc, .registration=TRUE
-//' @param modelString string representation of the MiniZinc model.
-//' @param mznpath the path of model mzn.
-//' @param modelStringName the name of model string.
-//' @param includePath path of the included mzn in the model if it exists.
+//' @param model_string string representation of the MiniZinc model.
+//' @param mzn_path the path of model mzn.
+//' @param include_path path of the included mzn in the model if it exists.
 // [[Rcpp::export]]
-List mzn_parse(std::string modelString = "",
-               std::string mznpath = "",
-               std::string  modelStringName = "mzn_parse.mzn",
-               Nullable<std::vector<std::string>> includePath = R_NilValue){
+Environment mzn_parse(std::string model_string = "",
+               std::string mzn_path = "",
+               Nullable<std::vector<std::string>> include_path = R_NilValue){
   
-  modelString  = pathStringcheck(modelString, mznpath);
+  model_string  = pathStringcheck(model_string, mzn_path);
   vector<string> ip;
-  if(!Rf_isNull(includePath)){
-    ip = Rcpp::as<vector<string>>(includePath);
+  if(!Rf_isNull(include_path)){
+    ip = Rcpp::as<vector<string>>(include_path);
   }
   
-  Model *model = helper_parse(modelString, modelStringName, ip);  
+  Model *model = helper_parse(model_string, "mzn_parse.mzn", ip);  
   
   // get all the items and the names of all the parameters and map to the item numbers
   vector<Item*> items;
@@ -141,7 +139,6 @@ List mzn_parse(std::string modelString = "",
       }else{
         Rcpp::warning ("Detected function without expression");
       }
-      // if(fi->ti()->type().isvar()) cout << " VF" << endl;
       // return the return type-inst information
       exp_details(fi->ti(), fnDets);
       fnDetnms.push_back("TYPE_INST");
@@ -308,5 +305,8 @@ List mzn_parse(std::string modelString = "",
   retVal.push_back(mString);
   retValNames.push_back("MODEL_STRING");
   retVal.names() = retValNames;
-  return retVal;
+  Environment rmzn_env("package:rminizinc");
+  Function retModel = rmzn_env["getRModel"];
+  Environment ret_env = retModel(retVal);
+  return ret_env;
 }

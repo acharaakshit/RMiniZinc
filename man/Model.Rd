@@ -25,6 +25,7 @@ This class will take all the objects required to create a MiniZinc model.
 \itemize{
 \item \href{#method-new}{\code{Model$new()}}
 \item \href{#method-item_i}{\code{Model$item_i()}}
+\item \href{#method-nitems}{\code{Model$nitems()}}
 \item \href{#method-mzn_string}{\code{Model$mzn_string()}}
 \item \href{#method-delete}{\code{Model$delete()}}
 \item \href{#method-clone}{\code{Model$clone()}}
@@ -63,6 +64,16 @@ get the item using index
 }
 \if{html}{\out{</div>}}
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-nitems"></a>}}
+\if{latex}{\out{\hypertarget{method-nitems}{}}}
+\subsection{Method \code{nitems()}}{
+get the number of items
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Model$nitems()}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-mzn_string"></a>}}

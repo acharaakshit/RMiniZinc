@@ -13,31 +13,30 @@ using namespace Rcpp;
 //' @importFrom Rcpp sourceCpp
 //' @export mzn_eval
 //' @useDynLib rminizinc, .registration=TRUE
-//' @param modelString the string representation of the model to be evaluated.
 //' @param solver the name of the solver to use.
-//' @param libpath the path of the library where the solver is present.
-//' @param mznpath the path of the MiniZinc model file.
-//' @param dznpath path of the datafile to be used.
+//' @param lib_path the path of the library where the solver is present.
+//' @param r_model R6 Model object
+//' @param dzn_path path of the datafile to be used.
 //' @param all_solutions bool to specify if all solutions are specified.
 //' @param time_limit stop after <time_limit> milliseconds
 // [[Rcpp::export]]
-List mzn_eval(std::string solver, std::string libpath,std::string modelString = "", 
-                       std::string mznpath = "", std::string dznpath = "",
-                       bool all_solutions = true, int time_limit = 300000){
+List mzn_eval(std::string solver, std::string lib_path, Environment &r_model,
+              std::string dzn_path = "",
+              bool all_solutions = true, int time_limit = 300000){
   
-  modelString = pathStringcheck(modelString, mznpath);
-  
+  Function getModelString = r_model["mzn_string"];
+  string model_string  = Rcpp::as<string>(getModelString());  
   std::stringstream sol_strn;
   string sol_string;
   if(solver != "Gecode" && solver != "org.gecode.gecode")
     Rcpp:stop("only Gecode solver is supported for now");
   try {
     MznSolver slv(sol_strn, Rcpp::Rcerr);
-    vector<std::string> options({"--stdlib-dir", libpath, "--solver", solver,
+    vector<std::string> options({"--stdlib-dir", lib_path, "--solver", solver,
                                 "--output-mode", "json", "--time-limit", to_string(time_limit)});
-    if(!dznpath.empty()) options.push_back(dznpath);
+    if(!dzn_path.empty()) options.push_back(dzn_path);
     if(all_solutions) options.push_back("-a");
-    slv.run(options,modelString, "minizinc", "model.mzn");
+    slv.run(options,model_string, "minizinc", "model.mzn");
     sol_string = sol_strn.str();
   }catch (const LocationException& e) {
     string evalError = e.loc().toString();

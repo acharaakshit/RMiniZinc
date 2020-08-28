@@ -5,7 +5,7 @@ date: "`r Sys.Date()`"
 output: 
   rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{R functionalities to use MiniZinc}
+  %\VignetteIndexEntry{MiniZinc Interface for R}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
@@ -25,6 +25,98 @@ It would be nice to go through this [manual](https://www.minizinc.org/tutorial/m
 
 Please make sure to install MiniZinc on your operating system and also ensure that minizinc is accessible from command line by typing 'minizinc' on the command line without the single quotes. The installation instructions can be found [here](https://www.minizinc.org/doc-2.4.3/en/installation.html).
 
+## Getting Started
+
+```{r, results='hide', echo=FALSE}
+library(rminizinc)
+```
+
+### Parse a MiniZinc Model
+
+A parser function `mzn_parse` has been implemented which can be used to detect possible syntax errors and get the smallest of details before the MiniZinc model is evaluated. The function returns the initialize `Model` R6 object.
+
+
+Now, let's solve a job shop model:
+
+```{r}
+# mzn file path
+mzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/jobshop/jobshop_0.mzn")
+
+# parse the model
+parseObj=rminizinc:::mzn_parse(mzn_path = mzn_path)
+```
+
+Look at the contents of parseObj for more understanding of the model.
+
+### Find the Missing Parameters
+
+The missing parameters can be obtained using `get_missing_pars()`
+
+```{r}
+missingPars = get_missing_pars(model = parseObj)
+print(missingPars)
+```
+
+### Set Values of Missing Parameters 
+
+```{r}
+pVals = list(Int$new(3), Int$new(4),
+             Array$new(exprVec = intExpressions(c(3, 3, 4, 4, 4, 3, 2, 2, 3, 3, 3, 4)),
+               dimranges = list(IntSetVal$new(1,3), IntSetVal$new(1,4))), 
+             Array$new(exprVec = intExpressions(c(1, 2, 3, 4, 1, 3, 2, 4, 4, 2, 1, 3)),
+               dimranges = list(IntSetVal$new(1,3), IntSetVal$new(1,4))))
+names(pVals) = missingPars
+model = set_params(model = parseObj, modData = pVals)
+cat(model$mzn_string())
+```
+
+### Solve the Model
+
+The function `mzn_eval()` is used to evaluate a MiniZinc model and returns the solution string and a list of solutions if they were parsed without any error by the function `sol_parse()` otherwise it returns the solution string and an appropriate error. The parsed solutions are a named list where elements are of type `OBJ$SOLUTIONS$SOLUTION<n>$<VARIABLE_NAME>`. The optimal solution if found can be accessed using `OBJ$SOLUTIONS$OPTIMAL_SOLUTION` and the best solution can be accessed using `OBJ$SOLUTIONS$BEST_SOLUTION`. More details about the functions can be obtained using `?mzn_eval` and `?sol_parse`.
+
+The solver that should be used to solve the model needs to be specified by the user (default is Gecode)
+and the lib_path (path of the MiniZinc executable) should also be provided. If the user wishes to provide a data file, it's path can be provided to the argument `dznpath`.  A time limit (in ms) can also be provided to the argument `time_limit`. (default is 300000 ms)
+
+A sample job shop problem has been solved below:
+
+```{r}
+# R List object containing the solutions
+solObj = rminizinc:::mzn_eval(model, solver = "org.gecode.gecode",
+                   lib_path = "/snap/minizinc/current/share/minizinc")
+# get all the solutions
+print(solObj$SOLUTIONS)
+```
+
+Let's solve another problem.
+
+```{r}
+# file path
+mzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/knapsack/knapsack_0.mzn")
+
+# get missing parameter values
+missingVals=rminizinc:::get_missing_pars( model = mzn_parse(mzn_path = mzn_path))
+print(missingVals)
+
+# list of the data
+pVals = list(Int$new(3), Int$new(9), Array$new(intExpressions(c(15,10,7)))
+             , Array$new(intExpressions(c(4,3,2))))
+names(pVals) = missingVals
+
+# set the missing parameters
+model = rminizinc:::set_params(modData = pVals, 
+                                   mzn_parse(mzn_path = mzn_path))
+
+# R List object containing the solutions
+solObj = rminizinc:::mzn_eval(model, solver = "org.gecode.gecode",
+                     lib_path = "/snap/minizinc/current/share/minizinc")
+# get all the solutions
+print(solObj$SOLUTIONS)
+
+```
+
+Some examples of how to use these functions to solve optimization problems can be found in `mzn_examples` which are taken from [minizinc-examples](https://github.com/MiniZinc/minizinc-examples).
+
+NOTE: Please don't include output formatting in the mzn files or the solutions might not be parsed properly.
 
 ## Variables
 
@@ -41,8 +133,6 @@ To create a variable declaration one needs to understand the elements of R6 clas
 Easy to use declaration functions have been created for the users to declare variables and parameters of different data types. Examples of how to declare variables is shown below.
 
 ```{r}
-library(rminizinc)
-
 # create the variable and parameter declarations
 item1 = VarDeclItem$new(decl = IntDecl(name = "n", kind = "par"))
 
@@ -137,7 +227,7 @@ sprintf("Is this a parameter? %s", declItem$getDecl()$isPar())
 sprintf("Is this a set? %s", declItem$getDecl()$ti()$type()$isSet())
 sprintf("Base type of set: %s", declItem$getDecl()$ti()$type()$bt())
 sprintf("Name: %s", declItem$id()$getId())
-sprintf("Value: %s", declItem$getDecl()$value()$c_str())
+sprintf("Value: %s", declItem$getDecl()$getValue()$c_str())
 ```
 
 ### Constraint Item
@@ -166,16 +256,6 @@ SlvItem = SolveItem$new(mzn_str = "solve
     maximize objective;")
 sprintf("Objective: %s", SlvItem$getSt())
 cat(sprintf("Annotation: %s", SlvItem$getAnn()$c_str()))
-```
-
-### Assignment Item
-
-The declaration associated with the assignment should also be provided along with the assignment string. Make sure that the declaration doesn't have a value.
-
-```{r}
-aDeclItem = VarDeclItem$new(mzn_str = "int: n;")
-aItem = AssignItem$new(decl = aDeclItem$getDecl(), mzn_str = "n = 8;")
-sprintf("Value: %s", aItem$getValue()$c_str())
 ```
 
 ### Function Item
@@ -210,207 +290,6 @@ items = c(item2, item3, item4, item5, item6, item7, item8, item9)
 mod = Model$new(items)
 cat(mod$mzn_string())
 ```
-
-## Parse Model, Set Missing Parameters and Solve 
-
-### Parse a MiniZinc Model
-
-A parser function `mzn_parse` has also been implemented which can be used to detect possible syntax errors and get the smallest of details before the MiniZinc model is evaluated. This function can either take the path of a model file path or it can take a string model and returns a list with different elements like: `MODEL_STRING` which is the string representation of the model and `VARIABLES` which are the variable declaration details, `CONSTRAINTS` which are the constraint details of a model, `SOLVE_TYPE` which contains the information about the solve type of the problem, `FUNCTION_ITEMS` contains the function information, `ASSIGNMENTS` contains the assignment information, `INCLUDES` contains information about the included mzn files and `OUTPUT_ITEM` contains the information about the output formatting. Each component (Variable Declarations, Constraints, Solve Items, Assignment Items, Include Items, Functions and Assignments) in a MiniZinc model is considered as an item. The `ITEM_NO` for each element is also returned. If your model includes an mzn file, you can provide custom paths of the folders where the included files are present. The default mzn files (in the std folder) provided along with libminizinc will be included by default.
-
-The Information about the naming of the elements returned is described in the following figures:
-
-### Model Items
-
-*Name*: `VARIABLES`    
-*Components*: `DECL<n>` is the list of declaration with components `DETAILS` and `ITEM_NO`  
-*Description*: `DETAILS` are the details of a variable declaration namely: `NAME`, `TYPE_INST` and `VALUE` and `ITEM_NO` is the item number of the variable declaration in the model.  
-
-*Name*: `CONSTRAINTS`  
-*Components*: `CONSTRAINT<n>` is the list of constraints with components: `DETAILS` and `ITEM_NO`.    
-*Description*: `DETAILS` are the details about the expressions.
-
-*Name*: `FUNCTION_ITEMS`  
-*Components*: `FUNCTION<n>` is the list of functions with components: `DETAILS` and `ITEM_NO`.    
-*Description*: `DETAILS` are the details that can `EXPRESSION`, `ANNOTATION`, `TYPE_INST` `PARAMETER_DECLARATIONS`.    
-
-*Name*: `SOLVE_TYPE`  
-*Components*: `DETAILS`, `OBJECTIVE` and `ITEM_NO`  
-*Description*: `DETAILS` are the details that can `EXPRESSION` or `ANNOTATION`, `OBJECTIVE` can be "satisfy", "minimize" or "maximize".  
-
-*Name*: `ASSIGNMENTS`  
-*Components*: `ASSIGNMENT<n>` have the sub components: `DETAILS` and `ITEM_NO`.  
-*Description*: `DETAILS` contain the value expression details.
-
-*Name*: `INCLUDES`  
-*Components*: `INCLUDED_MZN` and `ITEM_NO`
-*Description*: `INCLUDED_MZN` is the name of the included mzn file.
-
-*Name*: `OUTPUT_ITEM`  
-*Components*: `DETAILS` and `ITEM_NO`.  
-*Description*: `DETAILS` are the details about the output formatting expression.
-
-
-### Basic Expressions
-
-These are the expressions that lie at the lowest level when parsing any expression.
-
-```{r BASIC EXPRESSIONS, echo=FALSE, out.width = '80%'}
-knitr::include_graphics(paste0(getwd(),"/workflows/Basic_Types.png"))
-```
-
-### Parent Expressions
-
-These are the expressions that are above the basic types in hierarchy and can have sub expressions that can be either basic expressions or parent expressions.
-
-```{r PARENT EXPRESSIONS, echo=FALSE, out.width = '80%'}
-knitr::include_graphics(paste0(getwd(),"/workflows/Parent_Types.png"))
-```
-
-#### Properties of Parent Expressions
-
-Each parent has different properties that define it's structure. The properties of each of the parent are described below:
-
-*Name*: `COMPREHENSION`  
-*Components*: `GENERATORS` and `EXPRESSION`  
-*Description*: `GENERATORS` is a list of expressions and each generator contains `DECLARATIONS` (list of variable declarations), `IN_EXPRESSION` and `WHERE_EXPRESSION` (Expressions). and `EXPRESSION` is the expression in the comprehension.
-
-*Name*: `BINARY_OPERATION`   
-*Components*: `LHS`, `BINARY_OPERATOR` and `RHS`  
-*Description*: `LHS` and `RHS` are both expressions (basic or parent) and `BINARY_OPERATOR` is a binary operator in MiniZinc.
-
-
-*Name*: `UNARY_OPERATION`   
-*Components*: `UNARY_OPERATOR` and `ARGUMENTS`   
-*Description*: `UNARY_OPERATOR` are the unary operators in MiniZinc and `ARGUMENTS` contain a list of expressions.
-
-*Name*: `VARIABLE_DECLARATION`  
-*Components*: `NAME`, `TYPE_INST` (`KIND`, `TYPE`, `DOMAIN`, `INDEX`) and `VALUE`  
-*Description*: `NAME`, `KIND` and `TYPE` are strings representing the name, kind and type of the variable and `DOMAIN` and `VALUE` are expressions representing domain and value of the variable declaration. `TYPE_INST` contains the `KIND`, `TYPE`, `DOMAIN` and `INDEX`.
-
-*Name*: `ARRAY_ACCESS`   
-*Components*: `NAME` and `ARGUMENTS`   
-*Description*: `NAME` is the name of the variable and `ARGUMENTS` is the list of expressions that represent the indices. 
-
-*Name*: `IF_THEN_ELSE`  
-*Components*: `IF`, `THEN` and `ELSE`   
-*Description*: `IF` is the list of if expressions, `THEN` is the list of then expressions and `ELSE` is the else expression. 
-
-*Name*: `LET`  
-*Components*: `LET_EXPRESSION` and `IN_EXPRESSION`  
-*Description*: `LET_EXPRESSION` and `IN_EXPRESSION` are lists of expressions. 
-
-*Name*: `CALL`  
-*Components*: `NAME` and `ARGUMENTS`  
-*Description*: `NAME` is the name of the function call and `ARGUMENTS` is the list of expressions to that function call.
-
-*Name*: `SET`  
-*Components*: `MIN`, `MAX` (set ranges) or `ELEMENT<n>` where n is the serial number of the element.  
-*Description*: `MIN` , `MAX` and `ELEMENT<n>` are all expression types (mostly basic expressions).
-
-*Name*: `ARRAY`  
-*Components*: `ELEMENTS` and `DIM_SIZE`  
-*Description*: `ELEMENTS` have sub fields to type `ELEMENT<n>` where n is the serial number of the element and `DIM_SIZE` has sub fields `DIM<n>` which have the `MIN` and `MAX` index value of each dimension.
-
-
-Now, let's solve a job shop model:
-
-```{r}
-# mzn file path
-mzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/jobshop/jobshop_0.mzn")
-
-# parse the model
-parseObj=rminizinc:::mzn_parse(mznpath = mzn_path)
-```
-
-Look at the contents of parseObj for more understanding of the model.
-
-### Find the Missing Parameters
-
-The missing parameters can be obtained using `get_missing_pars()`
-
-```{r}
-missingPars = get_missing_pars(modelString = parseObj$MODEL_STRING)
-print(missingPars)
-```
-
-### Set Values of Missing Parameters 
-
-The function `set_params()` can be used to set the missing parameters of the model. Any number of missing parameters from 1 to the number of missing parameters can be set. The values for n dimensional arrays or sets can be provided as vectors like c(1, 2, .., n). The indices of the arrays will be automatically retrieved and the values of the arrays will be stored as `arraynd()` functions. The values should be provided as a named list where the names of each value is the name of the paramaeter. The string representation of the updated model will be returned on call. In case an mzn file path is provided it can also be updated after setting the values by setting `modifyMZN` to `TRUE`.
-
-```{r}
-pVals = list(3, 4, c(3, 3, 4, 4, 4, 3, 2, 2, 3, 3, 3, 4), 
-             c(1, 2, 3, 4, 1, 3, 2, 4, 4, 2, 1, 3))
-names(pVals) = missingPars
-modString = set_params(modData = pVals, mznpath = mzn_path)
-```
-
-### Solve the Model
-
-The function `mzn_eval()` is used to evaluate a MiniZinc model and returns the solution string and a list of solutions if they were parsed without any error by the function `sol_parse()` otherwise it returns the solution string and an appropriate error. The parsed solutions are a named list where elements are of type `OBJ$SOLUTIONS$SOLUTION<n>$<VARIABLE_NAME>`. The optimal solution if found can be accessed using `OBJ$SOLUTIONS$OPTIMAL_SOLUTION` and the best solution can be accessed using `OBJ$SOLUTIONS$BEST_SOLUTION`. More details about the functions can be obtained using `?mzn_eval` and `?sol_parse`.
-
-The solver that should be used to solve the model needs to be specified by the user (default is Gecode)
-and the libpath (path of the MiniZinc executable) should also be provided. If the user wishes to provide a data file, it's path can be provided to the argument `dznpath`.  A time limit (in ms) can also be provided to the argument `time_limit`. (default is 300000 ms)
-
-A sample job shop problem has been solved below:
-
-```{r}
-# R List object containing the solutions
-solObj = rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gecode",
-                     libpath = "/snap/minizinc/current/share/minizinc")
-# get all the solutions
-print(solObj$SOLUTIONS)
-```
-
-Let's solve another problem.
-
-```{r}
-# file path
-mzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/knapsack/knapsack_0.mzn")
-
-# get missing parameter values
-missingVals=rminizinc:::get_missing_pars( mznpath = mzn_path)
-print(missingVals)
-
-# list of the data
-pVals = list(3, 9, c(15,10,7), c(4,3,2))
-names(pVals) = missingVals
-
-# set the missing parameters
-modString = rminizinc:::set_params(modData = pVals,mznpath = mzn_path, modify_mzn = FALSE)
-
-# R List object containing the solutions
-solObj = rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gecode",
-                     libpath = "/snap/minizinc/current/share/minizinc")
-# get all the solutions
-print(solObj$SOLUTIONS)
-
-```
-
-Some examples of how to use these functions to solve optimization problems can be found in `mzn_examples` which are taken from [minizinc-examples](https://github.com/MiniZinc/minizinc-examples).
-
-NOTE: Please don't include output formatting in the mzn files or the solutions might not be parsed properly.
-
-The named list returned by `mzn_parse()` can be used to initialize all the R6 classes in the MiniZinc API mirror required to create the model that was parsed. This will help the user to use a lot of functions to understand, manipulate and use the model using the R6 objects. `getRModel()` is used to initialize all the relevant objects using named list returned by `mzn_parse()`.
-
-```{r}
-# mzn file path
-mzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/production_planning/prod_plan_0.mzn")
-
-# parse the model
-parseObj = rminizinc:::mzn_parse(mznpath = mzn_path)
-
-modString = getRModel(parseObj)$mzn_string()
-
-# dzn file path
-dzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/production_planning/prod_plan_0.dzn")
-
-# R List object containing the solutions
-solObj = rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gecode",
-                     libpath = "/snap/minizinc/current/share/minizinc", dznpath = dzn_path)
-# get all the solutions
-print(solObj$SOLUTIONS)
-```
-
 
 ## Modify Variable Domain
 

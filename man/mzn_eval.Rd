@@ -6,10 +6,9 @@
 \usage{
 mzn_eval(
   solver,
-  libpath,
-  modelString = "",
-  mznpath = "",
-  dznpath = "",
+  lib_path,
+  r_model,
+  dzn_path = "",
   all_solutions = TRUE,
   time_limit = 300000L
 )
@@ -17,13 +16,11 @@ mzn_eval(
 \arguments{
 \item{solver}{the name of the solver to use.}
 
-\item{libpath}{the path of the library where the solver is present.}
+\item{lib_path}{the path of the library where the solver is present.}
 
-\item{modelString}{the string representation of the model to be evaluated.}
+\item{r_model}{R6 Model object}
 
-\item{mznpath}{the path of the MiniZinc model file.}
-
-\item{dznpath}{path of the datafile to be used.}
+\item{dzn_path}{path of the datafile to be used.}
 
 \item{all_solutions}{bool to specify if all solutions are specified.}
 

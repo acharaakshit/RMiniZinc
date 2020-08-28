@@ -1,6 +1,59 @@
-## -----------------------------------------------------------------------------
+## ---- results='hide', echo=FALSE----------------------------------------------
 library(rminizinc)
 
+## -----------------------------------------------------------------------------
+# mzn file path
+mzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/jobshop/jobshop_0.mzn")
+
+# parse the model
+parseObj=rminizinc:::mzn_parse(mzn_path = mzn_path)
+
+## -----------------------------------------------------------------------------
+missingPars = get_missing_pars(model = parseObj)
+print(missingPars)
+
+## -----------------------------------------------------------------------------
+pVals = list(Int$new(3), Int$new(4),
+             Array$new(exprVec = intExpressions(c(3, 3, 4, 4, 4, 3, 2, 2, 3, 3, 3, 4)),
+               dimranges = list(IntSetVal$new(1,3), IntSetVal$new(1,4))), 
+             Array$new(exprVec = intExpressions(c(1, 2, 3, 4, 1, 3, 2, 4, 4, 2, 1, 3)),
+               dimranges = list(IntSetVal$new(1,3), IntSetVal$new(1,4))))
+names(pVals) = missingPars
+model = set_params(model = parseObj, modData = pVals)
+cat(model$mzn_string())
+
+## -----------------------------------------------------------------------------
+# R List object containing the solutions
+solObj = rminizinc:::mzn_eval(model, solver = "org.gecode.gecode",
+                   lib_path = "/snap/minizinc/current/share/minizinc")
+# get all the solutions
+print(solObj$SOLUTIONS)
+
+## -----------------------------------------------------------------------------
+# file path
+mzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/knapsack/knapsack_0.mzn")
+
+# get missing parameter values
+missingVals=rminizinc:::get_missing_pars( model = mzn_parse(mzn_path = mzn_path))
+print(missingVals)
+
+# list of the data
+pVals = list(Int$new(3), Int$new(9), Array$new(intExpressions(c(15,10,7)))
+             , Array$new(intExpressions(c(4,3,2))))
+names(pVals) = missingVals
+
+# set the missing parameters
+model = rminizinc:::set_params(modData = pVals, 
+                                   mzn_parse(mzn_path = mzn_path))
+
+# R List object containing the solutions
+solObj = rminizinc:::mzn_eval(model, solver = "org.gecode.gecode",
+                     lib_path = "/snap/minizinc/current/share/minizinc")
+# get all the solutions
+print(solObj$SOLUTIONS)
+
+
+## -----------------------------------------------------------------------------
 # create the variable and parameter declarations
 item1 = VarDeclItem$new(decl = IntDecl(name = "n", kind = "par"))
 
@@ -65,7 +118,7 @@ sprintf("Is this a parameter? %s", declItem$getDecl()$isPar())
 sprintf("Is this a set? %s", declItem$getDecl()$ti()$type()$isSet())
 sprintf("Base type of set: %s", declItem$getDecl()$ti()$type()$bt())
 sprintf("Name: %s", declItem$id()$getId())
-sprintf("Value: %s", declItem$getDecl()$value()$c_str())
+sprintf("Value: %s", declItem$getDecl()$getValue()$c_str())
 
 ## ---- results = 'hold'--------------------------------------------------------
 CstrItem = ConstraintItem$new(mzn_str = "constraint forall (i in PREC)
@@ -89,11 +142,6 @@ SlvItem = SolveItem$new(mzn_str = "solve
 sprintf("Objective: %s", SlvItem$getSt())
 cat(sprintf("Annotation: %s", SlvItem$getAnn()$c_str()))
 
-## -----------------------------------------------------------------------------
-aDeclItem = VarDeclItem$new(mzn_str = "int: n;")
-aItem = AssignItem$new(decl = aDeclItem$getDecl(), mzn_str = "n = 8;")
-sprintf("Value: %s", aItem$getValue()$c_str())
-
 ## ---- results = 'hold'--------------------------------------------------------
 fnItem = FunctionItem$new(mzn_str = "predicate nonoverlap(var int:s1, var int:d1,
                      var int:s2, var int:d2)=
@@ -115,76 +163,6 @@ ls(pattern = "item[^a-z]")
 items = c(item2, item3, item4, item5, item6, item7, item8, item9)
 mod = Model$new(items)
 cat(mod$mzn_string())
-
-## ----BASIC EXPRESSIONS, echo=FALSE, out.width = '80%'-------------------------
-knitr::include_graphics(paste0(getwd(),"/workflows/Basic_Types.png"))
-
-## ----PARENT EXPRESSIONS, echo=FALSE, out.width = '80%'------------------------
-knitr::include_graphics(paste0(getwd(),"/workflows/Parent_Types.png"))
-
-## -----------------------------------------------------------------------------
-# mzn file path
-mzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/jobshop/jobshop_0.mzn")
-
-# parse the model
-parseObj=rminizinc:::mzn_parse(mznpath = mzn_path)
-
-## -----------------------------------------------------------------------------
-missingPars = get_missing_pars(modelString = parseObj$MODEL_STRING)
-print(missingPars)
-
-## -----------------------------------------------------------------------------
-pVals = list(3, 4, c(3, 3, 4, 4, 4, 3, 2, 2, 3, 3, 3, 4), 
-             c(1, 2, 3, 4, 1, 3, 2, 4, 4, 2, 1, 3))
-names(pVals) = missingPars
-modString = set_params(modData = pVals, mznpath = mzn_path)
-
-## -----------------------------------------------------------------------------
-# R List object containing the solutions
-solObj = rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gecode",
-                     libpath = "/snap/minizinc/current/share/minizinc")
-# get all the solutions
-print(solObj$SOLUTIONS)
-
-## -----------------------------------------------------------------------------
-# file path
-mzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/knapsack/knapsack_0.mzn")
-
-# get missing parameter values
-missingVals=rminizinc:::get_missing_pars( mznpath = mzn_path)
-print(missingVals)
-
-# list of the data
-pVals = list(3, 9, c(15,10,7), c(4,3,2))
-names(pVals) = missingVals
-
-# set the missing parameters
-modString = rminizinc:::set_params(modData = pVals,mznpath = mzn_path, modify_mzn = FALSE)
-
-# R List object containing the solutions
-solObj = rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gecode",
-                     libpath = "/snap/minizinc/current/share/minizinc")
-# get all the solutions
-print(solObj$SOLUTIONS)
-
-
-## -----------------------------------------------------------------------------
-# mzn file path
-mzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/production_planning/prod_plan_0.mzn")
-
-# parse the model
-parseObj = rminizinc:::mzn_parse(mznpath = mzn_path)
-
-modString = getRModel(parseObj)$mzn_string()
-
-# dzn file path
-dzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/production_planning/prod_plan_0.dzn")
-
-# R List object containing the solutions
-solObj = rminizinc:::mzn_eval(modelString = modString, solver = "org.gecode.gecode",
-                     libpath = "/snap/minizinc/current/share/minizinc", dznpath = dzn_path)
-# get all the solutions
-print(solObj$SOLUTIONS)
 
 ## ---- results = 'hold'--------------------------------------------------------
 vd = VarDomainDecl(name = "n", dom = Set$new(IntSetVal$new(imin = 1, imax = 2)))

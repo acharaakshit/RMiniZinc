@@ -10,14 +10,16 @@ IncludeItem = R6Class("IncludeItem",
                         initialize = function(name = NULL, mzn_str = NULL){
                           if(testCharacter(mzn_str)){
                             assertNull(name)
-                            parsedList = suppressWarnings(mzn_parse(modelString = mzn_str))
-                            if(!testTRUE(length(parsedList) == 2 &&
-                                         names(parsedList$INCLUDES) == "INCLUDE1")){
+                            parsedR6 = suppressWarnings(mzn_parse(model_string = mzn_str))
+                            if(!testR6(parsedR6, "Model") &&
+                               parsedR6$nitems() != 1 &&
+                               !testR6(parsedR6$item_i(1), "IncludeItem")){
                               stop("only single include item should be provided")
                             }
-                            private$.id = parsedList$INCLUDES$INCLUDE1$INCLUDED_MZN
+                            i_item = parsedR6$item_i(1)  
+                            private$.id = i_item$getmznName()
                           }else{
-                            if(substr(name, nchar(name)-4+1, nchar(name)) != ".mzn"){
+                            if(substr(name, nchar(name)-3, nchar(name)) != ".mzn"){
                               stop("name should be an mzn file")
                             }
                             assertCharacter(name)

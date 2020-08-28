@@ -12,7 +12,7 @@
 
 <meta name="author" content="Akshit Achara, Lars Kotthoff" />
 
-<meta name="date" content="2020-08-20" />
+<meta name="date" content="2020-08-28" />
 
 <title>MiniZinc Interface for R</title>
 
@@ -319,7 +319,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">MiniZinc Interface for R</h1>
 <h4 class="author">Akshit Achara, Lars Kotthoff</h4>
-<h4 class="date">2020-08-20</h4>
+<h4 class="date">2020-08-28</h4>
 
 
 
@@ -332,310 +332,80 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <p>It would be nice to go through this <a href="https://www.minizinc.org/tutorial/minizinc-tute.pdf">manual</a> to understand more about MiniZinc. This is mainly for those who are interested in contributing to the package.</p>
 <p>Please make sure to install MiniZinc on your operating system and also ensure that minizinc is accessible from command line by typing ‘minizinc’ on the command line without the single quotes. The installation instructions can be found <a href="https://www.minizinc.org/doc-2.4.3/en/installation.html">here</a>.</p>
 </div>
-<div id="variables" class="section level2">
-<h2>Variables</h2>
-<p>There are two types of variables in MiniZinc namely, decision variables and parameters.</p>
-<p>The data types of variables can be single types i.e integers (int), floating point numbers (float), Booleans (bool) and strings (string) and collections i.e sets, enums and arrays (upto 6 dimensional arrays).</p>
-<p>Parameter is used to specify a parameter in a given problem and they are assigned a fixed value or expression.</p>
-<p>Decision variables are the unknowns that Minizinc model is finding solutions for. We do not need to give them a value, but instead we give them a domain of possible values. Sometimes expressions involving other variables and parameters are also assigned to decision variables. Decision variables need to satisfy a set of constraints which form the core of the problem.</p>
-<p>To create a variable declaration one needs to understand the elements of R6 classes that will be used to create the variables.</p>
-<p>Easy to use declaration functions have been created for the users to declare variables and parameters of different data types. Examples of how to declare variables is shown below.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(rminizinc)</span>
-<span id="cb1-2"><a href="#cb1-2"></a></span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="co"># create the variable and parameter declarations</span></span>
-<span id="cb1-4"><a href="#cb1-4"></a>item1 =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">decl =</span> <span class="kw">IntDecl</span>(<span class="dt">name =</span> <span class="st">&quot;n&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;par&quot;</span>))</span>
-<span id="cb1-5"><a href="#cb1-5"></a></span>
-<span id="cb1-6"><a href="#cb1-6"></a>par2_val =<span class="st"> </span>BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs =</span> Int<span class="op">$</span><span class="kw">new</span>(<span class="dv">1</span>), <span class="dt">binop =</span> <span class="st">&quot;..&quot;</span>, <span class="dt">rhs =</span> item1<span class="op">$</span><span class="kw">id</span>())</span>
-<span id="cb1-7"><a href="#cb1-7"></a>item2 =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">decl =</span> <span class="kw">IntSetDecl</span>(<span class="dt">name =</span> <span class="st">&quot;OBJ&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;par&quot;</span>, <span class="dt">value =</span> par2_val))</span>
-<span id="cb1-8"><a href="#cb1-8"></a></span>
-<span id="cb1-9"><a href="#cb1-9"></a>item3 =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">decl =</span> <span class="kw">IntDecl</span>(<span class="dt">name =</span> <span class="st">&quot;capacity&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;par&quot;</span>))</span>
-<span id="cb1-10"><a href="#cb1-10"></a></span>
-<span id="cb1-11"><a href="#cb1-11"></a>item4 =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">decl =</span> <span class="kw">IntArrDecl</span>(<span class="dt">name =</span> <span class="st">&quot;profit&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;par&quot;</span>, <span class="dt">ndim =</span> <span class="dv">1</span>, </span>
-<span id="cb1-12"><a href="#cb1-12"></a>                                          <span class="dt">ind =</span> <span class="kw">list</span>(item2<span class="op">$</span><span class="kw">id</span>())))</span>
-<span id="cb1-13"><a href="#cb1-13"></a></span>
-<span id="cb1-14"><a href="#cb1-14"></a>item5 =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">decl =</span> <span class="kw">IntArrDecl</span>(<span class="dt">name =</span> <span class="st">&quot;size&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;par&quot;</span>, <span class="dt">ndim =</span> <span class="dv">1</span>, <span class="dt">ind =</span>                                                            <span class="kw">list</span>(item2<span class="op">$</span><span class="kw">id</span>())))</span>
-<span id="cb1-15"><a href="#cb1-15"></a></span>
-<span id="cb1-16"><a href="#cb1-16"></a>item6 =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">decl =</span> <span class="kw">IntArrDecl</span>(<span class="dt">name =</span> <span class="st">&quot;x&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;var&quot;</span>, <span class="dt">ndim =</span> <span class="dv">1</span>, <span class="dt">ind =</span> <span class="kw">list</span>(item2<span class="op">$</span><span class="kw">id</span>())))</span></code></pre></div>
-</div>
-<div id="constraints" class="section level2">
-<h2>Constraints</h2>
-<p>Constraints are defined on the decision variables to restrict the range of values that they can take. They can also be thought of as the rules of a problem.</p>
-<p>Constraints can be created using different R6 sub classes of the super class Expression. In this example Generator, Binop, Comprehension and Call classes have been used. These classes take in the elements required to create an expression that will be used as a constraint. More information can be found using <code>?&lt;class Name&gt;</code></p>
-<p>Create constraints:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="co"># declare parameter for iterator</span></span>
-<span id="cb2-2"><a href="#cb2-2"></a>parIter =<span class="st"> </span><span class="kw">IntDecl</span>(<span class="dt">name =</span> <span class="st">&quot;i&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;par&quot;</span>)</span>
-<span id="cb2-3"><a href="#cb2-3"></a></span>
-<span id="cb2-4"><a href="#cb2-4"></a></span>
-<span id="cb2-5"><a href="#cb2-5"></a>gen_forall =<span class="st"> </span>Generator<span class="op">$</span><span class="kw">new</span>(<span class="dt">IN =</span> item2<span class="op">$</span><span class="kw">id</span>(), <span class="dt">decls =</span> <span class="kw">list</span>(parIter))</span>
-<span id="cb2-6"><a href="#cb2-6"></a>bop1 =<span class="st"> </span>BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> item6<span class="op">$</span><span class="kw">id</span>(),  <span class="dt">args=</span> <span class="kw">list</span>(gen_forall<span class="op">$</span><span class="kw">decl</span>(<span class="dv">1</span>))),</span>
-<span id="cb2-7"><a href="#cb2-7"></a>                                                             <span class="dt">binop =</span> <span class="st">&quot;&gt;=&quot;</span>, <span class="dt">rhs =</span> Int<span class="op">$</span><span class="kw">new</span>(<span class="dv">0</span>))</span>
-<span id="cb2-8"><a href="#cb2-8"></a></span>
-<span id="cb2-9"><a href="#cb2-9"></a>Comp1 =<span class="st"> </span>Comprehension<span class="op">$</span><span class="kw">new</span>(<span class="dt">generators =</span> <span class="kw">list</span>(gen_forall), <span class="dt">body =</span> bop1, <span class="dt">set =</span> <span class="ot">FALSE</span>)</span>
-<span id="cb2-10"><a href="#cb2-10"></a>cl1 =<span class="st"> </span>Call<span class="op">$</span><span class="kw">new</span>(<span class="dt">fnName =</span> <span class="st">&quot;forall&quot;</span>, <span class="dt">args =</span> <span class="kw">list</span>(Comp1))</span>
-<span id="cb2-11"><a href="#cb2-11"></a>item7 =<span class="st"> </span>ConstraintItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">e =</span> cl1)</span>
-<span id="cb2-12"><a href="#cb2-12"></a></span>
-<span id="cb2-13"><a href="#cb2-13"></a>gen_sum =<span class="st"> </span>Generator<span class="op">$</span><span class="kw">new</span>(<span class="dt">IN =</span> item2<span class="op">$</span><span class="kw">id</span>(), <span class="dt">decls =</span> <span class="kw">list</span>(parIter))</span>
-<span id="cb2-14"><a href="#cb2-14"></a></span>
-<span id="cb2-15"><a href="#cb2-15"></a>bop2 =<span class="st"> </span>BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> item5<span class="op">$</span><span class="kw">id</span>(), <span class="dt">args =</span> <span class="kw">list</span>(gen_sum<span class="op">$</span><span class="kw">decl</span>(<span class="dv">1</span>))),                  </span>
-<span id="cb2-16"><a href="#cb2-16"></a>                 <span class="dt">binop =</span> <span class="st">&quot;*&quot;</span>,  <span class="dt">rhs =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> item6<span class="op">$</span><span class="kw">id</span>() , </span>
-<span id="cb2-17"><a href="#cb2-17"></a>                 <span class="dt">args =</span> <span class="kw">list</span>(gen_sum<span class="op">$</span><span class="kw">decl</span>(<span class="dv">1</span>))))</span>
-<span id="cb2-18"><a href="#cb2-18"></a></span>
-<span id="cb2-19"><a href="#cb2-19"></a>Comp2 =<span class="st"> </span>Comprehension<span class="op">$</span><span class="kw">new</span>(<span class="dt">generators =</span> <span class="kw">list</span>(gen_sum), <span class="dt">body =</span> bop2, <span class="dt">set =</span> <span class="ot">FALSE</span>)</span>
-<span id="cb2-20"><a href="#cb2-20"></a>cl2 =<span class="st"> </span>Call<span class="op">$</span><span class="kw">new</span>(<span class="dt">fnName =</span> <span class="st">&quot;sum&quot;</span>, <span class="dt">args =</span> <span class="kw">list</span>(Comp2))</span>
-<span id="cb2-21"><a href="#cb2-21"></a>bop3 =<span class="st"> </span>BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs =</span> cl2, <span class="dt">binop =</span> <span class="st">&quot;&lt;=&quot;</span>, <span class="dt">rhs =</span> item3<span class="op">$</span><span class="kw">id</span>())</span>
-<span id="cb2-22"><a href="#cb2-22"></a>item8 =<span class="st"> </span>ConstraintItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">e =</span> bop3)</span></code></pre></div>
-</div>
-<div id="solve-type" class="section level2">
-<h2>Solve Type</h2>
-<p>The constraint programming problem can be of three types, namely: Satisfaction , Minimization and Maximization. Satisfaction problems produce all the solutions that satisfy the constraints whereas minimization and maximization problems produce the solution which minimizes and maximizes the given expression.</p>
-<p>An example is shown below:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>bop4 =<span class="st"> </span>BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> item4<span class="op">$</span><span class="kw">id</span>(), <span class="dt">args =</span> <span class="kw">list</span>(gen_sum<span class="op">$</span><span class="kw">decl</span>(<span class="dv">1</span>))),</span>
-<span id="cb3-2"><a href="#cb3-2"></a>                      <span class="dt">binop =</span> <span class="st">&quot;*&quot;</span>, <span class="dt">rhs =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> item6<span class="op">$</span><span class="kw">id</span>(), </span>
-<span id="cb3-3"><a href="#cb3-3"></a>                      <span class="dt">args =</span> <span class="kw">list</span>(gen_sum<span class="op">$</span><span class="kw">decl</span>(<span class="dv">1</span>))))</span>
-<span id="cb3-4"><a href="#cb3-4"></a></span>
-<span id="cb3-5"><a href="#cb3-5"></a>Comp3 =<span class="st"> </span>Comprehension<span class="op">$</span><span class="kw">new</span>(<span class="dt">generators =</span> <span class="kw">list</span>(gen_sum), <span class="dt">body =</span> bop4, <span class="dt">set =</span> <span class="ot">FALSE</span>)</span>
-<span id="cb3-6"><a href="#cb3-6"></a></span>
-<span id="cb3-7"><a href="#cb3-7"></a>cl3 =<span class="st"> </span>Call<span class="op">$</span><span class="kw">new</span>(<span class="dt">fnName =</span> <span class="st">&quot;sum&quot;</span>, <span class="dt">args =</span> <span class="kw">list</span>(Comp3))</span>
-<span id="cb3-8"><a href="#cb3-8"></a></span>
-<span id="cb3-9"><a href="#cb3-9"></a>item9 =<span class="st"> </span>SolveItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">solve_type =</span> <span class="st">&quot;maximize&quot;</span>, <span class="dt">e =</span> cl3)</span></code></pre></div>
-</div>
-<div id="create-the-model" class="section level2">
-<h2>Create the Model</h2>
-<p>Combine all the items to create a MiniZinc model.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>items  =<span class="st"> </span><span class="kw">c</span>(item1, item2, item3, item4, item5, item6, item7, item8, item9)</span>
-<span id="cb4-2"><a href="#cb4-2"></a>mod =<span class="st"> </span>Model<span class="op">$</span><span class="kw">new</span>(<span class="dt">items =</span> items)</span>
-<span id="cb4-3"><a href="#cb4-3"></a>modString =<span class="st"> </span>mod<span class="op">$</span><span class="kw">mzn_string</span>()</span>
-<span id="cb4-4"><a href="#cb4-4"></a><span class="kw">cat</span>(modString)</span></code></pre></div>
-<pre><code>## int: n;
-## 
-## set of int: OBJ = (1 .. n);
-## 
-## int: capacity;
-## 
-## array[OBJ] of int: profit;
-## 
-## array[OBJ] of int: size;
-## 
-## array[OBJ] of var int: x;
-## 
-## constraint forall([(x[i] &gt;= 0) | i in OBJ ]);
-## 
-## constraint (sum([(size[i] * x[i]) | i in OBJ ]) &lt;= capacity);
-## 
-## solve  maximize sum([(profit[i] * x[i]) | i in OBJ ]);</code></pre>
-</div>
-<div id="create-items-using-strings" class="section level2">
-<h2>Create Items Using Strings</h2>
-<p>The strings containing MiniZinc syntax of items can be directly supplied to the constructors to initialize the objects. If strings are supplied, no other argument should be supplied to any of the Item classes except for <code>AssignItem</code> where you need to provided the associated variable declaration for the assignment.</p>
-<div id="varaible-item" class="section level3">
-<h3>Varaible Item</h3>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>declItem =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">mzn_str =</span> <span class="st">&quot;set of int: WORKSHEET = 0..worksheets-1;&quot;</span>)</span>
-<span id="cb6-2"><a href="#cb6-2"></a><span class="kw">sprintf</span>(<span class="st">&quot;Is this a parameter? %s&quot;</span>, declItem<span class="op">$</span><span class="kw">getDecl</span>()<span class="op">$</span><span class="kw">isPar</span>())</span>
-<span id="cb6-3"><a href="#cb6-3"></a><span class="kw">sprintf</span>(<span class="st">&quot;Is this a set? %s&quot;</span>, declItem<span class="op">$</span><span class="kw">getDecl</span>()<span class="op">$</span><span class="kw">ti</span>()<span class="op">$</span><span class="kw">type</span>()<span class="op">$</span><span class="kw">isSet</span>())</span>
-<span id="cb6-4"><a href="#cb6-4"></a><span class="kw">sprintf</span>(<span class="st">&quot;Base type of set: %s&quot;</span>, declItem<span class="op">$</span><span class="kw">getDecl</span>()<span class="op">$</span><span class="kw">ti</span>()<span class="op">$</span><span class="kw">type</span>()<span class="op">$</span><span class="kw">bt</span>())</span>
-<span id="cb6-5"><a href="#cb6-5"></a><span class="kw">sprintf</span>(<span class="st">&quot;Name: %s&quot;</span>, declItem<span class="op">$</span><span class="kw">id</span>()<span class="op">$</span><span class="kw">getId</span>())</span>
-<span id="cb6-6"><a href="#cb6-6"></a><span class="kw">sprintf</span>(<span class="st">&quot;Value: %s&quot;</span>, declItem<span class="op">$</span><span class="kw">getDecl</span>()<span class="op">$</span><span class="kw">value</span>()<span class="op">$</span><span class="kw">c_str</span>())</span></code></pre></div>
-<pre><code>## [1] &quot;Is this a parameter? TRUE&quot;
-## [1] &quot;Is this a set? TRUE&quot;
-## [1] &quot;Base type of set: int&quot;
-## [1] &quot;Name: WORKSHEET&quot;
-## [1] &quot;Value: (0 .. (worksheets - 1))&quot;</code></pre>
-</div>
-<div id="constraint-item" class="section level3">
-<h3>Constraint Item</h3>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>CstrItem =<span class="st"> </span>ConstraintItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">mzn_str =</span> <span class="st">&quot;constraint forall (i in PREC)</span></span>
-<span id="cb8-2"><a href="#cb8-2"></a><span class="st">                  (let { WORKSHEET: w1 = preceeds[i];</span></span>
-<span id="cb8-3"><a href="#cb8-3"></a><span class="st">                             WORKSHEET: w2 = succeeds[i]; } in</span></span>
-<span id="cb8-4"><a href="#cb8-4"></a><span class="st">                   g[w1] * e[w1] &lt;= d[w2] + days * (1 - g[w2]));&quot;</span>)</span>
-<span id="cb8-5"><a href="#cb8-5"></a><span class="kw">sprintf</span>(<span class="st">&quot;Expression involved: %s&quot;</span>, CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">c_str</span>())</span>
-<span id="cb8-6"><a href="#cb8-6"></a><span class="kw">sprintf</span>(<span class="st">&quot;Call function name: %s&quot;</span>, CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">getName</span>())</span>
-<span id="cb8-7"><a href="#cb8-7"></a><span class="kw">sprintf</span>(<span class="st">&quot;Number of Arguments: %s&quot;</span>, CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">nargs</span>())</span>
-<span id="cb8-8"><a href="#cb8-8"></a><span class="kw">sprintf</span>(<span class="st">&quot;Class of Argument: %s&quot;</span>,  <span class="kw">class</span>(CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">arg</span>(<span class="dv">1</span>))[<span class="dv">1</span>])</span>
-<span id="cb8-9"><a href="#cb8-9"></a><span class="kw">sprintf</span>(<span class="st">&quot;Number of Generators: %s&quot;</span>, CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">nargs</span>())</span>
-<span id="cb8-10"><a href="#cb8-10"></a><span class="kw">sprintf</span>(<span class="st">&quot;Generator: %s&quot;</span>, CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">arg</span>(<span class="dv">1</span>)<span class="op">$</span><span class="kw">gen_i</span>(<span class="dv">1</span>)<span class="op">$</span><span class="kw">c_str</span>())</span>
-<span id="cb8-11"><a href="#cb8-11"></a><span class="kw">sprintf</span>(<span class="st">&quot;Comprehension body: %s&quot;</span>, CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">arg</span>(<span class="dv">1</span>)<span class="op">$</span><span class="kw">getBody</span>()<span class="op">$</span><span class="kw">c_str</span>())</span></code></pre></div>
-<pre><code>## [1] &quot;Expression involved: forall([let {WORKSHEET: w1 = preceeds[i], WORKSHEET: w2 = succeeds[i]} in ((g[w1] * e[w1]) &lt;= (d[w2] + (days * (1 - g[w2])))) | i in PREC ])&quot;
-## [1] &quot;Call function name: forall&quot;
-## [1] &quot;Number of Arguments: 1&quot;
-## [1] &quot;Class of Argument: Comprehension&quot;
-## [1] &quot;Number of Generators: 1&quot;
-## [1] &quot;Generator: i in PREC &quot;
-## [1] &quot;Comprehension body: let {WORKSHEET: w1 = preceeds[i], WORKSHEET: w2 = succeeds[i]} in ((g[w1] * e[w1]) &lt;= (d[w2] + (days * (1 - g[w2]))))&quot;</code></pre>
-</div>
-<div id="solve-item" class="section level3">
-<h3>Solve Item</h3>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>SlvItem =<span class="st"> </span>SolveItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">mzn_str =</span> <span class="st">&quot;solve </span></span>
-<span id="cb10-2"><a href="#cb10-2"></a><span class="st">    :: int_search(</span></span>
-<span id="cb10-3"><a href="#cb10-3"></a><span class="st">        [ if j = 1 then g[import_first[i]] else -d[import_first[i]] endif  | i in 1..worksheets, j in 1..2], </span></span>
-<span id="cb10-4"><a href="#cb10-4"></a><span class="st">        input_order, indomain_max, complete)</span></span>
-<span id="cb10-5"><a href="#cb10-5"></a><span class="st">    maximize objective;&quot;</span>)</span>
-<span id="cb10-6"><a href="#cb10-6"></a><span class="kw">sprintf</span>(<span class="st">&quot;Objective: %s&quot;</span>, SlvItem<span class="op">$</span><span class="kw">getSt</span>())</span>
-<span id="cb10-7"><a href="#cb10-7"></a><span class="kw">cat</span>(<span class="kw">sprintf</span>(<span class="st">&quot;Annotation: %s&quot;</span>, SlvItem<span class="op">$</span><span class="kw">getAnn</span>()<span class="op">$</span><span class="kw">c_str</span>()))</span></code></pre></div>
-<pre><code>## [1] &quot;Objective: maximize&quot;
-## Annotation:  :: int_search([if ((j = 1)) then (g[import_first[i]]) else (-(d[import_first[i]])) endif | i in (1 .. worksheets) , j in 1..2 ], input_order, indomain_max, complete)</code></pre>
-</div>
-<div id="assignment-item" class="section level3">
-<h3>Assignment Item</h3>
-<p>The declaration associated with the assignment should also be provided along with the assignment string. Make sure that the declaration doesn’t have a value.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>aDeclItem =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">mzn_str =</span> <span class="st">&quot;int: n;&quot;</span>)</span>
-<span id="cb12-2"><a href="#cb12-2"></a>aItem =<span class="st"> </span>AssignItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">decl =</span> aDeclItem<span class="op">$</span><span class="kw">getDecl</span>(), <span class="dt">mzn_str =</span> <span class="st">&quot;n = 8;&quot;</span>)</span>
-<span id="cb12-3"><a href="#cb12-3"></a><span class="kw">sprintf</span>(<span class="st">&quot;Value: %s&quot;</span>, aItem<span class="op">$</span><span class="kw">getValue</span>()<span class="op">$</span><span class="kw">c_str</span>())</span></code></pre></div>
-<pre><code>## [1] &quot;Value: 8&quot;</code></pre>
-</div>
-<div id="function-item" class="section level3">
-<h3>Function Item</h3>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>fnItem =<span class="st"> </span>FunctionItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">mzn_str =</span> <span class="st">&quot;predicate nonoverlap(var int:s1, var int:d1,</span></span>
-<span id="cb14-2"><a href="#cb14-2"></a><span class="st">                     var int:s2, var int:d2)=</span></span>
-<span id="cb14-3"><a href="#cb14-3"></a><span class="st">          s1 + d1 &lt;= s2 </span><span class="ch">\\</span><span class="st">/ s2 + d2 &lt;= s1;&quot;</span>)</span>
-<span id="cb14-4"><a href="#cb14-4"></a><span class="kw">sprintf</span>(<span class="st">&quot;Function name: %s&quot;</span>, fnItem<span class="op">$</span><span class="kw">name</span>())</span>
-<span id="cb14-5"><a href="#cb14-5"></a><span class="kw">sprintf</span>(<span class="st">&quot;No of function declarations: %s&quot;</span>, <span class="kw">length</span>(fnItem<span class="op">$</span><span class="kw">decls</span>()))</span>
-<span id="cb14-6"><a href="#cb14-6"></a><span class="kw">sprintf</span>(<span class="st">&quot;Function expression: %s&quot;</span>, fnItem<span class="op">$</span><span class="kw">body</span>()<span class="op">$</span><span class="kw">c_str</span>())</span></code></pre></div>
-<pre><code>## [1] &quot;Function name: nonoverlap&quot;
-## [1] &quot;No of function declarations: 4&quot;
-## [1] &quot;Function expression: (((s1 + d1) &lt;= s2) \\/ ((s2 + d2) &lt;= s1))&quot;</code></pre>
-</div>
-<div id="include-item" class="section level3">
-<h3>Include Item</h3>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>iItem =<span class="st"> </span>IncludeItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">mzn_str =</span> <span class="st">&quot;include </span><span class="ch">\&quot;</span><span class="st">cumulative.mzn</span><span class="ch">\&quot;</span><span class="st"> ;&quot;</span>)</span>
-<span id="cb16-2"><a href="#cb16-2"></a><span class="kw">sprintf</span>(<span class="st">&quot;Included mzn name: %s&quot;</span>, iItem<span class="op">$</span><span class="kw">getmznName</span>())</span></code></pre></div>
-<pre><code>## [1] &quot;Included mzn name: cumulative.mzn&quot;</code></pre>
-</div>
-</div>
-<div id="delete-items" class="section level2">
-<h2>Delete Items</h2>
-<p>All the item classes have a <code>delete()</code> function which is used to delete the item. An example to demonstrate the same is shown below:</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="co"># delete the item 1</span></span>
-<span id="cb18-2"><a href="#cb18-2"></a>item1<span class="op">$</span><span class="kw">delete</span>()</span></code></pre></div>
-<pre><code>## VarDeclItem object deleted!</code></pre>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="co"># check that item1 has been deleted</span></span>
-<span id="cb20-2"><a href="#cb20-2"></a><span class="kw">ls</span>(<span class="dt">pattern =</span> <span class="st">&quot;item[^a-z]&quot;</span>)</span></code></pre></div>
-<pre><code>## [1] &quot;item2&quot; &quot;item3&quot; &quot;item4&quot; &quot;item5&quot; &quot;item6&quot; &quot;item7&quot; &quot;item8&quot; &quot;item9&quot;</code></pre>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="co"># item1 reference is deleted but items vector should be updated</span></span>
-<span id="cb22-2"><a href="#cb22-2"></a>items =<span class="st"> </span><span class="kw">c</span>(item2, item3, item4, item5, item6, item7, item8, item9)</span>
-<span id="cb22-3"><a href="#cb22-3"></a>mod =<span class="st"> </span>Model<span class="op">$</span><span class="kw">new</span>(items)</span>
-<span id="cb22-4"><a href="#cb22-4"></a><span class="kw">cat</span>(mod<span class="op">$</span><span class="kw">mzn_string</span>())</span></code></pre></div>
-<pre><code>## set of int: OBJ = (1 .. n);
-## 
-## int: capacity;
-## 
-## array[OBJ] of int: profit;
-## 
-## array[OBJ] of int: size;
-## 
-## array[OBJ] of var int: x;
-## 
-## constraint forall([(x[i] &gt;= 0) | i in OBJ ]);
-## 
-## constraint (sum([(size[i] * x[i]) | i in OBJ ]) &lt;= capacity);
-## 
-## solve  maximize sum([(profit[i] * x[i]) | i in OBJ ]);</code></pre>
-</div>
-<div id="parse-model-set-missing-parameters-and-solve" class="section level2">
-<h2>Parse Model, Set Missing Parameters and Solve</h2>
+<div id="getting-started" class="section level2">
+<h2>Getting Started</h2>
 <div id="parse-a-minizinc-model" class="section level3">
 <h3>Parse a MiniZinc Model</h3>
-<p>A parser function <code>mzn_parse</code> has also been implemented which can be used to detect possible syntax errors and get the smallest of details before the MiniZinc model is evaluated. This function can either take the path of a model file path or it can take a string model and returns a list with different elements like: <code>MODEL_STRING</code> which is the string representation of the model and <code>VARIABLES</code> which are the variable declaration details, <code>CONSTRAINTS</code> which are the constraint details of a model, <code>SOLVE_TYPE</code> which contains the information about the solve type of the problem, <code>FUNCTION_ITEMS</code> contains the function information, <code>ASSIGNMENTS</code> contains the assignment information, <code>INCLUDES</code> contains information about the included mzn files and <code>OUTPUT_ITEM</code> contains the information about the output formatting. Each component (Variable Declarations, Constraints, Solve Items, Assignment Items, Include Items, Functions and Assignments) in a MiniZinc model is considered as an item. The <code>ITEM_NO</code> for each element is also returned. If your model includes an mzn file, you can provide custom paths of the folders where the included files are present. The default mzn files (in the std folder) provided along with libminizinc will be included by default.</p>
-<p>The Information about the naming of the elements returned is described in the following figures:</p>
-</div>
-<div id="model-items" class="section level3">
-<h3>Model Items</h3>
-<p><em>Name</em>: <code>VARIABLES</code><br />
-<em>Components</em>: <code>DECL&lt;n&gt;</code> is the list of declaration with components <code>DETAILS</code> and <code>ITEM_NO</code><br />
-<em>Description</em>: <code>DETAILS</code> are the details of a variable declaration namely: <code>NAME</code>, <code>TYPE_INST</code> and <code>VALUE</code> and <code>ITEM_NO</code> is the item number of the variable declaration in the model.</p>
-<p><em>Name</em>: <code>CONSTRAINTS</code><br />
-<em>Components</em>: <code>CONSTRAINT&lt;n&gt;</code> is the list of constraints with components: <code>DETAILS</code> and <code>ITEM_NO</code>.<br />
-<em>Description</em>: <code>DETAILS</code> are the details about the expressions.</p>
-<p><em>Name</em>: <code>FUNCTION_ITEMS</code><br />
-<em>Components</em>: <code>FUNCTION&lt;n&gt;</code> is the list of functions with components: <code>DETAILS</code> and <code>ITEM_NO</code>.<br />
-<em>Description</em>: <code>DETAILS</code> are the details that can <code>EXPRESSION</code>, <code>ANNOTATION</code>, <code>TYPE_INST</code> <code>PARAMETER_DECLARATIONS</code>.</p>
-<p><em>Name</em>: <code>SOLVE_TYPE</code><br />
-<em>Components</em>: <code>DETAILS</code>, <code>OBJECTIVE</code> and <code>ITEM_NO</code><br />
-<em>Description</em>: <code>DETAILS</code> are the details that can <code>EXPRESSION</code> or <code>ANNOTATION</code>, <code>OBJECTIVE</code> can be “satisfy”, “minimize” or “maximize”.</p>
-<p><em>Name</em>: <code>ASSIGNMENTS</code><br />
-<em>Components</em>: <code>ASSIGNMENT&lt;n&gt;</code> have the sub components: <code>DETAILS</code> and <code>ITEM_NO</code>.<br />
-<em>Description</em>: <code>DETAILS</code> contain the value expression details.</p>
-<p><em>Name</em>: <code>INCLUDES</code><br />
-<em>Components</em>: <code>INCLUDED_MZN</code> and <code>ITEM_NO</code> <em>Description</em>: <code>INCLUDED_MZN</code> is the name of the included mzn file.</p>
-<p><em>Name</em>: <code>OUTPUT_ITEM</code><br />
-<em>Components</em>: <code>DETAILS</code> and <code>ITEM_NO</code>.<br />
-<em>Description</em>: <code>DETAILS</code> are the details about the output formatting expression.</p>
-</div>
-<div id="basic-expressions" class="section level3">
-<h3>Basic Expressions</h3>
-<p>These are the expressions that lie at the lowest level when parsing any expression.</p>
-<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAggAAAC2CAIAAAAzweIYAAAAA3NCSVQICAjb4U/gAAAAGXRFWHRTb2Z0d2FyZQBnbm9tZS1zY3JlZW5zaG907wO/PgAADtZJREFUeJzt3T2QnEafx/GeK1lPK9oOXGUuEheZi0RmMnGRyUxmLrHInrnIZCYTmbnIZJ6rC4yiI3twZMoOzFMXmOzBkclMZq5KVepskRXMBfvaq5U8XknLSPv9RLszDDR/aH50sy+r7XYrAAA48U9LNwAAsF8IBgCAgWAAABgIBgCAgWAAABgIBgCAgWAAABgIBgCA4dbSDcBbY7VaLd2Em4JfO8WyCAb8CVywrgEBjMUxlQQAMBAMAAADwQAAMBAMAAADwQAAMBAMAAADwQAAMBAMAAADwQAAMBAMAAADwQAAMBAMuC7t2lqt5BFle/Gm1+fe1WVoK2fdzmcvzUOVBK5tWZZl2W6QVOMshBBD4amoPvlYt4l9x5JSSssN1qWxTqHLQK4ukMF//2/qWmE5nW2oT107qiYxbXx50kSpbDfKWy2EOHrdXIubD0fbLyLPsSzLUpbtRUVnbB94S22B3bzq2fLjX+/e++IfR18/+enL+wf3vvzl9M3fvv74/pdfP7j34LvDk5d++eqjDz7+6h9Pjt7/8YuPDj766pej1w8+/dt2u90e/vTFvYN7D7756bfD7eGTX3786pO7H9z/+tdLtv3T5x9++PlPp98e/vj5h3cffHe06u2vX9+/+/E3v26329++vn/wyf8ct+Dwl28+vfvBp397cuH1cw6/e3D3w79+99vh6fJ3z+3AFdErsThGDFiC8oLAnobTm/axquYwimOvL5uTe+6xH20/cJUQQgjLz5q+jp3zK5mqbCPSqow9SwqpHD+p6k3syD/evPSz3G/TrJuFmKokn5Mitp9byImTUHVN/+L1TMM4u4FvyePly64t/B22D+w3ggFLmNqq1n7oHn87VJWIQlv6sT+cJoMXBVMRRXnV9tMshFS2pc6vY+7b3o6C81kh3TD2rV0aoMI8s+tk0zVZNkbF2nnhkvIlF3o7CJ02CZNN3Y1aCCEtW5ELePsRDLg+88+Fr5RSSv5zUFlJ4h9f6PuyUnFoCyG8KBjL+mggoYKyqxN7KJPAVpYTJGU/G2vTelZqpxi4jBUXqcyDqPWLzLvsaq6HsqjnIDhKr/nbWMlTyi9GIYRwkqbdBHOTx64lbS/K2+mSNQFvGYIB10feS1qttdbzdqr8JgryQQgxt2U1tImjlFIq2AxtWY/HH7C8OC+bfpqntvCHLIjrc892pVJyGl/hQmzHiS+cODEmf84CwA42Iq3y4Ohd+Ump51O6TezjVjhBsqm7QeuxWssqDI8eSgNvM4IBi1BeHLtD005ibsvG2Yz6RJfoshqE0H3dDCdDBOUEaRrIoRvPViFd353qsjv/c0xdkWw6Y1zxMlKK56aKzgJAj1219tTlHz3a3NjW3UkyScuLs7U7dMPO2wf2FMGARei+KjvlOEo3ZWtHwdmMkBv6uip7obtNHK2rQR8vX24a4frnnwVYUbaWZRQV7ajFrMc2j6JiVNb1zfKPdRrGeTvNQggxT+2mHBx/l6ffwF4jGHB95p//0zuepLejysrq3J+bsrXD4PyTAi8K5rrs7HVZxWITHk0xOXGlsroIjIuu9PK2Sa0m8WypbD/tnKKpIvvNtP3bf79j/jpEqaWf14XTJZ6llFK2l45hWScvfo4NvCVWW/69O3azWnG2XAfqjMUxYgAAGAgGAICBYAAAGAgGAICBYAAAGAgGAICBYAAAGAgGAICBYAAAGAgGAICBYAAAGG4t3QC8TVar1dJNAPDG8ee68C7jD9IBV8BUEgDAQDAAAAwEAwDAQDAAAAwEAwDAQDAAAAwEAwDAQDAAAAwEAwDAQDAAAAwEAwDAQDAAAAwEAwDAQDAAAAwEAwDAQDAAAAwEAwDAQDAAAAwEAwDAQDAAAAwEAwDAQDAAAAwEAwDAQDAAAAwEAwDAQDAAAAwEAwDAQDAAAAwEAwDAQDAAAAwEAwDAQDAAAAwEAwDAQDAAAAwEAwDAQDAAAAwEAwDAQDAAAAwEAwDAQDAAAAwEAwDAtN0nvu8vXQ8AWJ7v+wteilfb7XbpCpxZrfarPXuLQu2IQl0NdVvcsoeAqSQAgIFgAAAYCAYAgIFgAAAYCAYAgIFgAAAYCAYAgIFgAAAYCAYAgIFgAAAYCAYAgIFgAAAYCAYAgIFgAAAYCAYAgIFgAAAYCAYAgIFgAAAYCAYAgIFgAAAYCAYAgIFgAAAYCAYAgIFgAAAYCAYAgIFgAAAYCAYAgIFgAAAYCAYAgIFgAAAYCAYAgIFgAAAYCAYAgGH5YPjhhx8ODg4ePXp0+sqjR48ODg6+//77BVu1hyjUjijU1VC3xe3PIVhtt9tr3uTzpJS3bt26c+fO48eP33///cPDw2fPnj19+nTpdu0dCrUjCnU11G1xe3IIlh8xCCGyLHv27Nnjx4+FEI8fP3727FmWZUs3ah9RqB1RqKuhbovbk0OwFyMGIcSdO3fmeT76+i9/+cvp17iAQu2IQl0NdVvcPhyCvRgxCCEePnx4+/ZtIcTt27cfPny4dHP2F4XaEYW6Guq2uH04BPsyYhAnOclNyh+iUDuiUFdD3Ra3+CHYlxGDEOLhw4fvvfceNyl/iELtiEJdDXVb3PKHYLs3fv/9988+++zp06dLN2TfUagdUairoW6LW/wQvNJU0mq1eo0R9Ya8yg6+LhRqRxTqaqjb4t6xQ3Dr2ra0iP05WhRqRxTqaqjb4t6lQ7BHzxgAAPuAYAAAGAgGAICBYAAAGAgGAICBYAAAGAgGAICBYAAAGAgGAICBYAAAGAgGAIBhgWBoYsvLByGEaNfWyopqffpWlzj+ZhwKT64uUHFz/S198+Y6NHdVuvkgRJ+61rp9bumpLWLfsZSU0nL8uGgnc2VN7Cg7rLQQQnSJc7GI0km6a9mrBXWJc7SX08aXKymllFJZjhel1XCD/reA7orIcyzLspRle1HRaSFe2K3atbU6LpWUUllumB+fWX/YVY++nto88h1LSimV7UV5M173/r4Fzp2QUllukNbj6Xtjk0eeYx2/sy77szoL3ZfrwLWVlFI554o716E6PQKv38IjBnlXdmnWmV3WSbp5u91ut989+OCjr37dbrfbrS6DhZr4psn7X/969tdu5z51Ll9Ot0kQlTIu+2medV/GogyDpD0rnW7KIcjDqaonIYRXDPN2u90++ebjg4+/ebLdbrfzUHjXs0/7QX5S6nmeZz3UmTekflAMSzfpesxNEm1U1o7TNOmxWYsiSpr5Jd1K3vuim4+NbSo3UXIuA45c2lWFELqJ/aix1lWvZ62HKlF1FCTPL4fTE3KeulRV6/SoxlMd+XFjpVWv53nsimDK/SDvhRBCzH0eBLkOi3bUsx6qxKpjP66nl27mtVh6KslJMrdObkqPfQVjlZUqrTexZ0khpOXFZZXJMivH4wV0U45+FMcnyYBTygmSqop1nlUXL3fvpGkYZzfwLSmEENKJy64tfLnjh5UTxb4YhvHiG5d31WGT1XZeFZFrSSGl5UWbZmgzb9fN3UjSDiNvniYthOiLrHWLqghdSwqhbD+pylgXeaWF0HVWzHFVrn1bSSEtNyrq3Kmzon/jTVw6GIQK8kxtkpJr2UvNXdM7YWiff80JIqdvju/Npqqc/MiTbhjqqhoXaOJ+k14UqK598z1qD9hB6LRJmGzqbtRCCGnZaucL9TyUZStd9/mB62VdVXft4EWBZSxnWerKbb8R5qGqeifwbSGmrhtds4Bnp2rf9soP3fPHzgojb+y6N365XDwYhLTjfK3ztLkRN3PPm7vUs07ZcX3pIFxrLZS60N8spYTWWgghxqrSYewKIZwoElXFEOw5ylJa6xsxxeEkTbsJ5iaPXUvaXpS3L7+QzD8XvlJKKSWlCkqZ1kVwSZJc0lWN83LcBPbLT+ObbW5iSymlpPrXZPDTyBZCaK2ldbFjK1tpredZa61s68J7lnXS6d+k5YNBCOEmuX/p/OVNIN206c9c2iOFUEoJrS9070lrcXR3NlRl1+eeUkopN+v6srwRt8Z/yjRqZe1+5/x2k06QbOpu0Hqs1rIKw/xltwryXtJqrbUe68iS7jp2X3TLf7GrKqXE0ZSIEMKOq77v+y73bkgA/0kyKCettZ7nwz4TmR/XWiil5tMCntCjPgpppfR4odPraXr+FvH124tgENLPMqdOb+ajBqnU2YhBveDKJb3AHaraKNDY1IMXeFKIvqxk3usTQ2HV5Tv/A0h/ztyWjfaDm/D0fR7b+nSuQVpenK3dodvph7JUkKVWlW5e3BEvdFXlB05fnfyAzfGpzETSH5F2uA5k1/TC8gK7M58Kzl3dai9whXADTzeVccM81XVvB751cY2v234EgxBWlKdikzfcaLyAHWfxnEdx2U2zEPPUV+sw1+ssssTclbUMg7NJYTsIVV221PKYHps8jGsrSy8fjr1rxjoN47ydZiGEmKd2Uw6O7+y263acR1OeVS+eezK7qh3n0ZSG6+PzUg9NEaWd7e24uRtqHptNM9muLYQbZ+GQhknd61mIeeo2cVyqNAuVECpME1XGUdGOsxBCD3UapUOYr1/wk4uv0b4EgxB2XETy4rjp5vq///q3s19A8DejkH7R1LEoY1dJqdxoI9Z1m3tSzO3GzAUh7CC0mhufDPO3sZJSSmn7aefkTXMN/WkfSD+vC6dLPEsppWwvHcOyTnbdd+mlmddm+UvOHqOrKn/T1vF8dF5aTph3TtZ2qfvq+/HOOT0hpeWlU1CVa1sIYYVlW4ZTHtpqJS13XVtp05wcLjdt2tRqEk/JlbTDYgyqdhMcD8nmv//Hv5xeIy77xadXsHqVf2C9Wr3Sx6/BnrRwT5rxEnvSwj1pxkvsZwv3s1Xn7X8LX9H+7+CfauH+jBgAAHuBYAAAGAgGAICBYAAAGAgGAICBYAAAGAgGAICBYAAAGAgGAICBYAAAGAgGAIDh1it+frVavZZ2vPMo1I4o1NVQt8W9S4dg3//wEwDgmjGVBAAwEAwAAAPBAAAwEAwAAAPBAAAwEAwAAAPBAAAwEAwAAAPBAAAwEAwAAAPBAAAwEAwAAAPBAAAwEAwAAAPBAAAwEAwAAAPBAAAw/D9YsUmt9EvxoAAAAABJRU5ErkJggg==" width="80%" /></p>
-</div>
-<div id="parent-expressions" class="section level3">
-<h3>Parent Expressions</h3>
-<p>These are the expressions that are above the basic types in hierarchy and can have sub expressions that can be either basic expressions or parent expressions.</p>
-<p><img src="data:image/png;base64,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" width="80%" /></p>
-<div id="properties-of-parent-expressions" class="section level4">
-<h4>Properties of Parent Expressions</h4>
-<p>Each parent has different properties that define it’s structure. The properties of each of the parent are described below:</p>
-<p><em>Name</em>: <code>COMPREHENSION</code><br />
-<em>Components</em>: <code>GENERATORS</code> and <code>EXPRESSION</code><br />
-<em>Description</em>: <code>GENERATORS</code> is a list of expressions and each generator contains <code>DECLARATIONS</code> (list of variable declarations), <code>IN_EXPRESSION</code> and <code>WHERE_EXPRESSION</code> (Expressions). and <code>EXPRESSION</code> is the expression in the comprehension.</p>
-<p><em>Name</em>: <code>BINARY_OPERATION</code><br />
-<em>Components</em>: <code>LHS</code>, <code>BINARY_OPERATOR</code> and <code>RHS</code><br />
-<em>Description</em>: <code>LHS</code> and <code>RHS</code> are both expressions (basic or parent) and <code>BINARY_OPERATOR</code> is a binary operator in MiniZinc.</p>
-<p><em>Name</em>: <code>UNARY_OPERATION</code><br />
-<em>Components</em>: <code>UNARY_OPERATOR</code> and <code>ARGUMENTS</code><br />
-<em>Description</em>: <code>UNARY_OPERATOR</code> are the unary operators in MiniZinc and <code>ARGUMENTS</code> contain a list of expressions.</p>
-<p><em>Name</em>: <code>VARIABLE_DECLARATION</code><br />
-<em>Components</em>: <code>NAME</code>, <code>TYPE_INST</code> (<code>KIND</code>, <code>TYPE</code>, <code>DOMAIN</code>, <code>INDEX</code>) and <code>VALUE</code><br />
-<em>Description</em>: <code>NAME</code>, <code>KIND</code> and <code>TYPE</code> are strings representing the name, kind and type of the variable and <code>DOMAIN</code> and <code>VALUE</code> are expressions representing domain and value of the variable declaration. <code>TYPE_INST</code> contains the <code>KIND</code>, <code>TYPE</code>, <code>DOMAIN</code> and <code>INDEX</code>.</p>
-<p><em>Name</em>: <code>ARRAY_ACCESS</code><br />
-<em>Components</em>: <code>NAME</code> and <code>ARGUMENTS</code><br />
-<em>Description</em>: <code>NAME</code> is the name of the variable and <code>ARGUMENTS</code> is the list of expressions that represent the indices.</p>
-<p><em>Name</em>: <code>IF_THEN_ELSE</code><br />
-<em>Components</em>: <code>IF</code>, <code>THEN</code> and <code>ELSE</code><br />
-<em>Description</em>: <code>IF</code> is the list of if expressions, <code>THEN</code> is the list of then expressions and <code>ELSE</code> is the else expression.</p>
-<p><em>Name</em>: <code>LET</code><br />
-<em>Components</em>: <code>LET_EXPRESSION</code> and <code>IN_EXPRESSION</code><br />
-<em>Description</em>: <code>LET_EXPRESSION</code> and <code>IN_EXPRESSION</code> are lists of expressions.</p>
-<p><em>Name</em>: <code>CALL</code><br />
-<em>Components</em>: <code>NAME</code> and <code>ARGUMENTS</code><br />
-<em>Description</em>: <code>NAME</code> is the name of the function call and <code>ARGUMENTS</code> is the list of expressions to that function call.</p>
-<p><em>Name</em>: <code>SET</code><br />
-<em>Components</em>: <code>MIN</code>, <code>MAX</code> (set ranges) or <code>ELEMENT&lt;n&gt;</code> where n is the serial number of the element.<br />
-<em>Description</em>: <code>MIN</code> , <code>MAX</code> and <code>ELEMENT&lt;n&gt;</code> are all expression types (mostly basic expressions).</p>
-<p><em>Name</em>: <code>ARRAY</code><br />
-<em>Components</em>: <code>ELEMENTS</code> and <code>DIM_SIZE</code><br />
-<em>Description</em>: <code>ELEMENTS</code> have sub fields to type <code>ELEMENT&lt;n&gt;</code> where n is the serial number of the element and <code>DIM_SIZE</code> has sub fields <code>DIM&lt;n&gt;</code> which have the <code>MIN</code> and <code>MAX</code> index value of each dimension.</p>
+<p>A parser function <code>mzn_parse</code> has been implemented which can be used to detect possible syntax errors and get the smallest of details before the MiniZinc model is evaluated. The function returns the initialize <code>Model</code> R6 object.</p>
 <p>Now, let’s solve a job shop model:</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a><span class="co"># mzn file path</span></span>
-<span id="cb24-2"><a href="#cb24-2"></a>mzn_path =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">dirname</span>(<span class="kw">getwd</span>()), <span class="st">&quot;/inst/extdata/mzn_examples/jobshop/jobshop_0.mzn&quot;</span>)</span>
-<span id="cb24-3"><a href="#cb24-3"></a></span>
-<span id="cb24-4"><a href="#cb24-4"></a><span class="co"># parse the model</span></span>
-<span id="cb24-5"><a href="#cb24-5"></a>parseObj=rminizinc<span class="op">:::</span><span class="kw">mzn_parse</span>(<span class="dt">mznpath =</span> mzn_path)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># mzn file path</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a>mzn_path =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">dirname</span>(<span class="kw">getwd</span>()), <span class="st">&quot;/inst/extdata/mzn_examples/jobshop/jobshop_0.mzn&quot;</span>)</span>
+<span id="cb1-3"><a href="#cb1-3"></a></span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="co"># parse the model</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a>parseObj=rminizinc<span class="op">:::</span><span class="kw">mzn_parse</span>(<span class="dt">mzn_path =</span> mzn_path)</span></code></pre></div>
 <p>Look at the contents of parseObj for more understanding of the model.</p>
-</div>
 </div>
 <div id="find-the-missing-parameters" class="section level3">
 <h3>Find the Missing Parameters</h3>
 <p>The missing parameters can be obtained using <code>get_missing_pars()</code></p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a>missingPars =<span class="st"> </span><span class="kw">get_missing_pars</span>(<span class="dt">modelString =</span> parseObj<span class="op">$</span>MODEL_STRING)</span>
-<span id="cb25-2"><a href="#cb25-2"></a><span class="kw">print</span>(missingPars)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>missingPars =<span class="st"> </span><span class="kw">get_missing_pars</span>(<span class="dt">model =</span> parseObj)</span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="kw">print</span>(missingPars)</span></code></pre></div>
 <pre><code>## [1] &quot;n&quot;  &quot;m&quot;  &quot;d&quot;  &quot;mc&quot;</code></pre>
 </div>
 <div id="set-values-of-missing-parameters" class="section level3">
 <h3>Set Values of Missing Parameters</h3>
-<p>The function <code>set_params()</code> can be used to set the missing parameters of the model. Any number of missing parameters from 1 to the number of missing parameters can be set. The values for n dimensional arrays or sets can be provided as vectors like c(1, 2, .., n). The indices of the arrays will be automatically retrieved and the values of the arrays will be stored as <code>arraynd()</code> functions. The values should be provided as a named list where the names of each value is the name of the paramaeter. The string representation of the updated model will be returned on call. In case an mzn file path is provided it can also be updated after setting the values by setting <code>modifyMZN</code> to <code>TRUE</code>.</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a>pVals =<span class="st"> </span><span class="kw">list</span>(<span class="dv">3</span>, <span class="dv">4</span>, <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">4</span>), </span>
-<span id="cb27-2"><a href="#cb27-2"></a>             <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">3</span>))</span>
-<span id="cb27-3"><a href="#cb27-3"></a><span class="kw">names</span>(pVals) =<span class="st"> </span>missingPars</span>
-<span id="cb27-4"><a href="#cb27-4"></a>modString =<span class="st"> </span><span class="kw">set_params</span>(<span class="dt">modData =</span> pVals, <span class="dt">mznpath =</span> mzn_path)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>pVals =<span class="st"> </span><span class="kw">list</span>(Int<span class="op">$</span><span class="kw">new</span>(<span class="dv">3</span>), Int<span class="op">$</span><span class="kw">new</span>(<span class="dv">4</span>),</span>
+<span id="cb4-2"><a href="#cb4-2"></a>             Array<span class="op">$</span><span class="kw">new</span>(<span class="dt">exprVec =</span> <span class="kw">intExpressions</span>(<span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">4</span>)),</span>
+<span id="cb4-3"><a href="#cb4-3"></a>               <span class="dt">dimranges =</span> <span class="kw">list</span>(IntSetVal<span class="op">$</span><span class="kw">new</span>(<span class="dv">1</span>,<span class="dv">3</span>), IntSetVal<span class="op">$</span><span class="kw">new</span>(<span class="dv">1</span>,<span class="dv">4</span>))), </span>
+<span id="cb4-4"><a href="#cb4-4"></a>             Array<span class="op">$</span><span class="kw">new</span>(<span class="dt">exprVec =</span> <span class="kw">intExpressions</span>(<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">3</span>)),</span>
+<span id="cb4-5"><a href="#cb4-5"></a>               <span class="dt">dimranges =</span> <span class="kw">list</span>(IntSetVal<span class="op">$</span><span class="kw">new</span>(<span class="dv">1</span>,<span class="dv">3</span>), IntSetVal<span class="op">$</span><span class="kw">new</span>(<span class="dv">1</span>,<span class="dv">4</span>))))</span>
+<span id="cb4-6"><a href="#cb4-6"></a><span class="kw">names</span>(pVals) =<span class="st"> </span>missingPars</span>
+<span id="cb4-7"><a href="#cb4-7"></a>model =<span class="st"> </span><span class="kw">set_params</span>(<span class="dt">model =</span> parseObj, <span class="dt">modData =</span> pVals)</span>
+<span id="cb4-8"><a href="#cb4-8"></a><span class="kw">cat</span>(model<span class="op">$</span><span class="kw">mzn_string</span>())</span></code></pre></div>
+<pre><code>## int: n = 3;
+## 
+## set of int: JOB = (1 .. n);
+## 
+## int: m = 4;
+## 
+## set of int: MACH = (1 .. m);
+## 
+## set of int: TASK = (1 .. m);
+## 
+## array[JOB, TASK] of int: d = [|3, 3, 4, 4
+## |4, 3, 2, 2
+## |3, 3, 3, 4
+## |];
+## 
+## array[JOB, TASK] of MACH: mc = [|1, 2, 3, 4
+## |1, 3, 2, 4
+## |4, 2, 1, 3
+## |];
+## 
+## int: maxt = sum([d[j, t] | j in JOB , t in TASK ]);
+## 
+## array[JOB, TASK] of var (0 .. maxt): s;
+## 
+## var (0 .. maxt): makespan = max([(s[j, m] + d[j, m]) | j in JOB ]);
+## 
+## constraint forall([((s[j, t] + d[j, t]) &lt;= s[j, (t + 1)]) | j in JOB , t in (1 .. (m - 1)) ]);
+## 
+## constraint forall([nonoverlap(s[j1, t1], d[j1, t1], s[j2, t2], d[j2, t2]) | j1,j2 in JOB , t1,t2 in TASK where ((j1 &lt; j2) /\ (mc[j1, t1] = mc[j2, t2]))]);
+## 
+## solve  :: int_search([s[j, t] | j in JOB , t in TASK ], input_order, indomain_min, complete) minimize makespan;
+## 
+## predicate nonoverlap(var int: s1, var int: d1, var int: s2, var int: d2) = (((s1 + d1) &lt;= s2) \/ ((s2 + d2) &lt;= s1));</code></pre>
 </div>
 <div id="solve-the-model" class="section level3">
 <h3>Solve the Model</h3>
 <p>The function <code>mzn_eval()</code> is used to evaluate a MiniZinc model and returns the solution string and a list of solutions if they were parsed without any error by the function <code>sol_parse()</code> otherwise it returns the solution string and an appropriate error. The parsed solutions are a named list where elements are of type <code>OBJ$SOLUTIONS$SOLUTION&lt;n&gt;$&lt;VARIABLE_NAME&gt;</code>. The optimal solution if found can be accessed using <code>OBJ$SOLUTIONS$OPTIMAL_SOLUTION</code> and the best solution can be accessed using <code>OBJ$SOLUTIONS$BEST_SOLUTION</code>. More details about the functions can be obtained using <code>?mzn_eval</code> and <code>?sol_parse</code>.</p>
-<p>The solver that should be used to solve the model needs to be specified by the user (default is Gecode) and the libpath (path of the MiniZinc executable) should also be provided. If the user wishes to provide a data file, it’s path can be provided to the argument <code>dznpath</code>. A time limit (in ms) can also be provided to the argument <code>time_limit</code>. (default is 300000 ms)</p>
+<p>The solver that should be used to solve the model needs to be specified by the user (default is Gecode) and the lib_path (path of the MiniZinc executable) should also be provided. If the user wishes to provide a data file, it’s path can be provided to the argument <code>dznpath</code>. A time limit (in ms) can also be provided to the argument <code>time_limit</code>. (default is 300000 ms)</p>
 <p>A sample job shop problem has been solved below:</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a><span class="co"># R List object containing the solutions</span></span>
-<span id="cb28-2"><a href="#cb28-2"></a>solObj =<span class="st"> </span>rminizinc<span class="op">:::</span><span class="kw">mzn_eval</span>(<span class="dt">modelString =</span> modString, <span class="dt">solver =</span> <span class="st">&quot;org.gecode.gecode&quot;</span>,</span>
-<span id="cb28-3"><a href="#cb28-3"></a>                     <span class="dt">libpath =</span> <span class="st">&quot;/snap/minizinc/current/share/minizinc&quot;</span>)</span>
-<span id="cb28-4"><a href="#cb28-4"></a><span class="co"># get all the solutions</span></span>
-<span id="cb28-5"><a href="#cb28-5"></a><span class="kw">print</span>(solObj<span class="op">$</span>SOLUTIONS)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="co"># R List object containing the solutions</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a>solObj =<span class="st"> </span>rminizinc<span class="op">:::</span><span class="kw">mzn_eval</span>(model, <span class="dt">solver =</span> <span class="st">&quot;org.gecode.gecode&quot;</span>,</span>
+<span id="cb6-3"><a href="#cb6-3"></a>                   <span class="dt">lib_path =</span> <span class="st">&quot;/snap/minizinc/current/share/minizinc&quot;</span>)</span>
+<span id="cb6-4"><a href="#cb6-4"></a><span class="co"># get all the solutions</span></span>
+<span id="cb6-5"><a href="#cb6-5"></a><span class="kw">print</span>(solObj<span class="op">$</span>SOLUTIONS)</span></code></pre></div>
 <pre><code>## $OPTIMAL_SOLUTION
 ## $OPTIMAL_SOLUTION$s
 ## $OPTIMAL_SOLUTION$s[[1]]
@@ -647,25 +417,31 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ## $OPTIMAL_SOLUTION$s[[3]]
 ## [1]  0  6  9 13</code></pre>
 <p>Let’s solve another problem.</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a><span class="co"># file path</span></span>
-<span id="cb30-2"><a href="#cb30-2"></a>mzn_path =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">dirname</span>(<span class="kw">getwd</span>()), <span class="st">&quot;/inst/extdata/mzn_examples/knapsack/knapsack_0.mzn&quot;</span>)</span>
-<span id="cb30-3"><a href="#cb30-3"></a></span>
-<span id="cb30-4"><a href="#cb30-4"></a><span class="co"># get missing parameter values</span></span>
-<span id="cb30-5"><a href="#cb30-5"></a>missingVals=rminizinc<span class="op">:::</span><span class="kw">get_missing_pars</span>( <span class="dt">mznpath =</span> mzn_path)</span>
-<span id="cb30-6"><a href="#cb30-6"></a><span class="kw">print</span>(missingVals)</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="co"># file path</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a>mzn_path =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">dirname</span>(<span class="kw">getwd</span>()), <span class="st">&quot;/inst/extdata/mzn_examples/knapsack/knapsack_0.mzn&quot;</span>)</span>
+<span id="cb8-3"><a href="#cb8-3"></a></span>
+<span id="cb8-4"><a href="#cb8-4"></a><span class="co"># get missing parameter values</span></span>
+<span id="cb8-5"><a href="#cb8-5"></a>missingVals=rminizinc<span class="op">:::</span><span class="kw">get_missing_pars</span>( <span class="dt">model =</span> <span class="kw">mzn_parse</span>(<span class="dt">mzn_path =</span> mzn_path))</span>
+<span id="cb8-6"><a href="#cb8-6"></a><span class="kw">print</span>(missingVals)</span></code></pre></div>
 <pre><code>## [1] &quot;n&quot;        &quot;capacity&quot; &quot;profit&quot;   &quot;size&quot;</code></pre>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a><span class="co"># list of the data</span></span>
-<span id="cb32-2"><a href="#cb32-2"></a>pVals =<span class="st"> </span><span class="kw">list</span>(<span class="dv">3</span>, <span class="dv">9</span>, <span class="kw">c</span>(<span class="dv">15</span>,<span class="dv">10</span>,<span class="dv">7</span>), <span class="kw">c</span>(<span class="dv">4</span>,<span class="dv">3</span>,<span class="dv">2</span>))</span>
-<span id="cb32-3"><a href="#cb32-3"></a><span class="kw">names</span>(pVals) =<span class="st"> </span>missingVals</span>
-<span id="cb32-4"><a href="#cb32-4"></a></span>
-<span id="cb32-5"><a href="#cb32-5"></a><span class="co"># set the missing parameters</span></span>
-<span id="cb32-6"><a href="#cb32-6"></a>modString =<span class="st"> </span>rminizinc<span class="op">:::</span><span class="kw">set_params</span>(<span class="dt">modData =</span> pVals,<span class="dt">mznpath =</span> mzn_path, <span class="dt">modify_mzn =</span> <span class="ot">FALSE</span>)</span>
-<span id="cb32-7"><a href="#cb32-7"></a></span>
-<span id="cb32-8"><a href="#cb32-8"></a><span class="co"># R List object containing the solutions</span></span>
-<span id="cb32-9"><a href="#cb32-9"></a>solObj =<span class="st"> </span>rminizinc<span class="op">:::</span><span class="kw">mzn_eval</span>(<span class="dt">modelString =</span> modString, <span class="dt">solver =</span> <span class="st">&quot;org.gecode.gecode&quot;</span>,</span>
-<span id="cb32-10"><a href="#cb32-10"></a>                     <span class="dt">libpath =</span> <span class="st">&quot;/snap/minizinc/current/share/minizinc&quot;</span>)</span>
-<span id="cb32-11"><a href="#cb32-11"></a><span class="co"># get all the solutions</span></span>
-<span id="cb32-12"><a href="#cb32-12"></a><span class="kw">print</span>(solObj<span class="op">$</span>SOLUTIONS)</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="co"># list of the data</span></span>
+<span id="cb10-2"><a href="#cb10-2"></a>pVals =<span class="st"> </span><span class="kw">list</span>(Int<span class="op">$</span><span class="kw">new</span>(<span class="dv">3</span>), Int<span class="op">$</span><span class="kw">new</span>(<span class="dv">9</span>), Array<span class="op">$</span><span class="kw">new</span>(<span class="kw">intExpressions</span>(<span class="kw">c</span>(<span class="dv">15</span>,<span class="dv">10</span>,<span class="dv">7</span>)))</span>
+<span id="cb10-3"><a href="#cb10-3"></a>             , Array<span class="op">$</span><span class="kw">new</span>(<span class="kw">intExpressions</span>(<span class="kw">c</span>(<span class="dv">4</span>,<span class="dv">3</span>,<span class="dv">2</span>))))</span></code></pre></div>
+<pre><code>## dimensions not provided: initializing as 1d Array with
+##                                min index 1 and max index &lt;number_of_elements&gt;
+## dimensions not provided: initializing as 1d Array with
+##                                min index 1 and max index &lt;number_of_elements&gt;</code></pre>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="kw">names</span>(pVals) =<span class="st"> </span>missingVals</span>
+<span id="cb12-2"><a href="#cb12-2"></a></span>
+<span id="cb12-3"><a href="#cb12-3"></a><span class="co"># set the missing parameters</span></span>
+<span id="cb12-4"><a href="#cb12-4"></a>model =<span class="st"> </span>rminizinc<span class="op">:::</span><span class="kw">set_params</span>(<span class="dt">modData =</span> pVals, </span>
+<span id="cb12-5"><a href="#cb12-5"></a>                                   <span class="kw">mzn_parse</span>(<span class="dt">mzn_path =</span> mzn_path))</span>
+<span id="cb12-6"><a href="#cb12-6"></a></span>
+<span id="cb12-7"><a href="#cb12-7"></a><span class="co"># R List object containing the solutions</span></span>
+<span id="cb12-8"><a href="#cb12-8"></a>solObj =<span class="st"> </span>rminizinc<span class="op">:::</span><span class="kw">mzn_eval</span>(model, <span class="dt">solver =</span> <span class="st">&quot;org.gecode.gecode&quot;</span>,</span>
+<span id="cb12-9"><a href="#cb12-9"></a>                     <span class="dt">lib_path =</span> <span class="st">&quot;/snap/minizinc/current/share/minizinc&quot;</span>)</span>
+<span id="cb12-10"><a href="#cb12-10"></a><span class="co"># get all the solutions</span></span>
+<span id="cb12-11"><a href="#cb12-11"></a><span class="kw">print</span>(solObj<span class="op">$</span>SOLUTIONS)</span></code></pre></div>
 <pre><code>## $SOLUTION0
 ## $SOLUTION0$x
 ## [1] 0 0 0
@@ -701,97 +477,214 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ## [1] 1 1 1</code></pre>
 <p>Some examples of how to use these functions to solve optimization problems can be found in <code>mzn_examples</code> which are taken from <a href="https://github.com/MiniZinc/minizinc-examples">minizinc-examples</a>.</p>
 <p>NOTE: Please don’t include output formatting in the mzn files or the solutions might not be parsed properly.</p>
-<p>The named list returned by <code>mzn_parse()</code> can be used to initialize all the R6 classes in the MiniZinc API mirror required to create the model that was parsed. This will help the user to use a lot of functions to understand, manipulate and use the model using the R6 objects. <code>getRModel()</code> is used to initialize all the relevant objects using named list returned by <code>mzn_parse()</code>.</p>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a><span class="co"># mzn file path</span></span>
-<span id="cb34-2"><a href="#cb34-2"></a>mzn_path =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">dirname</span>(<span class="kw">getwd</span>()), <span class="st">&quot;/inst/extdata/mzn_examples/production_planning/prod_plan_0.mzn&quot;</span>)</span>
-<span id="cb34-3"><a href="#cb34-3"></a></span>
-<span id="cb34-4"><a href="#cb34-4"></a><span class="co"># parse the model</span></span>
-<span id="cb34-5"><a href="#cb34-5"></a>parseObj =<span class="st"> </span>rminizinc<span class="op">:::</span><span class="kw">mzn_parse</span>(<span class="dt">mznpath =</span> mzn_path)</span>
-<span id="cb34-6"><a href="#cb34-6"></a></span>
-<span id="cb34-7"><a href="#cb34-7"></a>modString =<span class="st"> </span><span class="kw">getRModel</span>(parseObj)<span class="op">$</span><span class="kw">mzn_string</span>()</span>
-<span id="cb34-8"><a href="#cb34-8"></a></span>
-<span id="cb34-9"><a href="#cb34-9"></a><span class="co"># dzn file path</span></span>
-<span id="cb34-10"><a href="#cb34-10"></a>dzn_path =<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">dirname</span>(<span class="kw">getwd</span>()), <span class="st">&quot;/inst/extdata/mzn_examples/production_planning/prod_plan_0.dzn&quot;</span>)</span>
-<span id="cb34-11"><a href="#cb34-11"></a></span>
-<span id="cb34-12"><a href="#cb34-12"></a><span class="co"># R List object containing the solutions</span></span>
-<span id="cb34-13"><a href="#cb34-13"></a>solObj =<span class="st"> </span>rminizinc<span class="op">:::</span><span class="kw">mzn_eval</span>(<span class="dt">modelString =</span> modString, <span class="dt">solver =</span> <span class="st">&quot;org.gecode.gecode&quot;</span>,</span>
-<span id="cb34-14"><a href="#cb34-14"></a>                     <span class="dt">libpath =</span> <span class="st">&quot;/snap/minizinc/current/share/minizinc&quot;</span>, <span class="dt">dznpath =</span> dzn_path)</span>
-<span id="cb34-15"><a href="#cb34-15"></a><span class="co"># get all the solutions</span></span>
-<span id="cb34-16"><a href="#cb34-16"></a><span class="kw">print</span>(solObj<span class="op">$</span>SOLUTIONS)</span></code></pre></div>
-<pre><code>## $SOLUTION0
-## $SOLUTION0$produce
-## [1] 0 0
-## 
-## $SOLUTION0$used
-## [1] 0 0 0 0 0
-## 
-## 
-## $SOLUTION1
-## $SOLUTION1$produce
-## [1] 1 0
-## 
-## $SOLUTION1$used
-## [1] 250   2  75 100   0
-## 
-## 
-## $SOLUTION2
-## $SOLUTION2$produce
-## [1] 2 0
-## 
-## $SOLUTION2$used
-## [1] 500   4 150 200   0
-## 
-## 
-## $SOLUTION3
-## $SOLUTION3$produce
-## [1] 3 0
-## 
-## $SOLUTION3$used
-## [1] 750   6 225 300   0
-## 
-## 
-## $SOLUTION4
-## $SOLUTION4$produce
-## [1] 2 1
-## 
-## $SOLUTION4$used
-## [1] 700   4 300 350  75
-## 
-## 
-## $SOLUTION5
-## $SOLUTION5$produce
-## [1] 3 1
-## 
-## $SOLUTION5$used
-## [1] 950   6 375 450  75
-## 
-## 
-## $OPTIMAL_SOLUTION
-## $OPTIMAL_SOLUTION$produce
-## [1] 2 2
-## 
-## $OPTIMAL_SOLUTION$used
-## [1] 900   4 450 500 150</code></pre>
 </div>
+</div>
+<div id="variables" class="section level2">
+<h2>Variables</h2>
+<p>There are two types of variables in MiniZinc namely, decision variables and parameters.</p>
+<p>The data types of variables can be single types i.e integers (int), floating point numbers (float), Booleans (bool) and strings (string) and collections i.e sets, enums and arrays (upto 6 dimensional arrays).</p>
+<p>Parameter is used to specify a parameter in a given problem and they are assigned a fixed value or expression.</p>
+<p>Decision variables are the unknowns that Minizinc model is finding solutions for. We do not need to give them a value, but instead we give them a domain of possible values. Sometimes expressions involving other variables and parameters are also assigned to decision variables. Decision variables need to satisfy a set of constraints which form the core of the problem.</p>
+<p>To create a variable declaration one needs to understand the elements of R6 classes that will be used to create the variables.</p>
+<p>Easy to use declaration functions have been created for the users to declare variables and parameters of different data types. Examples of how to declare variables is shown below.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="co"># create the variable and parameter declarations</span></span>
+<span id="cb14-2"><a href="#cb14-2"></a>item1 =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">decl =</span> <span class="kw">IntDecl</span>(<span class="dt">name =</span> <span class="st">&quot;n&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;par&quot;</span>))</span>
+<span id="cb14-3"><a href="#cb14-3"></a></span>
+<span id="cb14-4"><a href="#cb14-4"></a>par2_val =<span class="st"> </span>BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs =</span> Int<span class="op">$</span><span class="kw">new</span>(<span class="dv">1</span>), <span class="dt">binop =</span> <span class="st">&quot;..&quot;</span>, <span class="dt">rhs =</span> item1<span class="op">$</span><span class="kw">id</span>())</span>
+<span id="cb14-5"><a href="#cb14-5"></a>item2 =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">decl =</span> <span class="kw">IntSetDecl</span>(<span class="dt">name =</span> <span class="st">&quot;OBJ&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;par&quot;</span>, <span class="dt">value =</span> par2_val))</span>
+<span id="cb14-6"><a href="#cb14-6"></a></span>
+<span id="cb14-7"><a href="#cb14-7"></a>item3 =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">decl =</span> <span class="kw">IntDecl</span>(<span class="dt">name =</span> <span class="st">&quot;capacity&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;par&quot;</span>))</span>
+<span id="cb14-8"><a href="#cb14-8"></a></span>
+<span id="cb14-9"><a href="#cb14-9"></a>item4 =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">decl =</span> <span class="kw">IntArrDecl</span>(<span class="dt">name =</span> <span class="st">&quot;profit&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;par&quot;</span>, <span class="dt">ndim =</span> <span class="dv">1</span>, </span>
+<span id="cb14-10"><a href="#cb14-10"></a>                                          <span class="dt">ind =</span> <span class="kw">list</span>(item2<span class="op">$</span><span class="kw">id</span>())))</span>
+<span id="cb14-11"><a href="#cb14-11"></a></span>
+<span id="cb14-12"><a href="#cb14-12"></a>item5 =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">decl =</span> <span class="kw">IntArrDecl</span>(<span class="dt">name =</span> <span class="st">&quot;size&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;par&quot;</span>, <span class="dt">ndim =</span> <span class="dv">1</span>, <span class="dt">ind =</span>                                                            <span class="kw">list</span>(item2<span class="op">$</span><span class="kw">id</span>())))</span>
+<span id="cb14-13"><a href="#cb14-13"></a></span>
+<span id="cb14-14"><a href="#cb14-14"></a>item6 =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">decl =</span> <span class="kw">IntArrDecl</span>(<span class="dt">name =</span> <span class="st">&quot;x&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;var&quot;</span>, <span class="dt">ndim =</span> <span class="dv">1</span>, <span class="dt">ind =</span> <span class="kw">list</span>(item2<span class="op">$</span><span class="kw">id</span>())))</span></code></pre></div>
+</div>
+<div id="constraints" class="section level2">
+<h2>Constraints</h2>
+<p>Constraints are defined on the decision variables to restrict the range of values that they can take. They can also be thought of as the rules of a problem.</p>
+<p>Constraints can be created using different R6 sub classes of the super class Expression. In this example Generator, Binop, Comprehension and Call classes have been used. These classes take in the elements required to create an expression that will be used as a constraint. More information can be found using <code>?&lt;class Name&gt;</code></p>
+<p>Create constraints:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="co"># declare parameter for iterator</span></span>
+<span id="cb15-2"><a href="#cb15-2"></a>parIter =<span class="st"> </span><span class="kw">IntDecl</span>(<span class="dt">name =</span> <span class="st">&quot;i&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;par&quot;</span>)</span>
+<span id="cb15-3"><a href="#cb15-3"></a></span>
+<span id="cb15-4"><a href="#cb15-4"></a></span>
+<span id="cb15-5"><a href="#cb15-5"></a>gen_forall =<span class="st"> </span>Generator<span class="op">$</span><span class="kw">new</span>(<span class="dt">IN =</span> item2<span class="op">$</span><span class="kw">id</span>(), <span class="dt">decls =</span> <span class="kw">list</span>(parIter))</span>
+<span id="cb15-6"><a href="#cb15-6"></a>bop1 =<span class="st"> </span>BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> item6<span class="op">$</span><span class="kw">id</span>(),  <span class="dt">args=</span> <span class="kw">list</span>(gen_forall<span class="op">$</span><span class="kw">decl</span>(<span class="dv">1</span>))),</span>
+<span id="cb15-7"><a href="#cb15-7"></a>                                                             <span class="dt">binop =</span> <span class="st">&quot;&gt;=&quot;</span>, <span class="dt">rhs =</span> Int<span class="op">$</span><span class="kw">new</span>(<span class="dv">0</span>))</span>
+<span id="cb15-8"><a href="#cb15-8"></a></span>
+<span id="cb15-9"><a href="#cb15-9"></a>Comp1 =<span class="st"> </span>Comprehension<span class="op">$</span><span class="kw">new</span>(<span class="dt">generators =</span> <span class="kw">list</span>(gen_forall), <span class="dt">body =</span> bop1, <span class="dt">set =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb15-10"><a href="#cb15-10"></a>cl1 =<span class="st"> </span>Call<span class="op">$</span><span class="kw">new</span>(<span class="dt">fnName =</span> <span class="st">&quot;forall&quot;</span>, <span class="dt">args =</span> <span class="kw">list</span>(Comp1))</span>
+<span id="cb15-11"><a href="#cb15-11"></a>item7 =<span class="st"> </span>ConstraintItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">e =</span> cl1)</span>
+<span id="cb15-12"><a href="#cb15-12"></a></span>
+<span id="cb15-13"><a href="#cb15-13"></a>gen_sum =<span class="st"> </span>Generator<span class="op">$</span><span class="kw">new</span>(<span class="dt">IN =</span> item2<span class="op">$</span><span class="kw">id</span>(), <span class="dt">decls =</span> <span class="kw">list</span>(parIter))</span>
+<span id="cb15-14"><a href="#cb15-14"></a></span>
+<span id="cb15-15"><a href="#cb15-15"></a>bop2 =<span class="st"> </span>BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> item5<span class="op">$</span><span class="kw">id</span>(), <span class="dt">args =</span> <span class="kw">list</span>(gen_sum<span class="op">$</span><span class="kw">decl</span>(<span class="dv">1</span>))),                  </span>
+<span id="cb15-16"><a href="#cb15-16"></a>                 <span class="dt">binop =</span> <span class="st">&quot;*&quot;</span>,  <span class="dt">rhs =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> item6<span class="op">$</span><span class="kw">id</span>() , </span>
+<span id="cb15-17"><a href="#cb15-17"></a>                 <span class="dt">args =</span> <span class="kw">list</span>(gen_sum<span class="op">$</span><span class="kw">decl</span>(<span class="dv">1</span>))))</span>
+<span id="cb15-18"><a href="#cb15-18"></a></span>
+<span id="cb15-19"><a href="#cb15-19"></a>Comp2 =<span class="st"> </span>Comprehension<span class="op">$</span><span class="kw">new</span>(<span class="dt">generators =</span> <span class="kw">list</span>(gen_sum), <span class="dt">body =</span> bop2, <span class="dt">set =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb15-20"><a href="#cb15-20"></a>cl2 =<span class="st"> </span>Call<span class="op">$</span><span class="kw">new</span>(<span class="dt">fnName =</span> <span class="st">&quot;sum&quot;</span>, <span class="dt">args =</span> <span class="kw">list</span>(Comp2))</span>
+<span id="cb15-21"><a href="#cb15-21"></a>bop3 =<span class="st"> </span>BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs =</span> cl2, <span class="dt">binop =</span> <span class="st">&quot;&lt;=&quot;</span>, <span class="dt">rhs =</span> item3<span class="op">$</span><span class="kw">id</span>())</span>
+<span id="cb15-22"><a href="#cb15-22"></a>item8 =<span class="st"> </span>ConstraintItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">e =</span> bop3)</span></code></pre></div>
+</div>
+<div id="solve-type" class="section level2">
+<h2>Solve Type</h2>
+<p>The constraint programming problem can be of three types, namely: Satisfaction , Minimization and Maximization. Satisfaction problems produce all the solutions that satisfy the constraints whereas minimization and maximization problems produce the solution which minimizes and maximizes the given expression.</p>
+<p>An example is shown below:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>bop4 =<span class="st"> </span>BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> item4<span class="op">$</span><span class="kw">id</span>(), <span class="dt">args =</span> <span class="kw">list</span>(gen_sum<span class="op">$</span><span class="kw">decl</span>(<span class="dv">1</span>))),</span>
+<span id="cb16-2"><a href="#cb16-2"></a>                      <span class="dt">binop =</span> <span class="st">&quot;*&quot;</span>, <span class="dt">rhs =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> item6<span class="op">$</span><span class="kw">id</span>(), </span>
+<span id="cb16-3"><a href="#cb16-3"></a>                      <span class="dt">args =</span> <span class="kw">list</span>(gen_sum<span class="op">$</span><span class="kw">decl</span>(<span class="dv">1</span>))))</span>
+<span id="cb16-4"><a href="#cb16-4"></a></span>
+<span id="cb16-5"><a href="#cb16-5"></a>Comp3 =<span class="st"> </span>Comprehension<span class="op">$</span><span class="kw">new</span>(<span class="dt">generators =</span> <span class="kw">list</span>(gen_sum), <span class="dt">body =</span> bop4, <span class="dt">set =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb16-6"><a href="#cb16-6"></a></span>
+<span id="cb16-7"><a href="#cb16-7"></a>cl3 =<span class="st"> </span>Call<span class="op">$</span><span class="kw">new</span>(<span class="dt">fnName =</span> <span class="st">&quot;sum&quot;</span>, <span class="dt">args =</span> <span class="kw">list</span>(Comp3))</span>
+<span id="cb16-8"><a href="#cb16-8"></a></span>
+<span id="cb16-9"><a href="#cb16-9"></a>item9 =<span class="st"> </span>SolveItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">solve_type =</span> <span class="st">&quot;maximize&quot;</span>, <span class="dt">e =</span> cl3)</span></code></pre></div>
+</div>
+<div id="create-the-model" class="section level2">
+<h2>Create the Model</h2>
+<p>Combine all the items to create a MiniZinc model.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>items  =<span class="st"> </span><span class="kw">c</span>(item1, item2, item3, item4, item5, item6, item7, item8, item9)</span>
+<span id="cb17-2"><a href="#cb17-2"></a>mod =<span class="st"> </span>Model<span class="op">$</span><span class="kw">new</span>(<span class="dt">items =</span> items)</span>
+<span id="cb17-3"><a href="#cb17-3"></a>modString =<span class="st"> </span>mod<span class="op">$</span><span class="kw">mzn_string</span>()</span>
+<span id="cb17-4"><a href="#cb17-4"></a><span class="kw">cat</span>(modString)</span></code></pre></div>
+<pre><code>## int: n;
+## 
+## set of int: OBJ = (1 .. n);
+## 
+## int: capacity;
+## 
+## array[OBJ] of int: profit;
+## 
+## array[OBJ] of int: size;
+## 
+## array[OBJ] of var int: x;
+## 
+## constraint forall([(x[i] &gt;= 0) | i in OBJ ]);
+## 
+## constraint (sum([(size[i] * x[i]) | i in OBJ ]) &lt;= capacity);
+## 
+## solve  maximize sum([(profit[i] * x[i]) | i in OBJ ]);</code></pre>
+</div>
+<div id="create-items-using-strings" class="section level2">
+<h2>Create Items Using Strings</h2>
+<p>The strings containing MiniZinc syntax of items can be directly supplied to the constructors to initialize the objects. If strings are supplied, no other argument should be supplied to any of the Item classes except for <code>AssignItem</code> where you need to provided the associated variable declaration for the assignment.</p>
+<div id="varaible-item" class="section level3">
+<h3>Varaible Item</h3>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a>declItem =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">mzn_str =</span> <span class="st">&quot;set of int: WORKSHEET = 0..worksheets-1;&quot;</span>)</span>
+<span id="cb19-2"><a href="#cb19-2"></a><span class="kw">sprintf</span>(<span class="st">&quot;Is this a parameter? %s&quot;</span>, declItem<span class="op">$</span><span class="kw">getDecl</span>()<span class="op">$</span><span class="kw">isPar</span>())</span>
+<span id="cb19-3"><a href="#cb19-3"></a><span class="kw">sprintf</span>(<span class="st">&quot;Is this a set? %s&quot;</span>, declItem<span class="op">$</span><span class="kw">getDecl</span>()<span class="op">$</span><span class="kw">ti</span>()<span class="op">$</span><span class="kw">type</span>()<span class="op">$</span><span class="kw">isSet</span>())</span>
+<span id="cb19-4"><a href="#cb19-4"></a><span class="kw">sprintf</span>(<span class="st">&quot;Base type of set: %s&quot;</span>, declItem<span class="op">$</span><span class="kw">getDecl</span>()<span class="op">$</span><span class="kw">ti</span>()<span class="op">$</span><span class="kw">type</span>()<span class="op">$</span><span class="kw">bt</span>())</span>
+<span id="cb19-5"><a href="#cb19-5"></a><span class="kw">sprintf</span>(<span class="st">&quot;Name: %s&quot;</span>, declItem<span class="op">$</span><span class="kw">id</span>()<span class="op">$</span><span class="kw">getId</span>())</span>
+<span id="cb19-6"><a href="#cb19-6"></a><span class="kw">sprintf</span>(<span class="st">&quot;Value: %s&quot;</span>, declItem<span class="op">$</span><span class="kw">getDecl</span>()<span class="op">$</span><span class="kw">getValue</span>()<span class="op">$</span><span class="kw">c_str</span>())</span></code></pre></div>
+<pre><code>## [1] &quot;Is this a parameter? TRUE&quot;
+## [1] &quot;Is this a set? TRUE&quot;
+## [1] &quot;Base type of set: int&quot;
+## [1] &quot;Name: WORKSHEET&quot;
+## [1] &quot;Value: (0 .. (worksheets - 1))&quot;</code></pre>
+</div>
+<div id="constraint-item" class="section level3">
+<h3>Constraint Item</h3>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a>CstrItem =<span class="st"> </span>ConstraintItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">mzn_str =</span> <span class="st">&quot;constraint forall (i in PREC)</span></span>
+<span id="cb21-2"><a href="#cb21-2"></a><span class="st">                  (let { WORKSHEET: w1 = preceeds[i];</span></span>
+<span id="cb21-3"><a href="#cb21-3"></a><span class="st">                             WORKSHEET: w2 = succeeds[i]; } in</span></span>
+<span id="cb21-4"><a href="#cb21-4"></a><span class="st">                   g[w1] * e[w1] &lt;= d[w2] + days * (1 - g[w2]));&quot;</span>)</span>
+<span id="cb21-5"><a href="#cb21-5"></a><span class="kw">sprintf</span>(<span class="st">&quot;Expression involved: %s&quot;</span>, CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">c_str</span>())</span>
+<span id="cb21-6"><a href="#cb21-6"></a><span class="kw">sprintf</span>(<span class="st">&quot;Call function name: %s&quot;</span>, CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">getName</span>())</span>
+<span id="cb21-7"><a href="#cb21-7"></a><span class="kw">sprintf</span>(<span class="st">&quot;Number of Arguments: %s&quot;</span>, CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">nargs</span>())</span>
+<span id="cb21-8"><a href="#cb21-8"></a><span class="kw">sprintf</span>(<span class="st">&quot;Class of Argument: %s&quot;</span>,  <span class="kw">class</span>(CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">arg</span>(<span class="dv">1</span>))[<span class="dv">1</span>])</span>
+<span id="cb21-9"><a href="#cb21-9"></a><span class="kw">sprintf</span>(<span class="st">&quot;Number of Generators: %s&quot;</span>, CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">nargs</span>())</span>
+<span id="cb21-10"><a href="#cb21-10"></a><span class="kw">sprintf</span>(<span class="st">&quot;Generator: %s&quot;</span>, CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">arg</span>(<span class="dv">1</span>)<span class="op">$</span><span class="kw">gen_i</span>(<span class="dv">1</span>)<span class="op">$</span><span class="kw">c_str</span>())</span>
+<span id="cb21-11"><a href="#cb21-11"></a><span class="kw">sprintf</span>(<span class="st">&quot;Comprehension body: %s&quot;</span>, CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">arg</span>(<span class="dv">1</span>)<span class="op">$</span><span class="kw">getBody</span>()<span class="op">$</span><span class="kw">c_str</span>())</span></code></pre></div>
+<pre><code>## [1] &quot;Expression involved: forall([let {WORKSHEET: w1 = preceeds[i], WORKSHEET: w2 = succeeds[i]} in ((g[w1] * e[w1]) &lt;= (d[w2] + (days * (1 - g[w2])))) | i in PREC ])&quot;
+## [1] &quot;Call function name: forall&quot;
+## [1] &quot;Number of Arguments: 1&quot;
+## [1] &quot;Class of Argument: Comprehension&quot;
+## [1] &quot;Number of Generators: 1&quot;
+## [1] &quot;Generator: i in PREC &quot;
+## [1] &quot;Comprehension body: let {WORKSHEET: w1 = preceeds[i], WORKSHEET: w2 = succeeds[i]} in ((g[w1] * e[w1]) &lt;= (d[w2] + (days * (1 - g[w2]))))&quot;</code></pre>
+</div>
+<div id="solve-item" class="section level3">
+<h3>Solve Item</h3>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a>SlvItem =<span class="st"> </span>SolveItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">mzn_str =</span> <span class="st">&quot;solve </span></span>
+<span id="cb23-2"><a href="#cb23-2"></a><span class="st">    :: int_search(</span></span>
+<span id="cb23-3"><a href="#cb23-3"></a><span class="st">        [ if j = 1 then g[import_first[i]] else -d[import_first[i]] endif  | i in 1..worksheets, j in 1..2], </span></span>
+<span id="cb23-4"><a href="#cb23-4"></a><span class="st">        input_order, indomain_max, complete)</span></span>
+<span id="cb23-5"><a href="#cb23-5"></a><span class="st">    maximize objective;&quot;</span>)</span>
+<span id="cb23-6"><a href="#cb23-6"></a><span class="kw">sprintf</span>(<span class="st">&quot;Objective: %s&quot;</span>, SlvItem<span class="op">$</span><span class="kw">getSt</span>())</span>
+<span id="cb23-7"><a href="#cb23-7"></a><span class="kw">cat</span>(<span class="kw">sprintf</span>(<span class="st">&quot;Annotation: %s&quot;</span>, SlvItem<span class="op">$</span><span class="kw">getAnn</span>()<span class="op">$</span><span class="kw">c_str</span>()))</span></code></pre></div>
+<pre><code>## [1] &quot;Objective: maximize&quot;
+## Annotation:  :: int_search([if ((j = 1)) then (g[import_first[i]]) else (-(d[import_first[i]])) endif | i in (1 .. worksheets) , j in 1..2 ], input_order, indomain_max, complete)</code></pre>
+</div>
+<div id="function-item" class="section level3">
+<h3>Function Item</h3>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a>fnItem =<span class="st"> </span>FunctionItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">mzn_str =</span> <span class="st">&quot;predicate nonoverlap(var int:s1, var int:d1,</span></span>
+<span id="cb25-2"><a href="#cb25-2"></a><span class="st">                     var int:s2, var int:d2)=</span></span>
+<span id="cb25-3"><a href="#cb25-3"></a><span class="st">          s1 + d1 &lt;= s2 </span><span class="ch">\\</span><span class="st">/ s2 + d2 &lt;= s1;&quot;</span>)</span>
+<span id="cb25-4"><a href="#cb25-4"></a><span class="kw">sprintf</span>(<span class="st">&quot;Function name: %s&quot;</span>, fnItem<span class="op">$</span><span class="kw">name</span>())</span>
+<span id="cb25-5"><a href="#cb25-5"></a><span class="kw">sprintf</span>(<span class="st">&quot;No of function declarations: %s&quot;</span>, <span class="kw">length</span>(fnItem<span class="op">$</span><span class="kw">decls</span>()))</span>
+<span id="cb25-6"><a href="#cb25-6"></a><span class="kw">sprintf</span>(<span class="st">&quot;Function expression: %s&quot;</span>, fnItem<span class="op">$</span><span class="kw">body</span>()<span class="op">$</span><span class="kw">c_str</span>())</span></code></pre></div>
+<pre><code>## [1] &quot;Function name: nonoverlap&quot;
+## [1] &quot;No of function declarations: 4&quot;
+## [1] &quot;Function expression: (((s1 + d1) &lt;= s2) \\/ ((s2 + d2) &lt;= s1))&quot;</code></pre>
+</div>
+<div id="include-item" class="section level3">
+<h3>Include Item</h3>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a>iItem =<span class="st"> </span>IncludeItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">mzn_str =</span> <span class="st">&quot;include </span><span class="ch">\&quot;</span><span class="st">cumulative.mzn</span><span class="ch">\&quot;</span><span class="st"> ;&quot;</span>)</span>
+<span id="cb27-2"><a href="#cb27-2"></a><span class="kw">sprintf</span>(<span class="st">&quot;Included mzn name: %s&quot;</span>, iItem<span class="op">$</span><span class="kw">getmznName</span>())</span></code></pre></div>
+<pre><code>## [1] &quot;Included mzn name: cumulative.mzn&quot;</code></pre>
+</div>
+</div>
+<div id="delete-items" class="section level2">
+<h2>Delete Items</h2>
+<p>All the item classes have a <code>delete()</code> function which is used to delete the item. An example to demonstrate the same is shown below:</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a><span class="co"># delete the item 1</span></span>
+<span id="cb29-2"><a href="#cb29-2"></a>item1<span class="op">$</span><span class="kw">delete</span>()</span></code></pre></div>
+<pre><code>## VarDeclItem object deleted!</code></pre>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a><span class="co"># check that item1 has been deleted</span></span>
+<span id="cb31-2"><a href="#cb31-2"></a><span class="kw">ls</span>(<span class="dt">pattern =</span> <span class="st">&quot;item[^a-z]&quot;</span>)</span></code></pre></div>
+<pre><code>## [1] &quot;item2&quot; &quot;item3&quot; &quot;item4&quot; &quot;item5&quot; &quot;item6&quot; &quot;item7&quot; &quot;item8&quot; &quot;item9&quot;</code></pre>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a><span class="co"># item1 reference is deleted but items vector should be updated</span></span>
+<span id="cb33-2"><a href="#cb33-2"></a>items =<span class="st"> </span><span class="kw">c</span>(item2, item3, item4, item5, item6, item7, item8, item9)</span>
+<span id="cb33-3"><a href="#cb33-3"></a>mod =<span class="st"> </span>Model<span class="op">$</span><span class="kw">new</span>(items)</span>
+<span id="cb33-4"><a href="#cb33-4"></a><span class="kw">cat</span>(mod<span class="op">$</span><span class="kw">mzn_string</span>())</span></code></pre></div>
+<pre><code>## set of int: OBJ = (1 .. n);
+## 
+## int: capacity;
+## 
+## array[OBJ] of int: profit;
+## 
+## array[OBJ] of int: size;
+## 
+## array[OBJ] of var int: x;
+## 
+## constraint forall([(x[i] &gt;= 0) | i in OBJ ]);
+## 
+## constraint (sum([(size[i] * x[i]) | i in OBJ ]) &lt;= capacity);
+## 
+## solve  maximize sum([(profit[i] * x[i]) | i in OBJ ]);</code></pre>
 </div>
 <div id="modify-variable-domain" class="section level2">
 <h2>Modify Variable Domain</h2>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a>vd =<span class="st"> </span><span class="kw">VarDomainDecl</span>(<span class="dt">name =</span> <span class="st">&quot;n&quot;</span>, <span class="dt">dom =</span> Set<span class="op">$</span><span class="kw">new</span>(IntSetVal<span class="op">$</span><span class="kw">new</span>(<span class="dt">imin =</span> <span class="dv">1</span>, <span class="dt">imax =</span> <span class="dv">2</span>)))</span>
-<span id="cb36-2"><a href="#cb36-2"></a><span class="kw">sprintf</span>(<span class="st">&quot;The current declaration is: %s&quot;</span>, vd<span class="op">$</span><span class="kw">c_str</span>())</span>
-<span id="cb36-3"><a href="#cb36-3"></a>vd<span class="op">$</span><span class="kw">setDomain</span>(Set<span class="op">$</span><span class="kw">new</span>(IntSetVal<span class="op">$</span><span class="kw">new</span>(<span class="dt">imin =</span> <span class="dv">3</span>, <span class="dt">imax =</span> <span class="dv">5</span>)))</span>
-<span id="cb36-4"><a href="#cb36-4"></a><span class="kw">sprintf</span>(<span class="st">&quot;The modified declaration is: %s&quot;</span>, vd<span class="op">$</span><span class="kw">c_str</span>())</span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a>vd =<span class="st"> </span><span class="kw">VarDomainDecl</span>(<span class="dt">name =</span> <span class="st">&quot;n&quot;</span>, <span class="dt">dom =</span> Set<span class="op">$</span><span class="kw">new</span>(IntSetVal<span class="op">$</span><span class="kw">new</span>(<span class="dt">imin =</span> <span class="dv">1</span>, <span class="dt">imax =</span> <span class="dv">2</span>)))</span>
+<span id="cb35-2"><a href="#cb35-2"></a><span class="kw">sprintf</span>(<span class="st">&quot;The current declaration is: %s&quot;</span>, vd<span class="op">$</span><span class="kw">c_str</span>())</span>
+<span id="cb35-3"><a href="#cb35-3"></a>vd<span class="op">$</span><span class="kw">setDomain</span>(Set<span class="op">$</span><span class="kw">new</span>(IntSetVal<span class="op">$</span><span class="kw">new</span>(<span class="dt">imin =</span> <span class="dv">3</span>, <span class="dt">imax =</span> <span class="dv">5</span>)))</span>
+<span id="cb35-4"><a href="#cb35-4"></a><span class="kw">sprintf</span>(<span class="st">&quot;The modified declaration is: %s&quot;</span>, vd<span class="op">$</span><span class="kw">c_str</span>())</span></code></pre></div>
 <pre><code>## [1] &quot;The current declaration is: var 1..2: n&quot;
 ## [1] &quot;The modified declaration is: var 3..5: n&quot;</code></pre>
 </div>
 <div id="modify-constraints" class="section level2">
 <h2>Modify Constraints</h2>
 <p>There are various getter and setter functions for the expression classes that can be used to modify existing constraints. For example:</p>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a>vItem =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">mzn_str =</span> <span class="st">&quot;set of int: a = {1, 2, 3, 4};&quot;</span>) </span>
-<span id="cb38-2"><a href="#cb38-2"></a>cItem =<span class="st"> </span>ConstraintItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">mzn_str =</span> <span class="st">&quot;constraint sum(a) &lt; 10;&quot;</span>)</span>
-<span id="cb38-3"><a href="#cb38-3"></a><span class="kw">sprintf</span>(<span class="st">&quot;The current constraint is: %s&quot;</span>, cItem<span class="op">$</span><span class="kw">c_str</span>())</span>
-<span id="cb38-4"><a href="#cb38-4"></a>cItem<span class="op">$</span><span class="kw">setExp</span>(BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs =</span> Call<span class="op">$</span><span class="kw">new</span>(<span class="dt">fnName =</span> <span class="st">&quot;max&quot;</span>, <span class="dt">args =</span> <span class="kw">list</span>(vItem<span class="op">$</span><span class="kw">getDecl</span>()<span class="op">$</span><span class="kw">id</span>())),</span>
-<span id="cb38-5"><a href="#cb38-5"></a>                       <span class="dt">binop =</span> <span class="st">&quot;&lt;&quot;</span>, <span class="dt">rhs =</span> Int<span class="op">$</span><span class="kw">new</span>(<span class="dv">10</span>)))</span>
-<span id="cb38-6"><a href="#cb38-6"></a><span class="kw">sprintf</span>(<span class="st">&quot;The modified constraint is: %s&quot;</span>, cItem<span class="op">$</span><span class="kw">c_str</span>())</span></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1"></a>vItem =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">mzn_str =</span> <span class="st">&quot;set of int: a = {1, 2, 3, 4};&quot;</span>) </span>
+<span id="cb37-2"><a href="#cb37-2"></a>cItem =<span class="st"> </span>ConstraintItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">mzn_str =</span> <span class="st">&quot;constraint sum(a) &lt; 10;&quot;</span>)</span>
+<span id="cb37-3"><a href="#cb37-3"></a><span class="kw">sprintf</span>(<span class="st">&quot;The current constraint is: %s&quot;</span>, cItem<span class="op">$</span><span class="kw">c_str</span>())</span>
+<span id="cb37-4"><a href="#cb37-4"></a>cItem<span class="op">$</span><span class="kw">setExp</span>(BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs =</span> Call<span class="op">$</span><span class="kw">new</span>(<span class="dt">fnName =</span> <span class="st">&quot;max&quot;</span>, <span class="dt">args =</span> <span class="kw">list</span>(vItem<span class="op">$</span><span class="kw">getDecl</span>()<span class="op">$</span><span class="kw">id</span>())),</span>
+<span id="cb37-5"><a href="#cb37-5"></a>                       <span class="dt">binop =</span> <span class="st">&quot;&lt;&quot;</span>, <span class="dt">rhs =</span> Int<span class="op">$</span><span class="kw">new</span>(<span class="dv">10</span>)))</span>
+<span id="cb37-6"><a href="#cb37-6"></a><span class="kw">sprintf</span>(<span class="st">&quot;The modified constraint is: %s&quot;</span>, cItem<span class="op">$</span><span class="kw">c_str</span>())</span></code></pre></div>
 <pre><code>## [1] &quot;The current constraint is: constraint (sum(a) &lt; 10);\n&quot;
 ## [1] &quot;The modified constraint is: constraint (max(a) &lt; 10);\n&quot;</code></pre>
 </div>

@@ -29,6 +29,10 @@ Model = R6Class("Model",
                  item_i = function(i){
                    return(private$.items[[i]])
                  },
+                 #' @description get the number of items
+                 nitems = function(){
+                   return(length(private$.items))
+                 },
                  #' @description get the string representation of the model
                  mzn_string = function(){
                    mzn_str = ''

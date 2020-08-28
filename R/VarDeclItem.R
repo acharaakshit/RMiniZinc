@@ -10,14 +10,14 @@ VarDeclItem = R6Class("VarDeclItem",
                         initialize =  function(decl = NULL, mzn_str = NULL){
                           if(testCharacter(mzn_str)){
                             assertNull(decl)
-                            parsedList = suppressWarnings(mzn_parse(modelString = mzn_str))
-                            if(!testTRUE(length(parsedList) == 2 &&
-                                      length(parsedList$VARIABLES) == 1 &&
-                                      names(parsedList$VARIABLES) == "DECL1")){
+                            parsedR6 = suppressWarnings(mzn_parse(model_string = mzn_str))
+                            if(!testR6(parsedR6, "Model") && 
+                               parsedR6$nitems() != 1 &&
+                               !testR6(parsedR6$item_i(1), "VarDeclItem")){
                               stop("pass only single variable declaration")
                             }
-                            vdList = list(VARIABLE_DECLARATION = parsedList$VARIABLES$DECL1$DETAILS)
-                            private$.decl = initExpression(vdList)
+                            vitem = parsedR6$item_i(1)
+                            private$.decl = vitem$getDecl()
                           }else{
                             assertR6(decl, "VarDecl")
                             private$.decl = decl 

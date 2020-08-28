@@ -41,7 +41,8 @@ Contains different fields to create a variable declaration
 \item \href{#method-setDomain}{\code{VarDecl$setDomain()}}
 \item \href{#method-getDomain}{\code{VarDecl$getDomain()}}
 \item \href{#method-c_str}{\code{VarDecl$c_str()}}
-\item \href{#method-value}{\code{VarDecl$value()}}
+\item \href{#method-getValue}{\code{VarDecl$getValue()}}
+\item \href{#method-setValue}{\code{VarDecl$setValue()}}
 \item \href{#method-ti}{\code{VarDecl$ti()}}
 \item \href{#method-clone}{\code{VarDecl$clone()}}
 }
@@ -144,14 +145,31 @@ return string representation of MiniZinc
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-value"></a>}}
-\if{latex}{\out{\hypertarget{method-value}{}}}
-\subsection{Method \code{value()}}{
+\if{html}{\out{<a id="method-getValue"></a>}}
+\if{latex}{\out{\hypertarget{method-getValue}{}}}
+\subsection{Method \code{getValue()}}{
 get the value
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{VarDecl$value()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{VarDecl$getValue()}\if{html}{\out{</div>}}
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-setValue"></a>}}
+\if{latex}{\out{\hypertarget{method-setValue}{}}}
+\subsection{Method \code{setValue()}}{
+set the value
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{VarDecl$setValue(val)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{val}}{expression to be set}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ti"></a>}}
