@@ -6,6 +6,10 @@
 \description{
 create a bool in MiniZinc
 }
+\examples{
+newBool = Bool$new(TRUE)
+newBool$c_str()
+}
 \section{Super class}{
 \code{\link[rminizinc:Expression]{rminizinc::Expression}} -> \code{Bool}
 }

@@ -6,6 +6,10 @@
 \description{
 create an array in MiniZinc
 }
+\examples{
+newArray = Array$new(exprVec = c(Int$new(1), Int$new(2)))
+newArray$c_str()
+}
 \section{Super class}{
 \code{\link[rminizinc:Expression]{rminizinc::Expression}} -> \code{Array}
 }
@@ -32,7 +36,12 @@ create an array in MiniZinc
 \itemize{
 \item \href{#method-new}{\code{Array$new()}}
 \item \href{#method-ndims}{\code{Array$ndims()}}
-\item \href{#method-getDim}{\code{Array$getDim()}}
+\item \href{#method-getMinIndex}{\code{Array$getMinIndex()}}
+\item \href{#method-getMaxIndex}{\code{Array$getMaxIndex()}}
+\item \href{#method-setMinIndex}{\code{Array$setMinIndex()}}
+\item \href{#method-setMaxIndex}{\code{Array$setMaxIndex()}}
+\item \href{#method-getVal}{\code{Array$getVal()}}
+\item \href{#method-setVal}{\code{Array$setVal()}}
 \item \href{#method-c_str}{\code{Array$c_str()}}
 \item \href{#method-clone}{\code{Array$clone()}}
 }
@@ -73,18 +82,95 @@ get the number of dimensions
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-getDim"></a>}}
-\if{latex}{\out{\hypertarget{method-getDim}{}}}
-\subsection{Method \code{getDim()}}{
+\if{html}{\out{<a id="method-getMinIndex"></a>}}
+\if{latex}{\out{\hypertarget{method-getMinIndex}{}}}
+\subsection{Method \code{getMinIndex()}}{
+get the minimum index of dimension i
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Array$getMinIndex(i)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getMaxIndex"></a>}}
+\if{latex}{\out{\hypertarget{method-getMaxIndex}{}}}
+\subsection{Method \code{getMaxIndex()}}{
+get the maximum index of dimension i
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Array$getMaxIndex(i)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-setMinIndex"></a>}}
+\if{latex}{\out{\hypertarget{method-setMinIndex}{}}}
+\subsection{Method \code{setMinIndex()}}{
+set the minimum index of dimension i
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Array$setMinIndex(i, minIndex)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{i}}{dimension number}
+
+\item{\code{minIndex}}{integer for min index}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-setMaxIndex"></a>}}
+\if{latex}{\out{\hypertarget{method-setMaxIndex}{}}}
+\subsection{Method \code{setMaxIndex()}}{
+set the maximum index of dimension i
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Array$setMaxIndex(i, maxIndex)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{i}}{dimension number}
+
+\item{\code{maxIndex}}{integer for max index}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getVal"></a>}}
+\if{latex}{\out{\hypertarget{method-getVal}{}}}
+\subsection{Method \code{getVal()}}{
 get the ith element from vector
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Array$getDim(i)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Array$getVal(i)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{i}}{index}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-setVal"></a>}}
+\if{latex}{\out{\hypertarget{method-setVal}{}}}
+\subsection{Method \code{setVal()}}{
+set the ith element from vector
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Array$setVal(i, val)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{i}}{index}
+
+\item{\code{val}}{value of expression to be set}
 }
 \if{html}{\out{</div>}}
 }

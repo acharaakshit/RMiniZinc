@@ -31,8 +31,10 @@ create let expression in MiniZinc
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{Let$new()}}
-\item \href{#method-let}{\code{Let$let()}}
-\item \href{#method-body}{\code{Let$body()}}
+\item \href{#method-getLet}{\code{Let$getLet()}}
+\item \href{#method-setLet}{\code{Let$setLet()}}
+\item \href{#method-getBody}{\code{Let$getBody()}}
+\item \href{#method-setBody}{\code{Let$setBody()}}
 \item \href{#method-c_str}{\code{Let$c_str()}}
 \item \href{#method-clone}{\code{Let$clone()}}
 }
@@ -63,24 +65,58 @@ constructor
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-let"></a>}}
-\if{latex}{\out{\hypertarget{method-let}{}}}
-\subsection{Method \code{let()}}{
+\if{html}{\out{<a id="method-getLet"></a>}}
+\if{latex}{\out{\hypertarget{method-getLet}{}}}
+\subsection{Method \code{getLet()}}{
 access list of local declarations
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Let$let()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Let$getLet()}\if{html}{\out{</div>}}
 }
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-body"></a>}}
-\if{latex}{\out{\hypertarget{method-body}{}}}
-\subsection{Method \code{body()}}{
-return the body
+\if{html}{\out{<a id="method-setLet"></a>}}
+\if{latex}{\out{\hypertarget{method-setLet}{}}}
+\subsection{Method \code{setLet()}}{
+set list of local declarations
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Let$body()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Let$setLet(letList)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{letList}}{list of declarations to be set}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getBody"></a>}}
+\if{latex}{\out{\hypertarget{method-getBody}{}}}
+\subsection{Method \code{getBody()}}{
+get the body
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Let$getBody()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-setBody"></a>}}
+\if{latex}{\out{\hypertarget{method-setBody}{}}}
+\subsection{Method \code{setBody()}}{
+set the body
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Let$setBody(expBody)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{expBody}}{expression to be set for body}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-c_str"></a>}}

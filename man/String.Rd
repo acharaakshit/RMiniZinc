@@ -6,6 +6,12 @@
 \description{
 create a string in MiniZinc
 }
+\examples{
+newString = String$new("example")
+newString$c_str()
+newString$setV("new example")
+newString$c_str()
+}
 \section{Super class}{
 \code{\link[rminizinc:Expression]{rminizinc::Expression}} -> \code{String}
 }

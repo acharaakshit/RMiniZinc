@@ -6,6 +6,10 @@
 \description{
 create function calls in MiniZinc
 }
+\examples{
+newCall = Call$new(fnName = "sum", args = list(Int$new(2), Int$new(5)))
+newCall$c_str()
+}
 \section{Super class}{
 \code{\link[rminizinc:Expression]{rminizinc::Expression}} -> \code{Call}
 }
@@ -38,9 +42,8 @@ create function calls in MiniZinc
 \item \href{#method-getName}{\code{Call$getName()}}
 \item \href{#method-setName}{\code{Call$setName()}}
 \item \href{#method-nargs}{\code{Call$nargs()}}
-\item \href{#method-arg}{\code{Call$arg()}}
+\item \href{#method-getArg}{\code{Call$getArg()}}
 \item \href{#method-setArg}{\code{Call$setArg()}}
-\item \href{#method-setArgs}{\code{Call$setArgs()}}
 \item \href{#method-c_str}{\code{Call$c_str()}}
 \item \href{#method-clone}{\code{Call$clone()}}
 }
@@ -108,12 +111,12 @@ get the number of arguments
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-arg"></a>}}
-\if{latex}{\out{\hypertarget{method-arg}{}}}
-\subsection{Method \code{arg()}}{
+\if{html}{\out{<a id="method-getArg"></a>}}
+\if{latex}{\out{\hypertarget{method-getArg}{}}}
+\subsection{Method \code{getArg()}}{
 get the expression based on index
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Call$arg(i)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Call$getArg(i)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -139,23 +142,6 @@ set argument i
 \item{\code{e}}{expression}
 
 \item{\code{i}}{index}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-setArgs"></a>}}
-\if{latex}{\out{\hypertarget{method-setArgs}{}}}
-\subsection{Method \code{setArgs()}}{
-set all the expression arguments
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Call$setArgs(expList)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{expList}}{list of expressions to set}
 }
 \if{html}{\out{</div>}}
 }

@@ -6,6 +6,13 @@
 \description{
 create ArrayAccess elements in MiniZinc
 }
+\examples{
+vDecl1 = IntSetDecl(name = "SET", kind = "par")
+vDecl2 = IntArrDecl(name = "profit", kind = "par", ndim = 1, 
+ind = list(vDecl1$id()))
+newArrayAccess = ArrayAccess$new(v = vDecl2$id(),
+ args = list(IntDecl(name = "i", kind = "par")))
+}
 \section{Super class}{
 \code{\link[rminizinc:Expression]{rminizinc::Expression}} -> \code{ArrayAccess}
 }
@@ -32,7 +39,8 @@ create ArrayAccess elements in MiniZinc
 \itemize{
 \item \href{#method-new}{\code{ArrayAccess$new()}}
 \item \href{#method-v}{\code{ArrayAccess$v()}}
-\item \href{#method-index}{\code{ArrayAccess$index()}}
+\item \href{#method-getIndex}{\code{ArrayAccess$getIndex()}}
+\item \href{#method-setIndex}{\code{ArrayAccess$setIndex()}}
 \item \href{#method-c_str}{\code{ArrayAccess$c_str()}}
 \item \href{#method-clone}{\code{ArrayAccess$clone()}}
 }
@@ -73,18 +81,37 @@ return the array access value
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-index"></a>}}
-\if{latex}{\out{\hypertarget{method-index}{}}}
-\subsection{Method \code{index()}}{
-return the index id
+\if{html}{\out{<a id="method-getIndex"></a>}}
+\if{latex}{\out{\hypertarget{method-getIndex}{}}}
+\subsection{Method \code{getIndex()}}{
+get the index i
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ArrayAccess$index(i)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ArrayAccess$getIndex(i)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{i}}{index of argument}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-setIndex"></a>}}
+\if{latex}{\out{\hypertarget{method-setIndex}{}}}
+\subsection{Method \code{setIndex()}}{
+set the index i
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ArrayAccess$setIndex(i, val)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{i}}{index of argument}
+
+\item{\code{val}}{expression for new index}
 }
 \if{html}{\out{</div>}}
 }

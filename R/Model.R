@@ -26,8 +26,17 @@ Model = R6Class("Model",
                  },
                  #' @description get the item using index
                  #' @param i index
-                 item_i = function(i){
+                 getItem_i = function(i){
                    return(private$.items[[i]])
+                 },
+                 #' @description set the item using index
+                 #' @param i index
+                 #' @param item item to be set
+                 setItem_i = function(i, item){
+                   if(testTRUE(class(private$items[[i]])[1] == class(item)[1])){
+                     stop("The class of the items should be same")
+                   }
+                    private$.items[[i]] = item
                  },
                  #' @description get the number of items
                  nitems = function(){

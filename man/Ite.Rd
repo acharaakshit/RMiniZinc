@@ -35,9 +35,12 @@ create if-then-else expressions in MiniZinc
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{Ite$new()}}
-\item \href{#method-If}{\code{Ite$If()}}
-\item \href{#method-Then}{\code{Ite$Then()}}
-\item \href{#method-Else}{\code{Ite$Else()}}
+\item \href{#method-getIf}{\code{Ite$getIf()}}
+\item \href{#method-setIf}{\code{Ite$setIf()}}
+\item \href{#method-getThen}{\code{Ite$getThen()}}
+\item \href{#method-setThen}{\code{Ite$setThen()}}
+\item \href{#method-getElse}{\code{Ite$getElse()}}
+\item \href{#method-setElse}{\code{Ite$setElse()}}
 \item \href{#method-c_str}{\code{Ite$c_str()}}
 \item \href{#method-clone}{\code{Ite$clone()}}
 }
@@ -70,12 +73,12 @@ constructor
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-If"></a>}}
-\if{latex}{\out{\hypertarget{method-If}{}}}
-\subsection{Method \code{If()}}{
+\if{html}{\out{<a id="method-getIf"></a>}}
+\if{latex}{\out{\hypertarget{method-getIf}{}}}
+\subsection{Method \code{getIf()}}{
 get the ith if expression
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Ite$If(i)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Ite$getIf(i)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -87,12 +90,31 @@ get the ith if expression
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Then"></a>}}
-\if{latex}{\out{\hypertarget{method-Then}{}}}
-\subsection{Method \code{Then()}}{
+\if{html}{\out{<a id="method-setIf"></a>}}
+\if{latex}{\out{\hypertarget{method-setIf}{}}}
+\subsection{Method \code{setIf()}}{
+set the ith if expression
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Ite$setIf(i, expIf)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{i}}{index}
+
+\item{\code{expIf}}{if expression to be set}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getThen"></a>}}
+\if{latex}{\out{\hypertarget{method-getThen}{}}}
+\subsection{Method \code{getThen()}}{
 get the ith then expression
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Ite$Then(i)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Ite$getThen(i)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -104,14 +126,50 @@ get the ith then expression
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Else"></a>}}
-\if{latex}{\out{\hypertarget{method-Else}{}}}
-\subsection{Method \code{Else()}}{
-get the else expression
+\if{html}{\out{<a id="method-setThen"></a>}}
+\if{latex}{\out{\hypertarget{method-setThen}{}}}
+\subsection{Method \code{setThen()}}{
+set the ith then expression
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Ite$Else()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Ite$setThen(i, expThen)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{i}}{index}
+
+\item{\code{expThen}}{then expression to be set}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getElse"></a>}}
+\if{latex}{\out{\hypertarget{method-getElse}{}}}
+\subsection{Method \code{getElse()}}{
+get the else expression
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Ite$getElse()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-setElse"></a>}}
+\if{latex}{\out{\hypertarget{method-setElse}{}}}
+\subsection{Method \code{setElse()}}{
+get the else expression
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Ite$setElse(expElse)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{expElse}}{else expression to be set}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-c_str"></a>}}

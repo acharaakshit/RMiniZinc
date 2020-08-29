@@ -18,10 +18,10 @@ FunctionItem = R6Class("FunctionItem",
                              parsedR6 = suppressWarnings(mzn_parse(model_string = mzn_str))
                              if(!testR6(parsedR6, "Model") && 
                                 parsedR6$nitems() != 1 &&
-                                !testR6(parsedR6$item_i(1), "FunctionItem")){
+                                !testR6(parsedR6$getItem_i(1), "FunctionItem")){
                                stop("pass only a single function item")
                              }
-                             f_item = parsedR6$item_i(1)
+                             f_item = parsedR6$getItem_i(1)
                              private$.id = f_item$name()
                              private$.decls = f_item$decls()
                              private$.ti = f_item$rtype()

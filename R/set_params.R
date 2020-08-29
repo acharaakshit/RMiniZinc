@@ -17,7 +17,7 @@ set_params = function(model, modData){
   modData = modData[match(missing_pars, names(modData))]
   count = 1
   for(i in seq(1, model$nitems(), 1)){
-    item = model$item_i(i)
+    item = model$getItem_i(i)
     if(testR6(item, "VarDeclItem")){
       if(item$id()$getId() == names(modData)[count]){
         item$getDecl()$setValue(modData[[count]])

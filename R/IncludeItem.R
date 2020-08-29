@@ -13,16 +13,16 @@ IncludeItem = R6Class("IncludeItem",
                             parsedR6 = suppressWarnings(mzn_parse(model_string = mzn_str))
                             if(!testR6(parsedR6, "Model") &&
                                parsedR6$nitems() != 1 &&
-                               !testR6(parsedR6$item_i(1), "IncludeItem")){
+                               !testR6(parsedR6$getItem_i(1), "IncludeItem")){
                               stop("only single include item should be provided")
                             }
-                            i_item = parsedR6$item_i(1)  
+                            i_item = parsedR6$getItem_i(1)  
                             private$.id = i_item$getmznName()
                           }else{
+                            assertCharacter(name)
                             if(substr(name, nchar(name)-3, nchar(name)) != ".mzn"){
                               stop("name should be an mzn file")
                             }
-                            assertCharacter(name)
                             private$.id = name 
                           }
                         },
@@ -33,6 +33,9 @@ IncludeItem = R6Class("IncludeItem",
                         #' set the file name
                         #' @param name name of file
                         setmznName = function(name){
+                          if(substr(name, nchar(name)-3, nchar(name)) != ".mzn"){
+                            stop("name should be an mzn file")
+                          }
                           private$.id = name
                         },
                         #' @description get the MiniZinc representation

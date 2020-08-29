@@ -12,7 +12,7 @@
 
 <meta name="author" content="Akshit Achara, Lars Kotthoff" />
 
-<meta name="date" content="2020-08-28" />
+<meta name="date" content="2020-08-29" />
 
 <title>MiniZinc Interface for R</title>
 
@@ -319,7 +319,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">MiniZinc Interface for R</h1>
 <h4 class="author">Akshit Achara, Lars Kotthoff</h4>
-<h4 class="date">2020-08-28</h4>
+<h4 class="date">2020-08-29</h4>
 
 
 
@@ -512,7 +512,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb15-3"><a href="#cb15-3"></a></span>
 <span id="cb15-4"><a href="#cb15-4"></a></span>
 <span id="cb15-5"><a href="#cb15-5"></a>gen_forall =<span class="st"> </span>Generator<span class="op">$</span><span class="kw">new</span>(<span class="dt">IN =</span> item2<span class="op">$</span><span class="kw">id</span>(), <span class="dt">decls =</span> <span class="kw">list</span>(parIter))</span>
-<span id="cb15-6"><a href="#cb15-6"></a>bop1 =<span class="st"> </span>BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> item6<span class="op">$</span><span class="kw">id</span>(),  <span class="dt">args=</span> <span class="kw">list</span>(gen_forall<span class="op">$</span><span class="kw">decl</span>(<span class="dv">1</span>))),</span>
+<span id="cb15-6"><a href="#cb15-6"></a>bop1 =<span class="st"> </span>BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> item6<span class="op">$</span><span class="kw">id</span>(),  <span class="dt">args=</span> <span class="kw">list</span>(gen_forall<span class="op">$</span><span class="kw">getDecl</span>(<span class="dv">1</span>))),</span>
 <span id="cb15-7"><a href="#cb15-7"></a>                                                             <span class="dt">binop =</span> <span class="st">&quot;&gt;=&quot;</span>, <span class="dt">rhs =</span> Int<span class="op">$</span><span class="kw">new</span>(<span class="dv">0</span>))</span>
 <span id="cb15-8"><a href="#cb15-8"></a></span>
 <span id="cb15-9"><a href="#cb15-9"></a>Comp1 =<span class="st"> </span>Comprehension<span class="op">$</span><span class="kw">new</span>(<span class="dt">generators =</span> <span class="kw">list</span>(gen_forall), <span class="dt">body =</span> bop1, <span class="dt">set =</span> <span class="ot">FALSE</span>)</span>
@@ -521,9 +521,9 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb15-12"><a href="#cb15-12"></a></span>
 <span id="cb15-13"><a href="#cb15-13"></a>gen_sum =<span class="st"> </span>Generator<span class="op">$</span><span class="kw">new</span>(<span class="dt">IN =</span> item2<span class="op">$</span><span class="kw">id</span>(), <span class="dt">decls =</span> <span class="kw">list</span>(parIter))</span>
 <span id="cb15-14"><a href="#cb15-14"></a></span>
-<span id="cb15-15"><a href="#cb15-15"></a>bop2 =<span class="st"> </span>BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> item5<span class="op">$</span><span class="kw">id</span>(), <span class="dt">args =</span> <span class="kw">list</span>(gen_sum<span class="op">$</span><span class="kw">decl</span>(<span class="dv">1</span>))),                  </span>
+<span id="cb15-15"><a href="#cb15-15"></a>bop2 =<span class="st"> </span>BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> item5<span class="op">$</span><span class="kw">id</span>(), <span class="dt">args =</span> <span class="kw">list</span>(gen_sum<span class="op">$</span><span class="kw">getDecl</span>(<span class="dv">1</span>))),                  </span>
 <span id="cb15-16"><a href="#cb15-16"></a>                 <span class="dt">binop =</span> <span class="st">&quot;*&quot;</span>,  <span class="dt">rhs =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> item6<span class="op">$</span><span class="kw">id</span>() , </span>
-<span id="cb15-17"><a href="#cb15-17"></a>                 <span class="dt">args =</span> <span class="kw">list</span>(gen_sum<span class="op">$</span><span class="kw">decl</span>(<span class="dv">1</span>))))</span>
+<span id="cb15-17"><a href="#cb15-17"></a>                 <span class="dt">args =</span> <span class="kw">list</span>(gen_sum<span class="op">$</span><span class="kw">getDecl</span>(<span class="dv">1</span>))))</span>
 <span id="cb15-18"><a href="#cb15-18"></a></span>
 <span id="cb15-19"><a href="#cb15-19"></a>Comp2 =<span class="st"> </span>Comprehension<span class="op">$</span><span class="kw">new</span>(<span class="dt">generators =</span> <span class="kw">list</span>(gen_sum), <span class="dt">body =</span> bop2, <span class="dt">set =</span> <span class="ot">FALSE</span>)</span>
 <span id="cb15-20"><a href="#cb15-20"></a>cl2 =<span class="st"> </span>Call<span class="op">$</span><span class="kw">new</span>(<span class="dt">fnName =</span> <span class="st">&quot;sum&quot;</span>, <span class="dt">args =</span> <span class="kw">list</span>(Comp2))</span>
@@ -534,9 +534,9 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h2>Solve Type</h2>
 <p>The constraint programming problem can be of three types, namely: Satisfaction , Minimization and Maximization. Satisfaction problems produce all the solutions that satisfy the constraints whereas minimization and maximization problems produce the solution which minimizes and maximizes the given expression.</p>
 <p>An example is shown below:</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>bop4 =<span class="st"> </span>BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> item4<span class="op">$</span><span class="kw">id</span>(), <span class="dt">args =</span> <span class="kw">list</span>(gen_sum<span class="op">$</span><span class="kw">decl</span>(<span class="dv">1</span>))),</span>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>bop4 =<span class="st"> </span>BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> item4<span class="op">$</span><span class="kw">id</span>(), <span class="dt">args =</span> <span class="kw">list</span>(gen_sum<span class="op">$</span><span class="kw">getDecl</span>(<span class="dv">1</span>))),</span>
 <span id="cb16-2"><a href="#cb16-2"></a>                      <span class="dt">binop =</span> <span class="st">&quot;*&quot;</span>, <span class="dt">rhs =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> item6<span class="op">$</span><span class="kw">id</span>(), </span>
-<span id="cb16-3"><a href="#cb16-3"></a>                      <span class="dt">args =</span> <span class="kw">list</span>(gen_sum<span class="op">$</span><span class="kw">decl</span>(<span class="dv">1</span>))))</span>
+<span id="cb16-3"><a href="#cb16-3"></a>                      <span class="dt">args =</span> <span class="kw">list</span>(gen_sum<span class="op">$</span><span class="kw">getDecl</span>(<span class="dv">1</span>))))</span>
 <span id="cb16-4"><a href="#cb16-4"></a></span>
 <span id="cb16-5"><a href="#cb16-5"></a>Comp3 =<span class="st"> </span>Comprehension<span class="op">$</span><span class="kw">new</span>(<span class="dt">generators =</span> <span class="kw">list</span>(gen_sum), <span class="dt">body =</span> bop4, <span class="dt">set =</span> <span class="ot">FALSE</span>)</span>
 <span id="cb16-6"><a href="#cb16-6"></a></span>
@@ -595,10 +595,10 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb21-5"><a href="#cb21-5"></a><span class="kw">sprintf</span>(<span class="st">&quot;Expression involved: %s&quot;</span>, CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">c_str</span>())</span>
 <span id="cb21-6"><a href="#cb21-6"></a><span class="kw">sprintf</span>(<span class="st">&quot;Call function name: %s&quot;</span>, CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">getName</span>())</span>
 <span id="cb21-7"><a href="#cb21-7"></a><span class="kw">sprintf</span>(<span class="st">&quot;Number of Arguments: %s&quot;</span>, CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">nargs</span>())</span>
-<span id="cb21-8"><a href="#cb21-8"></a><span class="kw">sprintf</span>(<span class="st">&quot;Class of Argument: %s&quot;</span>,  <span class="kw">class</span>(CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">arg</span>(<span class="dv">1</span>))[<span class="dv">1</span>])</span>
+<span id="cb21-8"><a href="#cb21-8"></a><span class="kw">sprintf</span>(<span class="st">&quot;Class of Argument: %s&quot;</span>,  <span class="kw">class</span>(CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">getArg</span>(<span class="dv">1</span>))[<span class="dv">1</span>])</span>
 <span id="cb21-9"><a href="#cb21-9"></a><span class="kw">sprintf</span>(<span class="st">&quot;Number of Generators: %s&quot;</span>, CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">nargs</span>())</span>
-<span id="cb21-10"><a href="#cb21-10"></a><span class="kw">sprintf</span>(<span class="st">&quot;Generator: %s&quot;</span>, CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">arg</span>(<span class="dv">1</span>)<span class="op">$</span><span class="kw">gen_i</span>(<span class="dv">1</span>)<span class="op">$</span><span class="kw">c_str</span>())</span>
-<span id="cb21-11"><a href="#cb21-11"></a><span class="kw">sprintf</span>(<span class="st">&quot;Comprehension body: %s&quot;</span>, CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">arg</span>(<span class="dv">1</span>)<span class="op">$</span><span class="kw">getBody</span>()<span class="op">$</span><span class="kw">c_str</span>())</span></code></pre></div>
+<span id="cb21-10"><a href="#cb21-10"></a><span class="kw">sprintf</span>(<span class="st">&quot;Generator: %s&quot;</span>, CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">getArg</span>(<span class="dv">1</span>)<span class="op">$</span><span class="kw">getGen_i</span>(<span class="dv">1</span>)<span class="op">$</span><span class="kw">c_str</span>())</span>
+<span id="cb21-11"><a href="#cb21-11"></a><span class="kw">sprintf</span>(<span class="st">&quot;Comprehension body: %s&quot;</span>, CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">getArg</span>(<span class="dv">1</span>)<span class="op">$</span><span class="kw">getBody</span>()<span class="op">$</span><span class="kw">c_str</span>())</span></code></pre></div>
 <pre><code>## [1] &quot;Expression involved: forall([let {WORKSHEET: w1 = preceeds[i], WORKSHEET: w2 = succeeds[i]} in ((g[w1] * e[w1]) &lt;= (d[w2] + (days * (1 - g[w2])))) | i in PREC ])&quot;
 ## [1] &quot;Call function name: forall&quot;
 ## [1] &quot;Number of Arguments: 1&quot;

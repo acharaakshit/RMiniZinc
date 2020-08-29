@@ -7,6 +7,8 @@
 set_params(model, modData)
 }
 \arguments{
+\item{model}{Model object}
+
 \item{modData}{list of the value objects to be assigned}
 }
 \description{

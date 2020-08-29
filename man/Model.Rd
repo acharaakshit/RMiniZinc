@@ -24,7 +24,8 @@ This class will take all the objects required to create a MiniZinc model.
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{Model$new()}}
-\item \href{#method-item_i}{\code{Model$item_i()}}
+\item \href{#method-getItem_i}{\code{Model$getItem_i()}}
+\item \href{#method-setItem_i}{\code{Model$setItem_i()}}
 \item \href{#method-nitems}{\code{Model$nitems()}}
 \item \href{#method-mzn_string}{\code{Model$mzn_string()}}
 \item \href{#method-delete}{\code{Model$delete()}}
@@ -49,18 +50,37 @@ create a new instance of model class
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-item_i"></a>}}
-\if{latex}{\out{\hypertarget{method-item_i}{}}}
-\subsection{Method \code{item_i()}}{
+\if{html}{\out{<a id="method-getItem_i"></a>}}
+\if{latex}{\out{\hypertarget{method-getItem_i}{}}}
+\subsection{Method \code{getItem_i()}}{
 get the item using index
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Model$item_i(i)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Model$getItem_i(i)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{i}}{index}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-setItem_i"></a>}}
+\if{latex}{\out{\hypertarget{method-setItem_i}{}}}
+\subsection{Method \code{setItem_i()}}{
+set the item using index
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Model$setItem_i(i, item)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{i}}{index}
+
+\item{\code{item}}{item to be set}
 }
 \if{html}{\out{</div>}}
 }

@@ -36,7 +36,8 @@ create a Comprehension in MiniZinc
 \itemize{
 \item \href{#method-new}{\code{Comprehension$new()}}
 \item \href{#method-ngens}{\code{Comprehension$ngens()}}
-\item \href{#method-gen_i}{\code{Comprehension$gen_i()}}
+\item \href{#method-getGen_i}{\code{Comprehension$getGen_i()}}
+\item \href{#method-setGen_i}{\code{Comprehension$setGen_i()}}
 \item \href{#method-In}{\code{Comprehension$In()}}
 \item \href{#method-where}{\code{Comprehension$where()}}
 \item \href{#method-decl}{\code{Comprehension$decl()}}
@@ -85,18 +86,37 @@ get the number of generators
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-gen_i"></a>}}
-\if{latex}{\out{\hypertarget{method-gen_i}{}}}
-\subsection{Method \code{gen_i()}}{
+\if{html}{\out{<a id="method-getGen_i"></a>}}
+\if{latex}{\out{\hypertarget{method-getGen_i}{}}}
+\subsection{Method \code{getGen_i()}}{
 get the ith generator expression
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Comprehension$gen_i(i)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Comprehension$getGen_i(i)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{i}}{index}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-setGen_i"></a>}}
+\if{latex}{\out{\hypertarget{method-setGen_i}{}}}
+\subsection{Method \code{setGen_i()}}{
+set the ith generator expression
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Comprehension$setGen_i(i, expGen)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{i}}{index}
+
+\item{\code{expGen}}{generator expression to be set}
 }
 \if{html}{\out{</div>}}
 }

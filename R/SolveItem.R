@@ -16,13 +16,13 @@ SolveItem = R6Class("SolveItem",
                                 assertTRUE(testNull(solve_type) &&
                                              testNull(e) &&
                                              testNull(ann))
-                                parsedR6 = suppressMessages(suppressWarnings(invisible(mzn_parse(model_string = mzn_str))))
+                                parsedR6 = suppressWarnings(invisible(mzn_parse(model_string = mzn_str)))
                                  if(!testR6(parsedR6, "Model") &&
                                     parsedR6$nitems() != 1 &&
-                                    !testR6(parsedR6$item_i(1), "SolveItem")){
+                                    !testR6(parsedR6$getItem_i(1), "SolveItem")){
                                   stop("provide only single solve item")  
                                  } 
-                                 sitem = parsedR6$item_i(1)
+                                 sitem = parsedR6$getItem_i(1)
                                  private$.st = sitem$getSt()
                                  if(private$.st == "SATISFY"){
                                    if(!testNull(sitem$getExp)){

@@ -13,10 +13,10 @@ VarDeclItem = R6Class("VarDeclItem",
                             parsedR6 = suppressWarnings(mzn_parse(model_string = mzn_str))
                             if(!testR6(parsedR6, "Model") && 
                                parsedR6$nitems() != 1 &&
-                               !testR6(parsedR6$item_i(1), "VarDeclItem")){
+                               !testR6(parsedR6$getItem_i(1), "VarDeclItem")){
                               stop("pass only single variable declaration")
                             }
-                            vitem = parsedR6$item_i(1)
+                            vitem = parsedR6$getItem_i(1)
                             private$.decl = vitem$getDecl()
                           }else{
                             assertR6(decl, "VarDecl")

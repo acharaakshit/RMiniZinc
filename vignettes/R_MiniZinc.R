@@ -76,7 +76,7 @@ parIter = IntDecl(name = "i", kind = "par")
 
 
 gen_forall = Generator$new(IN = item2$id(), decls = list(parIter))
-bop1 = BinOp$new(lhs = ArrayAccess$new(v = item6$id(),  args= list(gen_forall$decl(1))),
+bop1 = BinOp$new(lhs = ArrayAccess$new(v = item6$id(),  args= list(gen_forall$getDecl(1))),
                                                              binop = ">=", rhs = Int$new(0))
 
 Comp1 = Comprehension$new(generators = list(gen_forall), body = bop1, set = FALSE)
@@ -85,9 +85,9 @@ item7 = ConstraintItem$new(e = cl1)
 
 gen_sum = Generator$new(IN = item2$id(), decls = list(parIter))
 
-bop2 = BinOp$new(lhs = ArrayAccess$new(v = item5$id(), args = list(gen_sum$decl(1))),                  
+bop2 = BinOp$new(lhs = ArrayAccess$new(v = item5$id(), args = list(gen_sum$getDecl(1))),                  
                  binop = "*",  rhs = ArrayAccess$new(v = item6$id() , 
-                 args = list(gen_sum$decl(1))))
+                 args = list(gen_sum$getDecl(1))))
 
 Comp2 = Comprehension$new(generators = list(gen_sum), body = bop2, set = FALSE)
 cl2 = Call$new(fnName = "sum", args = list(Comp2))
@@ -96,9 +96,9 @@ item8 = ConstraintItem$new(e = bop3)
 
 ## -----------------------------------------------------------------------------
 
-bop4 = BinOp$new(lhs = ArrayAccess$new(v = item4$id(), args = list(gen_sum$decl(1))),
+bop4 = BinOp$new(lhs = ArrayAccess$new(v = item4$id(), args = list(gen_sum$getDecl(1))),
                       binop = "*", rhs = ArrayAccess$new(v = item6$id(), 
-                      args = list(gen_sum$decl(1))))
+                      args = list(gen_sum$getDecl(1))))
 
 Comp3 = Comprehension$new(generators = list(gen_sum), body = bop4, set = FALSE)
 
@@ -128,10 +128,10 @@ CstrItem = ConstraintItem$new(mzn_str = "constraint forall (i in PREC)
 sprintf("Expression involved: %s", CstrItem$getExp()$c_str())
 sprintf("Call function name: %s", CstrItem$getExp()$getName())
 sprintf("Number of Arguments: %s", CstrItem$getExp()$nargs())
-sprintf("Class of Argument: %s",  class(CstrItem$getExp()$arg(1))[1])
+sprintf("Class of Argument: %s",  class(CstrItem$getExp()$getArg(1))[1])
 sprintf("Number of Generators: %s", CstrItem$getExp()$nargs())
-sprintf("Generator: %s", CstrItem$getExp()$arg(1)$gen_i(1)$c_str())
-sprintf("Comprehension body: %s", CstrItem$getExp()$arg(1)$getBody()$c_str())
+sprintf("Generator: %s", CstrItem$getExp()$getArg(1)$getGen_i(1)$c_str())
+sprintf("Comprehension body: %s", CstrItem$getExp()$getArg(1)$getBody()$c_str())
 
 ## ---- results = 'hold'--------------------------------------------------------
 SlvItem = SolveItem$new(mzn_str = "solve 
