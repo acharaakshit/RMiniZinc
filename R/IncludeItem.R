@@ -13,10 +13,10 @@ IncludeItem = R6Class("IncludeItem",
                             parsedR6 = suppressWarnings(mzn_parse(model_string = mzn_str))
                             if(!testR6(parsedR6, "Model") &&
                                parsedR6$nitems() != 1 &&
-                               !testR6(parsedR6$getItem_i(1), "IncludeItem")){
+                               !testR6(parsedR6$getItem(1), "IncludeItem")){
                               stop("only single include item should be provided")
                             }
-                            i_item = parsedR6$getItem_i(1)  
+                            i_item = parsedR6$getItem(1)  
                             private$.id = i_item$getmznName()
                           }else{
                             assertCharacter(name)
@@ -55,8 +55,9 @@ IncludeItem = R6Class("IncludeItem",
                           })
                           this = ls(pf)[items][sapply(mget(ls(pf)[items], envir = pf),
                                                       function(x) x$getDeleteFlag())]
+                          thisObj = get(this, envir = pf)
                           rm(list = this, envir = pf)
-                          message("IncludeItem object deleted!")
+                          item_delete(thisObj)
                         }
                       ),
                       private = list(

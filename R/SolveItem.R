@@ -19,10 +19,10 @@ SolveItem = R6Class("SolveItem",
                                 parsedR6 = suppressWarnings(invisible(mzn_parse(model_string = mzn_str)))
                                  if(!testR6(parsedR6, "Model") &&
                                     parsedR6$nitems() != 1 &&
-                                    !testR6(parsedR6$getItem_i(1), "SolveItem")){
+                                    !testR6(parsedR6$getItem(1), "SolveItem")){
                                   stop("provide only single solve item")  
                                  } 
-                                 sitem = parsedR6$getItem_i(1)
+                                 sitem = parsedR6$getItem(1)
                                  private$.st = sitem$getSt()
                                  if(private$.st == "SATISFY"){
                                    if(!testNull(sitem$getExp)){
@@ -87,22 +87,6 @@ SolveItem = R6Class("SolveItem",
                                }else{
                                  return(sprintf("solve %s %s %s;\n", annStr, private$.st, private$.e$c_str()))
                                }
-                             },
-                             #' @description delete flag for internal use
-                             getDeleteFlag = function(){
-                               return(private$.delete_flag)
-                             },
-                             #' @description delete the solve item
-                             delete = function(){
-                               private$.delete_flag = TRUE
-                               pf = parent.frame()
-                               items = sapply(ls(pf), function(i) {
-                                 class(get(i, envir = pf))[1] == "SolveItem"
-                               })
-                               this = ls(pf)[items][sapply(mget(ls(pf)[items], envir = pf),
-                                                            function(x) x$getDeleteFlag())]
-                               rm(list = this, envir = pf)
-                               message("SolveItem object deleted!")
                              }
                              ),
                           private = list(
@@ -114,9 +98,6 @@ SolveItem = R6Class("SolveItem",
                             .st = NULL,
                             #' @field .ann
                             #' annotation of the solve type
-                            .ann = NULL,
-                            #' @field .delete_flag
-                            #' used to delete items
-                            .delete_flag = FALSE
+                            .ann = NULL
                           )
                     )

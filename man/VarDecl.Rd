@@ -22,6 +22,8 @@ newVarDecl$c_str()
 \item{\code{id}}{name of the variable}
 
 \item{\code{.expression}}{the initialization expression}
+
+\item{\code{.delete_flag}}{used to delete items}
 }
 \if{html}{\out{</div>}}
 }
@@ -33,6 +35,8 @@ newVarDecl$c_str()
 \item{\code{id}}{name of the variable}
 
 \item{\code{.expression}}{the initialization expression}
+
+\item{\code{.delete_flag}}{used to delete items}
 }
 \if{html}{\out{</div>}}
 }
@@ -45,10 +49,12 @@ newVarDecl$c_str()
 \item \href{#method-isVar}{\code{VarDecl$isVar()}}
 \item \href{#method-setDomain}{\code{VarDecl$setDomain()}}
 \item \href{#method-getDomain}{\code{VarDecl$getDomain()}}
-\item \href{#method-c_str}{\code{VarDecl$c_str()}}
 \item \href{#method-getValue}{\code{VarDecl$getValue()}}
 \item \href{#method-setValue}{\code{VarDecl$setValue()}}
 \item \href{#method-ti}{\code{VarDecl$ti()}}
+\item \href{#method-c_str}{\code{VarDecl$c_str()}}
+\item \href{#method-getDeleteFlag}{\code{VarDecl$getDeleteFlag()}}
+\item \href{#method-delete}{\code{VarDecl$delete()}}
 \item \href{#method-clone}{\code{VarDecl$clone()}}
 }
 }
@@ -137,19 +143,6 @@ get the variable domain
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-c_str"></a>}}
-\if{latex}{\out{\hypertarget{method-c_str}{}}}
-\subsection{Method \code{c_str()}}{
-get the domain of the variable
-
-
-return string representation of MiniZinc
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{VarDecl$c_str()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-getValue"></a>}}
 \if{latex}{\out{\hypertarget{method-getValue}{}}}
 \subsection{Method \code{getValue()}}{
@@ -183,6 +176,39 @@ set the value
 get the type-inst of the variable declaration
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{VarDecl$ti()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-c_str"></a>}}
+\if{latex}{\out{\hypertarget{method-c_str}{}}}
+\subsection{Method \code{c_str()}}{
+get the domain of the variable
+
+
+return string representation of MiniZinc
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{VarDecl$c_str()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getDeleteFlag"></a>}}
+\if{latex}{\out{\hypertarget{method-getDeleteFlag}{}}}
+\subsection{Method \code{getDeleteFlag()}}{
+delete flag for internal use
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{VarDecl$getDeleteFlag()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-delete"></a>}}
+\if{latex}{\out{\hypertarget{method-delete}{}}}
+\subsection{Method \code{delete()}}{
+delete the assignment item
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{VarDecl$delete()}\if{html}{\out{</div>}}
 }
 
 }

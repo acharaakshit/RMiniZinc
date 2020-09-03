@@ -22,6 +22,8 @@ newUnOp$c_str()
 \item{\code{.args}}{list of expression arguments}
 
 \item{\code{.op}}{operator to be used}
+
+\item{\code{.delete_flag}}{used to delete items}
 }
 \if{html}{\out{</div>}}
 }
@@ -31,6 +33,8 @@ newUnOp$c_str()
 \item{\code{.args}}{list of expression arguments}
 
 \item{\code{.op}}{operator to be used}
+
+\item{\code{.delete_flag}}{used to delete items}
 }
 \if{html}{\out{</div>}}
 }
@@ -39,11 +43,15 @@ newUnOp$c_str()
 \itemize{
 \item \href{#method-new}{\code{UnOp$new()}}
 \item \href{#method-nargs}{\code{UnOp$nargs()}}
+\item \href{#method-getArgs}{\code{UnOp$getArgs()}}
+\item \href{#method-setArgs}{\code{UnOp$setArgs()}}
 \item \href{#method-getArg}{\code{UnOp$getArg()}}
 \item \href{#method-setArg}{\code{UnOp$setArg()}}
 \item \href{#method-getOp}{\code{UnOp$getOp()}}
 \item \href{#method-setOp}{\code{UnOp$setOp()}}
 \item \href{#method-c_str}{\code{UnOp$c_str()}}
+\item \href{#method-getDeleteFlag}{\code{UnOp$getDeleteFlag()}}
+\item \href{#method-delete}{\code{UnOp$delete()}}
 \item \href{#method-clone}{\code{UnOp$clone()}}
 }
 }
@@ -81,6 +89,33 @@ get the number of arguments
 \if{html}{\out{<div class="r">}}\preformatted{UnOp$nargs()}\if{html}{\out{</div>}}
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getArgs"></a>}}
+\if{latex}{\out{\hypertarget{method-getArgs}{}}}
+\subsection{Method \code{getArgs()}}{
+get all expression arguments
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{UnOp$getArgs()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-setArgs"></a>}}
+\if{latex}{\out{\hypertarget{method-setArgs}{}}}
+\subsection{Method \code{setArgs()}}{
+set all expression arguments
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{UnOp$setArgs()}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{args}}{argument list to be set}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-getArg"></a>}}
@@ -152,6 +187,26 @@ set the unary operator
 return the MiniZinc representation
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{UnOp$c_str()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getDeleteFlag"></a>}}
+\if{latex}{\out{\hypertarget{method-getDeleteFlag}{}}}
+\subsection{Method \code{getDeleteFlag()}}{
+delete flag for internal use
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{UnOp$getDeleteFlag()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-delete"></a>}}
+\if{latex}{\out{\hypertarget{method-delete}{}}}
+\subsection{Method \code{delete()}}{
+delete the assignment item
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{UnOp$delete()}\if{html}{\out{</div>}}
 }
 
 }

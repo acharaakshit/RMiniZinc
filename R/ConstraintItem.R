@@ -15,10 +15,10 @@ ConstraintItem = R6Class("ConstraintItem",
                                parsedR6 = suppressWarnings(mzn_parse(model_string = mzn_str))
                                if(!testR6(parsedR6, "Model") &&
                                   parsedR6$nitems() != 1 &&
-                                  !testR6(parsedR6$getItem_i(1), "ConstraintItem")){
+                                  !testR6(parsedR6$getItem(1), "ConstraintItem")){
                                  stop("pass only single constraint")
                                }
-                               citem = parsedR6$getItem_i(1)
+                               citem = parsedR6$getItem(1)
                                private$.e = citem$getExp()
                              }else{
                                assertR6(e, "Expression")
@@ -52,8 +52,9 @@ ConstraintItem = R6Class("ConstraintItem",
                              })
                              this = ls(pf)[items][sapply(mget(ls(pf)[items], envir = pf),
                                                          function(x) x$getDeleteFlag())]
+                             thisObj = get(this, envir = pf)
                              rm(list = this, envir = pf)
-                             message("ConstraintItem object deleted!")
+                             item_delete(thisObj)
                            }
                          ),
                          private = list(

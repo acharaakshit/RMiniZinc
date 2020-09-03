@@ -194,6 +194,15 @@ Set = R6Class("Set",
                   assertList(val, "Expression")
                   private$.setVec = val
                 },
+                #' @description is the set empty
+                isEmpty = function(){
+                  return(private$.et)
+                },
+                #' @description make the set empty
+                makeEmpty = function(){
+                  private$.setVec = NULL
+                  private$.et = TRUE
+                },
                 #' @description return the integer set range
                 getIsv = function(){
                   return(private$.isv)
@@ -409,39 +418,43 @@ ArrayAccess = R6Class("ArrayAccess",
                       inherit = Expression,
                       public = list(
                         #' @description constructor
-                        #' @param v the value of element
+                        #' @param v the value/identifier of variable decl
                         #' @param args the array indices
                         initialize =  function(v, args){
-                          assertR6(v, "Expression")
+                          assertR6(v, "Id")
                           private$.v = v
                           assertList(args, "Expression")
                           private$.args = args
                         },
-                        #' @description  return the array access value
-                        v = function(){
+                        #' @description  get the array access value
+                        getV = function(){
                           return(private$.v)
                         },
-                        #' @description get the index i
-                        #' @param i index of argument
-                        getIndex = function(i){
-                          return(private$.index[[i]])
+                        #' @description  set the array access value
+                        #' @param val new array access value
+                        setV = function(val){
+                          assertR6(val, "Id")
+                          private$.v = val
                         },
-                        #' @description set the index i
-                        #' @param i index of argument
-                        #' @param val expression for new index
-                        setIndex = function(i, val){
-                          assertR6(val, "Expression")
-                          private$.index[[i]] = val
+                        #' @description get the number of arguments
+                        nargs = function(){
+                          return(length(private$.index))
+                        },
+                        #' @description get the index sets
+                        getIndex = function(){
+                          return(private$.index)
+                        },
+                        #' @description set the index sets
+                        #' @param val new index sets
+                        setIndex = function(val){
+                          assertList(val, "Expression")
+                          private$.index = val
                         },
                         #' @description return the MiniZinc representation
                         c_str = function(){
                           retStr = ""
                           for (i in seq(1, length(private$.args), 1)) {
-                            if(testR6(private$.args[[i]], "VarDecl")){
-                              retStr = paste0(retStr, private$.args[[i]]$id()$getId())
-                            }else{
-                              retStr = paste0(retStr, private$.args[[i]]$c_str()) 
-                            }
+                            retStr = paste0(retStr, private$.args[[i]]$c_str()) 
                             if(i < length(private$.args)){
                               retStr = paste0(retStr, ", ")
                             }
@@ -495,9 +508,10 @@ Generator = R6Class("Generator",
                          return(private$.where)
                        },
                        #' @description get the where expression
-                       #' @param expWhere where expression
+                       #' @param expWhere where expression (or NULL)
                        setWhere = function(expWhere){
-                         assertR6(expWhere, "Expression")
+                         assertTRUE(testR6(expWhere, "Expression") ||
+                                      testNull(expWhere))
                          private$.where = expWhere
                        },
                        #' @description get the ith declaration
@@ -530,6 +544,23 @@ Generator = R6Class("Generator",
                            whereStr = sprintf("where %s", private$.where$c_str())
                          }
                          return(sprintf("%s %s %s", dStr, inStr, whereStr)) 
+                       },
+                       #' @description delete flag for internal use
+                       getDeleteFlag = function(){
+                         return(private$.delete_flag)
+                       },
+                       #' @description delete the assignment item
+                       delete = function(){
+                         private$.delete_flag = TRUE
+                         pf = parent.frame()
+                         items = sapply(ls(pf), function(i) {
+                           class(get(i, envir = pf))[1] == "Generator"
+                         })
+                         this = ls(pf)[items][sapply(mget(ls(pf)[items], envir = pf),
+                                                     function(x) x$getDeleteFlag())]
+                         thisObj = get(this, envir = pf)
+                         rm(list = this, envir = pf)
+                         expression_delete(thisObj)
                        }
                      ),
                      private = list(
@@ -541,7 +572,10 @@ Generator = R6Class("Generator",
                        .in = NULL,
                        #' @field where
                        #' where expression
-                       .where = NULL
+                       .where = NULL,
+                       #' @field .delete_flag
+                       #' used to delete items
+                       .delete_flag = FALSE
                      ))
 
 #' @title Comprehension
@@ -566,33 +600,27 @@ Comprehension = R6Class("Comprehension",
                            ngens = function(){
                              return(length(private$.generators))
                            },
+                           #' @description get all the generator expressions
+                           getGens = function(i){
+                             return(private$.generators)
+                           },
+                           #' @description set all the generator expressions
+                           #' @param generators list of generator expressions to be set
+                           setGens = function(generators){
+                             assert_list(generators, "Generator")
+                             private$.generators = generators
+                           },
                            #' @description get the ith generator expression
                            #' @param i index
-                           getGen_i = function(i){
+                           getGen = function(i){
                              return(private$.generators[[i]])
                            },
                            #' @description set the ith generator expression
                            #' @param i index
                            #' @param expGen generator expression to be set
-                           setGen_i = function(i, expGen){
+                           setGen = function(i, expGen){
                              assertR6(expGen, "Generator")
                              private$.generators[[i]] = expGen
-                           },
-                           #' @description get the in expression of ith generator
-                           #' @param i index
-                           In = function(i){
-                             return(private$.generators[[i]]$In())
-                           },
-                           #' @description get the where expression of ith generator
-                           #' @param i index
-                           where = function(i){
-                             return(private$.generators[[i]]$where())
-                           },
-                           #' @description get the idecl declaration of igen generator
-                           #' @param igen generator index
-                           #' @param idecl declaration index
-                           decl = function(igen, idecl){
-                             return(private$.generators[[igen]]$decl(idecl))
                            },
                            #' @description get the expression/body
                            getBody = function(){
@@ -622,6 +650,23 @@ Comprehension = R6Class("Comprehension",
                              }else{
                                return(sprintf("[%s | %s]", private$.e$c_str(), gStr))  
                              }
+                           },
+                           #' @description delete flag for internal use
+                           getDeleteFlag = function(){
+                             return(private$.delete_flag)
+                           },
+                           #' @description delete the assignment item
+                           delete = function(){
+                             private$.delete_flag = TRUE
+                             pf = parent.frame()
+                             items = sapply(ls(pf), function(i) {
+                               class(get(i, envir = pf))[1] == "Comprehension"
+                             })
+                             this = ls(pf)[items][sapply(mget(ls(pf)[items], envir = pf),
+                                                         function(x) x$getDeleteFlag())]
+                             thisObj = get(this, envir = pf)
+                             rm(list = this, envir = pf)
+                             expression_delete(thisObj)
                            }
                          ),
                          private = list(
@@ -633,7 +678,10 @@ Comprehension = R6Class("Comprehension",
                            .e = NULL,
                            #' @field .set
                            #' TRUE if comprehension is a set
-                           .set = NULL
+                           .set = NULL,
+                           #' @field .delete_flag
+                           #' used to delete items
+                           .delete_flag = FALSE
                          ))
 
 #' @title BinOp 
@@ -665,6 +713,10 @@ BinOp = R6Class("BinOp",
                    getLhs =  function(){
                      return(private$.lhs_exp)
                    },
+                   #' @description get the rhs expression
+                   getRhs =  function(){
+                     return(private$.rhs_exp)
+                   },
                    #' @description get the operator
                    getOp =  function(){
                      return(private$.op)
@@ -691,6 +743,23 @@ BinOp = R6Class("BinOp",
                    c_str = function(){
                      return(sprintf("(%s %s %s)", private$.lhs_exp$c_str(),
                                     private$.op, private$.rhs_exp$c_str()))
+                   },
+                   #' @description delete flag for internal use
+                   getDeleteFlag = function(){
+                     return(private$.delete_flag)
+                   },
+                   #' @description delete the assignment item
+                   delete = function(){
+                     private$.delete_flag = TRUE
+                     pf = parent.frame()
+                     items = sapply(ls(pf), function(i) {
+                       class(get(i, envir = pf))[1] == "BinOp"
+                     })
+                     this = ls(pf)[items][sapply(mget(ls(pf)[items], envir = pf),
+                                                 function(x) x$getDeleteFlag())]
+                     thisObj = get(this, envir = pf)
+                     rm(list = this, envir = pf)
+                     expression_delete(thisObj)
                    }
                  ),
                 private = list(
@@ -702,7 +771,10 @@ BinOp = R6Class("BinOp",
                   .rhs_exp = NULL,
                   #' @field .op
                   #' the operator
-                  .op = NULL
+                  .op = NULL,
+                  #' @field .delete_flag
+                  #' used to delete items
+                  .delete_flag = FALSE
                 ))
 
 
@@ -730,6 +802,16 @@ UnOp = R6Class("UnOp",
                  #' @description get the number of arguments
                  nargs = function(){
                    return(length(private$.args))
+                 },
+                 #' @description get all expression arguments
+                 getArgs = function(){
+                   return(private$.args)
+                 },
+                 #' @description set all expression arguments
+                 #' @param args argument list to be set
+                 setArgs = function(){
+                   assertList(args, "Expression")
+                   private$.args = args
                  },
                  #' @description get the ith expression argument
                  #' @param i index
@@ -763,6 +845,23 @@ UnOp = R6Class("UnOp",
                      }
                    }
                    return(sprintf("%s(%s)", private$.op, uoStr))
+                 },
+                 #' @description delete flag for internal use
+                 getDeleteFlag = function(){
+                   return(private$.delete_flag)
+                 },
+                 #' @description delete the assignment item
+                 delete = function(){
+                   private$.delete_flag = TRUE
+                   pf = parent.frame()
+                   items = sapply(ls(pf), function(i) {
+                     class(get(i, envir = pf))[1] == "UnOp"
+                   })
+                   this = ls(pf)[items][sapply(mget(ls(pf)[items], envir = pf),
+                                               function(x) x$getDeleteFlag())]
+                   thisObj = get(this, envir = pf)
+                   rm(list = this, envir = pf)
+                   expression_delete(thisObj)
                  }
                ),
                private = list(
@@ -771,7 +870,10 @@ UnOp = R6Class("UnOp",
                  .args = NULL,
                  #' @field .op
                  #' operator to be used
-                 .op = NULL
+                 .op = NULL,
+                 #' @field .delete_flag
+                 #' used to delete items
+                 .delete_flag = FALSE
                ))
 
 #' @title Call
@@ -791,7 +893,6 @@ Call = R6Class("Call",
                    private$.id = fnName
                    assert_list(args, "Expression")
                    private$.args = args
-                   private$.nargs = length(args)
                  },
                  #' @description get the function id/string
                  getName =  function(){
@@ -805,7 +906,17 @@ Call = R6Class("Call",
                  },
                  #' @description get the number of arguments
                  nargs = function(){
-                   return(private$.nargs)
+                   return(length(private$.args))
+                 },
+                 #' @description get the expression list
+                 getArgs = function(){
+                   return(private$.args)
+                 },
+                 #' @description set the expression list
+                 #' @param args list of expressions to be set
+                 setArgs = function(args){
+                   assert_list(args, "Expression")
+                   private$.args = args
                  },
                  #' @description get the expression based on index
                  #' @param i index 
@@ -829,6 +940,23 @@ Call = R6Class("Call",
                      }
                    }
                    return(sprintf("%s(%s)", private$.id, clStr))
+                 },
+                 #' @description delete flag for internal use
+                 getDeleteFlag = function(){
+                   return(private$.delete_flag)
+                 },
+                 #' @description delete the assignment item
+                 delete = function(){
+                   private$.delete_flag = TRUE
+                   pf = parent.frame()
+                   items = sapply(ls(pf), function(i) {
+                     class(get(i, envir = pf))[1] == "Call"
+                   })
+                   this = ls(pf)[items][sapply(mget(ls(pf)[items], envir = pf),
+                                               function(x) x$getDeleteFlag())]
+                   thisObj = get(this, envir = pf)
+                   rm(list = this, envir = pf)
+                   expression_delete(thisObj)
                  }
                ),
                private = list(
@@ -838,9 +966,9 @@ Call = R6Class("Call",
                  #' @field .lExp
                  #' list of expressions
                  .args = NULL,
-                 #' @field .nargs
-                 #' number of arguments to the call
-                 .nargs = NULL
+                 #' @field .delete_flag
+                 #' used to delete items
+                 .delete_flag = FALSE
                ))
 
 #' @title Let
@@ -859,14 +987,25 @@ Let = R6Class("Let",
                   private$.in = body
                 },
                 #' @description  access list of local declarations
-                getLet = function(){
+                getLets = function(){
                   return(private$.let)
                 },
                 #' @description  set list of local declarations
                 #' @param letList list of declarations to be set
-                setLet = function(letList){
+                setLets = function(letList){
                   assertList(letList, "Expression")
                   private$.let = letList
+                },
+                #' @description  access local declaration i
+                #' @param i index of let declaration to be accessed
+                getLet = function(i){
+                  return(private$.let[[i]])
+                },
+                #' @description  set list of local declarations
+                #' @param let declaration to be set
+                setLet = function(let){
+                  assertList(let, "Expression")
+                  private$.let[[i]] = let
                 },
                 #' @description get the body
                 getBody = function(){
@@ -888,6 +1027,23 @@ Let = R6Class("Let",
                     }
                   }
                   return(sprintf("let {%s} in %s", declStr, private$.in$c_str()))
+                },
+                #' @description delete flag for internal use
+                getDeleteFlag = function(){
+                  return(private$.delete_flag)
+                },
+                #' @description delete the assignment item
+                delete = function(){
+                  private$.delete_flag = TRUE
+                  pf = parent.frame()
+                  items = sapply(ls(pf), function(i) {
+                    class(get(i, envir = pf))[1] == "Let"
+                  })
+                  this = ls(pf)[items][sapply(mget(ls(pf)[items], envir = pf),
+                                              function(x) x$getDeleteFlag())]
+                  thisObj = get(this, envir = pf)
+                  rm(list = this, envir = pf)
+                  expression_delete(thisObj)
                 }
               ),
               private = list(
@@ -896,7 +1052,10 @@ Let = R6Class("Let",
                 .decl = NULL,
                 #' @field .in
                 #' body of the let
-                .in = NULL
+                .in = NULL,
+                #' @field .delete_flag
+                #' used to delete items
+                .delete_flag = FALSE
               ))
 
 #' @title Ite 
@@ -917,6 +1076,24 @@ Ite = R6Class("Ite",
                   private$.ifs = ifs
                   private$.thens = thens
                   private$.else = Else
+                },
+                #' @description get the if expression list
+                getIfs = function(){
+                  return(private$.ifs)
+                },
+                #' @description get the then expression list
+                getThens = function(){
+                  return(private$.thens)
+                },
+                #' @description set the if and then expression list
+                #' @param ifs expression list to be set
+                #' @param thens expression list to be set
+                setIfsThens = function(ifs, thens){
+                  assertList(ifs, "Expression")
+                  assertList(thens, "Expression")
+                  assert_true(length(ifs) == length(thens))
+                  private$.ifs = ifs
+                  private$.thens = thens
                 },
                 #' @description get the ith if expression
                 #' @param i index
@@ -960,6 +1137,23 @@ Ite = R6Class("Ite",
                                         private$.thens[[i]]$c_str()))
                   }
                   return(sprintf("%s (%s) endif", ifthenStr, private$.else$c_str()))
+                },
+                #' @description delete flag for internal use
+                getDeleteFlag = function(){
+                  return(private$.delete_flag)
+                },
+                #' @description delete the assignment item
+                delete = function(){
+                  private$.delete_flag = TRUE
+                  pf = parent.frame()
+                  items = sapply(ls(pf), function(i) {
+                    class(get(i, envir = pf))[1] == "Ite"
+                  })
+                  this = ls(pf)[items][sapply(mget(ls(pf)[items], envir = pf),
+                                              function(x) x$getDeleteFlag())]
+                  thisObj = get(this, envir = pf)
+                  rm(list = this, envir = pf)
+                  expression_delete(thisObj)
                 }
               ),
               private = list(
@@ -971,7 +1165,10 @@ Ite = R6Class("Ite",
                 .thens = NULL,
                 #' @field .else
                 #' else expression
-                .else = NULL
+                .else = NULL,
+                #' @field .delete_flag
+                #' used to delete items
+                .delete_flag = FALSE
               ))
 
 #' @title VarDecl
@@ -1023,6 +1220,21 @@ VarDecl = R6Class("VarDecl",
                     #' @description get the variable domain
                     getDomain = function(){
                       return(private$.ti$getDomain())
+                    },
+                    #' @description get the value
+                    getValue = function(){
+                      return(private$.e)
+                    },
+                    #' @description set the value
+                    #' @param val expression to be set
+                    setValue = function(val){
+                      assertTRUE(testR6(val, "Expression") ||
+                                   testNull(val))
+                      private$.e = val
+                    },
+                    #' @description get the type-inst of the variable declaration
+                    ti = function(){
+                      return(private$.ti)
                     }, 
                     #' @description get the domain of the variable
                     #' @description return string representation of MiniZinc
@@ -1092,19 +1304,22 @@ VarDecl = R6Class("VarDecl",
                       }
                       return(sprintf("%s", retStr))
                     },
-                    #' @description get the value
-                    getValue = function(){
-                      return(private$.e)
+                    #' @description delete flag for internal use
+                    getDeleteFlag = function(){
+                      return(private$.delete_flag)
                     },
-                    #' @description set the value
-                    #' @param val expression to be set
-                    setValue = function(val){
-                      assertR6(val, "Expression")
-                      private$.e = val
-                    },
-                    #' @description get the type-inst of the variable declaration
-                    ti = function(){
-                      return(private$.ti)
+                    #' @description delete the assignment item
+                    delete = function(){
+                      private$.delete_flag = TRUE
+                      pf = parent.frame()
+                      items = sapply(ls(pf), function(i) {
+                        class(get(i, envir = pf))[1] == "VarDecl"
+                      })
+                      this = ls(pf)[items][sapply(mget(ls(pf)[items], envir = pf),
+                                                  function(x) x$getDeleteFlag())]
+                      thisObj = get(this, envir = pf)
+                      rm(list = this, envir = pf)
+                      expression_delete(thisObj)
                     }
                   ),
                   private = list(
@@ -1116,7 +1331,10 @@ VarDecl = R6Class("VarDecl",
                     .id = NULL,
                     #' @field .expression
                     #' the initialization expression
-                    .e = NULL
+                    .e = NULL,
+                    #' @field .delete_flag
+                    #' used to delete items
+                    .delete_flag = FALSE
                   ))
 
 

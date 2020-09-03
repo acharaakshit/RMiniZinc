@@ -22,6 +22,8 @@ in a MiniZinc model
 \item{\code{.ann}}{annotation}
 
 \item{\code{.ti}}{return type of the function}
+
+\item{\code{.delete_flag}}{used to delete items}
 }
 \if{html}{\out{</div>}}
 }
@@ -37,6 +39,8 @@ in a MiniZinc model
 \item{\code{.ann}}{annotation}
 
 \item{\code{.ti}}{return type of the function}
+
+\item{\code{.delete_flag}}{used to delete items}
 }
 \if{html}{\out{</div>}}
 }
@@ -50,6 +54,8 @@ in a MiniZinc model
 \item \href{#method-ann}{\code{FunctionItem$ann()}}
 \item \href{#method-rtype}{\code{FunctionItem$rtype()}}
 \item \href{#method-c_str}{\code{FunctionItem$c_str()}}
+\item \href{#method-getDeleteFlag}{\code{FunctionItem$getDeleteFlag()}}
+\item \href{#method-delete}{\code{FunctionItem$delete()}}
 \item \href{#method-clone}{\code{FunctionItem$clone()}}
 }
 }
@@ -151,6 +157,26 @@ or a function call itself.
 get the MiniZinc representation
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FunctionItem$c_str()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getDeleteFlag"></a>}}
+\if{latex}{\out{\hypertarget{method-getDeleteFlag}{}}}
+\subsection{Method \code{getDeleteFlag()}}{
+delete flag for internal use
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FunctionItem$getDeleteFlag()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-delete"></a>}}
+\if{latex}{\out{\hypertarget{method-delete}{}}}
+\subsection{Method \code{delete()}}{
+delete the variable item
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FunctionItem$delete()}\if{html}{\out{</div>}}
 }
 
 }

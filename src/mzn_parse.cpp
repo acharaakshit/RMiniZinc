@@ -248,7 +248,7 @@ Environment mzn_parse(std::string model_string = "",
   
   // push the solveType information of the problem
   if(objective.length() == 0) {
-    Rcpp::warning("No solve item found"); 
+    Rcpp::warning("No solve item found!"); 
   }else{
     retVal.push_back(objective);
     retValNames.push_back("SOLVE_TYPE"); 

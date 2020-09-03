@@ -15,6 +15,8 @@ create let expression in MiniZinc
 \item{\code{.decl}}{list of local declarations}
 
 \item{\code{.in}}{body of the let}
+
+\item{\code{.delete_flag}}{used to delete items}
 }
 \if{html}{\out{</div>}}
 }
@@ -24,6 +26,8 @@ create let expression in MiniZinc
 \item{\code{.decl}}{list of local declarations}
 
 \item{\code{.in}}{body of the let}
+
+\item{\code{.delete_flag}}{used to delete items}
 }
 \if{html}{\out{</div>}}
 }
@@ -31,11 +35,15 @@ create let expression in MiniZinc
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{Let$new()}}
+\item \href{#method-getLets}{\code{Let$getLets()}}
+\item \href{#method-setLets}{\code{Let$setLets()}}
 \item \href{#method-getLet}{\code{Let$getLet()}}
 \item \href{#method-setLet}{\code{Let$setLet()}}
 \item \href{#method-getBody}{\code{Let$getBody()}}
 \item \href{#method-setBody}{\code{Let$setBody()}}
 \item \href{#method-c_str}{\code{Let$c_str()}}
+\item \href{#method-getDeleteFlag}{\code{Let$getDeleteFlag()}}
+\item \href{#method-delete}{\code{Let$delete()}}
 \item \href{#method-clone}{\code{Let$clone()}}
 }
 }
@@ -65,14 +73,48 @@ constructor
 }
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getLets"></a>}}
+\if{latex}{\out{\hypertarget{method-getLets}{}}}
+\subsection{Method \code{getLets()}}{
+access list of local declarations
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Let$getLets()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-setLets"></a>}}
+\if{latex}{\out{\hypertarget{method-setLets}{}}}
+\subsection{Method \code{setLets()}}{
+set list of local declarations
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Let$setLets(letList)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{letList}}{list of declarations to be set}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-getLet"></a>}}
 \if{latex}{\out{\hypertarget{method-getLet}{}}}
 \subsection{Method \code{getLet()}}{
-access list of local declarations
+access local declaration i
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Let$getLet()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Let$getLet(i)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{i}}{index of let declaration to be accessed}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-setLet"></a>}}
@@ -80,13 +122,13 @@ access list of local declarations
 \subsection{Method \code{setLet()}}{
 set list of local declarations
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Let$setLet(letList)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Let$setLet(let)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{letList}}{list of declarations to be set}
+\item{\code{let}}{declaration to be set}
 }
 \if{html}{\out{</div>}}
 }
@@ -125,6 +167,26 @@ set the body
 get the MiniZinc representation
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Let$c_str()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getDeleteFlag"></a>}}
+\if{latex}{\out{\hypertarget{method-getDeleteFlag}{}}}
+\subsection{Method \code{getDeleteFlag()}}{
+delete flag for internal use
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Let$getDeleteFlag()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-delete"></a>}}
+\if{latex}{\out{\hypertarget{method-delete}{}}}
+\subsection{Method \code{delete()}}{
+delete the assignment item
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Let$delete()}\if{html}{\out{</div>}}
 }
 
 }

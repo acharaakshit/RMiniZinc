@@ -50,6 +50,8 @@ newFloatSet$setFsv(FloatSetVal$new(1.2,4.1))
 \item \href{#method-new}{\code{Set$new()}}
 \item \href{#method-getSetVec}{\code{Set$getSetVec()}}
 \item \href{#method-setSetVec}{\code{Set$setSetVec()}}
+\item \href{#method-isEmpty}{\code{Set$isEmpty()}}
+\item \href{#method-makeEmpty}{\code{Set$makeEmpty()}}
 \item \href{#method-getIsv}{\code{Set$getIsv()}}
 \item \href{#method-setIsv}{\code{Set$setIsv()}}
 \item \href{#method-getFsv}{\code{Set$getFsv()}}
@@ -109,6 +111,26 @@ set the set expression
 }
 \if{html}{\out{</div>}}
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-isEmpty"></a>}}
+\if{latex}{\out{\hypertarget{method-isEmpty}{}}}
+\subsection{Method \code{isEmpty()}}{
+is the set empty
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Set$isEmpty()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-makeEmpty"></a>}}
+\if{latex}{\out{\hypertarget{method-makeEmpty}{}}}
+\subsection{Method \code{makeEmpty()}}{
+make the set empty
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Set$makeEmpty()}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-getIsv"></a>}}

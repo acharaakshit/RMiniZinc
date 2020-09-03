@@ -25,6 +25,8 @@ newBinOp$c_str()
 \item{\code{.rhs_exp}}{the right hand side expression}
 
 \item{\code{.op}}{the operator}
+
+\item{\code{.delete_flag}}{used to delete items}
 }
 \if{html}{\out{</div>}}
 }
@@ -36,6 +38,8 @@ newBinOp$c_str()
 \item{\code{.rhs_exp}}{the right hand side expression}
 
 \item{\code{.op}}{the operator}
+
+\item{\code{.delete_flag}}{used to delete items}
 }
 \if{html}{\out{</div>}}
 }
@@ -44,11 +48,14 @@ newBinOp$c_str()
 \itemize{
 \item \href{#method-new}{\code{BinOp$new()}}
 \item \href{#method-getLhs}{\code{BinOp$getLhs()}}
+\item \href{#method-getRhs}{\code{BinOp$getRhs()}}
 \item \href{#method-getOp}{\code{BinOp$getOp()}}
 \item \href{#method-setOp}{\code{BinOp$setOp()}}
 \item \href{#method-setLhs}{\code{BinOp$setLhs()}}
 \item \href{#method-setRhs}{\code{BinOp$setRhs()}}
 \item \href{#method-c_str}{\code{BinOp$c_str()}}
+\item \href{#method-getDeleteFlag}{\code{BinOp$getDeleteFlag()}}
+\item \href{#method-delete}{\code{BinOp$delete()}}
 \item \href{#method-clone}{\code{BinOp$clone()}}
 }
 }
@@ -86,6 +93,16 @@ constructor
 get the lhs expression
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{BinOp$getLhs()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getRhs"></a>}}
+\if{latex}{\out{\hypertarget{method-getRhs}{}}}
+\subsection{Method \code{getRhs()}}{
+get the rhs expression
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{BinOp$getRhs()}\if{html}{\out{</div>}}
 }
 
 }
@@ -157,6 +174,26 @@ set the rhs expression
 return the MiniZinc representation
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{BinOp$c_str()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getDeleteFlag"></a>}}
+\if{latex}{\out{\hypertarget{method-getDeleteFlag}{}}}
+\subsection{Method \code{getDeleteFlag()}}{
+delete flag for internal use
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{BinOp$getDeleteFlag()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-delete"></a>}}
+\if{latex}{\out{\hypertarget{method-delete}{}}}
+\subsection{Method \code{delete()}}{
+delete the assignment item
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{BinOp$delete()}\if{html}{\out{</div>}}
 }
 
 }

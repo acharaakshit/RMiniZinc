@@ -20,7 +20,7 @@ newCall$c_str()
 
 \item{\code{.lExp}}{list of expressions}
 
-\item{\code{.nargs}}{number of arguments to the call}
+\item{\code{.delete_flag}}{used to delete items}
 }
 \if{html}{\out{</div>}}
 }
@@ -31,7 +31,7 @@ newCall$c_str()
 
 \item{\code{.lExp}}{list of expressions}
 
-\item{\code{.nargs}}{number of arguments to the call}
+\item{\code{.delete_flag}}{used to delete items}
 }
 \if{html}{\out{</div>}}
 }
@@ -42,9 +42,13 @@ newCall$c_str()
 \item \href{#method-getName}{\code{Call$getName()}}
 \item \href{#method-setName}{\code{Call$setName()}}
 \item \href{#method-nargs}{\code{Call$nargs()}}
+\item \href{#method-getArgs}{\code{Call$getArgs()}}
+\item \href{#method-setArgs}{\code{Call$setArgs()}}
 \item \href{#method-getArg}{\code{Call$getArg()}}
 \item \href{#method-setArg}{\code{Call$setArg()}}
 \item \href{#method-c_str}{\code{Call$c_str()}}
+\item \href{#method-getDeleteFlag}{\code{Call$getDeleteFlag()}}
+\item \href{#method-delete}{\code{Call$delete()}}
 \item \href{#method-clone}{\code{Call$clone()}}
 }
 }
@@ -111,6 +115,33 @@ get the number of arguments
 
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getArgs"></a>}}
+\if{latex}{\out{\hypertarget{method-getArgs}{}}}
+\subsection{Method \code{getArgs()}}{
+get the expression list
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Call$getArgs()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-setArgs"></a>}}
+\if{latex}{\out{\hypertarget{method-setArgs}{}}}
+\subsection{Method \code{setArgs()}}{
+set the expression list
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Call$setArgs(args)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{args}}{list of expressions to be set}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-getArg"></a>}}
 \if{latex}{\out{\hypertarget{method-getArg}{}}}
 \subsection{Method \code{getArg()}}{
@@ -153,6 +184,26 @@ set argument i
 return the MiniZinc representation
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Call$c_str()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getDeleteFlag"></a>}}
+\if{latex}{\out{\hypertarget{method-getDeleteFlag}{}}}
+\subsection{Method \code{getDeleteFlag()}}{
+delete flag for internal use
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Call$getDeleteFlag()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-delete"></a>}}
+\if{latex}{\out{\hypertarget{method-delete}{}}}
+\subsection{Method \code{delete()}}{
+delete the assignment item
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Call$delete()}\if{html}{\out{</div>}}
 }
 
 }

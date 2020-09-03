@@ -17,6 +17,8 @@ create a Comprehension in MiniZinc
 \item{\code{.expression}}{the comprehension expression}
 
 \item{\code{.set}}{TRUE if comprehension is a set}
+
+\item{\code{.delete_flag}}{used to delete items}
 }
 \if{html}{\out{</div>}}
 }
@@ -28,6 +30,8 @@ create a Comprehension in MiniZinc
 \item{\code{.expression}}{the comprehension expression}
 
 \item{\code{.set}}{TRUE if comprehension is a set}
+
+\item{\code{.delete_flag}}{used to delete items}
 }
 \if{html}{\out{</div>}}
 }
@@ -36,15 +40,16 @@ create a Comprehension in MiniZinc
 \itemize{
 \item \href{#method-new}{\code{Comprehension$new()}}
 \item \href{#method-ngens}{\code{Comprehension$ngens()}}
-\item \href{#method-getGen_i}{\code{Comprehension$getGen_i()}}
-\item \href{#method-setGen_i}{\code{Comprehension$setGen_i()}}
-\item \href{#method-In}{\code{Comprehension$In()}}
-\item \href{#method-where}{\code{Comprehension$where()}}
-\item \href{#method-decl}{\code{Comprehension$decl()}}
+\item \href{#method-getGens}{\code{Comprehension$getGens()}}
+\item \href{#method-setGens}{\code{Comprehension$setGens()}}
+\item \href{#method-getGen}{\code{Comprehension$getGen()}}
+\item \href{#method-setGen}{\code{Comprehension$setGen()}}
 \item \href{#method-getBody}{\code{Comprehension$getBody()}}
 \item \href{#method-setBody}{\code{Comprehension$setBody()}}
 \item \href{#method-isSet}{\code{Comprehension$isSet()}}
 \item \href{#method-c_str}{\code{Comprehension$c_str()}}
+\item \href{#method-getDeleteFlag}{\code{Comprehension$getDeleteFlag()}}
+\item \href{#method-delete}{\code{Comprehension$delete()}}
 \item \href{#method-clone}{\code{Comprehension$clone()}}
 }
 }
@@ -86,12 +91,39 @@ get the number of generators
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-getGen_i"></a>}}
-\if{latex}{\out{\hypertarget{method-getGen_i}{}}}
-\subsection{Method \code{getGen_i()}}{
+\if{html}{\out{<a id="method-getGens"></a>}}
+\if{latex}{\out{\hypertarget{method-getGens}{}}}
+\subsection{Method \code{getGens()}}{
+get all the generator expressions
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Comprehension$getGens(i)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-setGens"></a>}}
+\if{latex}{\out{\hypertarget{method-setGens}{}}}
+\subsection{Method \code{setGens()}}{
+set all the generator expressions
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Comprehension$setGens(generators)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{generators}}{list of generator expressions to be set}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getGen"></a>}}
+\if{latex}{\out{\hypertarget{method-getGen}{}}}
+\subsection{Method \code{getGen()}}{
 get the ith generator expression
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Comprehension$getGen_i(i)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Comprehension$getGen(i)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -103,12 +135,12 @@ get the ith generator expression
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-setGen_i"></a>}}
-\if{latex}{\out{\hypertarget{method-setGen_i}{}}}
-\subsection{Method \code{setGen_i()}}{
+\if{html}{\out{<a id="method-setGen"></a>}}
+\if{latex}{\out{\hypertarget{method-setGen}{}}}
+\subsection{Method \code{setGen()}}{
 set the ith generator expression
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Comprehension$setGen_i(i, expGen)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Comprehension$setGen(i, expGen)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -117,59 +149,6 @@ set the ith generator expression
 \item{\code{i}}{index}
 
 \item{\code{expGen}}{generator expression to be set}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-In"></a>}}
-\if{latex}{\out{\hypertarget{method-In}{}}}
-\subsection{Method \code{In()}}{
-get the in expression of ith generator
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Comprehension$In(i)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{i}}{index}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-where"></a>}}
-\if{latex}{\out{\hypertarget{method-where}{}}}
-\subsection{Method \code{where()}}{
-get the where expression of ith generator
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Comprehension$where(i)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{i}}{index}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-decl"></a>}}
-\if{latex}{\out{\hypertarget{method-decl}{}}}
-\subsection{Method \code{decl()}}{
-get the idecl declaration of igen generator
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Comprehension$decl(igen, idecl)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{igen}}{generator index}
-
-\item{\code{idecl}}{declaration index}
 }
 \if{html}{\out{</div>}}
 }
@@ -218,6 +197,26 @@ check if comprehension is a set
 get the MiniZinc representation
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Comprehension$c_str()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getDeleteFlag"></a>}}
+\if{latex}{\out{\hypertarget{method-getDeleteFlag}{}}}
+\subsection{Method \code{getDeleteFlag()}}{
+delete flag for internal use
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Comprehension$getDeleteFlag()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-delete"></a>}}
+\if{latex}{\out{\hypertarget{method-delete}{}}}
+\subsection{Method \code{delete()}}{
+delete the assignment item
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Comprehension$delete()}\if{html}{\out{</div>}}
 }
 
 }

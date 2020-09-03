@@ -13,10 +13,10 @@ VarDeclItem = R6Class("VarDeclItem",
                             parsedR6 = suppressWarnings(mzn_parse(model_string = mzn_str))
                             if(!testR6(parsedR6, "Model") && 
                                parsedR6$nitems() != 1 &&
-                               !testR6(parsedR6$getItem_i(1), "VarDeclItem")){
+                               !testR6(parsedR6$getItem(1), "VarDeclItem")){
                               stop("pass only single variable declaration")
                             }
-                            vitem = parsedR6$getItem_i(1)
+                            vitem = parsedR6$getItem(1)
                             private$.decl = vitem$getDecl()
                           }else{
                             assertR6(decl, "VarDecl")
@@ -37,7 +37,7 @@ VarDeclItem = R6Class("VarDeclItem",
                         id =  function(){
                           return(private$.decl$id())
                         },
-                        #' @description set the variable decaration 
+                        #' @description set the variable declaration 
                         #' @description convert the declaration to String
                         c_str = function(){
                           return(sprintf("%s;\n", private$.decl$c_str()))
@@ -55,8 +55,9 @@ VarDeclItem = R6Class("VarDeclItem",
                           })
                           this = ls(pf)[items][sapply(mget(ls(pf)[items], envir = pf),
                                                       function(x) x$getDeleteFlag())]
+                          thisObj = get(this, envir = pf)
                           rm(list = this, envir = pf)
-                          message("VarDeclItem object deleted!")
+                          item_delete(thisObj)
                         }
                       ),
                       private = list(

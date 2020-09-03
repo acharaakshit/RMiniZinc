@@ -21,6 +21,8 @@ decls = list(IntDecl(name = "i", kind = "par")))
 \item{\code{.in}}{in expression}
 
 \item{\code{where}}{where expression}
+
+\item{\code{.delete_flag}}{used to delete items}
 }
 \if{html}{\out{</div>}}
 }
@@ -32,6 +34,8 @@ decls = list(IntDecl(name = "i", kind = "par")))
 \item{\code{.in}}{in expression}
 
 \item{\code{where}}{where expression}
+
+\item{\code{.delete_flag}}{used to delete items}
 }
 \if{html}{\out{</div>}}
 }
@@ -46,6 +50,8 @@ decls = list(IntDecl(name = "i", kind = "par")))
 \item \href{#method-getDecl}{\code{Generator$getDecl()}}
 \item \href{#method-setDecl}{\code{Generator$setDecl()}}
 \item \href{#method-c_str}{\code{Generator$c_str()}}
+\item \href{#method-getDeleteFlag}{\code{Generator$getDeleteFlag()}}
+\item \href{#method-delete}{\code{Generator$delete()}}
 \item \href{#method-clone}{\code{Generator$clone()}}
 }
 }
@@ -125,7 +131,7 @@ get the where expression
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{expWhere}}{where expression}
+\item{\code{expWhere}}{where expression (or NULL)}
 }
 \if{html}{\out{</div>}}
 }
@@ -173,6 +179,26 @@ get the ith declaration
 get the MiniZinc representation
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Generator$c_str()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getDeleteFlag"></a>}}
+\if{latex}{\out{\hypertarget{method-getDeleteFlag}{}}}
+\subsection{Method \code{getDeleteFlag()}}{
+delete flag for internal use
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Generator$getDeleteFlag()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-delete"></a>}}
+\if{latex}{\out{\hypertarget{method-delete}{}}}
+\subsection{Method \code{delete()}}{
+delete the assignment item
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Generator$delete()}\if{html}{\out{</div>}}
 }
 
 }

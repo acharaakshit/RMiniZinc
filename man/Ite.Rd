@@ -17,6 +17,8 @@ create if-then-else expressions in MiniZinc
 \item{\code{.thens}}{list of corresponding then expressions}
 
 \item{\code{.else}}{else expression}
+
+\item{\code{.delete_flag}}{used to delete items}
 }
 \if{html}{\out{</div>}}
 }
@@ -28,6 +30,8 @@ create if-then-else expressions in MiniZinc
 \item{\code{.thens}}{list of corresponding then expressions}
 
 \item{\code{.else}}{else expression}
+
+\item{\code{.delete_flag}}{used to delete items}
 }
 \if{html}{\out{</div>}}
 }
@@ -35,6 +39,9 @@ create if-then-else expressions in MiniZinc
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{Ite$new()}}
+\item \href{#method-getIfs}{\code{Ite$getIfs()}}
+\item \href{#method-getThens}{\code{Ite$getThens()}}
+\item \href{#method-setIfsThens}{\code{Ite$setIfsThens()}}
 \item \href{#method-getIf}{\code{Ite$getIf()}}
 \item \href{#method-setIf}{\code{Ite$setIf()}}
 \item \href{#method-getThen}{\code{Ite$getThen()}}
@@ -42,6 +49,8 @@ create if-then-else expressions in MiniZinc
 \item \href{#method-getElse}{\code{Ite$getElse()}}
 \item \href{#method-setElse}{\code{Ite$setElse()}}
 \item \href{#method-c_str}{\code{Ite$c_str()}}
+\item \href{#method-getDeleteFlag}{\code{Ite$getDeleteFlag()}}
+\item \href{#method-delete}{\code{Ite$delete()}}
 \item \href{#method-clone}{\code{Ite$clone()}}
 }
 }
@@ -68,6 +77,45 @@ constructor
 \item{\code{thens}}{list of corresponding then expressions}
 
 \item{\code{Else}}{else expression}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getIfs"></a>}}
+\if{latex}{\out{\hypertarget{method-getIfs}{}}}
+\subsection{Method \code{getIfs()}}{
+get the if expression list
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Ite$getIfs()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getThens"></a>}}
+\if{latex}{\out{\hypertarget{method-getThens}{}}}
+\subsection{Method \code{getThens()}}{
+get the then expression list
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Ite$getThens()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-setIfsThens"></a>}}
+\if{latex}{\out{\hypertarget{method-setIfsThens}{}}}
+\subsection{Method \code{setIfsThens()}}{
+set the if and then expression list
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Ite$setIfsThens(ifs, thens)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{ifs}}{expression list to be set}
+
+\item{\code{thens}}{expression list to be set}
 }
 \if{html}{\out{</div>}}
 }
@@ -178,6 +226,26 @@ get the else expression
 get the MiniZinc representation
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Ite$c_str()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getDeleteFlag"></a>}}
+\if{latex}{\out{\hypertarget{method-getDeleteFlag}{}}}
+\subsection{Method \code{getDeleteFlag()}}{
+delete flag for internal use
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Ite$getDeleteFlag()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-delete"></a>}}
+\if{latex}{\out{\hypertarget{method-delete}{}}}
+\subsection{Method \code{delete()}}{
+delete the assignment item
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Ite$delete()}\if{html}{\out{</div>}}
 }
 
 }

@@ -51,12 +51,13 @@ AssignItem = R6Class("AssignItem",
                          private$.delete_flag = TRUE
                          pf = parent.frame()
                          items = sapply(ls(pf), function(i) {
-                           class(get(i, envir = pf))[1] == "SolveItem"
+                           class(get(i, envir = pf))[1] == "AssignItem"
                          })
                          this = ls(pf)[items][sapply(mget(ls(pf)[items], envir = pf),
                                                      function(x) x$getDeleteFlag())]
+                         thisObj = get(this, envir = pf)
                          rm(list = this, envir = pf)
-                         message("SolveItem object deleted!")
+                         item_delete(thisObj)
                        }
                      ),
                      private = list(

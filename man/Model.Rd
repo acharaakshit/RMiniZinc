@@ -24,11 +24,13 @@ This class will take all the objects required to create a MiniZinc model.
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{Model$new()}}
-\item \href{#method-getItem_i}{\code{Model$getItem_i()}}
-\item \href{#method-setItem_i}{\code{Model$setItem_i()}}
+\item \href{#method-getItems}{\code{Model$getItems()}}
+\item \href{#method-setItems}{\code{Model$setItems()}}
+\item \href{#method-getItem}{\code{Model$getItem()}}
+\item \href{#method-setItem}{\code{Model$setItem()}}
+\item \href{#method-addItem}{\code{Model$addItem()}}
 \item \href{#method-nitems}{\code{Model$nitems()}}
 \item \href{#method-mzn_string}{\code{Model$mzn_string()}}
-\item \href{#method-delete}{\code{Model$delete()}}
 \item \href{#method-clone}{\code{Model$clone()}}
 }
 }
@@ -50,12 +52,39 @@ create a new instance of model class
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-getItem_i"></a>}}
-\if{latex}{\out{\hypertarget{method-getItem_i}{}}}
-\subsection{Method \code{getItem_i()}}{
+\if{html}{\out{<a id="method-getItems"></a>}}
+\if{latex}{\out{\hypertarget{method-getItems}{}}}
+\subsection{Method \code{getItems()}}{
+get all the items
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Model$getItems()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-setItems"></a>}}
+\if{latex}{\out{\hypertarget{method-setItems}{}}}
+\subsection{Method \code{setItems()}}{
+set all the items
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Model$setItems(items)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{items}}{items to be set}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getItem"></a>}}
+\if{latex}{\out{\hypertarget{method-getItem}{}}}
+\subsection{Method \code{getItem()}}{
 get the item using index
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Model$getItem_i(i)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Model$getItem(i)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -67,12 +96,12 @@ get the item using index
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-setItem_i"></a>}}
-\if{latex}{\out{\hypertarget{method-setItem_i}{}}}
-\subsection{Method \code{setItem_i()}}{
+\if{html}{\out{<a id="method-setItem"></a>}}
+\if{latex}{\out{\hypertarget{method-setItem}{}}}
+\subsection{Method \code{setItem()}}{
 set the item using index
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Model$setItem_i(i, item)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Model$setItem(i, item)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -81,6 +110,23 @@ set the item using index
 \item{\code{i}}{index}
 
 \item{\code{item}}{item to be set}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-addItem"></a>}}
+\if{latex}{\out{\hypertarget{method-addItem}{}}}
+\subsection{Method \code{addItem()}}{
+add item to the model
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Model$addItem(item)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{item}}{item to add}
 }
 \if{html}{\out{</div>}}
 }
@@ -104,23 +150,6 @@ get the string representation of the model
 \if{html}{\out{<div class="r">}}\preformatted{Model$mzn_string()}\if{html}{\out{</div>}}
 }
 
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-delete"></a>}}
-\if{latex}{\out{\hypertarget{method-delete}{}}}
-\subsection{Method \code{delete()}}{
-delete item i from the model
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Model$delete(i)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{i}}{index of the item}
-}
-\if{html}{\out{</div>}}
-}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}

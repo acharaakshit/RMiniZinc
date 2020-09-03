@@ -106,7 +106,7 @@ get the identifier object for the variable
 \if{html}{\out{<a id="method-c_str"></a>}}
 \if{latex}{\out{\hypertarget{method-c_str}{}}}
 \subsection{Method \code{c_str()}}{
-set the variable decaration
+set the variable declaration
 
 
 convert the declaration to String

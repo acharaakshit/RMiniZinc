@@ -12,7 +12,7 @@
 
 <meta name="author" content="Akshit Achara, Lars Kotthoff" />
 
-<meta name="date" content="2020-08-29" />
+<meta name="date" content="2020-09-03" />
 
 <title>MiniZinc Interface for R</title>
 
@@ -319,7 +319,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">MiniZinc Interface for R</h1>
 <h4 class="author">Akshit Achara, Lars Kotthoff</h4>
-<h4 class="date">2020-08-29</h4>
+<h4 class="date">2020-09-03</h4>
 
 
 
@@ -488,19 +488,20 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <p>To create a variable declaration one needs to understand the elements of R6 classes that will be used to create the variables.</p>
 <p>Easy to use declaration functions have been created for the users to declare variables and parameters of different data types. Examples of how to declare variables is shown below.</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="co"># create the variable and parameter declarations</span></span>
-<span id="cb14-2"><a href="#cb14-2"></a>item1 =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">decl =</span> <span class="kw">IntDecl</span>(<span class="dt">name =</span> <span class="st">&quot;n&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;par&quot;</span>))</span>
-<span id="cb14-3"><a href="#cb14-3"></a></span>
-<span id="cb14-4"><a href="#cb14-4"></a>par2_val =<span class="st"> </span>BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs =</span> Int<span class="op">$</span><span class="kw">new</span>(<span class="dv">1</span>), <span class="dt">binop =</span> <span class="st">&quot;..&quot;</span>, <span class="dt">rhs =</span> item1<span class="op">$</span><span class="kw">id</span>())</span>
-<span id="cb14-5"><a href="#cb14-5"></a>item2 =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">decl =</span> <span class="kw">IntSetDecl</span>(<span class="dt">name =</span> <span class="st">&quot;OBJ&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;par&quot;</span>, <span class="dt">value =</span> par2_val))</span>
-<span id="cb14-6"><a href="#cb14-6"></a></span>
-<span id="cb14-7"><a href="#cb14-7"></a>item3 =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">decl =</span> <span class="kw">IntDecl</span>(<span class="dt">name =</span> <span class="st">&quot;capacity&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;par&quot;</span>))</span>
-<span id="cb14-8"><a href="#cb14-8"></a></span>
-<span id="cb14-9"><a href="#cb14-9"></a>item4 =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">decl =</span> <span class="kw">IntArrDecl</span>(<span class="dt">name =</span> <span class="st">&quot;profit&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;par&quot;</span>, <span class="dt">ndim =</span> <span class="dv">1</span>, </span>
-<span id="cb14-10"><a href="#cb14-10"></a>                                          <span class="dt">ind =</span> <span class="kw">list</span>(item2<span class="op">$</span><span class="kw">id</span>())))</span>
-<span id="cb14-11"><a href="#cb14-11"></a></span>
-<span id="cb14-12"><a href="#cb14-12"></a>item5 =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">decl =</span> <span class="kw">IntArrDecl</span>(<span class="dt">name =</span> <span class="st">&quot;size&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;par&quot;</span>, <span class="dt">ndim =</span> <span class="dv">1</span>, <span class="dt">ind =</span>                                                            <span class="kw">list</span>(item2<span class="op">$</span><span class="kw">id</span>())))</span>
-<span id="cb14-13"><a href="#cb14-13"></a></span>
-<span id="cb14-14"><a href="#cb14-14"></a>item6 =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">decl =</span> <span class="kw">IntArrDecl</span>(<span class="dt">name =</span> <span class="st">&quot;x&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;var&quot;</span>, <span class="dt">ndim =</span> <span class="dv">1</span>, <span class="dt">ind =</span> <span class="kw">list</span>(item2<span class="op">$</span><span class="kw">id</span>())))</span></code></pre></div>
+<span id="cb14-2"><a href="#cb14-2"></a>decl =<span class="st"> </span><span class="kw">IntDecl</span>(<span class="dt">name =</span> <span class="st">&quot;n&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;par&quot;</span>)</span>
+<span id="cb14-3"><a href="#cb14-3"></a>item1 =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">decl =</span> decl)</span>
+<span id="cb14-4"><a href="#cb14-4"></a></span>
+<span id="cb14-5"><a href="#cb14-5"></a>par2_val =<span class="st"> </span>BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs =</span> Int<span class="op">$</span><span class="kw">new</span>(<span class="dv">1</span>), <span class="dt">binop =</span> <span class="st">&quot;..&quot;</span>, <span class="dt">rhs =</span> item1<span class="op">$</span><span class="kw">id</span>())</span>
+<span id="cb14-6"><a href="#cb14-6"></a>item2 =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">decl =</span> <span class="kw">IntSetDecl</span>(<span class="dt">name =</span> <span class="st">&quot;OBJ&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;par&quot;</span>, <span class="dt">value =</span> par2_val))</span>
+<span id="cb14-7"><a href="#cb14-7"></a></span>
+<span id="cb14-8"><a href="#cb14-8"></a>item3 =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">decl =</span> <span class="kw">IntDecl</span>(<span class="dt">name =</span> <span class="st">&quot;capacity&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;par&quot;</span>))</span>
+<span id="cb14-9"><a href="#cb14-9"></a></span>
+<span id="cb14-10"><a href="#cb14-10"></a>item4 =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">decl =</span> <span class="kw">IntArrDecl</span>(<span class="dt">name =</span> <span class="st">&quot;profit&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;par&quot;</span>, <span class="dt">ndim =</span> <span class="dv">1</span>, </span>
+<span id="cb14-11"><a href="#cb14-11"></a>                                          <span class="dt">ind =</span> <span class="kw">list</span>(item2<span class="op">$</span><span class="kw">id</span>())))</span>
+<span id="cb14-12"><a href="#cb14-12"></a></span>
+<span id="cb14-13"><a href="#cb14-13"></a>item5 =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">decl =</span> <span class="kw">IntArrDecl</span>(<span class="dt">name =</span> <span class="st">&quot;size&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;par&quot;</span>, <span class="dt">ndim =</span> <span class="dv">1</span>, <span class="dt">ind =</span>                                                            <span class="kw">list</span>(item2<span class="op">$</span><span class="kw">id</span>())))</span>
+<span id="cb14-14"><a href="#cb14-14"></a></span>
+<span id="cb14-15"><a href="#cb14-15"></a>item6 =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">decl =</span> <span class="kw">IntArrDecl</span>(<span class="dt">name =</span> <span class="st">&quot;x&quot;</span>, <span class="dt">kind =</span> <span class="st">&quot;var&quot;</span>, <span class="dt">ndim =</span> <span class="dv">1</span>, <span class="dt">ind =</span> <span class="kw">list</span>(item2<span class="op">$</span><span class="kw">id</span>())))</span></code></pre></div>
 </div>
 <div id="constraints" class="section level2">
 <h2>Constraints</h2>
@@ -512,7 +513,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb15-3"><a href="#cb15-3"></a></span>
 <span id="cb15-4"><a href="#cb15-4"></a></span>
 <span id="cb15-5"><a href="#cb15-5"></a>gen_forall =<span class="st"> </span>Generator<span class="op">$</span><span class="kw">new</span>(<span class="dt">IN =</span> item2<span class="op">$</span><span class="kw">id</span>(), <span class="dt">decls =</span> <span class="kw">list</span>(parIter))</span>
-<span id="cb15-6"><a href="#cb15-6"></a>bop1 =<span class="st"> </span>BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> item6<span class="op">$</span><span class="kw">id</span>(),  <span class="dt">args=</span> <span class="kw">list</span>(gen_forall<span class="op">$</span><span class="kw">getDecl</span>(<span class="dv">1</span>))),</span>
+<span id="cb15-6"><a href="#cb15-6"></a>bop1 =<span class="st"> </span>BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> item6<span class="op">$</span><span class="kw">id</span>(),  <span class="dt">args=</span> <span class="kw">list</span>(gen_forall<span class="op">$</span><span class="kw">getDecl</span>(<span class="dv">1</span>)<span class="op">$</span><span class="kw">id</span>())),</span>
 <span id="cb15-7"><a href="#cb15-7"></a>                                                             <span class="dt">binop =</span> <span class="st">&quot;&gt;=&quot;</span>, <span class="dt">rhs =</span> Int<span class="op">$</span><span class="kw">new</span>(<span class="dv">0</span>))</span>
 <span id="cb15-8"><a href="#cb15-8"></a></span>
 <span id="cb15-9"><a href="#cb15-9"></a>Comp1 =<span class="st"> </span>Comprehension<span class="op">$</span><span class="kw">new</span>(<span class="dt">generators =</span> <span class="kw">list</span>(gen_forall), <span class="dt">body =</span> bop1, <span class="dt">set =</span> <span class="ot">FALSE</span>)</span>
@@ -521,9 +522,9 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb15-12"><a href="#cb15-12"></a></span>
 <span id="cb15-13"><a href="#cb15-13"></a>gen_sum =<span class="st"> </span>Generator<span class="op">$</span><span class="kw">new</span>(<span class="dt">IN =</span> item2<span class="op">$</span><span class="kw">id</span>(), <span class="dt">decls =</span> <span class="kw">list</span>(parIter))</span>
 <span id="cb15-14"><a href="#cb15-14"></a></span>
-<span id="cb15-15"><a href="#cb15-15"></a>bop2 =<span class="st"> </span>BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> item5<span class="op">$</span><span class="kw">id</span>(), <span class="dt">args =</span> <span class="kw">list</span>(gen_sum<span class="op">$</span><span class="kw">getDecl</span>(<span class="dv">1</span>))),                  </span>
+<span id="cb15-15"><a href="#cb15-15"></a>bop2 =<span class="st"> </span>BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> item5<span class="op">$</span><span class="kw">id</span>(), <span class="dt">args =</span> <span class="kw">list</span>(gen_sum<span class="op">$</span><span class="kw">getDecl</span>(<span class="dv">1</span>)<span class="op">$</span><span class="kw">id</span>())),             </span>
 <span id="cb15-16"><a href="#cb15-16"></a>                 <span class="dt">binop =</span> <span class="st">&quot;*&quot;</span>,  <span class="dt">rhs =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> item6<span class="op">$</span><span class="kw">id</span>() , </span>
-<span id="cb15-17"><a href="#cb15-17"></a>                 <span class="dt">args =</span> <span class="kw">list</span>(gen_sum<span class="op">$</span><span class="kw">getDecl</span>(<span class="dv">1</span>))))</span>
+<span id="cb15-17"><a href="#cb15-17"></a>                 <span class="dt">args =</span> <span class="kw">list</span>(gen_sum<span class="op">$</span><span class="kw">getDecl</span>(<span class="dv">1</span>)<span class="op">$</span><span class="kw">id</span>())))</span>
 <span id="cb15-18"><a href="#cb15-18"></a></span>
 <span id="cb15-19"><a href="#cb15-19"></a>Comp2 =<span class="st"> </span>Comprehension<span class="op">$</span><span class="kw">new</span>(<span class="dt">generators =</span> <span class="kw">list</span>(gen_sum), <span class="dt">body =</span> bop2, <span class="dt">set =</span> <span class="ot">FALSE</span>)</span>
 <span id="cb15-20"><a href="#cb15-20"></a>cl2 =<span class="st"> </span>Call<span class="op">$</span><span class="kw">new</span>(<span class="dt">fnName =</span> <span class="st">&quot;sum&quot;</span>, <span class="dt">args =</span> <span class="kw">list</span>(Comp2))</span>
@@ -534,9 +535,9 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h2>Solve Type</h2>
 <p>The constraint programming problem can be of three types, namely: Satisfaction , Minimization and Maximization. Satisfaction problems produce all the solutions that satisfy the constraints whereas minimization and maximization problems produce the solution which minimizes and maximizes the given expression.</p>
 <p>An example is shown below:</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>bop4 =<span class="st"> </span>BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> item4<span class="op">$</span><span class="kw">id</span>(), <span class="dt">args =</span> <span class="kw">list</span>(gen_sum<span class="op">$</span><span class="kw">getDecl</span>(<span class="dv">1</span>))),</span>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>bop4 =<span class="st"> </span>BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> item4<span class="op">$</span><span class="kw">id</span>(), <span class="dt">args =</span> <span class="kw">list</span>(gen_sum<span class="op">$</span><span class="kw">getDecl</span>(<span class="dv">1</span>)<span class="op">$</span><span class="kw">id</span>())),</span>
 <span id="cb16-2"><a href="#cb16-2"></a>                      <span class="dt">binop =</span> <span class="st">&quot;*&quot;</span>, <span class="dt">rhs =</span> ArrayAccess<span class="op">$</span><span class="kw">new</span>(<span class="dt">v =</span> item6<span class="op">$</span><span class="kw">id</span>(), </span>
-<span id="cb16-3"><a href="#cb16-3"></a>                      <span class="dt">args =</span> <span class="kw">list</span>(gen_sum<span class="op">$</span><span class="kw">getDecl</span>(<span class="dv">1</span>))))</span>
+<span id="cb16-3"><a href="#cb16-3"></a>                      <span class="dt">args =</span> <span class="kw">list</span>(gen_sum<span class="op">$</span><span class="kw">getDecl</span>(<span class="dv">1</span>)<span class="op">$</span><span class="kw">id</span>())))</span>
 <span id="cb16-4"><a href="#cb16-4"></a></span>
 <span id="cb16-5"><a href="#cb16-5"></a>Comp3 =<span class="st"> </span>Comprehension<span class="op">$</span><span class="kw">new</span>(<span class="dt">generators =</span> <span class="kw">list</span>(gen_sum), <span class="dt">body =</span> bop4, <span class="dt">set =</span> <span class="ot">FALSE</span>)</span>
 <span id="cb16-6"><a href="#cb16-6"></a></span>
@@ -569,88 +570,13 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ## 
 ## solve  maximize sum([(profit[i] * x[i]) | i in OBJ ]);</code></pre>
 </div>
-<div id="create-items-using-strings" class="section level2">
-<h2>Create Items Using Strings</h2>
-<p>The strings containing MiniZinc syntax of items can be directly supplied to the constructors to initialize the objects. If strings are supplied, no other argument should be supplied to any of the Item classes except for <code>AssignItem</code> where you need to provided the associated variable declaration for the assignment.</p>
-<div id="varaible-item" class="section level3">
-<h3>Varaible Item</h3>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a>declItem =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">mzn_str =</span> <span class="st">&quot;set of int: WORKSHEET = 0..worksheets-1;&quot;</span>)</span>
-<span id="cb19-2"><a href="#cb19-2"></a><span class="kw">sprintf</span>(<span class="st">&quot;Is this a parameter? %s&quot;</span>, declItem<span class="op">$</span><span class="kw">getDecl</span>()<span class="op">$</span><span class="kw">isPar</span>())</span>
-<span id="cb19-3"><a href="#cb19-3"></a><span class="kw">sprintf</span>(<span class="st">&quot;Is this a set? %s&quot;</span>, declItem<span class="op">$</span><span class="kw">getDecl</span>()<span class="op">$</span><span class="kw">ti</span>()<span class="op">$</span><span class="kw">type</span>()<span class="op">$</span><span class="kw">isSet</span>())</span>
-<span id="cb19-4"><a href="#cb19-4"></a><span class="kw">sprintf</span>(<span class="st">&quot;Base type of set: %s&quot;</span>, declItem<span class="op">$</span><span class="kw">getDecl</span>()<span class="op">$</span><span class="kw">ti</span>()<span class="op">$</span><span class="kw">type</span>()<span class="op">$</span><span class="kw">bt</span>())</span>
-<span id="cb19-5"><a href="#cb19-5"></a><span class="kw">sprintf</span>(<span class="st">&quot;Name: %s&quot;</span>, declItem<span class="op">$</span><span class="kw">id</span>()<span class="op">$</span><span class="kw">getId</span>())</span>
-<span id="cb19-6"><a href="#cb19-6"></a><span class="kw">sprintf</span>(<span class="st">&quot;Value: %s&quot;</span>, declItem<span class="op">$</span><span class="kw">getDecl</span>()<span class="op">$</span><span class="kw">getValue</span>()<span class="op">$</span><span class="kw">c_str</span>())</span></code></pre></div>
-<pre><code>## [1] &quot;Is this a parameter? TRUE&quot;
-## [1] &quot;Is this a set? TRUE&quot;
-## [1] &quot;Base type of set: int&quot;
-## [1] &quot;Name: WORKSHEET&quot;
-## [1] &quot;Value: (0 .. (worksheets - 1))&quot;</code></pre>
-</div>
-<div id="constraint-item" class="section level3">
-<h3>Constraint Item</h3>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a>CstrItem =<span class="st"> </span>ConstraintItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">mzn_str =</span> <span class="st">&quot;constraint forall (i in PREC)</span></span>
-<span id="cb21-2"><a href="#cb21-2"></a><span class="st">                  (let { WORKSHEET: w1 = preceeds[i];</span></span>
-<span id="cb21-3"><a href="#cb21-3"></a><span class="st">                             WORKSHEET: w2 = succeeds[i]; } in</span></span>
-<span id="cb21-4"><a href="#cb21-4"></a><span class="st">                   g[w1] * e[w1] &lt;= d[w2] + days * (1 - g[w2]));&quot;</span>)</span>
-<span id="cb21-5"><a href="#cb21-5"></a><span class="kw">sprintf</span>(<span class="st">&quot;Expression involved: %s&quot;</span>, CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">c_str</span>())</span>
-<span id="cb21-6"><a href="#cb21-6"></a><span class="kw">sprintf</span>(<span class="st">&quot;Call function name: %s&quot;</span>, CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">getName</span>())</span>
-<span id="cb21-7"><a href="#cb21-7"></a><span class="kw">sprintf</span>(<span class="st">&quot;Number of Arguments: %s&quot;</span>, CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">nargs</span>())</span>
-<span id="cb21-8"><a href="#cb21-8"></a><span class="kw">sprintf</span>(<span class="st">&quot;Class of Argument: %s&quot;</span>,  <span class="kw">class</span>(CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">getArg</span>(<span class="dv">1</span>))[<span class="dv">1</span>])</span>
-<span id="cb21-9"><a href="#cb21-9"></a><span class="kw">sprintf</span>(<span class="st">&quot;Number of Generators: %s&quot;</span>, CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">nargs</span>())</span>
-<span id="cb21-10"><a href="#cb21-10"></a><span class="kw">sprintf</span>(<span class="st">&quot;Generator: %s&quot;</span>, CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">getArg</span>(<span class="dv">1</span>)<span class="op">$</span><span class="kw">getGen_i</span>(<span class="dv">1</span>)<span class="op">$</span><span class="kw">c_str</span>())</span>
-<span id="cb21-11"><a href="#cb21-11"></a><span class="kw">sprintf</span>(<span class="st">&quot;Comprehension body: %s&quot;</span>, CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">getArg</span>(<span class="dv">1</span>)<span class="op">$</span><span class="kw">getBody</span>()<span class="op">$</span><span class="kw">c_str</span>())</span></code></pre></div>
-<pre><code>## [1] &quot;Expression involved: forall([let {WORKSHEET: w1 = preceeds[i], WORKSHEET: w2 = succeeds[i]} in ((g[w1] * e[w1]) &lt;= (d[w2] + (days * (1 - g[w2])))) | i in PREC ])&quot;
-## [1] &quot;Call function name: forall&quot;
-## [1] &quot;Number of Arguments: 1&quot;
-## [1] &quot;Class of Argument: Comprehension&quot;
-## [1] &quot;Number of Generators: 1&quot;
-## [1] &quot;Generator: i in PREC &quot;
-## [1] &quot;Comprehension body: let {WORKSHEET: w1 = preceeds[i], WORKSHEET: w2 = succeeds[i]} in ((g[w1] * e[w1]) &lt;= (d[w2] + (days * (1 - g[w2]))))&quot;</code></pre>
-</div>
-<div id="solve-item" class="section level3">
-<h3>Solve Item</h3>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a>SlvItem =<span class="st"> </span>SolveItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">mzn_str =</span> <span class="st">&quot;solve </span></span>
-<span id="cb23-2"><a href="#cb23-2"></a><span class="st">    :: int_search(</span></span>
-<span id="cb23-3"><a href="#cb23-3"></a><span class="st">        [ if j = 1 then g[import_first[i]] else -d[import_first[i]] endif  | i in 1..worksheets, j in 1..2], </span></span>
-<span id="cb23-4"><a href="#cb23-4"></a><span class="st">        input_order, indomain_max, complete)</span></span>
-<span id="cb23-5"><a href="#cb23-5"></a><span class="st">    maximize objective;&quot;</span>)</span>
-<span id="cb23-6"><a href="#cb23-6"></a><span class="kw">sprintf</span>(<span class="st">&quot;Objective: %s&quot;</span>, SlvItem<span class="op">$</span><span class="kw">getSt</span>())</span>
-<span id="cb23-7"><a href="#cb23-7"></a><span class="kw">cat</span>(<span class="kw">sprintf</span>(<span class="st">&quot;Annotation: %s&quot;</span>, SlvItem<span class="op">$</span><span class="kw">getAnn</span>()<span class="op">$</span><span class="kw">c_str</span>()))</span></code></pre></div>
-<pre><code>## [1] &quot;Objective: maximize&quot;
-## Annotation:  :: int_search([if ((j = 1)) then (g[import_first[i]]) else (-(d[import_first[i]])) endif | i in (1 .. worksheets) , j in 1..2 ], input_order, indomain_max, complete)</code></pre>
-</div>
-<div id="function-item" class="section level3">
-<h3>Function Item</h3>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a>fnItem =<span class="st"> </span>FunctionItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">mzn_str =</span> <span class="st">&quot;predicate nonoverlap(var int:s1, var int:d1,</span></span>
-<span id="cb25-2"><a href="#cb25-2"></a><span class="st">                     var int:s2, var int:d2)=</span></span>
-<span id="cb25-3"><a href="#cb25-3"></a><span class="st">          s1 + d1 &lt;= s2 </span><span class="ch">\\</span><span class="st">/ s2 + d2 &lt;= s1;&quot;</span>)</span>
-<span id="cb25-4"><a href="#cb25-4"></a><span class="kw">sprintf</span>(<span class="st">&quot;Function name: %s&quot;</span>, fnItem<span class="op">$</span><span class="kw">name</span>())</span>
-<span id="cb25-5"><a href="#cb25-5"></a><span class="kw">sprintf</span>(<span class="st">&quot;No of function declarations: %s&quot;</span>, <span class="kw">length</span>(fnItem<span class="op">$</span><span class="kw">decls</span>()))</span>
-<span id="cb25-6"><a href="#cb25-6"></a><span class="kw">sprintf</span>(<span class="st">&quot;Function expression: %s&quot;</span>, fnItem<span class="op">$</span><span class="kw">body</span>()<span class="op">$</span><span class="kw">c_str</span>())</span></code></pre></div>
-<pre><code>## [1] &quot;Function name: nonoverlap&quot;
-## [1] &quot;No of function declarations: 4&quot;
-## [1] &quot;Function expression: (((s1 + d1) &lt;= s2) \\/ ((s2 + d2) &lt;= s1))&quot;</code></pre>
-</div>
-<div id="include-item" class="section level3">
-<h3>Include Item</h3>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a>iItem =<span class="st"> </span>IncludeItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">mzn_str =</span> <span class="st">&quot;include </span><span class="ch">\&quot;</span><span class="st">cumulative.mzn</span><span class="ch">\&quot;</span><span class="st"> ;&quot;</span>)</span>
-<span id="cb27-2"><a href="#cb27-2"></a><span class="kw">sprintf</span>(<span class="st">&quot;Included mzn name: %s&quot;</span>, iItem<span class="op">$</span><span class="kw">getmznName</span>())</span></code></pre></div>
-<pre><code>## [1] &quot;Included mzn name: cumulative.mzn&quot;</code></pre>
-</div>
-</div>
 <div id="delete-items" class="section level2">
 <h2>Delete Items</h2>
-<p>All the item classes have a <code>delete()</code> function which is used to delete the item. An example to demonstrate the same is shown below:</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a><span class="co"># delete the item 1</span></span>
-<span id="cb29-2"><a href="#cb29-2"></a>item1<span class="op">$</span><span class="kw">delete</span>()</span></code></pre></div>
-<pre><code>## VarDeclItem object deleted!</code></pre>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a><span class="co"># check that item1 has been deleted</span></span>
-<span id="cb31-2"><a href="#cb31-2"></a><span class="kw">ls</span>(<span class="dt">pattern =</span> <span class="st">&quot;item[^a-z]&quot;</span>)</span></code></pre></div>
-<pre><code>## [1] &quot;item2&quot; &quot;item3&quot; &quot;item4&quot; &quot;item5&quot; &quot;item6&quot; &quot;item7&quot; &quot;item8&quot; &quot;item9&quot;</code></pre>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a><span class="co"># item1 reference is deleted but items vector should be updated</span></span>
-<span id="cb33-2"><a href="#cb33-2"></a>items =<span class="st"> </span><span class="kw">c</span>(item2, item3, item4, item5, item6, item7, item8, item9)</span>
-<span id="cb33-3"><a href="#cb33-3"></a>mod =<span class="st"> </span>Model<span class="op">$</span><span class="kw">new</span>(items)</span>
-<span id="cb33-4"><a href="#cb33-4"></a><span class="kw">cat</span>(mod<span class="op">$</span><span class="kw">mzn_string</span>())</span></code></pre></div>
+<p>All the item classes(except <code>SolveItem</code>) have a <code>delete()</code> function which is used to delete the item. An example to demonstrate the same is shown below:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="co"># delete the item 1</span></span>
+<span id="cb19-2"><a href="#cb19-2"></a>item1<span class="op">$</span><span class="kw">delete</span>()</span></code></pre></div>
+<pre><code>## Model updated successfully!</code></pre>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="kw">cat</span>(mod<span class="op">$</span><span class="kw">mzn_string</span>())</span></code></pre></div>
 <pre><code>## set of int: OBJ = (1 .. n);
 ## 
 ## int: capacity;
@@ -667,24 +593,93 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ## 
 ## solve  maximize sum([(profit[i] * x[i]) | i in OBJ ]);</code></pre>
 </div>
+<div id="create-items-using-strings" class="section level2">
+<h2>Create Items Using Strings</h2>
+<p>The strings containing MiniZinc syntax of items can be directly supplied to the constructors to initialize the objects. If strings are supplied, no other argument should be supplied to any of the Item classes except for <code>AssignItem</code> where you need to provided the associated variable declaration for the assignment.</p>
+<div id="varaible-item" class="section level3">
+<h3>Varaible Item</h3>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a>declItem =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">mzn_str =</span> <span class="st">&quot;set of int: WORKSHEET = 0..worksheets-1;&quot;</span>)</span>
+<span id="cb23-2"><a href="#cb23-2"></a><span class="kw">sprintf</span>(<span class="st">&quot;Is this a parameter? %s&quot;</span>, declItem<span class="op">$</span><span class="kw">getDecl</span>()<span class="op">$</span><span class="kw">isPar</span>())</span>
+<span id="cb23-3"><a href="#cb23-3"></a><span class="kw">sprintf</span>(<span class="st">&quot;Is this a set? %s&quot;</span>, declItem<span class="op">$</span><span class="kw">getDecl</span>()<span class="op">$</span><span class="kw">ti</span>()<span class="op">$</span><span class="kw">type</span>()<span class="op">$</span><span class="kw">isSet</span>())</span>
+<span id="cb23-4"><a href="#cb23-4"></a><span class="kw">sprintf</span>(<span class="st">&quot;Base type of set: %s&quot;</span>, declItem<span class="op">$</span><span class="kw">getDecl</span>()<span class="op">$</span><span class="kw">ti</span>()<span class="op">$</span><span class="kw">type</span>()<span class="op">$</span><span class="kw">bt</span>())</span>
+<span id="cb23-5"><a href="#cb23-5"></a><span class="kw">sprintf</span>(<span class="st">&quot;Name: %s&quot;</span>, declItem<span class="op">$</span><span class="kw">id</span>()<span class="op">$</span><span class="kw">getId</span>())</span>
+<span id="cb23-6"><a href="#cb23-6"></a><span class="kw">sprintf</span>(<span class="st">&quot;Value: %s&quot;</span>, declItem<span class="op">$</span><span class="kw">getDecl</span>()<span class="op">$</span><span class="kw">getValue</span>()<span class="op">$</span><span class="kw">c_str</span>())</span></code></pre></div>
+<pre><code>## [1] &quot;Is this a parameter? TRUE&quot;
+## [1] &quot;Is this a set? TRUE&quot;
+## [1] &quot;Base type of set: int&quot;
+## [1] &quot;Name: WORKSHEET&quot;
+## [1] &quot;Value: (0 .. (worksheets - 1))&quot;</code></pre>
+</div>
+<div id="constraint-item" class="section level3">
+<h3>Constraint Item</h3>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a>CstrItem =<span class="st"> </span>ConstraintItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">mzn_str =</span> <span class="st">&quot;constraint forall (i in PREC)</span></span>
+<span id="cb25-2"><a href="#cb25-2"></a><span class="st">                  (let { WORKSHEET: w1 = preceeds[i];</span></span>
+<span id="cb25-3"><a href="#cb25-3"></a><span class="st">                             WORKSHEET: w2 = succeeds[i]; } in</span></span>
+<span id="cb25-4"><a href="#cb25-4"></a><span class="st">                   g[w1] * e[w1] &lt;= d[w2] + days * (1 - g[w2]));&quot;</span>)</span>
+<span id="cb25-5"><a href="#cb25-5"></a><span class="kw">sprintf</span>(<span class="st">&quot;Expression involved: %s&quot;</span>, CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">c_str</span>())</span>
+<span id="cb25-6"><a href="#cb25-6"></a><span class="kw">sprintf</span>(<span class="st">&quot;Call function name: %s&quot;</span>, CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">getName</span>())</span>
+<span id="cb25-7"><a href="#cb25-7"></a><span class="kw">sprintf</span>(<span class="st">&quot;Number of Arguments: %s&quot;</span>, CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">nargs</span>())</span>
+<span id="cb25-8"><a href="#cb25-8"></a><span class="kw">sprintf</span>(<span class="st">&quot;Class of Argument: %s&quot;</span>,  <span class="kw">class</span>(CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">getArg</span>(<span class="dv">1</span>))[<span class="dv">1</span>])</span>
+<span id="cb25-9"><a href="#cb25-9"></a><span class="kw">sprintf</span>(<span class="st">&quot;Number of Generators: %s&quot;</span>, CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">nargs</span>())</span>
+<span id="cb25-10"><a href="#cb25-10"></a><span class="kw">sprintf</span>(<span class="st">&quot;Generator: %s&quot;</span>, CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">getArg</span>(<span class="dv">1</span>)<span class="op">$</span><span class="kw">getGen</span>(<span class="dv">1</span>)<span class="op">$</span><span class="kw">c_str</span>())</span>
+<span id="cb25-11"><a href="#cb25-11"></a><span class="kw">sprintf</span>(<span class="st">&quot;Comprehension body: %s&quot;</span>, CstrItem<span class="op">$</span><span class="kw">getExp</span>()<span class="op">$</span><span class="kw">getArg</span>(<span class="dv">1</span>)<span class="op">$</span><span class="kw">getBody</span>()<span class="op">$</span><span class="kw">c_str</span>())</span></code></pre></div>
+<pre><code>## [1] &quot;Expression involved: forall([let {WORKSHEET: w1 = preceeds[i], WORKSHEET: w2 = succeeds[i]} in ((g[w1] * e[w1]) &lt;= (d[w2] + (days * (1 - g[w2])))) | i in PREC ])&quot;
+## [1] &quot;Call function name: forall&quot;
+## [1] &quot;Number of Arguments: 1&quot;
+## [1] &quot;Class of Argument: Comprehension&quot;
+## [1] &quot;Number of Generators: 1&quot;
+## [1] &quot;Generator: i in PREC &quot;
+## [1] &quot;Comprehension body: let {WORKSHEET: w1 = preceeds[i], WORKSHEET: w2 = succeeds[i]} in ((g[w1] * e[w1]) &lt;= (d[w2] + (days * (1 - g[w2]))))&quot;</code></pre>
+</div>
+<div id="solve-item" class="section level3">
+<h3>Solve Item</h3>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a>SlvItem =<span class="st"> </span>SolveItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">mzn_str =</span> <span class="st">&quot;solve </span></span>
+<span id="cb27-2"><a href="#cb27-2"></a><span class="st">    :: int_search(</span></span>
+<span id="cb27-3"><a href="#cb27-3"></a><span class="st">        [ if j = 1 then g[import_first[i]] else -d[import_first[i]] endif  | i in 1..worksheets, j in 1..2], </span></span>
+<span id="cb27-4"><a href="#cb27-4"></a><span class="st">        input_order, indomain_max, complete)</span></span>
+<span id="cb27-5"><a href="#cb27-5"></a><span class="st">    maximize objective;&quot;</span>)</span>
+<span id="cb27-6"><a href="#cb27-6"></a><span class="kw">sprintf</span>(<span class="st">&quot;Objective: %s&quot;</span>, SlvItem<span class="op">$</span><span class="kw">getSt</span>())</span>
+<span id="cb27-7"><a href="#cb27-7"></a><span class="kw">cat</span>(<span class="kw">sprintf</span>(<span class="st">&quot;Annotation: %s&quot;</span>, SlvItem<span class="op">$</span><span class="kw">getAnn</span>()<span class="op">$</span><span class="kw">c_str</span>()))</span></code></pre></div>
+<pre><code>## [1] &quot;Objective: maximize&quot;
+## Annotation:  :: int_search([if ((j = 1)) then (g[import_first[i]]) else (-(d[import_first[i]])) endif | i in (1 .. worksheets) , j in 1..2 ], input_order, indomain_max, complete)</code></pre>
+</div>
+<div id="function-item" class="section level3">
+<h3>Function Item</h3>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a>fnItem =<span class="st"> </span>FunctionItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">mzn_str =</span> <span class="st">&quot;predicate nonoverlap(var int:s1, var int:d1,</span></span>
+<span id="cb29-2"><a href="#cb29-2"></a><span class="st">                     var int:s2, var int:d2)=</span></span>
+<span id="cb29-3"><a href="#cb29-3"></a><span class="st">          s1 + d1 &lt;= s2 </span><span class="ch">\\</span><span class="st">/ s2 + d2 &lt;= s1;&quot;</span>)</span>
+<span id="cb29-4"><a href="#cb29-4"></a><span class="kw">sprintf</span>(<span class="st">&quot;Function name: %s&quot;</span>, fnItem<span class="op">$</span><span class="kw">name</span>())</span>
+<span id="cb29-5"><a href="#cb29-5"></a><span class="kw">sprintf</span>(<span class="st">&quot;No of function declarations: %s&quot;</span>, <span class="kw">length</span>(fnItem<span class="op">$</span><span class="kw">decls</span>()))</span>
+<span id="cb29-6"><a href="#cb29-6"></a><span class="kw">sprintf</span>(<span class="st">&quot;Function expression: %s&quot;</span>, fnItem<span class="op">$</span><span class="kw">body</span>()<span class="op">$</span><span class="kw">c_str</span>())</span></code></pre></div>
+<pre><code>## [1] &quot;Function name: nonoverlap&quot;
+## [1] &quot;No of function declarations: 4&quot;
+## [1] &quot;Function expression: (((s1 + d1) &lt;= s2) \\/ ((s2 + d2) &lt;= s1))&quot;</code></pre>
+</div>
+<div id="include-item" class="section level3">
+<h3>Include Item</h3>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a>iItem =<span class="st"> </span>IncludeItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">mzn_str =</span> <span class="st">&quot;include </span><span class="ch">\&quot;</span><span class="st">cumulative.mzn</span><span class="ch">\&quot;</span><span class="st"> ;&quot;</span>)</span>
+<span id="cb31-2"><a href="#cb31-2"></a><span class="kw">sprintf</span>(<span class="st">&quot;Included mzn name: %s&quot;</span>, iItem<span class="op">$</span><span class="kw">getmznName</span>())</span></code></pre></div>
+<pre><code>## [1] &quot;Included mzn name: cumulative.mzn&quot;</code></pre>
+</div>
+</div>
 <div id="modify-variable-domain" class="section level2">
 <h2>Modify Variable Domain</h2>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a>vd =<span class="st"> </span><span class="kw">VarDomainDecl</span>(<span class="dt">name =</span> <span class="st">&quot;n&quot;</span>, <span class="dt">dom =</span> Set<span class="op">$</span><span class="kw">new</span>(IntSetVal<span class="op">$</span><span class="kw">new</span>(<span class="dt">imin =</span> <span class="dv">1</span>, <span class="dt">imax =</span> <span class="dv">2</span>)))</span>
-<span id="cb35-2"><a href="#cb35-2"></a><span class="kw">sprintf</span>(<span class="st">&quot;The current declaration is: %s&quot;</span>, vd<span class="op">$</span><span class="kw">c_str</span>())</span>
-<span id="cb35-3"><a href="#cb35-3"></a>vd<span class="op">$</span><span class="kw">setDomain</span>(Set<span class="op">$</span><span class="kw">new</span>(IntSetVal<span class="op">$</span><span class="kw">new</span>(<span class="dt">imin =</span> <span class="dv">3</span>, <span class="dt">imax =</span> <span class="dv">5</span>)))</span>
-<span id="cb35-4"><a href="#cb35-4"></a><span class="kw">sprintf</span>(<span class="st">&quot;The modified declaration is: %s&quot;</span>, vd<span class="op">$</span><span class="kw">c_str</span>())</span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a>vd =<span class="st"> </span><span class="kw">VarDomainDecl</span>(<span class="dt">name =</span> <span class="st">&quot;n&quot;</span>, <span class="dt">dom =</span> Set<span class="op">$</span><span class="kw">new</span>(IntSetVal<span class="op">$</span><span class="kw">new</span>(<span class="dt">imin =</span> <span class="dv">1</span>, <span class="dt">imax =</span> <span class="dv">2</span>)))</span>
+<span id="cb33-2"><a href="#cb33-2"></a><span class="kw">sprintf</span>(<span class="st">&quot;The current declaration is: %s&quot;</span>, vd<span class="op">$</span><span class="kw">c_str</span>())</span>
+<span id="cb33-3"><a href="#cb33-3"></a>vd<span class="op">$</span><span class="kw">setDomain</span>(Set<span class="op">$</span><span class="kw">new</span>(IntSetVal<span class="op">$</span><span class="kw">new</span>(<span class="dt">imin =</span> <span class="dv">3</span>, <span class="dt">imax =</span> <span class="dv">5</span>)))</span>
+<span id="cb33-4"><a href="#cb33-4"></a><span class="kw">sprintf</span>(<span class="st">&quot;The modified declaration is: %s&quot;</span>, vd<span class="op">$</span><span class="kw">c_str</span>())</span></code></pre></div>
 <pre><code>## [1] &quot;The current declaration is: var 1..2: n&quot;
 ## [1] &quot;The modified declaration is: var 3..5: n&quot;</code></pre>
 </div>
 <div id="modify-constraints" class="section level2">
 <h2>Modify Constraints</h2>
 <p>There are various getter and setter functions for the expression classes that can be used to modify existing constraints. For example:</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1"></a>vItem =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">mzn_str =</span> <span class="st">&quot;set of int: a = {1, 2, 3, 4};&quot;</span>) </span>
-<span id="cb37-2"><a href="#cb37-2"></a>cItem =<span class="st"> </span>ConstraintItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">mzn_str =</span> <span class="st">&quot;constraint sum(a) &lt; 10;&quot;</span>)</span>
-<span id="cb37-3"><a href="#cb37-3"></a><span class="kw">sprintf</span>(<span class="st">&quot;The current constraint is: %s&quot;</span>, cItem<span class="op">$</span><span class="kw">c_str</span>())</span>
-<span id="cb37-4"><a href="#cb37-4"></a>cItem<span class="op">$</span><span class="kw">setExp</span>(BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs =</span> Call<span class="op">$</span><span class="kw">new</span>(<span class="dt">fnName =</span> <span class="st">&quot;max&quot;</span>, <span class="dt">args =</span> <span class="kw">list</span>(vItem<span class="op">$</span><span class="kw">getDecl</span>()<span class="op">$</span><span class="kw">id</span>())),</span>
-<span id="cb37-5"><a href="#cb37-5"></a>                       <span class="dt">binop =</span> <span class="st">&quot;&lt;&quot;</span>, <span class="dt">rhs =</span> Int<span class="op">$</span><span class="kw">new</span>(<span class="dv">10</span>)))</span>
-<span id="cb37-6"><a href="#cb37-6"></a><span class="kw">sprintf</span>(<span class="st">&quot;The modified constraint is: %s&quot;</span>, cItem<span class="op">$</span><span class="kw">c_str</span>())</span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a>vItem =<span class="st"> </span>VarDeclItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">mzn_str =</span> <span class="st">&quot;set of int: a = {1, 2, 3, 4};&quot;</span>) </span>
+<span id="cb35-2"><a href="#cb35-2"></a>cItem =<span class="st"> </span>ConstraintItem<span class="op">$</span><span class="kw">new</span>(<span class="dt">mzn_str =</span> <span class="st">&quot;constraint sum(a) &lt; 10;&quot;</span>)</span>
+<span id="cb35-3"><a href="#cb35-3"></a><span class="kw">sprintf</span>(<span class="st">&quot;The current constraint is: %s&quot;</span>, cItem<span class="op">$</span><span class="kw">c_str</span>())</span>
+<span id="cb35-4"><a href="#cb35-4"></a>cItem<span class="op">$</span><span class="kw">setExp</span>(BinOp<span class="op">$</span><span class="kw">new</span>(<span class="dt">lhs =</span> Call<span class="op">$</span><span class="kw">new</span>(<span class="dt">fnName =</span> <span class="st">&quot;max&quot;</span>, <span class="dt">args =</span> <span class="kw">list</span>(vItem<span class="op">$</span><span class="kw">getDecl</span>()<span class="op">$</span><span class="kw">id</span>())),</span>
+<span id="cb35-5"><a href="#cb35-5"></a>                       <span class="dt">binop =</span> <span class="st">&quot;&lt;&quot;</span>, <span class="dt">rhs =</span> Int<span class="op">$</span><span class="kw">new</span>(<span class="dv">10</span>)))</span>
+<span id="cb35-6"><a href="#cb35-6"></a><span class="kw">sprintf</span>(<span class="st">&quot;The modified constraint is: %s&quot;</span>, cItem<span class="op">$</span><span class="kw">c_str</span>())</span></code></pre></div>
 <pre><code>## [1] &quot;The current constraint is: constraint (sum(a) &lt; 10);\n&quot;
 ## [1] &quot;The modified constraint is: constraint (max(a) &lt; 10);\n&quot;</code></pre>
 </div>

@@ -55,7 +55,8 @@ print(solObj$SOLUTIONS)
 
 ## -----------------------------------------------------------------------------
 # create the variable and parameter declarations
-item1 = VarDeclItem$new(decl = IntDecl(name = "n", kind = "par"))
+decl = IntDecl(name = "n", kind = "par")
+item1 = VarDeclItem$new(decl = decl)
 
 par2_val = BinOp$new(lhs = Int$new(1), binop = "..", rhs = item1$id())
 item2 = VarDeclItem$new(decl = IntSetDecl(name = "OBJ", kind = "par", value = par2_val))
@@ -76,7 +77,7 @@ parIter = IntDecl(name = "i", kind = "par")
 
 
 gen_forall = Generator$new(IN = item2$id(), decls = list(parIter))
-bop1 = BinOp$new(lhs = ArrayAccess$new(v = item6$id(),  args= list(gen_forall$getDecl(1))),
+bop1 = BinOp$new(lhs = ArrayAccess$new(v = item6$id(),  args= list(gen_forall$getDecl(1)$id())),
                                                              binop = ">=", rhs = Int$new(0))
 
 Comp1 = Comprehension$new(generators = list(gen_forall), body = bop1, set = FALSE)
@@ -85,9 +86,9 @@ item7 = ConstraintItem$new(e = cl1)
 
 gen_sum = Generator$new(IN = item2$id(), decls = list(parIter))
 
-bop2 = BinOp$new(lhs = ArrayAccess$new(v = item5$id(), args = list(gen_sum$getDecl(1))),                  
+bop2 = BinOp$new(lhs = ArrayAccess$new(v = item5$id(), args = list(gen_sum$getDecl(1)$id())),             
                  binop = "*",  rhs = ArrayAccess$new(v = item6$id() , 
-                 args = list(gen_sum$getDecl(1))))
+                 args = list(gen_sum$getDecl(1)$id())))
 
 Comp2 = Comprehension$new(generators = list(gen_sum), body = bop2, set = FALSE)
 cl2 = Call$new(fnName = "sum", args = list(Comp2))
@@ -96,9 +97,9 @@ item8 = ConstraintItem$new(e = bop3)
 
 ## -----------------------------------------------------------------------------
 
-bop4 = BinOp$new(lhs = ArrayAccess$new(v = item4$id(), args = list(gen_sum$getDecl(1))),
+bop4 = BinOp$new(lhs = ArrayAccess$new(v = item4$id(), args = list(gen_sum$getDecl(1)$id())),
                       binop = "*", rhs = ArrayAccess$new(v = item6$id(), 
-                      args = list(gen_sum$getDecl(1))))
+                      args = list(gen_sum$getDecl(1)$id())))
 
 Comp3 = Comprehension$new(generators = list(gen_sum), body = bop4, set = FALSE)
 
@@ -111,6 +112,11 @@ items  = c(item1, item2, item3, item4, item5, item6, item7, item8, item9)
 mod = Model$new(items = items)
 modString = mod$mzn_string()
 cat(modString)
+
+## -----------------------------------------------------------------------------
+# delete the item 1
+item1$delete()
+cat(mod$mzn_string())
 
 ## ---- results = 'hold'--------------------------------------------------------
 declItem = VarDeclItem$new(mzn_str = "set of int: WORKSHEET = 0..worksheets-1;")
@@ -130,7 +136,7 @@ sprintf("Call function name: %s", CstrItem$getExp()$getName())
 sprintf("Number of Arguments: %s", CstrItem$getExp()$nargs())
 sprintf("Class of Argument: %s",  class(CstrItem$getExp()$getArg(1))[1])
 sprintf("Number of Generators: %s", CstrItem$getExp()$nargs())
-sprintf("Generator: %s", CstrItem$getExp()$getArg(1)$getGen_i(1)$c_str())
+sprintf("Generator: %s", CstrItem$getExp()$getArg(1)$getGen(1)$c_str())
 sprintf("Comprehension body: %s", CstrItem$getExp()$getArg(1)$getBody()$c_str())
 
 ## ---- results = 'hold'--------------------------------------------------------
@@ -153,16 +159,6 @@ sprintf("Function expression: %s", fnItem$body()$c_str())
 ## -----------------------------------------------------------------------------
 iItem = IncludeItem$new(mzn_str = "include \"cumulative.mzn\" ;")
 sprintf("Included mzn name: %s", iItem$getmznName())
-
-## -----------------------------------------------------------------------------
-# delete the item 1
-item1$delete()
-# check that item1 has been deleted
-ls(pattern = "item[^a-z]")
-# item1 reference is deleted but items vector should be updated
-items = c(item2, item3, item4, item5, item6, item7, item8, item9)
-mod = Model$new(items)
-cat(mod$mzn_string())
 
 ## ---- results = 'hold'--------------------------------------------------------
 vd = VarDomainDecl(name = "n", dom = Set$new(IntSetVal$new(imin = 1, imax = 2)))
