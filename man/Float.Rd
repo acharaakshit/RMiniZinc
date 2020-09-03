@@ -6,6 +6,12 @@
 \description{
 create a float in MiniZinc
 }
+\examples{
+newFloat = Float$new(1.5)
+newFloat$c_str()
+newFloat$setFloatVal(newFloat$getFloatVal() + 2.5)
+newFloat$c_str()
+}
 \section{Super class}{
 \code{\link[rminizinc:Expression]{rminizinc::Expression}} -> \code{Float}
 }

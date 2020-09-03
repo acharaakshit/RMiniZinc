@@ -6,6 +6,11 @@
 \description{
 Contains different fields to create a variable declaration
 }
+\examples{
+newVarDecl = VarDecl$new(name = "n", 
+type_inst = TypeInst$new(Type$new(base_type = "int", kind = "par")))
+newVarDecl$c_str()
+}
 \section{Super class}{
 \code{\link[rminizinc:Expression]{rminizinc::Expression}} -> \code{VarDecl}
 }
@@ -17,6 +22,8 @@ Contains different fields to create a variable declaration
 \item{\code{id}}{name of the variable}
 
 \item{\code{.expression}}{the initialization expression}
+
+\item{\code{.delete_flag}}{used to delete items}
 }
 \if{html}{\out{</div>}}
 }
@@ -28,6 +35,8 @@ Contains different fields to create a variable declaration
 \item{\code{id}}{name of the variable}
 
 \item{\code{.expression}}{the initialization expression}
+
+\item{\code{.delete_flag}}{used to delete items}
 }
 \if{html}{\out{</div>}}
 }
@@ -40,9 +49,12 @@ Contains different fields to create a variable declaration
 \item \href{#method-isVar}{\code{VarDecl$isVar()}}
 \item \href{#method-setDomain}{\code{VarDecl$setDomain()}}
 \item \href{#method-getDomain}{\code{VarDecl$getDomain()}}
-\item \href{#method-c_str}{\code{VarDecl$c_str()}}
-\item \href{#method-value}{\code{VarDecl$value()}}
+\item \href{#method-getValue}{\code{VarDecl$getValue()}}
+\item \href{#method-setValue}{\code{VarDecl$setValue()}}
 \item \href{#method-ti}{\code{VarDecl$ti()}}
+\item \href{#method-c_str}{\code{VarDecl$c_str()}}
+\item \href{#method-getDeleteFlag}{\code{VarDecl$getDeleteFlag()}}
+\item \href{#method-delete}{\code{VarDecl$delete()}}
 \item \href{#method-clone}{\code{VarDecl$clone()}}
 }
 }
@@ -131,6 +143,43 @@ get the variable domain
 
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getValue"></a>}}
+\if{latex}{\out{\hypertarget{method-getValue}{}}}
+\subsection{Method \code{getValue()}}{
+get the value
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{VarDecl$getValue()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-setValue"></a>}}
+\if{latex}{\out{\hypertarget{method-setValue}{}}}
+\subsection{Method \code{setValue()}}{
+set the value
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{VarDecl$setValue(val)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{val}}{expression to be set}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-ti"></a>}}
+\if{latex}{\out{\hypertarget{method-ti}{}}}
+\subsection{Method \code{ti()}}{
+get the type-inst of the variable declaration
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{VarDecl$ti()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-c_str"></a>}}
 \if{latex}{\out{\hypertarget{method-c_str}{}}}
 \subsection{Method \code{c_str()}}{
@@ -144,22 +193,22 @@ return string representation of MiniZinc
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-value"></a>}}
-\if{latex}{\out{\hypertarget{method-value}{}}}
-\subsection{Method \code{value()}}{
-get the value
+\if{html}{\out{<a id="method-getDeleteFlag"></a>}}
+\if{latex}{\out{\hypertarget{method-getDeleteFlag}{}}}
+\subsection{Method \code{getDeleteFlag()}}{
+delete flag for internal use
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{VarDecl$value()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{VarDecl$getDeleteFlag()}\if{html}{\out{</div>}}
 }
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-ti"></a>}}
-\if{latex}{\out{\hypertarget{method-ti}{}}}
-\subsection{Method \code{ti()}}{
-get the type-inst of the variable declaration
+\if{html}{\out{<a id="method-delete"></a>}}
+\if{latex}{\out{\hypertarget{method-delete}{}}}
+\subsection{Method \code{delete()}}{
+delete the assignment item
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{VarDecl$ti()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{VarDecl$delete()}\if{html}{\out{</div>}}
 }
 
 }

@@ -15,23 +15,18 @@ FunctionItem = R6Class("FunctionItem",
                          initialize = function(name = NULL, decls = NULL, rt = NULL,
                                                ann = NULL, body = NULL, mzn_str = NULL){
                            if(testCharacter(mzn_str)){
-                             parsedList = suppressWarnings(mzn_parse(modelString = mzn_str))
-                             if(!testTRUE(length(parsedList) == 2 &&
-                                          names(parsedList$FUNCTION_ITEMS) == "FUNCTION1")){
+                             parsedR6 = suppressWarnings(mzn_parse(model_string = mzn_str))
+                             if(!testR6(parsedR6, "Model") && 
+                                parsedR6$nitems() != 1 &&
+                                !testR6(parsedR6$getItem(1), "FunctionItem")){
                                stop("pass only a single function item")
                              }
-                             private$.id = parsedList$FUNCTION_ITEMS$FUNCTION1$FUNCTION_NAME
-                             v_decls = c()
-                             vDecls = parsedList$FUNCTION_ITEMS$FUNCTION1$DETAILS$DECLARATIONS
-                             for (j in seq(1, length(vDecls), 1)) {
-                               ti = initExpression(vDecls[[j]]["TYPE_INST"])
-                               v_decls = c(v_decls, VarDecl$new(name = vDecls[[j]]$NAME, type_inst = ti,
-                                                                value = vDecls[[j]]$VALUE))
-                             }
-                             private$.decls = v_decls
-                             private$.ti = initExpression(parsedList$FUNCTION_ITEMS$FUNCTION1$DETAILS["TYPE_INST"])
-                             private$.e = initExpression(parsedList$FUNCTION_ITEMS$FUNCTION1$DETAILS$EXPRESSION)
-                             private$.ann = initExpression(parsedList$FUNCTION_ITEMS$FUNCTION1$DETAILS["ANNOTATION"])
+                             f_item = parsedR6$getItem(1)
+                             private$.id = f_item$name()
+                             private$.decls = f_item$decls()
+                             private$.ti = f_item$rtype()
+                             private$.e = f_item$body()
+                             private$.ann = f_item$ann()
                            }else{
                              assertCharacter(name)
                              private$.id = name
@@ -64,7 +59,7 @@ FunctionItem = R6Class("FunctionItem",
                          #' @description get if the function is a test, predicate 
                          #' or a function call itself.
                          rtype = function(){
-                           return(private$.rt)
+                           return(private$.ti)
                          },
                          #' @description get the MiniZinc representation
                          c_str = function(){
@@ -150,6 +145,23 @@ FunctionItem = R6Class("FunctionItem",
                            }else{
                              return(sprintf("%s %s %s;", fnPrefix, private$.id, private$.ann$c_str())) 
                            }
+                         },
+                         #' @description delete flag for internal use
+                         getDeleteFlag = function(){
+                           return(private$.delete_flag)
+                         },
+                         #' @description delete the variable item
+                         delete = function(){
+                           private$.delete_flag = TRUE
+                           pf = parent.frame()
+                           items = sapply(ls(pf), function(i) {
+                             class(get(i, envir = pf))[1] == "FunctionItem"
+                           })
+                           this = ls(pf)[items][sapply(mget(ls(pf)[items], envir = pf),
+                                                       function(x) x$getDeleteFlag())]
+                           thisObj = get(this, envir = pf)
+                           rm(list = this, envir = pf)
+                           item_delete(thisObj)
                          }
                        ),
                        private = list(
@@ -167,5 +179,8 @@ FunctionItem = R6Class("FunctionItem",
                          .ann = NULL,
                          #' @field .ti
                          #' return type of the function
-                         .ti = NULL
+                         .ti = NULL,
+                         #' @field .delete_flag
+                         #' used to delete items
+                         .delete_flag = FALSE
                        ))

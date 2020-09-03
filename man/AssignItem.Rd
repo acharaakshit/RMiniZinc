@@ -58,7 +58,7 @@ assignments in MiniZinc
 \subsection{Method \code{new()}}{
 constructor
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{AssignItem$new(decl, value = NULL, mzn_str = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{AssignItem$new(decl, value)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -67,8 +67,6 @@ constructor
 \item{\code{decl}}{declaration associated with assignment.}
 
 \item{\code{value}}{expression to be assigned.}
-
-\item{\code{mzn_str}}{string representation of Assignment Item}
 }
 \if{html}{\out{</div>}}
 }

@@ -7,32 +7,16 @@ AssignItem = R6Class("AssignItem",
                        #' @description constructor
                        #' @param decl declaration associated with assignment.
                        #' @param value expression to be assigned.
-                       #' @param mzn_str string representation of Assignment Item
-                       initialize = function(decl, value = NULL, mzn_str = NULL){
-                         if(testCharacter(mzn_str)){
-                           parsedList = suppressWarnings(mzn_parse(modelString = mzn_str))
-                           if(!testTRUE(length(parsedList) == 2) &&
-                              names(parsedList$ASSIGNMENTS) == "ASSIGNMENT1"){
-                             stop("Supply only a single assignment item in mzn_str")
-                           }
-                           private$.e = initExpression(parsedList$ASSIGNMENTS$ASSIGNMENT1$VALUE)
-                           assertR6(decl, "VarDecl")
-                           assertNull(decl$value())
-                           if(!testTRUE(parsedList$ASSIGNMENTS$ASSIGNMENT1$NAME == decl$id()$getId())){
-                             stop("the names of supplied declaration and assignment don't match")
-                           }
-                           private$.decl = decl
-                         }else{
+                       initialize = function(decl, value){
                            assertR6(decl, "VarDecl")
                            assertNull(decl$value())
                            assertR6(value, "Expression")
                            private$.decl = decl
-                           private$.e = value 
-                         }
+                           private$.e = value
                        },
                        #' @description  get the name of assigned variable
                        id = function(){
-                         return(private$.decl$id())
+                         return(private$.decl$id()$getId())
                        },
                        #' @description get the value
                        getValue = function(){
@@ -67,12 +51,13 @@ AssignItem = R6Class("AssignItem",
                          private$.delete_flag = TRUE
                          pf = parent.frame()
                          items = sapply(ls(pf), function(i) {
-                           class(get(i, envir = pf))[1] == "SolveItem"
+                           class(get(i, envir = pf))[1] == "AssignItem"
                          })
                          this = ls(pf)[items][sapply(mget(ls(pf)[items], envir = pf),
                                                      function(x) x$getDeleteFlag())]
+                         thisObj = get(this, envir = pf)
                          rm(list = this, envir = pf)
-                         message("SolveItem object deleted!")
+                         item_delete(thisObj)
                        }
                      ),
                      private = list(

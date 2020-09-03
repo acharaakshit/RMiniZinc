@@ -6,6 +6,13 @@
 \description{
 create ArrayAccess elements in MiniZinc
 }
+\examples{
+vDecl1 = IntSetDecl(name = "SET", kind = "par")
+vDecl2 = IntArrDecl(name = "profit", kind = "par", ndim = 1, 
+ind = list(vDecl1$id()))
+newArrayAccess = ArrayAccess$new(v = vDecl2$id(),
+ args = list(IntDecl(name = "i", kind = "par")))
+}
 \section{Super class}{
 \code{\link[rminizinc:Expression]{rminizinc::Expression}} -> \code{ArrayAccess}
 }
@@ -31,8 +38,11 @@ create ArrayAccess elements in MiniZinc
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{ArrayAccess$new()}}
-\item \href{#method-v}{\code{ArrayAccess$v()}}
-\item \href{#method-index}{\code{ArrayAccess$index()}}
+\item \href{#method-getV}{\code{ArrayAccess$getV()}}
+\item \href{#method-setV}{\code{ArrayAccess$setV()}}
+\item \href{#method-nargs}{\code{ArrayAccess$nargs()}}
+\item \href{#method-getIndex}{\code{ArrayAccess$getIndex()}}
+\item \href{#method-setIndex}{\code{ArrayAccess$setIndex()}}
 \item \href{#method-c_str}{\code{ArrayAccess$c_str()}}
 \item \href{#method-clone}{\code{ArrayAccess$clone()}}
 }
@@ -55,7 +65,7 @@ constructor
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{v}}{the value of element}
+\item{\code{v}}{the value/identifier of variable decl}
 
 \item{\code{args}}{the array indices}
 }
@@ -63,28 +73,65 @@ constructor
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-v"></a>}}
-\if{latex}{\out{\hypertarget{method-v}{}}}
-\subsection{Method \code{v()}}{
-return the array access value
+\if{html}{\out{<a id="method-getV"></a>}}
+\if{latex}{\out{\hypertarget{method-getV}{}}}
+\subsection{Method \code{getV()}}{
+get the array access value
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ArrayAccess$v()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ArrayAccess$getV()}\if{html}{\out{</div>}}
 }
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-index"></a>}}
-\if{latex}{\out{\hypertarget{method-index}{}}}
-\subsection{Method \code{index()}}{
-return the index id
+\if{html}{\out{<a id="method-setV"></a>}}
+\if{latex}{\out{\hypertarget{method-setV}{}}}
+\subsection{Method \code{setV()}}{
+set the array access value
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ArrayAccess$index(i)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ArrayAccess$setV(val)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{i}}{index of argument}
+\item{\code{val}}{new array access value}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-nargs"></a>}}
+\if{latex}{\out{\hypertarget{method-nargs}{}}}
+\subsection{Method \code{nargs()}}{
+get the number of arguments
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ArrayAccess$nargs()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getIndex"></a>}}
+\if{latex}{\out{\hypertarget{method-getIndex}{}}}
+\subsection{Method \code{getIndex()}}{
+get the index sets
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ArrayAccess$getIndex()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-setIndex"></a>}}
+\if{latex}{\out{\hypertarget{method-setIndex}{}}}
+\subsection{Method \code{setIndex()}}{
+set the index sets
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ArrayAccess$setIndex(val)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{val}}{new index sets}
 }
 \if{html}{\out{</div>}}
 }

@@ -6,8 +6,7 @@ int: m; % number of sets
 
 array[1..m] of var set of NUMBER: s;
 
-constraint forall(i,j,k in 1..m where i < j /\ j < k)
-     ( s[i] intersect s[j] intersect s[k] = {} );
+constraint forall([(((s[i] intersect s[j]) intersect s[k]) = {}) | i,j,k in (1 .. m) where ((i < j) /\ (j < k))]);
 
 
 array[1..m,1..c] of var NUMBER: x;

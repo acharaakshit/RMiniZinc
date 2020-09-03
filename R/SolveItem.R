@@ -16,19 +16,21 @@ SolveItem = R6Class("SolveItem",
                                 assertTRUE(testNull(solve_type) &&
                                              testNull(e) &&
                                              testNull(ann))
-                                parsedList = suppressMessages(suppressWarnings(invisible(mzn_parse(modelString = mzn_str))))
-                                 if(!testTRUE(length(parsedList) == 2 &&
-                                             all(names(parsedList) == c("SOLVE_TYPE", "MODEL_STRING")))){
+                                parsedR6 = suppressWarnings(invisible(mzn_parse(model_string = mzn_str)))
+                                 if(!testR6(parsedR6, "Model") &&
+                                    parsedR6$nitems() != 1 &&
+                                    !testR6(parsedR6$getItem(1), "SolveItem")){
                                   stop("provide only single solve item")  
                                  } 
-                                 private$.st = parsedList$SOLVE_TYPE$OBJECTIVE
+                                 sitem = parsedR6$getItem(1)
+                                 private$.st = sitem$getSt()
                                  if(private$.st == "SATISFY"){
-                                   if(!testNull(parsedList$SOLVE_TYPE$DETAILS$EXPRESSION)){
+                                   if(!testNull(sitem$getExp)){
                                      stop("satisfaction solve item should not have an expression")
                                    }
                                  }
-                                 private$.e = initExpression(parsedList$SOLVE_TYPE$DETAILS$EXPRESSION)
-                                 private$.ann = initExpression(parsedList$SOLVE_TYPE$DETAILS["ANNOTATION"])
+                                 private$.e = sitem$getExp()
+                                 private$.ann = sitem$getAnn()
                                }else{
                                  assert_choice(solve_type, .globals$objectives)
                                  private$.st = solve_type
@@ -85,22 +87,6 @@ SolveItem = R6Class("SolveItem",
                                }else{
                                  return(sprintf("solve %s %s %s;\n", annStr, private$.st, private$.e$c_str()))
                                }
-                             },
-                             #' @description delete flag for internal use
-                             getDeleteFlag = function(){
-                               return(private$.delete_flag)
-                             },
-                             #' @description delete the solve item
-                             delete = function(){
-                               private$.delete_flag = TRUE
-                               pf = parent.frame()
-                               items = sapply(ls(pf), function(i) {
-                                 class(get(i, envir = pf))[1] == "SolveItem"
-                               })
-                               this = ls(pf)[items][sapply(mget(ls(pf)[items], envir = pf),
-                                                            function(x) x$getDeleteFlag())]
-                               rm(list = this, envir = pf)
-                               message("SolveItem object deleted!")
                              }
                              ),
                           private = list(
@@ -112,9 +98,6 @@ SolveItem = R6Class("SolveItem",
                             .st = NULL,
                             #' @field .ann
                             #' annotation of the solve type
-                            .ann = NULL,
-                            #' @field .delete_flag
-                            #' used to delete items
-                            .delete_flag = FALSE
+                            .ann = NULL
                           )
                     )

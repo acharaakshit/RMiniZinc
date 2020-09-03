@@ -25,6 +25,7 @@ create Annotations in MiniZinc
 \itemize{
 \item \href{#method-new}{\code{Annotation$new()}}
 \item \href{#method-getExp}{\code{Annotation$getExp()}}
+\item \href{#method-setExp}{\code{Annotation$setExp()}}
 \item \href{#method-c_str}{\code{Annotation$c_str()}}
 \item \href{#method-clone}{\code{Annotation$clone()}}
 }
@@ -55,6 +56,23 @@ get the list of expressions
 \if{html}{\out{<div class="r">}}\preformatted{Annotation$getExp()}\if{html}{\out{</div>}}
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-setExp"></a>}}
+\if{latex}{\out{\hypertarget{method-setExp}{}}}
+\subsection{Method \code{setExp()}}{
+set the list of expressions
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Annotation$setExp(expVec)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{expVec}}{list of expressions to be set}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-c_str"></a>}}

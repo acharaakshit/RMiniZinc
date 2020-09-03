@@ -6,6 +6,14 @@
 \description{
 create a binary operation expression
 }
+\examples{
+newBinOp = BinOp$new(lhs = Int$new(2), binop = "+", rhs = Int$new(5))
+newBinOp$c_str()
+newBinOp$setLhs(Int$new(5))
+newBinOp$setOp("-")
+newBinOp$setRhs(Int$new(2))
+newBinOp$c_str()
+}
 \section{Super class}{
 \code{\link[rminizinc:Expression]{rminizinc::Expression}} -> \code{BinOp}
 }
@@ -17,6 +25,8 @@ create a binary operation expression
 \item{\code{.rhs_exp}}{the right hand side expression}
 
 \item{\code{.op}}{the operator}
+
+\item{\code{.delete_flag}}{used to delete items}
 }
 \if{html}{\out{</div>}}
 }
@@ -28,6 +38,8 @@ create a binary operation expression
 \item{\code{.rhs_exp}}{the right hand side expression}
 
 \item{\code{.op}}{the operator}
+
+\item{\code{.delete_flag}}{used to delete items}
 }
 \if{html}{\out{</div>}}
 }
@@ -37,10 +49,13 @@ create a binary operation expression
 \item \href{#method-new}{\code{BinOp$new()}}
 \item \href{#method-getLhs}{\code{BinOp$getLhs()}}
 \item \href{#method-getRhs}{\code{BinOp$getRhs()}}
-\item \href{#method-op}{\code{BinOp$op()}}
+\item \href{#method-getOp}{\code{BinOp$getOp()}}
+\item \href{#method-setOp}{\code{BinOp$setOp()}}
 \item \href{#method-setLhs}{\code{BinOp$setLhs()}}
 \item \href{#method-setRhs}{\code{BinOp$setRhs()}}
 \item \href{#method-c_str}{\code{BinOp$c_str()}}
+\item \href{#method-getDeleteFlag}{\code{BinOp$getDeleteFlag()}}
+\item \href{#method-delete}{\code{BinOp$delete()}}
 \item \href{#method-clone}{\code{BinOp$clone()}}
 }
 }
@@ -92,14 +107,31 @@ get the rhs expression
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-op"></a>}}
-\if{latex}{\out{\hypertarget{method-op}{}}}
-\subsection{Method \code{op()}}{
-return the operator
+\if{html}{\out{<a id="method-getOp"></a>}}
+\if{latex}{\out{\hypertarget{method-getOp}{}}}
+\subsection{Method \code{getOp()}}{
+get the operator
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{BinOp$op()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{BinOp$getOp()}\if{html}{\out{</div>}}
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-setOp"></a>}}
+\if{latex}{\out{\hypertarget{method-setOp}{}}}
+\subsection{Method \code{setOp()}}{
+set the operator
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{BinOp$setOp(binop)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{op}}{binary operator to be set}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-setLhs"></a>}}
@@ -124,7 +156,7 @@ set the lhs expression
 \subsection{Method \code{setRhs()}}{
 set the rhs expression
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{BinOp$setRhs()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{BinOp$setRhs(e)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -142,6 +174,26 @@ set the rhs expression
 return the MiniZinc representation
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{BinOp$c_str()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getDeleteFlag"></a>}}
+\if{latex}{\out{\hypertarget{method-getDeleteFlag}{}}}
+\subsection{Method \code{getDeleteFlag()}}{
+delete flag for internal use
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{BinOp$getDeleteFlag()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-delete"></a>}}
+\if{latex}{\out{\hypertarget{method-delete}{}}}
+\subsection{Method \code{delete()}}{
+delete the assignment item
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{BinOp$delete()}\if{html}{\out{</div>}}
 }
 
 }

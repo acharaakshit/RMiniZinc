@@ -6,6 +6,10 @@
 \description{
 create a generator in MiniZinc
 }
+\examples{
+newGen = Generator$new(IN = IntSetDecl(name = "SET", kind = "par"), 
+decls = list(IntDecl(name = "i", kind = "par")))
+}
 \section{Super class}{
 \code{\link[rminizinc:Expression]{rminizinc::Expression}} -> \code{Generator}
 }
@@ -17,6 +21,8 @@ create a generator in MiniZinc
 \item{\code{.in}}{in expression}
 
 \item{\code{where}}{where expression}
+
+\item{\code{.delete_flag}}{used to delete items}
 }
 \if{html}{\out{</div>}}
 }
@@ -28,6 +34,8 @@ create a generator in MiniZinc
 \item{\code{.in}}{in expression}
 
 \item{\code{where}}{where expression}
+
+\item{\code{.delete_flag}}{used to delete items}
 }
 \if{html}{\out{</div>}}
 }
@@ -35,10 +43,15 @@ create a generator in MiniZinc
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{Generator$new()}}
-\item \href{#method-In}{\code{Generator$In()}}
-\item \href{#method-where}{\code{Generator$where()}}
-\item \href{#method-decl}{\code{Generator$decl()}}
+\item \href{#method-getIn}{\code{Generator$getIn()}}
+\item \href{#method-setIn}{\code{Generator$setIn()}}
+\item \href{#method-getWhere}{\code{Generator$getWhere()}}
+\item \href{#method-setWhere}{\code{Generator$setWhere()}}
+\item \href{#method-getDecl}{\code{Generator$getDecl()}}
+\item \href{#method-setDecl}{\code{Generator$setDecl()}}
 \item \href{#method-c_str}{\code{Generator$c_str()}}
+\item \href{#method-getDeleteFlag}{\code{Generator$getDeleteFlag()}}
+\item \href{#method-delete}{\code{Generator$delete()}}
 \item \href{#method-clone}{\code{Generator$clone()}}
 }
 }
@@ -70,32 +83,66 @@ constructor
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-In"></a>}}
-\if{latex}{\out{\hypertarget{method-In}{}}}
-\subsection{Method \code{In()}}{
+\if{html}{\out{<a id="method-getIn"></a>}}
+\if{latex}{\out{\hypertarget{method-getIn}{}}}
+\subsection{Method \code{getIn()}}{
 get the in expression
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Generator$In()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Generator$getIn()}\if{html}{\out{</div>}}
 }
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-where"></a>}}
-\if{latex}{\out{\hypertarget{method-where}{}}}
-\subsection{Method \code{where()}}{
+\if{html}{\out{<a id="method-setIn"></a>}}
+\if{latex}{\out{\hypertarget{method-setIn}{}}}
+\subsection{Method \code{setIn()}}{
+set the in expression
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Generator$setIn(expIn)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{expIn}}{expression to be set}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getWhere"></a>}}
+\if{latex}{\out{\hypertarget{method-getWhere}{}}}
+\subsection{Method \code{getWhere()}}{
 get the where expression
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Generator$where()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Generator$getWhere()}\if{html}{\out{</div>}}
 }
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-decl"></a>}}
-\if{latex}{\out{\hypertarget{method-decl}{}}}
-\subsection{Method \code{decl()}}{
+\if{html}{\out{<a id="method-setWhere"></a>}}
+\if{latex}{\out{\hypertarget{method-setWhere}{}}}
+\subsection{Method \code{setWhere()}}{
+get the where expression
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Generator$setWhere(expWhere)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{expWhere}}{where expression (or NULL)}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getDecl"></a>}}
+\if{latex}{\out{\hypertarget{method-getDecl}{}}}
+\subsection{Method \code{getDecl()}}{
 get the ith declaration
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Generator$decl(i)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Generator$getDecl(i)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -107,12 +154,51 @@ get the ith declaration
 }
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-setDecl"></a>}}
+\if{latex}{\out{\hypertarget{method-setDecl}{}}}
+\subsection{Method \code{setDecl()}}{
+get the ith declaration
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Generator$setDecl(i, decl)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{i}}{index}
+
+\item{\code{decl}}{declaration to be set}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-c_str"></a>}}
 \if{latex}{\out{\hypertarget{method-c_str}{}}}
 \subsection{Method \code{c_str()}}{
 get the MiniZinc representation
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Generator$c_str()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getDeleteFlag"></a>}}
+\if{latex}{\out{\hypertarget{method-getDeleteFlag}{}}}
+\subsection{Method \code{getDeleteFlag()}}{
+delete flag for internal use
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Generator$getDeleteFlag()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-delete"></a>}}
+\if{latex}{\out{\hypertarget{method-delete}{}}}
+\subsection{Method \code{delete()}}{
+delete the assignment item
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Generator$delete()}\if{html}{\out{</div>}}
 }
 
 }
