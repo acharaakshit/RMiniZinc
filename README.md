@@ -46,7 +46,7 @@ This package is currently available only for Linux users, the support for OSX an
   * Find the model parameters which have not been assigned a value yet.
   * Set the values of unassigned parameters. (Scope needs to be extended)
   * Solve a model and get parsed solutions as a named list in R.
-  * Create your own MiniZinc in R using the [R6](https://adv-r.hadley.nz/r6.html) classes from MiniZinc API mirror (Note that the API mirror only includes the relevant functionalities to serialize various objects to MiniZinc along with some checks).
+  * Create your own MiniZinc model in R using the [R6](https://adv-r.hadley.nz/r6.html) classes from MiniZinc API mirror (Note that the API mirror only includes the relevant functionalities to serialize various objects to MiniZinc along with some checks).
   * Use the setter and getter functions of R6 classes to manipulate a model.
   * Use the named list returned after parsing to initialize all the relevant objects in R, manipulate the model and serialize back to MiniZinc.
 
