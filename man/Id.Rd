@@ -13,6 +13,8 @@ create a new Id in MiniZinc
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
 \item{\code{.id}}{the string identifier}
+
+\item{\code{.delete_flag}}{used to delete items}
 }
 \if{html}{\out{</div>}}
 }
@@ -20,6 +22,8 @@ create a new Id in MiniZinc
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
 \item{\code{.id}}{the string identifier}
+
+\item{\code{.delete_flag}}{used to delete items}
 }
 \if{html}{\out{</div>}}
 }
@@ -27,9 +31,11 @@ create a new Id in MiniZinc
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{Id$new()}}
-\item \href{#method-getId}{\code{Id$getId()}}
-\item \href{#method-setId}{\code{Id$setId()}}
+\item \href{#method-getName}{\code{Id$getName()}}
+\item \href{#method-setName}{\code{Id$setName()}}
 \item \href{#method-c_str}{\code{Id$c_str()}}
+\item \href{#method-getDeleteFlag}{\code{Id$getDeleteFlag()}}
+\item \href{#method-delete}{\code{Id$delete()}}
 \item \href{#method-clone}{\code{Id$clone()}}
 }
 }
@@ -57,28 +63,28 @@ constructor
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-getId"></a>}}
-\if{latex}{\out{\hypertarget{method-getId}{}}}
-\subsection{Method \code{getId()}}{
+\if{html}{\out{<a id="method-getName"></a>}}
+\if{latex}{\out{\hypertarget{method-getName}{}}}
+\subsection{Method \code{getName()}}{
 get the string identifier
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Id$getId()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Id$getName()}\if{html}{\out{</div>}}
 }
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-setId"></a>}}
-\if{latex}{\out{\hypertarget{method-setId}{}}}
-\subsection{Method \code{setId()}}{
+\if{html}{\out{<a id="method-setName"></a>}}
+\if{latex}{\out{\hypertarget{method-setName}{}}}
+\subsection{Method \code{setName()}}{
 set the string identifier
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Id$setId(val)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Id$setName(name)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{val}}{string value to set}
+\item{\code{name}}{string name to set}
 }
 \if{html}{\out{</div>}}
 }
@@ -90,6 +96,26 @@ set the string identifier
 return the MiniZinc representation
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Id$c_str()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getDeleteFlag"></a>}}
+\if{latex}{\out{\hypertarget{method-getDeleteFlag}{}}}
+\subsection{Method \code{getDeleteFlag()}}{
+delete flag for internal use
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Id$getDeleteFlag()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-delete"></a>}}
+\if{latex}{\out{\hypertarget{method-delete}{}}}
+\subsection{Method \code{delete()}}{
+delete the assignment item
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Id$delete()}\if{html}{\out{</div>}}
 }
 
 }

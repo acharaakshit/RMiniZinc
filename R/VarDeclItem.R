@@ -34,8 +34,8 @@ VarDeclItem = R6Class("VarDeclItem",
                           private$.decl = e
                         },
                         #' @description get the identifier object for the variable 
-                        id =  function(){
-                          return(private$.decl$id())
+                        getId =  function(){
+                          return(private$.decl$getId())
                         },
                         #' @description set the variable declaration 
                         #' @description convert the declaration to String
@@ -49,15 +49,7 @@ VarDeclItem = R6Class("VarDeclItem",
                         #' @description delete the variable item
                         delete = function(){
                           private$.delete_flag = TRUE
-                          pf = parent.frame()
-                          items = sapply(ls(pf), function(i) {
-                            class(get(i, envir = pf))[1] == "VarDeclItem"
-                          })
-                          this = ls(pf)[items][sapply(mget(ls(pf)[items], envir = pf),
-                                                      function(x) x$getDeleteFlag())]
-                          thisObj = get(this, envir = pf)
-                          rm(list = this, envir = pf)
-                          item_delete(thisObj)
+                          helperDeleteItem("VarDeclItem")
                         }
                       ),
                       private = list(

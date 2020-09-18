@@ -1,5 +1,4 @@
 # package level environment
-#' @importFrom  rlang env
 .globals = env()
 .globals$Type$kinds =  c("var", "par") 
 .globals$Type$baseTypes = c("bool", "int", "float", "string", "unknown", "ann") 

@@ -8,7 +8,7 @@ get_missing_pars = function(model){
   for(i in seq(1, model$nitems(), 1)){
    if(testR6(model$getItem(i), "VarDeclItem")){
      if(model$getItem(i)$getDecl()$isPar() && is.null(model$getItem(i)$getDecl()$getValue())){
-       missing_pars = c(missing_pars, model$getItem(i)$getDecl()$id()$getId())
+       missing_pars = c(missing_pars, model$getItem(i)$getDecl()$getId()$getName())
      }
    }
   }

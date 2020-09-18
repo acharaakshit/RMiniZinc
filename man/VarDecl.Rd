@@ -44,7 +44,8 @@ newVarDecl$c_str()
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{VarDecl$new()}}
-\item \href{#method-id}{\code{VarDecl$id()}}
+\item \href{#method-getId}{\code{VarDecl$getId()}}
+\item \href{#method-setId}{\code{VarDecl$setId()}}
 \item \href{#method-isPar}{\code{VarDecl$isPar()}}
 \item \href{#method-isVar}{\code{VarDecl$isVar()}}
 \item \href{#method-setDomain}{\code{VarDecl$setDomain()}}
@@ -86,14 +87,31 @@ constructor
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-id"></a>}}
-\if{latex}{\out{\hypertarget{method-id}{}}}
-\subsection{Method \code{id()}}{
+\if{html}{\out{<a id="method-getId"></a>}}
+\if{latex}{\out{\hypertarget{method-getId}{}}}
+\subsection{Method \code{getId()}}{
 get the identifier object
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{VarDecl$id()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{VarDecl$getId()}\if{html}{\out{</div>}}
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-setId"></a>}}
+\if{latex}{\out{\hypertarget{method-setId}{}}}
+\subsection{Method \code{setId()}}{
+set the identifier object name
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{VarDecl$setId(name)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{name}}{name to be set}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-isPar"></a>}}

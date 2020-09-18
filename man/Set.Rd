@@ -28,6 +28,8 @@ newFloatSet$setFsv(FloatSetVal$new(1.2,4.1))
 \item{\code{.fsv}}{the float range set}
 
 \item{\code{.et}}{empty set}
+
+\item{\code{.delete_flag}}{used to delete items}
 }
 \if{html}{\out{</div>}}
 }
@@ -41,6 +43,8 @@ newFloatSet$setFsv(FloatSetVal$new(1.2,4.1))
 \item{\code{.fsv}}{the float range set}
 
 \item{\code{.et}}{empty set}
+
+\item{\code{.delete_flag}}{used to delete items}
 }
 \if{html}{\out{</div>}}
 }
@@ -57,6 +61,8 @@ newFloatSet$setFsv(FloatSetVal$new(1.2,4.1))
 \item \href{#method-getFsv}{\code{Set$getFsv()}}
 \item \href{#method-setFsv}{\code{Set$setFsv()}}
 \item \href{#method-c_str}{\code{Set$c_str()}}
+\item \href{#method-getDeleteFlag}{\code{Set$getDeleteFlag()}}
+\item \href{#method-delete}{\code{Set$delete()}}
 \item \href{#method-clone}{\code{Set$clone()}}
 }
 }
@@ -193,6 +199,26 @@ set the float set range
 get the MiniZinc representation
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Set$c_str()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getDeleteFlag"></a>}}
+\if{latex}{\out{\hypertarget{method-getDeleteFlag}{}}}
+\subsection{Method \code{getDeleteFlag()}}{
+delete flag for internal use
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Set$getDeleteFlag()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-delete"></a>}}
+\if{latex}{\out{\hypertarget{method-delete}{}}}
+\subsection{Method \code{delete()}}{
+delete the assignment item
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Set$delete()}\if{html}{\out{</div>}}
 }
 
 }

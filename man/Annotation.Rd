@@ -10,6 +10,8 @@ create Annotations in MiniZinc
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
 \item{\code{.expVec}}{list of expressions}
+
+\item{\code{.delete_flag}}{used to delete items}
 }
 \if{html}{\out{</div>}}
 }
@@ -17,6 +19,8 @@ create Annotations in MiniZinc
 \if{html}{\out{<div class="r6-active-bindings">}}
 \describe{
 \item{\code{.expVec}}{list of expressions}
+
+\item{\code{.delete_flag}}{used to delete items}
 }
 \if{html}{\out{</div>}}
 }
@@ -24,9 +28,11 @@ create Annotations in MiniZinc
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{Annotation$new()}}
-\item \href{#method-getExp}{\code{Annotation$getExp()}}
-\item \href{#method-setExp}{\code{Annotation$setExp()}}
+\item \href{#method-getExps}{\code{Annotation$getExps()}}
+\item \href{#method-setExps}{\code{Annotation$setExps()}}
 \item \href{#method-c_str}{\code{Annotation$c_str()}}
+\item \href{#method-getDeleteFlag}{\code{Annotation$getDeleteFlag()}}
+\item \href{#method-delete}{\code{Annotation$delete()}}
 \item \href{#method-clone}{\code{Annotation$clone()}}
 }
 }
@@ -48,22 +54,22 @@ constructor
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-getExp"></a>}}
-\if{latex}{\out{\hypertarget{method-getExp}{}}}
-\subsection{Method \code{getExp()}}{
+\if{html}{\out{<a id="method-getExps"></a>}}
+\if{latex}{\out{\hypertarget{method-getExps}{}}}
+\subsection{Method \code{getExps()}}{
 get the list of expressions
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Annotation$getExp()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Annotation$getExps()}\if{html}{\out{</div>}}
 }
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-setExp"></a>}}
-\if{latex}{\out{\hypertarget{method-setExp}{}}}
-\subsection{Method \code{setExp()}}{
+\if{html}{\out{<a id="method-setExps"></a>}}
+\if{latex}{\out{\hypertarget{method-setExps}{}}}
+\subsection{Method \code{setExps()}}{
 set the list of expressions
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Annotation$setExp(expVec)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Annotation$setExps(expVec)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -81,6 +87,26 @@ set the list of expressions
 get the MiniZinc expression
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Annotation$c_str()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getDeleteFlag"></a>}}
+\if{latex}{\out{\hypertarget{method-getDeleteFlag}{}}}
+\subsection{Method \code{getDeleteFlag()}}{
+delete flag for internal use
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Annotation$getDeleteFlag()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-delete"></a>}}
+\if{latex}{\out{\hypertarget{method-delete}{}}}
+\subsection{Method \code{delete()}}{
+delete the assignment item
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Annotation$delete()}\if{html}{\out{</div>}}
 }
 
 }
