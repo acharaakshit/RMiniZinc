@@ -305,7 +305,8 @@ Environment mzn_parse(std::string model_string = "",
   retVal.push_back(mString);
   retValNames.push_back("MODEL_STRING");
   retVal.names() = retValNames;
-  Environment rmzn_env("package:rminizinc");
+  Function asNamespace("asNamespace");
+  Environment rmzn_env = asNamespace("rminizinc");
   Function retModel = rmzn_env["getRModel"];
   Environment ret_env = retModel(retVal);
   return ret_env;
