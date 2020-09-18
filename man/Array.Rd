@@ -19,6 +19,8 @@ newArray$c_str()
 \item{\code{.exprVec}}{vector of value expressions}
 
 \item{\code{.dims}}{vector of dimension expressions}
+
+\item{\code{.delete_flag}}{used to delete items}
 }
 \if{html}{\out{</div>}}
 }
@@ -28,6 +30,8 @@ newArray$c_str()
 \item{\code{.exprVec}}{vector of value expressions}
 
 \item{\code{.dims}}{vector of dimension expressions}
+
+\item{\code{.delete_flag}}{used to delete items}
 }
 \if{html}{\out{</div>}}
 }
@@ -43,6 +47,8 @@ newArray$c_str()
 \item \href{#method-getVal}{\code{Array$getVal()}}
 \item \href{#method-setVal}{\code{Array$setVal()}}
 \item \href{#method-c_str}{\code{Array$c_str()}}
+\item \href{#method-getDeleteFlag}{\code{Array$getDeleteFlag()}}
+\item \href{#method-delete}{\code{Array$delete()}}
 \item \href{#method-clone}{\code{Array$clone()}}
 }
 }
@@ -182,6 +188,26 @@ set the ith element from vector
 return the MiniZinc representation
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Array$c_str()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getDeleteFlag"></a>}}
+\if{latex}{\out{\hypertarget{method-getDeleteFlag}{}}}
+\subsection{Method \code{getDeleteFlag()}}{
+delete flag for internal use
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Array$getDeleteFlag()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-delete"></a>}}
+\if{latex}{\out{\hypertarget{method-delete}{}}}
+\subsection{Method \code{delete()}}{
+delete the assignment item
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Array$delete()}\if{html}{\out{</div>}}
 }
 
 }

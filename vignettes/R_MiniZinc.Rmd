@@ -137,24 +137,24 @@ Easy to use declaration functions have been created for the users to declare var
 decl = IntDecl(name = "n", kind = "par")
 item1 = VarDeclItem$new(decl = decl)
 
-par2_val = BinOp$new(lhs = Int$new(1), binop = "..", rhs = item1$id())
+par2_val = BinOp$new(lhs = Int$new(1), binop = "..", rhs = item1$getId())
 item2 = VarDeclItem$new(decl = IntSetDecl(name = "OBJ", kind = "par", value = par2_val))
 
 item3 = VarDeclItem$new(decl = IntDecl(name = "capacity", kind = "par"))
 
 item4 = VarDeclItem$new(decl = IntArrDecl(name = "profit", kind = "par", ndim = 1, 
-                                          ind = list(item2$id())))
+                                          ind = list(item2$getId())))
 
-item5 = VarDeclItem$new(decl = IntArrDecl(name = "size", kind = "par", ndim = 1, ind =                                                            list(item2$id())))
+item5 = VarDeclItem$new(decl = IntArrDecl(name = "size", kind = "par", ndim = 1, ind =                                                            list(item2$getId())))
 
-item6 = VarDeclItem$new(decl = IntArrDecl(name = "x", kind = "var", ndim = 1, ind = list(item2$id())))
+item6 = VarDeclItem$new(decl = IntArrDecl(name = "x", kind = "var", ndim = 1, ind = list(item2$getId())))
 ```
 
 ## Constraints
 
 Constraints are defined on the decision variables to restrict the range of values that they can take. They can also be thought of as the rules of a problem.
 
-Constraints can be created using different R6 sub classes of the super class Expression. In this example Generator, Binop, Comprehension and Call classes have been used. These classes take in the elements required to create an expression that will be used as a constraint. More information can be found using `?<class Name>`
+Constraints can be created using different R6 sub classes of the super class Expression. In this example Generator, BinOp, Comprehension and Call classes have been used. These classes take in the elements required to create an expression that will be used as a constraint. More information can be found using `?<class Name>`
 
 Create constraints:
 
@@ -164,23 +164,23 @@ Create constraints:
 parIter = IntDecl(name = "i", kind = "par")
 
 
-gen_forall = Generator$new(IN = item2$id(), decls = list(parIter))
-bop1 = BinOp$new(lhs = ArrayAccess$new(v = item6$id(),  args= list(gen_forall$getDecl(1)$id())),
+gen_forall = Generator$new(IN = item2$getId(), decls = list(parIter))
+bop1 = BinOp$new(lhs = ArrayAccess$new(v = item6$getId(),  args= list(gen_forall$getDecl(1)$getId())),
                                                              binop = ">=", rhs = Int$new(0))
 
 Comp1 = Comprehension$new(generators = list(gen_forall), body = bop1, set = FALSE)
 cl1 = Call$new(fnName = "forall", args = list(Comp1))
 item7 = ConstraintItem$new(e = cl1)
 
-gen_sum = Generator$new(IN = item2$id(), decls = list(parIter))
+gen_sum = Generator$new(IN = item2$getId(), decls = list(parIter))
 
-bop2 = BinOp$new(lhs = ArrayAccess$new(v = item5$id(), args = list(gen_sum$getDecl(1)$id())),             
-                 binop = "*",  rhs = ArrayAccess$new(v = item6$id() , 
-                 args = list(gen_sum$getDecl(1)$id())))
+bop2 = BinOp$new(lhs = ArrayAccess$new(v = item5$getId(), args = list(gen_sum$getDecl(1)$getId())),             
+                 binop = "*",  rhs = ArrayAccess$new(v = item6$getId() , 
+                 args = list(gen_sum$getDecl(1)$getId())))
 
 Comp2 = Comprehension$new(generators = list(gen_sum), body = bop2, set = FALSE)
 cl2 = Call$new(fnName = "sum", args = list(Comp2))
-bop3 = BinOp$new(lhs = cl2, binop = "<=", rhs = item3$id())
+bop3 = BinOp$new(lhs = cl2, binop = "<=", rhs = item3$getId())
 item8 = ConstraintItem$new(e = bop3)
 ```
 
@@ -194,9 +194,9 @@ An example is shown below:
 
 ```{r}
 
-bop4 = BinOp$new(lhs = ArrayAccess$new(v = item4$id(), args = list(gen_sum$getDecl(1)$id())),
-                      binop = "*", rhs = ArrayAccess$new(v = item6$id(), 
-                      args = list(gen_sum$getDecl(1)$id())))
+bop4 = BinOp$new(lhs = ArrayAccess$new(v = item4$getId(), args = list(gen_sum$getDecl(1)$getId())),
+                      binop = "*", rhs = ArrayAccess$new(v = item6$getId(), 
+                      args = list(gen_sum$getDecl(1)$getId())))
 
 Comp3 = Comprehension$new(generators = list(gen_sum), body = bop4, set = FALSE)
 
@@ -218,11 +218,11 @@ cat(modString)
 
 ## Delete Items
 
-All the item classes(except `SolveItem`) have a `delete()` function which is used to delete the item. An example to demonstrate the same is shown below:
+All the `Item` and `Expression` classes have a `delete()` function which is used to delete the objects from everywhere in the model. Note that the objects will be deleted from all the models present in the environment from where the `delete()` function is called. An example to demonstrate the same is shown below:
 
 ```{r}
-# delete the item 1
-item1$delete()
+# delete the identifier of item 1 i.e n 
+item1$getId()$delete()
 cat(mod$mzn_string())
 ```
 
@@ -237,7 +237,7 @@ declItem = VarDeclItem$new(mzn_str = "set of int: WORKSHEET = 0..worksheets-1;")
 sprintf("Is this a parameter? %s", declItem$getDecl()$isPar())
 sprintf("Is this a set? %s", declItem$getDecl()$ti()$type()$isSet())
 sprintf("Base type of set: %s", declItem$getDecl()$ti()$type()$bt())
-sprintf("Name: %s", declItem$id()$getId())
+sprintf("Name: %s", declItem$getId()$getName())
 sprintf("Value: %s", declItem$getDecl()$getValue()$c_str())
 ```
 
@@ -276,8 +276,8 @@ fnItem = FunctionItem$new(mzn_str = "predicate nonoverlap(var int:s1, var int:d1
                      var int:s2, var int:d2)=
           s1 + d1 <= s2 \\/ s2 + d2 <= s1;")
 sprintf("Function name: %s", fnItem$name())
-sprintf("No of function declarations: %s", length(fnItem$decls()))
-sprintf("Function expression: %s", fnItem$body()$c_str())
+sprintf("No of function declarations: %s", length(fnItem$getDecls()))
+sprintf("Function expression: %s", fnItem$getBody()$c_str())
 ```
 
 ### Include Item
@@ -304,7 +304,7 @@ There are various getter and setter functions for the expression classes that ca
 vItem = VarDeclItem$new(mzn_str = "set of int: a = {1, 2, 3, 4};") 
 cItem = ConstraintItem$new(mzn_str = "constraint sum(a) < 10;")
 sprintf("The current constraint is: %s", cItem$c_str())
-cItem$setExp(BinOp$new(lhs = Call$new(fnName = "max", args = list(vItem$getDecl()$id())),
+cItem$setExp(BinOp$new(lhs = Call$new(fnName = "max", args = list(vItem$getDecl()$getId())),
                        binop = "<", rhs = Int$new(10)))
 sprintf("The modified constraint is: %s", cItem$c_str())
 ```

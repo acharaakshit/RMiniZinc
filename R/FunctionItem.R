@@ -23,10 +23,10 @@ FunctionItem = R6Class("FunctionItem",
                              }
                              f_item = parsedR6$getItem(1)
                              private$.id = f_item$name()
-                             private$.decls = f_item$decls()
+                             private$.decls = f_item$getDecls()
                              private$.ti = f_item$rtype()
-                             private$.e = f_item$body()
-                             private$.ann = f_item$ann()
+                             private$.e = f_item$getBody()
+                             private$.ann = f_item$getAnn()
                            }else{
                              assertCharacter(name)
                              private$.id = name
@@ -45,16 +45,34 @@ FunctionItem = R6Class("FunctionItem",
                            return(private$.id)
                          },
                          #' @description get the list of declarations
-                         decls = function(){
+                         getDecls = function(){
                            return(private$.decls)
                          },
                          #' @description get the function body
-                         body = function(){
+                         getBody = function(){
                            return(private$.e)
                          },
                          #' @description get the function annotation
-                         ann = function(){
+                         getAnn = function(){
                            return(private$.ann)
+                         },
+                         #' @description set the list of declarations
+                         #' @param decls list of declarations to be set
+                         setDecls = function(decls){
+                           assertList(decls, "VarDecl")
+                           private$.decls = decls
+                         },
+                         #' @description set the function body
+                         #' @param body function expression to set or NULL
+                         setBody = function(){
+                           assertTRUE(testNull(body) || testR6(body, "Expression"))
+                           private$.e = body
+                         },
+                         #' @description set the function annotation
+                         #' @param ann annotation to be set or NULL
+                         setAnn = function(){
+                           assertTRUE(testNull(ann) || testR6(ann, "Annotation"))
+                           private$.ann = ann
                          },
                          #' @description get if the function is a test, predicate 
                          #' or a function call itself.
@@ -153,15 +171,7 @@ FunctionItem = R6Class("FunctionItem",
                          #' @description delete the variable item
                          delete = function(){
                            private$.delete_flag = TRUE
-                           pf = parent.frame()
-                           items = sapply(ls(pf), function(i) {
-                             class(get(i, envir = pf))[1] == "FunctionItem"
-                           })
-                           this = ls(pf)[items][sapply(mget(ls(pf)[items], envir = pf),
-                                                       function(x) x$getDeleteFlag())]
-                           thisObj = get(this, envir = pf)
-                           rm(list = this, envir = pf)
-                           item_delete(thisObj)
+                           helperDeleteItem("FunctionItem")
                          }
                        ),
                        private = list(

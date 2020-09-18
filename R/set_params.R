@@ -19,7 +19,7 @@ set_params = function(model, modData){
   for(i in seq(1, model$nitems(), 1)){
     item = model$getItem(i)
     if(testR6(item, "VarDeclItem")){
-      if(item$id()$getId() == names(modData)[count]){
+      if(item$getId()$getName() == names(modData)[count]){
         item$getDecl()$setValue(modData[[count]])
         count = count + 1
       }

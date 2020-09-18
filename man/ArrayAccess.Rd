@@ -9,8 +9,8 @@ create ArrayAccess elements in MiniZinc
 \examples{
 vDecl1 = IntSetDecl(name = "SET", kind = "par")
 vDecl2 = IntArrDecl(name = "profit", kind = "par", ndim = 1, 
-ind = list(vDecl1$id()))
-newArrayAccess = ArrayAccess$new(v = vDecl2$id(),
+ind = list(vDecl1$getId()))
+newArrayAccess = ArrayAccess$new(v = vDecl2$getId(),
  args = list(IntDecl(name = "i", kind = "par")))
 }
 \section{Super class}{
@@ -21,7 +21,9 @@ newArrayAccess = ArrayAccess$new(v = vDecl2$id(),
 \describe{
 \item{\code{.v}}{the id/value of array}
 
-\item{\code{.index}}{indices of the array}
+\item{\code{.args}}{arguments of the array}
+
+\item{\code{.delete_flag}}{used to delete items}
 }
 \if{html}{\out{</div>}}
 }
@@ -30,7 +32,9 @@ newArrayAccess = ArrayAccess$new(v = vDecl2$id(),
 \describe{
 \item{\code{.v}}{the id/value of array}
 
-\item{\code{.index}}{indices of the array}
+\item{\code{.args}}{arguments of the array}
+
+\item{\code{.delete_flag}}{used to delete items}
 }
 \if{html}{\out{</div>}}
 }
@@ -41,9 +45,11 @@ newArrayAccess = ArrayAccess$new(v = vDecl2$id(),
 \item \href{#method-getV}{\code{ArrayAccess$getV()}}
 \item \href{#method-setV}{\code{ArrayAccess$setV()}}
 \item \href{#method-nargs}{\code{ArrayAccess$nargs()}}
-\item \href{#method-getIndex}{\code{ArrayAccess$getIndex()}}
-\item \href{#method-setIndex}{\code{ArrayAccess$setIndex()}}
+\item \href{#method-getArgs}{\code{ArrayAccess$getArgs()}}
+\item \href{#method-setArgs}{\code{ArrayAccess$setArgs()}}
 \item \href{#method-c_str}{\code{ArrayAccess$c_str()}}
+\item \href{#method-getDeleteFlag}{\code{ArrayAccess$getDeleteFlag()}}
+\item \href{#method-delete}{\code{ArrayAccess$delete()}}
 \item \href{#method-clone}{\code{ArrayAccess$clone()}}
 }
 }
@@ -110,28 +116,28 @@ get the number of arguments
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-getIndex"></a>}}
-\if{latex}{\out{\hypertarget{method-getIndex}{}}}
-\subsection{Method \code{getIndex()}}{
-get the index sets
+\if{html}{\out{<a id="method-getArgs"></a>}}
+\if{latex}{\out{\hypertarget{method-getArgs}{}}}
+\subsection{Method \code{getArgs()}}{
+get the arguments
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ArrayAccess$getIndex()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ArrayAccess$getArgs()}\if{html}{\out{</div>}}
 }
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-setIndex"></a>}}
-\if{latex}{\out{\hypertarget{method-setIndex}{}}}
-\subsection{Method \code{setIndex()}}{
-set the index sets
+\if{html}{\out{<a id="method-setArgs"></a>}}
+\if{latex}{\out{\hypertarget{method-setArgs}{}}}
+\subsection{Method \code{setArgs()}}{
+set the arguments
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ArrayAccess$setIndex(val)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ArrayAccess$setArgs(val)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{val}}{new index sets}
+\item{\code{val}}{new arguments}
 }
 \if{html}{\out{</div>}}
 }
@@ -143,6 +149,26 @@ set the index sets
 return the MiniZinc representation
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ArrayAccess$c_str()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-getDeleteFlag"></a>}}
+\if{latex}{\out{\hypertarget{method-getDeleteFlag}{}}}
+\subsection{Method \code{getDeleteFlag()}}{
+delete flag for internal use
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ArrayAccess$getDeleteFlag()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-delete"></a>}}
+\if{latex}{\out{\hypertarget{method-delete}{}}}
+\subsection{Method \code{delete()}}{
+delete the assignment item
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ArrayAccess$delete()}\if{html}{\out{</div>}}
 }
 
 }

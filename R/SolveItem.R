@@ -61,9 +61,9 @@ SolveItem = R6Class("SolveItem",
                                private$.e = e
                              },
                              #' @description set the annotation
-                             #' @param ann annotation
+                             #' @param ann annotation or Null
                              setAnn =  function(ann){
-                               assertR6(ann, "Annotation")
+                               assert(testR6(ann, "Annotation") || testNull(ann))
                                private$.ann = ann
                              },
                              #' @description get the solve type/objective
@@ -87,6 +87,15 @@ SolveItem = R6Class("SolveItem",
                                }else{
                                  return(sprintf("solve %s %s %s;\n", annStr, private$.st, private$.e$c_str()))
                                }
+                             },
+                             #' @description delete flag for internal use
+                             getDeleteFlag = function(){
+                               return(private$.delete_flag)
+                             },
+                             #' @description delete the variable item
+                             delete = function(){
+                               private$.delete_flag = TRUE
+                               helperDeleteItem("SolveItem")
                              }
                              ),
                           private = list(
@@ -98,6 +107,9 @@ SolveItem = R6Class("SolveItem",
                             .st = NULL,
                             #' @field .ann
                             #' annotation of the solve type
-                            .ann = NULL
+                            .ann = NULL,
+                            #' @field .delete_flag
+                            #' used to delete items
+                            .delete_flag = FALSE
                           )
                     )

@@ -49,9 +49,12 @@ in a MiniZinc model
 \itemize{
 \item \href{#method-new}{\code{FunctionItem$new()}}
 \item \href{#method-name}{\code{FunctionItem$name()}}
-\item \href{#method-decls}{\code{FunctionItem$decls()}}
-\item \href{#method-body}{\code{FunctionItem$body()}}
-\item \href{#method-ann}{\code{FunctionItem$ann()}}
+\item \href{#method-getDecls}{\code{FunctionItem$getDecls()}}
+\item \href{#method-getBody}{\code{FunctionItem$getBody()}}
+\item \href{#method-getAnn}{\code{FunctionItem$getAnn()}}
+\item \href{#method-setDecls}{\code{FunctionItem$setDecls()}}
+\item \href{#method-setBody}{\code{FunctionItem$setBody()}}
+\item \href{#method-setAnn}{\code{FunctionItem$setAnn()}}
 \item \href{#method-rtype}{\code{FunctionItem$rtype()}}
 \item \href{#method-c_str}{\code{FunctionItem$c_str()}}
 \item \href{#method-getDeleteFlag}{\code{FunctionItem$getDeleteFlag()}}
@@ -110,34 +113,85 @@ get the name of the function
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-decls"></a>}}
-\if{latex}{\out{\hypertarget{method-decls}{}}}
-\subsection{Method \code{decls()}}{
+\if{html}{\out{<a id="method-getDecls"></a>}}
+\if{latex}{\out{\hypertarget{method-getDecls}{}}}
+\subsection{Method \code{getDecls()}}{
 get the list of declarations
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FunctionItem$decls()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FunctionItem$getDecls()}\if{html}{\out{</div>}}
 }
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-body"></a>}}
-\if{latex}{\out{\hypertarget{method-body}{}}}
-\subsection{Method \code{body()}}{
+\if{html}{\out{<a id="method-getBody"></a>}}
+\if{latex}{\out{\hypertarget{method-getBody}{}}}
+\subsection{Method \code{getBody()}}{
 get the function body
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FunctionItem$body()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FunctionItem$getBody()}\if{html}{\out{</div>}}
 }
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-ann"></a>}}
-\if{latex}{\out{\hypertarget{method-ann}{}}}
-\subsection{Method \code{ann()}}{
+\if{html}{\out{<a id="method-getAnn"></a>}}
+\if{latex}{\out{\hypertarget{method-getAnn}{}}}
+\subsection{Method \code{getAnn()}}{
 get the function annotation
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FunctionItem$ann()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FunctionItem$getAnn()}\if{html}{\out{</div>}}
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-setDecls"></a>}}
+\if{latex}{\out{\hypertarget{method-setDecls}{}}}
+\subsection{Method \code{setDecls()}}{
+set the list of declarations
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FunctionItem$setDecls(decls)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{decls}}{list of declarations to be set}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-setBody"></a>}}
+\if{latex}{\out{\hypertarget{method-setBody}{}}}
+\subsection{Method \code{setBody()}}{
+set the function body
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FunctionItem$setBody()}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{body}}{function expression to set or NULL}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-setAnn"></a>}}
+\if{latex}{\out{\hypertarget{method-setAnn}{}}}
+\subsection{Method \code{setAnn()}}{
+set the function annotation
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FunctionItem$setAnn()}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{ann}}{annotation to be set or NULL}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-rtype"></a>}}

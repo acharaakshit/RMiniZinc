@@ -58,17 +58,17 @@ print(solObj$SOLUTIONS)
 decl = IntDecl(name = "n", kind = "par")
 item1 = VarDeclItem$new(decl = decl)
 
-par2_val = BinOp$new(lhs = Int$new(1), binop = "..", rhs = item1$id())
+par2_val = BinOp$new(lhs = Int$new(1), binop = "..", rhs = item1$getId())
 item2 = VarDeclItem$new(decl = IntSetDecl(name = "OBJ", kind = "par", value = par2_val))
 
 item3 = VarDeclItem$new(decl = IntDecl(name = "capacity", kind = "par"))
 
 item4 = VarDeclItem$new(decl = IntArrDecl(name = "profit", kind = "par", ndim = 1, 
-                                          ind = list(item2$id())))
+                                          ind = list(item2$getId())))
 
-item5 = VarDeclItem$new(decl = IntArrDecl(name = "size", kind = "par", ndim = 1, ind =                                                            list(item2$id())))
+item5 = VarDeclItem$new(decl = IntArrDecl(name = "size", kind = "par", ndim = 1, ind =                                                            list(item2$getId())))
 
-item6 = VarDeclItem$new(decl = IntArrDecl(name = "x", kind = "var", ndim = 1, ind = list(item2$id())))
+item6 = VarDeclItem$new(decl = IntArrDecl(name = "x", kind = "var", ndim = 1, ind = list(item2$getId())))
 
 ## -----------------------------------------------------------------------------
 
@@ -76,30 +76,30 @@ item6 = VarDeclItem$new(decl = IntArrDecl(name = "x", kind = "var", ndim = 1, in
 parIter = IntDecl(name = "i", kind = "par")
 
 
-gen_forall = Generator$new(IN = item2$id(), decls = list(parIter))
-bop1 = BinOp$new(lhs = ArrayAccess$new(v = item6$id(),  args= list(gen_forall$getDecl(1)$id())),
+gen_forall = Generator$new(IN = item2$getId(), decls = list(parIter))
+bop1 = BinOp$new(lhs = ArrayAccess$new(v = item6$getId(),  args= list(gen_forall$getDecl(1)$getId())),
                                                              binop = ">=", rhs = Int$new(0))
 
 Comp1 = Comprehension$new(generators = list(gen_forall), body = bop1, set = FALSE)
 cl1 = Call$new(fnName = "forall", args = list(Comp1))
 item7 = ConstraintItem$new(e = cl1)
 
-gen_sum = Generator$new(IN = item2$id(), decls = list(parIter))
+gen_sum = Generator$new(IN = item2$getId(), decls = list(parIter))
 
-bop2 = BinOp$new(lhs = ArrayAccess$new(v = item5$id(), args = list(gen_sum$getDecl(1)$id())),             
-                 binop = "*",  rhs = ArrayAccess$new(v = item6$id() , 
-                 args = list(gen_sum$getDecl(1)$id())))
+bop2 = BinOp$new(lhs = ArrayAccess$new(v = item5$getId(), args = list(gen_sum$getDecl(1)$getId())),             
+                 binop = "*",  rhs = ArrayAccess$new(v = item6$getId() , 
+                 args = list(gen_sum$getDecl(1)$getId())))
 
 Comp2 = Comprehension$new(generators = list(gen_sum), body = bop2, set = FALSE)
 cl2 = Call$new(fnName = "sum", args = list(Comp2))
-bop3 = BinOp$new(lhs = cl2, binop = "<=", rhs = item3$id())
+bop3 = BinOp$new(lhs = cl2, binop = "<=", rhs = item3$getId())
 item8 = ConstraintItem$new(e = bop3)
 
 ## -----------------------------------------------------------------------------
 
-bop4 = BinOp$new(lhs = ArrayAccess$new(v = item4$id(), args = list(gen_sum$getDecl(1)$id())),
-                      binop = "*", rhs = ArrayAccess$new(v = item6$id(), 
-                      args = list(gen_sum$getDecl(1)$id())))
+bop4 = BinOp$new(lhs = ArrayAccess$new(v = item4$getId(), args = list(gen_sum$getDecl(1)$getId())),
+                      binop = "*", rhs = ArrayAccess$new(v = item6$getId(), 
+                      args = list(gen_sum$getDecl(1)$getId())))
 
 Comp3 = Comprehension$new(generators = list(gen_sum), body = bop4, set = FALSE)
 
@@ -123,7 +123,7 @@ declItem = VarDeclItem$new(mzn_str = "set of int: WORKSHEET = 0..worksheets-1;")
 sprintf("Is this a parameter? %s", declItem$getDecl()$isPar())
 sprintf("Is this a set? %s", declItem$getDecl()$ti()$type()$isSet())
 sprintf("Base type of set: %s", declItem$getDecl()$ti()$type()$bt())
-sprintf("Name: %s", declItem$id()$getId())
+sprintf("Name: %s", declItem$getId()$getName())
 sprintf("Value: %s", declItem$getDecl()$getValue()$c_str())
 
 ## ---- results = 'hold'--------------------------------------------------------
@@ -153,8 +153,8 @@ fnItem = FunctionItem$new(mzn_str = "predicate nonoverlap(var int:s1, var int:d1
                      var int:s2, var int:d2)=
           s1 + d1 <= s2 \\/ s2 + d2 <= s1;")
 sprintf("Function name: %s", fnItem$name())
-sprintf("No of function declarations: %s", length(fnItem$decls()))
-sprintf("Function expression: %s", fnItem$body()$c_str())
+sprintf("No of function declarations: %s", length(fnItem$getDecls()))
+sprintf("Function expression: %s", fnItem$getBody()$c_str())
 
 ## -----------------------------------------------------------------------------
 iItem = IncludeItem$new(mzn_str = "include \"cumulative.mzn\" ;")
@@ -170,7 +170,7 @@ sprintf("The modified declaration is: %s", vd$c_str())
 vItem = VarDeclItem$new(mzn_str = "set of int: a = {1, 2, 3, 4};") 
 cItem = ConstraintItem$new(mzn_str = "constraint sum(a) < 10;")
 sprintf("The current constraint is: %s", cItem$c_str())
-cItem$setExp(BinOp$new(lhs = Call$new(fnName = "max", args = list(vItem$getDecl()$id())),
+cItem$setExp(BinOp$new(lhs = Call$new(fnName = "max", args = list(vItem$getDecl()$getId())),
                        binop = "<", rhs = Int$new(10)))
 sprintf("The modified constraint is: %s", cItem$c_str())
 

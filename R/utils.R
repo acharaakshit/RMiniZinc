@@ -88,7 +88,7 @@ initItem = function(parsedList){
     variableItems = .globals$help_track_decls
     for (i in seq(1, length(parsedList$ASSIGNMENTS), 1)) {
       for (j in seq(1, length(variableItems), 1)) {
-        if(variableItems[[j]]$getDecl()$id()$getId() == parsedList$ASSIGNMENTS[[i]]$NAME){
+        if(variableItems[[j]]$getDecl()$getId()$getName() == parsedList$ASSIGNMENTS[[i]]$NAME){
           aItem  = AssignItem$new(decl = variableItems[[j]]$getDecl(), 
                                   value = initExpression(parsedList$ASSIGNMENTS[[i]]$VALUE))
         }
@@ -291,5 +291,289 @@ getType = function(type_str, kind){
     }else {
       stop("type error -- not indentified")
     }
+  }
+}
+
+
+#' @title helper delete item
+#' @description helper function to search the through a model for an item and return the 
+#' object if found
+#' @param classNm name of the object class
+helperDeleteItem = function(classNm){
+  for (object in ls(parent.frame(n = 2))) {
+    if(testR6(get(object, envir = parent.frame(n = 2)), "Model")){
+      mod = get(object)
+      mod = itemDelete(classNm, mod)
+    }
+  }
+}
+
+#' @title helper delete expression
+#' @description helper function to search the through a model for an expression and return the 
+#' object if found
+#' @param classNm name of the object class
+helperDeleteExpression = function(classNm){
+  for (object in ls(parent.frame(n = 2))) {
+    if(testR6(get(object, envir = parent.frame(n = 2)), "Model")){
+      mod = get(object)
+      mod = expressionDelete(classNm, mod)
+    }
+  }
+}
+
+#' @title search item in model and delete
+#' @description find the object in the model and delete it.
+#' @param classNm object to be deleted
+#' @param model model to delete the object from
+itemDelete = function(classNm, model){
+  assertCharacter(classNm)
+  for (object in model$getItems()) {
+    if(class(object)[1] == classNm){
+      if(object$getDeleteFlag()){
+        items = model$getItems()
+        model$setItems(items[-which(lapply(items, function(x) identical(x, object)) == TRUE)])
+        break
+      }
+    }
+  }
+}
+
+#' @title delete an expression
+#' @description delete the object everywhere from the MiniZinc model
+#' @param classNm class of the object to delete
+#' @param model model to delete the object from
+expressionDelete = function(classNm, model){
+  assertCharacter(classNm)
+  for (object in model$getItems()) {
+    for (item in model$getItems()) {
+      iterItem(model, classNm)
+    }
+  }
+}
+
+#' @title check all possible items(Under Development)
+#' @description find the expressions in the items and delete them if matched
+#' @param mod model to be searched
+#' @param classNm class name of the object to be deleted
+iterItem = function(mod, classNm){
+  itList = mod$getItems()
+  for(item in itList){
+    delCount = 0
+    if(testR6(item, "VarDeclItem")){
+      if(class(item$getDecl())[1] == classNm && item$getDecl()$getDeleteFlag()){
+        delCount = delCount + 1
+      }else{
+          delCount = delCount + iterExpression(classNm, item$getDecl())
+      }
+      suppressWarnings(mzn_parse(item$c_str()))
+    }else if(testR6(item, "ConstraintItem")){
+      delCount = 0
+      if(class(item$getExp())[1] == classNm && item$Exp()$getDeleteFlag()){
+        delCount = delCount + 1
+      }else{
+          delCount = delCount + iterExpression(classNm, item$getExp())
+      }
+      suppressWarnings(mzn_parse(item$c_str()))
+    }else if(testR6(item, "AssignItem")){
+      if(class(item$getValue())[1] == classNm && item$getValue()$getDeleteFlag()){
+        delCount = delCount + 1 
+      }else{
+          delCount = delCount + iterExpression(classNm, item$getValue()) 
+      }
+      suppressWarnings(mzn_parse(item$c_str()))
+    }else if(testR6(item, "SolveItem")){
+      if((class(item$getExp())[1] == classNm && item$getExp()$getDeleteFlag()) ||
+         (class(item$getAnn())[1] == classNm && item$getAnn()$getDeleteFlag())){
+        delCount = delCount + 1
+      }else{
+        delCount = delCount + iterExpression(classNm, item$getExp())
+        if(iterExpression(classNm, item$getAnn())){
+          item$setAnn(NULL)
+        }
+      }
+      suppressWarnings(mzn_parse(item$c_str()))
+    }else if(testR6(item, "FunctionItem")){
+      if((class(item$getBody())[1] == classNm && item$getBody()$getDeleteFlag()) ||
+         (class(item$getAnn())[1] == classNm && item$getAnn()$getDeleteFlag())){
+        delCount = delCount + 1
+      }else{
+        setDecl = c()
+        for (decl in item$getDecls()) {
+         if(iterExpression(classNm, decl)){
+           setDecl = c(setDecl, decl)
+         }
+        }
+        if(length(setDecl) == length(item$getDecls())){
+          delCount = delCount + 1
+        }else if(length(setDecl)){
+          item$setDecls(setDecl)
+        }
+        if(iterExpression(classNm, item$getBody())){
+          item$setBody(NULL)
+        }
+        if(iterExpression(classNm, item$getAnn())){
+          item$setAnn(NULL)
+        }
+      }
+      suppressWarnings(mzn_parse(item$c_str()))
+    }else{
+      stop("invalid object")
+    }
+    if(delCount){
+      mod$setItems(itList[-which(lapply(itList, function(x) identical(x, item)) == TRUE)])
+      itList = itList[-which(lapply(itList, function(x) identical(x, item)) == TRUE)]
+    }
+  }
+}
+
+#' @title iterate through expressions and delete (Under Development)
+#' @description given an object to delete and expression
+#' object, delete all the embedded expression objects that
+#' are identical
+#' @param classNm class name of the object to delete
+#' @param expObj expression object to iterate through
+iterExpression = function(classNm, expObj){
+  if(testR6(expObj, "VarDecl")){
+    if(class(expObj$getValue())[1] == classNm && expObj$getValue()$getDeleteFlag()){
+      expObj$setValue(NULL)
+    }
+    flag = iterExpression(classNm, expObj$getValue())
+    if(flag == 1) {
+      expObj$setValue(NULL)
+    }
+    return(0)
+  }else if(testR6(expObj, "BinOp")){
+    if(iterExpression(classNm, expObj$getLhs()) || iterExpression(classNm, expObj$getRhs())){
+      return(1)
+    }
+    return(0)
+  }else if(testR6(expObj, "Id")){
+    if(class(expObj)[1] == classNm && expObj$getDeleteFlag()){
+      return(1)
+    }
+    return(0)
+  }else if(testR6(expObj, "Set")){
+    if(expObj$isEmpty()){
+      return(0)
+    } 
+    elements = expObj$getSetVec()
+    del_elements = c()
+    for(i in seq(1, elements, 1)){
+      if(class(elements[[i]])[1] ==  classNm && elements[[i]]$getDeleteFlag()){
+        del_elements = c(del_elements, i)
+      }
+    }
+    if(length(del_elements) == 1 && length(elements) == 1){
+      expObj$makeEmpty()
+    }else{
+      expObj$setSetVec(elements[-del_elements])
+    }
+    return(0)
+  }else if(testR6(expObj, "Array")){
+    return(0)
+  }else if(testR6(expObj, "ArrayAccess")){
+    if(class(expObj$getV())[1] == classNm && expObj$getV()$getDeleteFlag()){
+      return(1)
+    }
+    for(arg in expObj$getArgs()){
+      if(class(arg)[1] == classNm && arg$getDeleteFlag()){
+        return(1)
+      }
+    }
+    return(0)
+  }else if(testR6(expObj, "UnOp")){
+    argList = expObj$getArgs() 
+    internal_flag = 0
+    for(arg in argList){
+      if(class(arg)[1] == classNm && arg$getDeleteFlag()){
+        expObj$setArgs(argList[-which(lapply(argList, function(x) identical(x, arg)) == TRUE)])
+        internal_flag = internal_flag + 1
+      }
+    }
+    if(length(argList) == internal_flag){
+      return(1)
+    }
+    return(0)
+  }else if(testR6(expObj, "Generator")){
+    if(class(expObj$getIn()) == classNm && expObj$getIn()$getDeleteFlag()){
+      return(1)
+    }else if(class(expObj$getWhere())[1] == classNm && expObj$getWhere()$getDeleteFlag()){
+      expObj$setWhere(NULL)
+    }
+    return(0)
+  }else if(testR6(expObj, "Comprehension")){
+    gens = expObj$getGens()
+    internal_flag = 0
+    for(gen in gens){
+      if(class(gen) == classNm && gen$getDeleteFlag()){
+        expObj$setGens(gens[-which(lapply(gens, function(x) identical(x, gen)) == TRUE)])
+        internal_flag = internal_flag + 1
+      }else{
+        if(iterExpression(classNm, gen) == 1){
+          expObj$setGens(gens[-which(lapply(gens, function(x) identical(x, gen)) == TRUE)])
+          internal_flag = internal_flag + 1
+        }
+      }
+    }
+    if(length(gens) == internal_flag || (class(expObj$getBody())[1] == classNm 
+       && expObj$getBody()$getDeleteFlag()) || iterExpression(classNm, expObj$getBody())){
+      return(1)
+    }
+    return(0)
+  }else if(testR6(expObj, "Call")){
+    argList = expObj$getArgs() 
+    internal_flag = 0
+    for(arg in argList){
+      if(class(arg) == classNm && arg$getDeleteFlag()){
+        expObj$setArgs(argList[-which(lapply(argList, function(x) identical(x, arg)) == TRUE)])
+        internal_flag = internal_flag + 1
+      }else{
+        if(iterExpression(classNm, arg) == 1){
+          internal_flag = internal_flag + 1
+        }
+      }
+    }
+    if(length(argList) == internal_flag){
+      return(1)
+    }
+    return(0)
+  }else if(testR6(expObj, "Let")){
+    letList = expObj$getLets()
+    internal_flag = 0
+    for(decl in letList){
+      if(class(decl) == classNm && decl$getDeleteFlag()){
+        expObj$setLets(letList[-which(lapply(letList, function(x) identical(x, decl)) == TRUE)])
+        internal_flag = internal_flag + 1
+      }
+    }
+    if(length(letList) == internal_flag || class(expObj$getBody())[1] == classNm 
+       && expObj$getBody()$getDeleteFlag()){
+      return(1)
+    }
+    return(0)
+  }else if(testR6(expObj, "Ite")){
+    ifList = expObj$getIfs()
+    thenList = expObj$getThens()
+    return(0)
+  }else if(is.null(expObj)) {
+    return(0)
+  }else if(testR6(expObj, "Annotation")){
+    expList = expObj$getExps()
+    internalFlag = 0
+    for(expr in expList){
+      if(class(expr)[1] == classNm && expr$getDeleteFlag()){
+        expObj$setExps(expList[-which(lapply(expList, function(x) identical(x, expr)) == TRUE)])
+        internalFlag = internalFlag + 1
+      }else if(iterExpression(classNm, expr)){
+        internalFlag = internalFlag + 1
+      }
+    }
+    if(internalFlag == length(expList)){
+      return(1)
+    }
+    return(0)
+  }else{
+    assertChoice(class(expObj)[1], c("Int", "Float", "Bool", "String", "TypeInst"))
+    return(0)
   }
 }

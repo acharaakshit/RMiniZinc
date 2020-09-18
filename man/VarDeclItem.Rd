@@ -33,7 +33,7 @@ Declaration items in the model
 \item \href{#method-new}{\code{VarDeclItem$new()}}
 \item \href{#method-getDecl}{\code{VarDeclItem$getDecl()}}
 \item \href{#method-setDecl}{\code{VarDeclItem$setDecl()}}
-\item \href{#method-id}{\code{VarDeclItem$id()}}
+\item \href{#method-getId}{\code{VarDeclItem$getId()}}
 \item \href{#method-c_str}{\code{VarDeclItem$c_str()}}
 \item \href{#method-getDeleteFlag}{\code{VarDeclItem$getDeleteFlag()}}
 \item \href{#method-delete}{\code{VarDeclItem$delete()}}
@@ -93,12 +93,12 @@ set the variable declaration
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-id"></a>}}
-\if{latex}{\out{\hypertarget{method-id}{}}}
-\subsection{Method \code{id()}}{
+\if{html}{\out{<a id="method-getId"></a>}}
+\if{latex}{\out{\hypertarget{method-getId}{}}}
+\subsection{Method \code{getId()}}{
 get the identifier object for the variable
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{VarDeclItem$id()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{VarDeclItem$getId()}\if{html}{\out{</div>}}
 }
 
 }
