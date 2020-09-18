@@ -4,7 +4,6 @@
 #' using the API mirror
 #' @import rlist
 #' @param mznParseList list input
-#' @export
 getRModel = function(mznParseList){
   items = c()
   if("ASSIGNMENTS" %in% names(mznParseList) && !("VARIABLES" %in% names(mznParseList))){
@@ -368,7 +367,7 @@ iterItem = function(mod, classNm){
       suppressWarnings(mzn_parse(item$c_str()))
     }else if(testR6(item, "ConstraintItem")){
       delCount = 0
-      if(class(item$getExp())[1] == classNm && item$Exp()$getDeleteFlag()){
+      if(class(item$getExp())[1] == classNm && item$getExp()$getDeleteFlag()){
         delCount = delCount + 1
       }else{
           delCount = delCount + iterExpression(classNm, item$getExp())
@@ -495,7 +494,7 @@ iterExpression = function(classNm, expObj){
     }
     return(0)
   }else if(testR6(expObj, "Generator")){
-    if(class(expObj$getIn()) == classNm && expObj$getIn()$getDeleteFlag()){
+    if(class(expObj$getIn())[1] == classNm && expObj$getIn()$getDeleteFlag()){
       return(1)
     }else if(class(expObj$getWhere())[1] == classNm && expObj$getWhere()$getDeleteFlag()){
       expObj$setWhere(NULL)
@@ -505,7 +504,7 @@ iterExpression = function(classNm, expObj){
     gens = expObj$getGens()
     internal_flag = 0
     for(gen in gens){
-      if(class(gen) == classNm && gen$getDeleteFlag()){
+      if(class(gen)[1] == classNm && gen$getDeleteFlag()){
         expObj$setGens(gens[-which(lapply(gens, function(x) identical(x, gen)) == TRUE)])
         internal_flag = internal_flag + 1
       }else{
@@ -524,7 +523,7 @@ iterExpression = function(classNm, expObj){
     argList = expObj$getArgs() 
     internal_flag = 0
     for(arg in argList){
-      if(class(arg) == classNm && arg$getDeleteFlag()){
+      if(class(arg)[1] == classNm && arg$getDeleteFlag()){
         expObj$setArgs(argList[-which(lapply(argList, function(x) identical(x, arg)) == TRUE)])
         internal_flag = internal_flag + 1
       }else{
@@ -541,7 +540,7 @@ iterExpression = function(classNm, expObj){
     letList = expObj$getLets()
     internal_flag = 0
     for(decl in letList){
-      if(class(decl) == classNm && decl$getDeleteFlag()){
+      if(class(decl)[1] == classNm && decl$getDeleteFlag()){
         expObj$setLets(letList[-which(lapply(letList, function(x) identical(x, decl)) == TRUE)])
         internal_flag = internal_flag + 1
       }
