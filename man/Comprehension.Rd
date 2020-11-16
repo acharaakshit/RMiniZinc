@@ -96,7 +96,7 @@ get the number of generators
 \subsection{Method \code{getGens()}}{
 get all the generator expressions
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Comprehension$getGens(i)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{Comprehension$getGens()}\if{html}{\out{</div>}}
 }
 
 }

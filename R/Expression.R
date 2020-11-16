@@ -30,6 +30,7 @@ Int = R6Class("Int",
                    return (private$.value$v())
                  },
                  #' @description set the IntVal value
+                 #' @param val value to be set
                  setIntVal = function(val){
                    private$.value = IntVal$new(val = val)
                  },
@@ -311,10 +312,12 @@ Array = R6Class("Array",
                      return (length(private$.dims))
                    },
                    #' @description get the minimum index of dimension i
+                   #' @param i ith dimension 
                    getMinIndex = function(i){
                      return (private$.dims[[i]]$getMin())
                    },
                    #' @description get the maximum index of dimension i
+                   #' @param i ith dimension
                    getMaxIndex = function(i){
                      return (private$.dims[[i]]$getMax())
                    },
@@ -641,7 +644,7 @@ Comprehension = R6Class("Comprehension",
                              return(length(private$.generators))
                            },
                            #' @description get all the generator expressions
-                           getGens = function(i){
+                           getGens = function(){
                              return(private$.generators)
                            },
                            #' @description set all the generator expressions
@@ -1398,7 +1401,6 @@ TypeInst = R6Class("TypeInst",
 #' @title Annotation
 #' @description create Annotations in MiniZinc
 #' @export
-#' @examples 
 Annotation = R6Class("Annotation",
                      public = list(
                        #' @description constructor

@@ -96,6 +96,13 @@ get the minimum index of dimension i
 \if{html}{\out{<div class="r">}}\preformatted{Array$getMinIndex(i)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{i}}{ith dimension}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-getMaxIndex"></a>}}
@@ -106,6 +113,13 @@ get the maximum index of dimension i
 \if{html}{\out{<div class="r">}}\preformatted{Array$getMaxIndex(i)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{i}}{ith dimension}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-setMinIndex"></a>}}

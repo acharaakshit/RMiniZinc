@@ -1,10 +1,16 @@
-#include <minizinc/solver.hh>
-#include "sol_parse.h"
+#include "config.h"
 #include "helper_parse.h"
+#include "sol_parse.h"
+
+using namespace Rcpp;
+
+#ifdef MZN_3
+
+#include <minizinc/solver.hh>
 
 using namespace std;
 using namespace MiniZinc;
-using namespace Rcpp;
+
 
 //' @title MiniZinc model evaluation
 //' 
@@ -70,6 +76,14 @@ List mzn_eval(std::string solver, std::string lib_path, Environment &r_model,
   return retVal;
 }
 
+#else
 
+List mzn_eval(std::string solver, std::string lib_path, Rcpp::Environment &r_model,
+              std::string dzn_path = "",
+              bool all_solutions = true, int time_limit = 300000){
+stop("Please set up MiniZinc, libminizinc and re-install the package!");
+}
+
+#endif
 
 

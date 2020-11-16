@@ -583,6 +583,9 @@ PACKAGE_URL=''
 
 ac_subst_vars='LTLIBOBJS
 LIBOBJS
+LIB_PATH
+MZN_PATH
+MZN_LIB_PATH
 MZN_LIBS
 MZN_INCLUDE
 DEFAULT_INCLUDE
@@ -2742,11 +2745,15 @@ MZN_INCLUDE="-I${DEFAULT_INCLUDE}/include"
 
 MZN_LIBS="-L${DEFAULT_INCLUDE} -lmzn"
 
+MZN_LIB_PATH="${DEFAULT_INCLUDE}/libmzn.a"
+
+
 
 if test -e "${with_mzn}"; then :
 
              MZN_INCLUDE="-I${with_mzn}/include"
              MZN_LIBS="-L${with_mzn} -lmzn"
+             MZN_LIB_PATH="${with_mzn}/libmzn.a"
 
 fi
 
@@ -2754,7 +2761,65 @@ CPP_FLAGS="${CPP_FLAGS} ${MZN_INCLUDE}"
 CXX_FLAGS="${CXX_FLAGS} ${MZN_INCLUDE}"
 LDFLAGS="${LDFLAGS} ${MZN_LIBS}"
 
-ac_config_files="$ac_config_files src/Makevars"
+as_ac_File=`$as_echo "ac_cv_file_"${DEFAULT_INCLUDE}/include/minizinc/ast.hh"" | $as_tr_sh`
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for \"${DEFAULT_INCLUDE}/include/minizinc/ast.hh\"" >&5
+$as_echo_n "checking for \"${DEFAULT_INCLUDE}/include/minizinc/ast.hh\"... " >&6; }
+if eval \${$as_ac_File+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  test "$cross_compiling" = yes &&
+  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
+if test -r ""${DEFAULT_INCLUDE}/include/minizinc/ast.hh""; then
+  eval "$as_ac_File=yes"
+else
+  eval "$as_ac_File=no"
+fi
+fi
+eval ac_res=\$$as_ac_File
+	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
+$as_echo "$ac_res" >&6; }
+if eval test \"x\$"$as_ac_File"\" = x"yes"; then :
+  MZN_PATH=50
+
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: files not found!" >&5
+$as_echo "$as_me: files not found!" >&6;}
+fi
+
+
+as_ac_File=`$as_echo "ac_cv_file_"${MZN_LIB_PATH}"" | $as_tr_sh`
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for \"${MZN_LIB_PATH}\"" >&5
+$as_echo_n "checking for \"${MZN_LIB_PATH}\"... " >&6; }
+if eval \${$as_ac_File+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  test "$cross_compiling" = yes &&
+  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
+if test -r ""${MZN_LIB_PATH}""; then
+  eval "$as_ac_File=yes"
+else
+  eval "$as_ac_File=no"
+fi
+fi
+eval ac_res=\$$as_ac_File
+	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
+$as_echo "$ac_res" >&6; }
+if eval test \"x\$"$as_ac_File"\" = x"yes"; then :
+  LIB_PATH="${DEFAULT_INCLUDE}/libmzn.a"
+
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: libmzn.a not found at default path!" >&5
+$as_echo "$as_me: libmzn.a not found at default path!" >&6;}
+fi
+
+
+if test "${LIB_PATH}" = ""; then :
+
+				MZN_LIBS=""
+
+fi
+
+ac_config_files="$ac_config_files src/Makevars src/config.h"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -3462,6 +3527,7 @@ for ac_config_target in $ac_config_targets
 do
   case $ac_config_target in
     "src/Makevars") CONFIG_FILES="$CONFIG_FILES src/Makevars" ;;
+    "src/config.h") CONFIG_FILES="$CONFIG_FILES src/config.h" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac
@@ -3918,6 +3984,7 @@ echo "
 
     cppflags: ${CPPFLAGS} ${PKG_CPPFLAGS} ${MZN_INCLUDE}
     libs:     ${PKG_LIBS} ${MZN_LIBS}
+    mzn:      ${with_mzn} ${LIB_PATH}
 
   --------------------------------------------------
 "

@@ -35,7 +35,7 @@ test_that("production planning problems are solved",{
   model = set_params(modData = pVals, model = parseInfo)
   
   solution  = mzn_eval(r_model = model, solver = "org.gecode.gecode",
-                       lib_path = "/snap/minizinc/current/share/minizinc")
+                       lib_path = "/home/akshit/Downloads/MiniZincIDE-2.4.3-bundle-linux-x86_64/share/minizinc")
 
   expect_equal(solution$SOLUTIONS$OPTIMAL_SOLUTION$produce, c(2, 2))
   expect_equal(solution$SOLUTIONS$OPTIMAL_SOLUTION$used, c( 900, 4, 450, 500, 150))
