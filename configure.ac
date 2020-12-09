@@ -88,7 +88,6 @@ AC_ARG_WITH(
             [
             	AS_IF([test "$BUILD_PLATFORM" = "Windows"], 
             	[
-             		AC_MSG_NOTICE([Windows will be supported soon!])
             		AC_MSG_NOTICE([Custom libminizinc path not provided!])
              		AC_SUBST([DEFAULT_INCLUDE], "C:/Program Files/libminizinc")
 					MZN_INCLUDE="-I${DEFAULT_INCLUDE}/include"
