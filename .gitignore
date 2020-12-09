@@ -11,3 +11,8 @@ autom4te.cache
 config.log
 config.status
 aclocal.m4
+inst/minizinc/solvers/gecode.msc
+inst/minizinc/solvers/chuffed.msc
+inst/minizinc/solvers/findmus.msc
+inst/minizinc/solvers/gecode-gist.msc
+inst/minizinc/solvers/globalizer.msc

@@ -1,10 +1,23 @@
+skip_if_no_libminizinc = function(){
+  data("config")
+  data("slvbin")
+  if(LIBMINIZINC_PATH == "" || SOLVER_BIN == ""){
+    return(0)
+  }
+  return(1)
+}
+
 test_that("type compatibility is detected correctly",{
-  expect_error(set_params(modData = 1, modify_mzn = "A"))
-  expect_error(mzn_parse(mznpath = 1))
-  expect_error(deleteItem(itemNo = 'a'))
+  if(skip_if_no_libminizinc()){
+    expect_error(set_params(modData = 1, modify_mzn = "A"))
+    expect_error(mzn_parse(mznpath = 1))
+    expect_error(deleteItem(itemNo = 'a'))  
+  }
 })
 
 test_that("production planning problems are solved",{
+  data("config")
+  if(skip_if_no_libminizinc()){
   # for devtools::test()
   mznName = "../../inst/extdata/mzn_examples/production_planning/prod_plan_0.mzn"
   
@@ -33,10 +46,11 @@ test_that("production planning problems are solved",{
   names(pVals) = missingPars
   
   model = set_params(modData = pVals, model = parseInfo)
-  
+  data("proot")
   solution  = mzn_eval(r_model = model, solver = "org.gecode.gecode",
-                       lib_path = "/home/akshit/Downloads/MiniZincIDE-2.4.3-bundle-linux-x86_64/share/minizinc")
+                       lib_path = paste0(PROJECT_DIRECTORY, "/inst/minizinc/"))
 
   expect_equal(solution$SOLUTIONS$OPTIMAL_SOLUTION$produce, c(2, 2))
   expect_equal(solution$SOLUTIONS$OPTIMAL_SOLUTION$used, c( 900, 4, 450, 500, 150))
+  }
 })

@@ -1,18 +1,34 @@
-## ---- results='hide', echo=FALSE----------------------------------------------
-library(rminizinc)
-
 ## -----------------------------------------------------------------------------
+library(rminizinc)
+# load the project directory
+data("proot")
+# check if the library is present
+data("config")
+parse.next = FALSE
+if(LIBMINIZINC_PATH == ""){
+  warning("Please install libminizinc on your system!")
+  parse.next = TRUE
+}
+# check if solver binaries are present
+data("slvbin")
+evaluate.next = FALSE
+if(SOLVER_BIN == ""){
+  warning("Please download solver binaries to solve the model")
+  evaluate.next = TRUE
+}
+
+## ---- error=parse.next--------------------------------------------------------
 # mzn file path
-mzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/jobshop/jobshop_0.mzn")
+mzn_path = paste0(PROJECT_DIRECTORY, "/inst/extdata/mzn_examples/jobshop/jobshop_0.mzn")
 
 # parse the model
-parseObj=rminizinc:::mzn_parse(mzn_path = mzn_path)
+parseObj = rminizinc:::mzn_parse(mzn_path = mzn_path)
 
-## -----------------------------------------------------------------------------
+## ---- error=parse.next--------------------------------------------------------
 missingPars = get_missing_pars(model = parseObj)
 print(missingPars)
 
-## -----------------------------------------------------------------------------
+## ---- error=parse.next--------------------------------------------------------
 pVals = list(Int$new(3), Int$new(4),
              Array$new(exprVec = intExpressions(c(3, 3, 4, 4, 4, 3, 2, 2, 3, 3, 3, 4)),
                dimranges = list(IntSetVal$new(1,3), IntSetVal$new(1,4))), 
@@ -22,16 +38,16 @@ names(pVals) = missingPars
 model = set_params(model = parseObj, modData = pVals)
 cat(model$mzn_string())
 
-## -----------------------------------------------------------------------------
+## ---- error=evaluate.next-----------------------------------------------------
 # R List object containing the solutions
 solObj = rminizinc:::mzn_eval(model, solver = "org.gecode.gecode",
-                   lib_path = "/snap/minizinc/current/share/minizinc")
+                   lib_path = paste0(PROJECT_DIRECTORY, "/inst/minizinc/"))
 # get all the solutions
 print(solObj$SOLUTIONS)
 
-## -----------------------------------------------------------------------------
+## ---- error=parse.next--------------------------------------------------------
 # file path
-mzn_path = paste0(dirname(getwd()), "/inst/extdata/mzn_examples/knapsack/knapsack_0.mzn")
+mzn_path = paste0(PROJECT_DIRECTORY, "/inst/extdata/mzn_examples/knapsack/knapsack_0.mzn")
 
 # get missing parameter values
 missingVals=rminizinc:::get_missing_pars( model = mzn_parse(mzn_path = mzn_path))
@@ -46,14 +62,13 @@ names(pVals) = missingVals
 model = rminizinc:::set_params(modData = pVals, 
                                    mzn_parse(mzn_path = mzn_path))
 
+## ---- error=evaluate.next-----------------------------------------------------
 # R List object containing the solutions
-solObj = rminizinc:::mzn_eval(model, solver = "org.gecode.gecode",
-                     lib_path = "/snap/minizinc/current/share/minizinc")
+solObj = rminizinc:::mzn_eval(r_model = model)
 # get all the solutions
 print(solObj$SOLUTIONS)
 
-
-## -----------------------------------------------------------------------------
+## ---- error=parse.next--------------------------------------------------------
 # create the variable and parameter declarations
 decl = IntDecl(name = "n", kind = "par")
 item1 = VarDeclItem$new(decl = decl)
@@ -70,7 +85,7 @@ item5 = VarDeclItem$new(decl = IntArrDecl(name = "size", kind = "par", ndim = 1,
 
 item6 = VarDeclItem$new(decl = IntArrDecl(name = "x", kind = "var", ndim = 1, ind = list(item2$getId())))
 
-## -----------------------------------------------------------------------------
+## ---- error=parse.next--------------------------------------------------------
 
 # declare parameter for iterator
 parIter = IntDecl(name = "i", kind = "par")
@@ -95,7 +110,7 @@ cl2 = Call$new(fnName = "sum", args = list(Comp2))
 bop3 = BinOp$new(lhs = cl2, binop = "<=", rhs = item3$getId())
 item8 = ConstraintItem$new(e = bop3)
 
-## -----------------------------------------------------------------------------
+## ---- error=parse.next--------------------------------------------------------
 
 bop4 = BinOp$new(lhs = ArrayAccess$new(v = item4$getId(), args = list(gen_sum$getDecl(1)$getId())),
                       binop = "*", rhs = ArrayAccess$new(v = item6$getId(), 
@@ -107,18 +122,18 @@ cl3 = Call$new(fnName = "sum", args = list(Comp3))
 
 item9 = SolveItem$new(solve_type = "maximize", e = cl3)
 
-## -----------------------------------------------------------------------------
+## ---- error=parse.next--------------------------------------------------------
 items  = c(item1, item2, item3, item4, item5, item6, item7, item8, item9)
 mod = Model$new(items = items)
 modString = mod$mzn_string()
 cat(modString)
 
-## -----------------------------------------------------------------------------
-# delete the item 1
+## ---- error=parse.next--------------------------------------------------------
+# delete the item 1 i.e declaration of n 
 item1$delete()
 cat(mod$mzn_string())
 
-## ---- results = 'hold'--------------------------------------------------------
+## ---- results = 'hold', error=parse.next--------------------------------------
 declItem = VarDeclItem$new(mzn_str = "set of int: WORKSHEET = 0..worksheets-1;")
 sprintf("Is this a parameter? %s", declItem$getDecl()$isPar())
 sprintf("Is this a set? %s", declItem$getDecl()$ti()$type()$isSet())
@@ -126,7 +141,7 @@ sprintf("Base type of set: %s", declItem$getDecl()$ti()$type()$bt())
 sprintf("Name: %s", declItem$getId()$getName())
 sprintf("Value: %s", declItem$getDecl()$getValue()$c_str())
 
-## ---- results = 'hold'--------------------------------------------------------
+## ---- results = 'hold', error=parse.next--------------------------------------
 CstrItem = ConstraintItem$new(mzn_str = "constraint forall (i in PREC)
                   (let { WORKSHEET: w1 = preceeds[i];
 		                     WORKSHEET: w2 = succeeds[i]; } in
@@ -139,7 +154,7 @@ sprintf("Number of Generators: %s", CstrItem$getExp()$nargs())
 sprintf("Generator: %s", CstrItem$getExp()$getArg(1)$getGen(1)$c_str())
 sprintf("Comprehension body: %s", CstrItem$getExp()$getArg(1)$getBody()$c_str())
 
-## ---- results = 'hold'--------------------------------------------------------
+## ---- results = 'hold', error=parse.next--------------------------------------
 SlvItem = SolveItem$new(mzn_str = "solve 
     :: int_search(
         [ if j = 1 then g[import_first[i]] else -d[import_first[i]] endif  | i in 1..worksheets, j in 1..2], 
@@ -148,7 +163,7 @@ SlvItem = SolveItem$new(mzn_str = "solve
 sprintf("Objective: %s", SlvItem$getSt())
 cat(sprintf("Annotation: %s", SlvItem$getAnn()$c_str()))
 
-## ---- results = 'hold'--------------------------------------------------------
+## ---- results = 'hold', error=parse.next--------------------------------------
 fnItem = FunctionItem$new(mzn_str = "predicate nonoverlap(var int:s1, var int:d1,
                      var int:s2, var int:d2)=
           s1 + d1 <= s2 \\/ s2 + d2 <= s1;")
@@ -156,17 +171,17 @@ sprintf("Function name: %s", fnItem$name())
 sprintf("No of function declarations: %s", length(fnItem$getDecls()))
 sprintf("Function expression: %s", fnItem$getBody()$c_str())
 
-## -----------------------------------------------------------------------------
+## ---- error=parse.next--------------------------------------------------------
 iItem = IncludeItem$new(mzn_str = "include \"cumulative.mzn\" ;")
 sprintf("Included mzn name: %s", iItem$getmznName())
 
-## ---- results = 'hold'--------------------------------------------------------
+## ---- results = 'hold', error=parse.next--------------------------------------
 vd = VarDomainDecl(name = "n", dom = Set$new(IntSetVal$new(imin = 1, imax = 2)))
 sprintf("The current declaration is: %s", vd$c_str())
 vd$setDomain(Set$new(IntSetVal$new(imin = 3, imax = 5)))
 sprintf("The modified declaration is: %s", vd$c_str())
 
-## ---- results = 'hold'--------------------------------------------------------
+## ---- results = 'hold', error=parse.next--------------------------------------
 vItem = VarDeclItem$new(mzn_str = "set of int: a = {1, 2, 3, 4};") 
 cItem = ConstraintItem$new(mzn_str = "constraint sum(a) < 10;")
 sprintf("The current constraint is: %s", cItem$c_str())

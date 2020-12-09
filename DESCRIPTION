@@ -15,4 +15,5 @@ Imports: R6, checkmate, Rcpp, rlang, rlist
 LinkingTo: Rcpp, testthat
 Suggests: knitr, rmarkdown, testthat, stringr
 VignetteBuilder: knitr
+Biarch: true
 
