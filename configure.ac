@@ -163,18 +163,13 @@ CXX_FLAGS="${CXX_FLAGS} ${MZN_INCLUDE}"
 LDFLAGS="${LDFLAGS} ${MZN_LIBS}"
 
 
-AS_IF([test "$BUILD_PLATFORM" = "Linux"], 
+AS_IF([test "$BUILD_PLATFORM" = "Windows"], 
 [
-	AC_CONFIG_FILES([src/Makevars])
+	AC_CONFIG_FILES([src/Makevars.win])
 ], 
 [
-	AS_IF([test "$BUILD_PLATFORM" = "Windows"], 
-	[
-		AC_CONFIG_FILES([src/Makevars.win])
-	],
-	[
-		AC_MSG_NOTICE([MAC OS will be supported soon!])	
-	])
+	AC_CONFIG_FILES([src/Makevars])
+
 ])
 
 AC_CONFIG_FILES([src/config.h])

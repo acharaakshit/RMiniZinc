@@ -3779,8 +3779,6 @@ else
 
             	if test "$BUILD_PLATFORM" = "Windows"; then :
 
-             		{ $as_echo "$as_me:${as_lineno-$LINENO}: Windows will be supported soon!" >&5
-$as_echo "$as_me: Windows will be supported soon!" >&6;}
             		{ $as_echo "$as_me:${as_lineno-$LINENO}: Custom libminizinc path not provided!" >&5
 $as_echo "$as_me: Custom libminizinc path not provided!" >&6;}
              		DEFAULT_INCLUDE="C:/Program Files/libminizinc"
@@ -3898,24 +3896,16 @@ CXX_FLAGS="${CXX_FLAGS} ${MZN_INCLUDE}"
 LDFLAGS="${LDFLAGS} ${MZN_LIBS}"
 
 
-if test "$BUILD_PLATFORM" = "Linux"; then :
+if test "$BUILD_PLATFORM" = "Windows"; then :
+
+	ac_config_files="$ac_config_files src/Makevars.win"
+
+
+else
 
 	ac_config_files="$ac_config_files src/Makevars"
 
 
-else
-
-	if test "$BUILD_PLATFORM" = "Windows"; then :
-
-		ac_config_files="$ac_config_files src/Makevars.win"
-
-
-else
-
-		{ $as_echo "$as_me:${as_lineno-$LINENO}: MAC OS will be supported soon!" >&5
-$as_echo "$as_me: MAC OS will be supported soon!" >&6;}
-
-fi
 
 fi
 
@@ -4631,8 +4621,8 @@ do
     "inst/minizinc/solvers/findmus.msc") CONFIG_FILES="$CONFIG_FILES inst/minizinc/solvers/findmus.msc" ;;
     "inst/minizinc/solvers/gecode-gist.msc") CONFIG_FILES="$CONFIG_FILES inst/minizinc/solvers/gecode-gist.msc" ;;
     "inst/minizinc/solvers/globalizer.msc") CONFIG_FILES="$CONFIG_FILES inst/minizinc/solvers/globalizer.msc" ;;
-    "src/Makevars") CONFIG_FILES="$CONFIG_FILES src/Makevars" ;;
     "src/Makevars.win") CONFIG_FILES="$CONFIG_FILES src/Makevars.win" ;;
+    "src/Makevars") CONFIG_FILES="$CONFIG_FILES src/Makevars" ;;
     "src/config.h") CONFIG_FILES="$CONFIG_FILES src/config.h" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
