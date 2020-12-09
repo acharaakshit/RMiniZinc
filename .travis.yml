@@ -26,6 +26,8 @@ jobs:
         - export PATH=/Applications/MiniZincIDE.app/Contents/Resources:$PATH ;
         - echo PATH ;
         - cd $TRAVIS_BUILD_DIR;
+    - os: windows
+      language: R
   allow_failures:
     os: osx
    
