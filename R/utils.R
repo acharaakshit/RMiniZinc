@@ -415,7 +415,12 @@ iterItem = function(mod, classNm){
         }
       }
       suppressWarnings(mzn_parse(item$c_str()))
+    }else if (testR6(item, "IncludeItem")){
+      if(classNm == "IncludeItem" && item$getDeleteFlag()){
+        delCount = delCount + 1
+      }
     }else{
+      print(class(item))
       stop("invalid object")
     }
     if(delCount){
