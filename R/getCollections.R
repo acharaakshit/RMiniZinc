@@ -1,5 +1,6 @@
 #' @title get ints
-#' @description get a list of integer expressions
+#' @description 
+#' Get a list of integer expressions
 #' @param vals vector of integer values
 #' @export
 intExpressions = function(vals){
@@ -12,7 +13,8 @@ intExpressions = function(vals){
 }
 
 #' @title get floats
-#' @description get a list of floats expressions
+#' @description 
+#' Get a list of floats expressions
 #' @param vals vector of floats values
 #' @export
 floatExpressions = function(vals){
@@ -25,7 +27,8 @@ floatExpressions = function(vals){
 }
 
 #' @title get bools
-#' @description get a list of bool expressions
+#' @description 
+#' Get a list of bool expressions
 #' @param vals vector of bool values
 #' @export
 boolExpressions = function(vals){
@@ -38,7 +41,8 @@ boolExpressions = function(vals){
 }
 
 #' @title get strings
-#' @description get a list of string expressions
+#' @description 
+#' Get a list of string expressions
 #' @param vals vector of string values
 #' @export
 stringExpressions = function(vals){

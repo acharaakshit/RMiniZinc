@@ -4,7 +4,7 @@
 \alias{String}
 \title{String}
 \description{
-create a string in MiniZinc
+Create a string in MiniZinc
 }
 \examples{
 newString = String$new("example")

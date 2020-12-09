@@ -1,5 +1,6 @@
 #' @title Expression (Abstract class -- should not be initialized) 
-#' @description This class represents an expression. 
+#' @description 
+#' This class represents an expression in MiniZinc. 
 #' @export
 Expression = R6Class("Expression",
                          public = list(
@@ -10,7 +11,8 @@ Expression = R6Class("Expression",
                          ))
 
 #' @title Int 
-#' @description create an integer in MiniZinc
+#' @description 
+#' Create an integer in MiniZinc
 #' @export
 #' @examples 
 #' newInt = Int$new(10)
@@ -46,7 +48,8 @@ Int = R6Class("Int",
                ))
 
 #' @title Float 
-#' @description create a float in MiniZinc
+#' @description 
+#' Create a float in MiniZinc
 #' @export
 #' @examples 
 #' newFloat = Float$new(1.5)
@@ -82,7 +85,8 @@ Float = R6Class("Float",
                ))
 
 #' @title Bool
-#' @description create a bool in MiniZinc
+#' @description 
+#' Create a bool in MiniZinc
 #' @export
 #' @examples 
 #' newBool = Bool$new(TRUE)
@@ -117,7 +121,8 @@ Bool = R6Class("Bool",
                ))
 
 #' @title String
-#' @description create a string in MiniZinc
+#' @description 
+#' Create a string in MiniZinc
 #' @export
 #' @examples 
 #' newString = String$new("example")
@@ -155,7 +160,8 @@ String = R6Class("String",
                  ))
 
 #' @title Set
-#' @description create a set in MiniZinc
+#' @description 
+#' Create a set in MiniZinc
 #' @import R6
 #' @import checkmate
 #' @export
@@ -274,7 +280,8 @@ Set = R6Class("Set",
               ))
 
 #' @title create an array 
-#' @description create an array in MiniZinc
+#' @description 
+#' Create an array in MiniZinc
 #' @export
 #' @examples 
 #' newArray = Array$new(exprVec = c(Int$new(1), Int$new(2)))
@@ -400,7 +407,8 @@ Array = R6Class("Array",
                  ))
 
 #' @title Id class (not exposed to the user)
-#' @description create a new Id in MiniZinc
+#' @description 
+#' Create a new Id in MiniZinc
 Id  = R6Class("Id",
               inherit = Expression,
               public = list(
@@ -445,7 +453,8 @@ Id  = R6Class("Id",
 
 
 #' @title Array Access
-#' @description create ArrayAccess elements in MiniZinc
+#' @description 
+#' Create ArrayAccess elements in MiniZinc
 #' @export
 #' @examples 
 #' vDecl1 = IntSetDecl(name = "SET", kind = "par")
@@ -524,7 +533,8 @@ ArrayAccess = R6Class("ArrayAccess",
                       )
 
 #' @title Generator 
-#' @description create a generator in MiniZinc
+#' @description 
+#' Create a generator in MiniZinc
 #' @export 
 #' @examples 
 #' newGen = Generator$new(IN = IntSetDecl(name = "SET", kind = "par"), 
@@ -622,7 +632,8 @@ Generator = R6Class("Generator",
                      ))
 
 #' @title Comprehension
-#' @description create a Comprehension in MiniZinc
+#' @description 
+#' Create a Comprehension in MiniZinc
 #' @export 
 Comprehension = R6Class("Comprehension",
                         inherit = Expression,
@@ -720,7 +731,8 @@ Comprehension = R6Class("Comprehension",
                          ))
 
 #' @title BinOp 
-#' @description create a binary operation expression
+#' @description 
+#' Create a binary operation expression
 #' @export 
 #' @examples
 #' newBinOp = BinOp$new(lhs = Int$new(2), binop = "+", rhs = Int$new(5))
@@ -806,7 +818,8 @@ BinOp = R6Class("BinOp",
 
 
 #' @title UnOp 
-#' @description Unary operation expression in MiniZinc
+#' @description
+#' Unary operation expression in MiniZinc
 #' @export
 #' @examples 
 #' newUnOp = UnOp$new(args = list(Int$new(5)), op = "-")
@@ -896,7 +909,8 @@ UnOp = R6Class("UnOp",
                ))
 
 #' @title Call
-#' @description create function calls in MiniZinc
+#' @description 
+#' Create function calls in MiniZinc
 #' @export
 #' @examples 
 #' newCall = Call$new(fnName = "sum", args = list(Int$new(2), Int$new(5)))
@@ -983,7 +997,8 @@ Call = R6Class("Call",
                ))
 
 #' @title Let
-#' @description create let expression in MiniZinc
+#' @description 
+#' Create let expression in MiniZinc
 #' @export
 Let = R6Class("Let",
               inherit = Expression,
@@ -1062,7 +1077,8 @@ Let = R6Class("Let",
               ))
 
 #' @title Ite 
-#' @description create if-then-else expressions in MiniZinc
+#' @description 
+#' Create if-then-else expressions in MiniZinc
 #' @export
 Ite = R6Class("Ite",
               inherit = Expression,
@@ -1167,7 +1183,8 @@ Ite = R6Class("Ite",
               ))
 
 #' @title VarDecl
-#' @description Contains different fields to create a variable declaration
+#' @description 
+#' Contains different fields to create a variable declaration
 #' @export
 #' @examples 
 #' newVarDecl = VarDecl$new(name = "n", 
@@ -1332,7 +1349,8 @@ VarDecl = R6Class("VarDecl",
 
 
 #' @title TypeInst 
-#' @description create type instantiation with indices, etc.
+#' @description 
+#' Create type instantiation with indices, etc.
 #' @export
 #' @examples 
 #' TypeInst$new(type = Type$new(base_type = "int", kind = "par" ,dim = 1), 
@@ -1399,7 +1417,8 @@ TypeInst = R6Class("TypeInst",
                    ))
 
 #' @title Annotation
-#' @description create Annotations in MiniZinc
+#' @description 
+#' Create Annotations in MiniZinc
 #' @export
 Annotation = R6Class("Annotation",
                      public = list(

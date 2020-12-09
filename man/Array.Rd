@@ -4,7 +4,7 @@
 \alias{Array}
 \title{create an array}
 \description{
-create an array in MiniZinc
+Create an array in MiniZinc
 }
 \examples{
 newArray = Array$new(exprVec = c(Int$new(1), Int$new(2)))

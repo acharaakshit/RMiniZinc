@@ -4,7 +4,7 @@
 \alias{Comprehension}
 \title{Comprehension}
 \description{
-create a Comprehension in MiniZinc
+Create a Comprehension in MiniZinc
 }
 \section{Super class}{
 \code{\link[rminizinc:Expression]{rminizinc::Expression}} -> \code{Comprehension}

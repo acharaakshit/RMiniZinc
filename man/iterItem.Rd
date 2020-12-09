@@ -12,5 +12,6 @@ iterItem(mod, classNm)
 \item{classNm}{class name of the object to be deleted}
 }
 \description{
-find the expressions in the items and delete them if matched
+Find the expressions in the items and
+delete them if matched
 }

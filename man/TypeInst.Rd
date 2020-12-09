@@ -4,7 +4,7 @@
 \alias{TypeInst}
 \title{TypeInst}
 \description{
-create type instantiation with indices, etc.
+Create type instantiation with indices, etc.
 }
 \examples{
 TypeInst$new(type = Type$new(base_type = "int", kind = "par" ,dim = 1), 

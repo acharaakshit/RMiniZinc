@@ -12,7 +12,7 @@ iterExpression(classNm, expObj)
 \item{expObj}{expression object to iterate through}
 }
 \description{
-given an object to delete and expression
-object, delete all the embedded expression objects that
+Given an object to delete and expression object,
+delete all the embedded expression objects that
 are identical
 }

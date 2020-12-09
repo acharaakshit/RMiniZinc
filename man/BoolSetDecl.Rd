@@ -2,7 +2,7 @@
 % Please edit documentation in R/DeclFunctions.R
 \name{BoolSetDecl}
 \alias{BoolSetDecl}
-\title{new set of bool declaration}
+\title{set of bool declaration}
 \usage{
 BoolSetDecl(name, kind, value = NULL)
 }
@@ -14,5 +14,5 @@ BoolSetDecl(name, kind, value = NULL)
 \item{value}{value of the set (or NULL)}
 }
 \description{
-declare a new set of bool
+Declare a new set of bool
 }

@@ -4,7 +4,8 @@
 \alias{AssignItem}
 \title{Assignment Items}
 \description{
-assignments in MiniZinc
+Assign values to variables in MiniZinc
+by creating an assignment item.
 }
 \section{Super class}{
 \code{\link[rminizinc:Item]{rminizinc::Item}} -> \code{AssignItem}

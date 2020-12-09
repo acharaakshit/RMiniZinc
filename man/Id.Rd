@@ -4,7 +4,7 @@
 \alias{Id}
 \title{Id class (not exposed to the user)}
 \description{
-create a new Id in MiniZinc
+Create a new Id in MiniZinc
 }
 \section{Super class}{
 \code{\link[rminizinc:Expression]{rminizinc::Expression}} -> \code{Id}

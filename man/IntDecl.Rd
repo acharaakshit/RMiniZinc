@@ -2,7 +2,7 @@
 % Please edit documentation in R/DeclFunctions.R
 \name{IntDecl}
 \alias{IntDecl}
-\title{new int declaration}
+\title{int declaration}
 \usage{
 IntDecl(name, kind, value = NULL)
 }
@@ -14,5 +14,5 @@ IntDecl(name, kind, value = NULL)
 \item{value}{value (NULL by default)}
 }
 \description{
-declare a new int variable
+Declare a new int
 }

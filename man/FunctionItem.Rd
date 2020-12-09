@@ -4,8 +4,9 @@
 \alias{FunctionItem}
 \title{Function Items}
 \description{
-Independent functions (that are not part of any other items)
-in a MiniZinc model
+Create Independent functions (that are
+not part of any other items) in a 
+MiniZinc model
 }
 \section{Super class}{
 \code{\link[rminizinc:Item]{rminizinc::Item}} -> \code{FunctionItem}

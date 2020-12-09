@@ -2,7 +2,7 @@
 % Please edit documentation in R/DeclFunctions.R
 \name{StringSetDecl}
 \alias{StringSetDecl}
-\title{new set of string declaration}
+\title{set of string declaration}
 \usage{
 StringSetDecl(name, kind, value = NULL)
 }

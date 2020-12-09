@@ -2,7 +2,7 @@
 % Please edit documentation in R/DeclFunctions.R
 \name{ArrDomainDecl}
 \alias{ArrDomainDecl}
-\title{declare nD array with domain}
+\title{declare n-D array with domain}
 \usage{
 ArrDomainDecl(name, kind, dom, ndim)
 }
@@ -16,5 +16,6 @@ ArrDomainDecl(name, kind, dom, ndim)
 \item{ndim}{number of dimensions}
 }
 \description{
-declare a n dimensional array declaration with domain
+Declare a n-dimensional array 
+with domain
 }

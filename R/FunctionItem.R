@@ -1,6 +1,8 @@
 #' @title Function Items
-#' @description Independent functions (that are not part of any other items)
-#' in a MiniZinc model
+#' @description 
+#' Create Independent functions (that are
+#' not part of any other items) in a 
+#' MiniZinc model
 #' @export
 FunctionItem = R6Class("FunctionItem",
                        inherit = Item,

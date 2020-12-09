@@ -2,7 +2,7 @@
 % Please edit documentation in R/DeclFunctions.R
 \name{FloatDecl}
 \alias{FloatDecl}
-\title{new float declaration}
+\title{float declaration}
 \usage{
 FloatDecl(name, kind, value = NULL)
 }
@@ -14,5 +14,5 @@ FloatDecl(name, kind, value = NULL)
 \item{value}{value (NULL by default)}
 }
 \description{
-declare a new float
+Declare a new float
 }

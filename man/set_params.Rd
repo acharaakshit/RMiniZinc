@@ -12,6 +12,6 @@ set_params(model, modData)
 \item{modData}{list of the value objects to be assigned}
 }
 \description{
-assign values to parameters which don't have
- a value assigned yet.
+Assign values to parameters which don't have
+a value assigned yet.
 }

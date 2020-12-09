@@ -10,7 +10,7 @@ initItem(parsedList)
 \item{parsedList}{list returned by `mzn_parse()`}
 }
 \description{
-initialize all the R6 objects
+Initialize all the R6 objects
 using the list returned by `mzn_parse()` to
 create exactly the same structure in R.
 }

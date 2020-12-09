@@ -4,7 +4,7 @@
 \alias{Let}
 \title{Let}
 \description{
-create let expression in MiniZinc
+Create let expression in MiniZinc
 }
 \section{Super class}{
 \code{\link[rminizinc:Expression]{rminizinc::Expression}} -> \code{Let}

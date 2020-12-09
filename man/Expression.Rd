@@ -4,7 +4,7 @@
 \alias{Expression}
 \title{Expression (Abstract class -- should not be initialized)}
 \description{
-This class represents an expression.
+This class represents an expression in MiniZinc.
 }
 \section{Methods}{
 \subsection{Public methods}{

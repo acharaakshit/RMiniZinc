@@ -10,5 +10,5 @@ floatExpressions(vals)
 \item{vals}{vector of floats values}
 }
 \description{
-get a list of floats expressions
+Get a list of floats expressions
 }

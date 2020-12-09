@@ -4,7 +4,8 @@
 \alias{Item}
 \title{Item class (Abstract)}
 \description{
-abstract class for all items of MiniZinc
+Abstract class for all items in
+MiniZinc grammar
 }
 \section{Methods}{
 \subsection{Public methods}{

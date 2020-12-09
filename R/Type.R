@@ -1,10 +1,6 @@
 #' @title Type class
-#' 
-#' @description the information of different data types
-#' 
-#' @import R6
-#' @import checkmate
-#' 
+#' @description 
+#' The information of different data types
 #' @export
 
 Type = R6Class("Type",

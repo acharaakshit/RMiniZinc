@@ -10,5 +10,5 @@ stringExpressions(vals)
 \item{vals}{vector of string values}
 }
 \description{
-get a list of string expressions
+Get a list of string expressions
 }

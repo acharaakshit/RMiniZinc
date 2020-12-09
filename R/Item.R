@@ -1,5 +1,7 @@
 #' @title Item class (Abstract)
-#' @description abstract class for all items of MiniZinc
+#' @description 
+#' Abstract class for all items in
+#' MiniZinc grammar
 #' @import R6
 #' @import checkmate
 #' @export

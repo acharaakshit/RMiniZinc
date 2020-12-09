@@ -2,7 +2,7 @@
 % Please edit documentation in R/DeclFunctions.R
 \name{FloatSetDecl}
 \alias{FloatSetDecl}
-\title{new set of float declaration}
+\title{set of float declaration}
 \usage{
 FloatSetDecl(name, kind, value = NULL)
 }
@@ -14,5 +14,5 @@ FloatSetDecl(name, kind, value = NULL)
 \item{value}{value of the set (or NULL)}
 }
 \description{
-declare a new set of float
+Declare a new set of float
 }

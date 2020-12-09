@@ -12,5 +12,5 @@ itemDelete(classNm, model)
 \item{model}{model to delete the object from}
 }
 \description{
-find the object in the model and delete it.
+Find the object in the model and delete it.
 }

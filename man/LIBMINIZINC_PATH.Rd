@@ -3,7 +3,7 @@
 \docType{data}
 \name{LIBMINIZINC_PATH}
 \alias{LIBMINIZINC_PATH}
-\title{Flag for internal use}
+\title{Absolute path of the libminizinc library}
 \format{
 A string containing linker flag
 }
@@ -11,6 +11,6 @@ A string containing linker flag
 LIBMINIZINC_PATH
 }
 \description{
-Flag for internal use
+Absolute path of the libminizinc library
 }
 \keyword{datasets}

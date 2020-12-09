@@ -6,6 +6,6 @@
 \alias{rminizinc-package}
 \title{rminizinc: R Interface to Use MiniZinc}
 \description{
-load the required libraries used by 
+Load the required libraries used by 
 most of the functions and classes
 }

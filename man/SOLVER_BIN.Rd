@@ -3,7 +3,7 @@
 \docType{data}
 \name{SOLVER_BIN}
 \alias{SOLVER_BIN}
-\title{Path of the solver executable directory}
+\title{Absolute path of the solver executable directory}
 \format{
 A string containing path of solver executable directory
 }
@@ -11,6 +11,6 @@ A string containing path of solver executable directory
 SOLVER_BIN
 }
 \description{
-Path of the solver executable directory
+Absolute path of the solver executable directory
 }
 \keyword{datasets}

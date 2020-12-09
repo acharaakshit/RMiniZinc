@@ -4,7 +4,7 @@
 \alias{Call}
 \title{Call}
 \description{
-create function calls in MiniZinc
+Create function calls in MiniZinc
 }
 \examples{
 newCall = Call$new(fnName = "sum", args = list(Int$new(2), Int$new(5)))

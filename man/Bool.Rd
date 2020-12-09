@@ -4,7 +4,7 @@
 \alias{Bool}
 \title{Bool}
 \description{
-create a bool in MiniZinc
+Create a bool in MiniZinc
 }
 \examples{
 newBool = Bool$new(TRUE)

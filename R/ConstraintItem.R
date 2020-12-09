@@ -1,4 +1,4 @@
-#' @title Constraint Class
+#' @title Constraint Items
 #' @description
 #' Describe Minizinc constraints on decision variables.
 #' @export

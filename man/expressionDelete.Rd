@@ -12,5 +12,6 @@ expressionDelete(classNm, model)
 \item{model}{model to delete the object from}
 }
 \description{
-delete the object everywhere from the MiniZinc model
+Delete the object everywhere from the
+MiniZinc model
 }

@@ -1,5 +1,6 @@
 #' @title get missing parameters
-#' @description get the values of the missing parameters
+#' @description 
+#' Get the values of the missing parameters
 #' @param model object of Model class
 #' @export
 get_missing_pars = function(model){

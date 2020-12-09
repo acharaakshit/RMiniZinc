@@ -4,7 +4,7 @@
 \alias{Ite}
 \title{Ite}
 \description{
-create if-then-else expressions in MiniZinc
+Create if-then-else expressions in MiniZinc
 }
 \section{Super class}{
 \code{\link[rminizinc:Expression]{rminizinc::Expression}} -> \code{Ite}

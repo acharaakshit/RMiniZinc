@@ -10,5 +10,5 @@ intExpressions(vals)
 \item{vals}{vector of integer values}
 }
 \description{
-get a list of integer expressions
+Get a list of integer expressions
 }

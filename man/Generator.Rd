@@ -4,7 +4,7 @@
 \alias{Generator}
 \title{Generator}
 \description{
-create a generator in MiniZinc
+Create a generator in MiniZinc
 }
 \examples{
 newGen = Generator$new(IN = IntSetDecl(name = "SET", kind = "par"), 

@@ -1,7 +1,8 @@
 # API functions to be exposed to the user
 
-#' @title new int declaration
-#' @description declare a new int variable
+#' @title int declaration
+#' @description 
+#' Declare a new int
 #' @param name variable/parameter name
 #' @param kind "var" or "par"
 #' @param value value (NULL by default)
@@ -11,8 +12,9 @@ IntDecl = function(name, kind, value = NULL){
   return(VarDecl$new(name, parTI, value))
 }
 
-#' @title new float declaration
-#' @description declare a new float
+#' @title float declaration
+#' @description 
+#' Declare a new float
 #' @param name variable/parameter name
 #' @param kind "var" or "par"
 #' @param value value (NULL by default)
@@ -23,7 +25,8 @@ FloatDecl = function(name, kind, value = NULL){
 }
 
 #' @title new bool declaration
-#' @description declare a new bool 
+#' @description 
+#' Declare a new bool 
 #' @param name variable/parameter name
 #' @param kind "var" or "par"
 #' @param value value (NULL by default)
@@ -33,8 +36,9 @@ BoolDecl = function(name, kind, value = NULL){
   return(VarDecl$new(name, parTI, value))
 }
 
-#' @title new int set declaration
-#' @description declare a new set of int
+#' @title int set declaration
+#' @description 
+#' Declare a new set of int
 #' @param name variable/parameter name
 #' @param kind "var" or "par"
 #' @param value value (NULL by default)
@@ -44,8 +48,9 @@ IntSetDecl = function(name, kind, value = NULL){
   return(VarDecl$new(name, parTI, value))
 }
 
-#' @title new set of float declaration
-#' @description declare a new set of float
+#' @title set of float declaration
+#' @description 
+#' Declare a new set of float
 #' @param name variable/parameter name
 #' @param kind "var" or "par"
 #' @param value value of the set (or NULL)
@@ -55,8 +60,9 @@ FloatSetDecl = function(name, kind, value = NULL){
   return(VarDecl$new(name, parTI, value))
 }
 
-#' @title new set of bool declaration
-#' @description declare a new set of bool
+#' @title set of bool declaration
+#' @description
+#' Declare a new set of bool
 #' @param name variable/parameter name
 #' @param kind "var" or "par"
 #' @param value value of the set (or NULL)
@@ -66,7 +72,7 @@ BoolSetDecl = function(name, kind, value = NULL){
   return(VarDecl$new(name, parTI, value))
 }
 
-#' @title new set of string declaration
+#' @title set of string declaration
 #' @description declare a new set of string
 #' @param name variable/parameter name
 #' @param kind "var" or "par"
@@ -77,8 +83,10 @@ StringSetDecl = function(name, kind, value = NULL){
   return(VarDecl$new(name, parTI, value))
 }
 
-#' @title new nD int array declaration
-#' @description declare a new array of int
+#' @title n-D int array declaration
+#' @description
+#' Declare a new n-dimensional array
+#' of int
 #' @param name variable/parameter name
 #' @param kind "var" or "par"
 #' @param ind index of the array
@@ -90,8 +98,10 @@ IntArrDecl = function(name, kind, ind, value = NULL, ndim){
   return(VarDecl$new(name, parTI, value))
 }
 
-#' @title new nD float array declaration
-#' @description declare a new array of float
+#' @title n-D float array declaration
+#' @description 
+#' Declare a new n-dimensional array
+#' of float
 #' @param name variable/parameter name
 #' @param kind "var" or "par"
 #' @param ind index of the array
@@ -104,8 +114,10 @@ FloatArrDecl = function(name, kind, ind, value = NULL, ndim){
 }  
 
 
-#' @title new nD bool array declaration
-#' @description declare a new array of bool
+#' @title n-D bool array declaration
+#' @description 
+#' Declare a new n-dimensional array
+#' of bool
 #' @param name variable/parameter name
 #' @param kind "var" or "par"
 #' @param ind index of the array
@@ -117,8 +129,10 @@ BoolArrDecl = function(name, kind, ind, value = NULL, ndim){
   return(VarDecl$new(name, parTI, value))
 }
 
-#' @title new nD bool array declaration
-#' @description declare a new array of bool
+#' @title n-D bool array declaration
+#' @description 
+#' Declare a new n-dimensional array
+#' of bool
 #' @param name variable/parameter name
 #' @param kind "var" or "par"
 #' @param ind index of the array
@@ -131,7 +145,9 @@ StringArrDecl = function(name, kind, ind, value = NULL, ndim){
 }
 
 #' @title declare 0-D variable with domain
-#' @description declare a 0 dimensional (int, float, bool or string) variable with domain 
+#' @description 
+#' Declare a 0 dimensional (int, float,
+#' bool or string) variable with domain 
 #' @param name variable name
 #' @param dom domain
 #' @export
@@ -140,8 +156,10 @@ VarDomainDecl = function(name, dom){
   return(VarDecl$new(name = name, type_inst = parTI))
 }
 
-#' @title declare nD array with domain
-#' @description declare a n dimensional array declaration with domain 
+#' @title declare n-D array with domain
+#' @description 
+#' Declare a n-dimensional array 
+#' with domain 
 #' @param name variable name
 #' @param kind variable or parameter
 #' @param dom domain

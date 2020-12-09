@@ -4,7 +4,7 @@
 \alias{Annotation}
 \title{Annotation}
 \description{
-create Annotations in MiniZinc
+Create Annotations in MiniZinc
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}

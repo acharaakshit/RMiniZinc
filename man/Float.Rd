@@ -4,7 +4,7 @@
 \alias{Float}
 \title{Float}
 \description{
-create a float in MiniZinc
+Create a float in MiniZinc
 }
 \examples{
 newFloat = Float$new(1.5)

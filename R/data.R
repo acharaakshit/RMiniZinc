@@ -1,4 +1,4 @@
-#' Flag for internal use
+#' Absolute path of the libminizinc library
 #' @format A string containing linker flag
 "LIBMINIZINC_PATH"
 
@@ -6,6 +6,6 @@
 #' @format A string containing absolute path of the project directory
 "PROJECT_DIRECTORY"
 
-#' Path of the solver executable directory
+#' Absolute path of the solver executable directory
 #' @format A string containing path of solver executable directory
 "SOLVER_BIN"

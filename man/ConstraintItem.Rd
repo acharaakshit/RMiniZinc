@@ -2,7 +2,7 @@
 % Please edit documentation in R/ConstraintItem.R
 \name{ConstraintItem}
 \alias{ConstraintItem}
-\title{Constraint Class}
+\title{Constraint Items}
 \description{
 Describe Minizinc constraints on decision variables.
 }

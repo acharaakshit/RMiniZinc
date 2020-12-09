@@ -1,6 +1,7 @@
 #' @title set missing parameters
-#' @description assign values to parameters which don't have
-#'  a value assigned yet. 
+#' @description 
+#' Assign values to parameters which don't have
+#' a value assigned yet. 
 #' @param model Model object
 #' @param modData list of the value objects to be assigned
 #' @export

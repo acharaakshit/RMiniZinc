@@ -10,5 +10,5 @@ boolExpressions(vals)
 \item{vals}{vector of bool values}
 }
 \description{
-get a list of bool expressions
+Get a list of bool expressions
 }

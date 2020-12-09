@@ -7,8 +7,8 @@ using namespace std;
 
 //' @title parse the solution
 //' 
-//' @description can parse the solution of a model
-//' 
+//' @description can parse the JSON solution of a model to 
+//' return a list output
 //' @importFrom Rcpp sourceCpp
 //' @import rjson
 //' @export sol_parse

@@ -1,5 +1,6 @@
 #' @title init all classes
-#' @description given the return value of
+#' @description 
+#' Given the return value of
 #' `mzn_parse()`, it creates a model in R
 #' using the API mirror
 #' @import rlist
@@ -26,7 +27,8 @@ getRModel = function(mznParseList){
 }
 
 #' @title initialize R6 from parsed (not to be exposed)
-#' @description initialize all the R6 objects
+#' @description 
+#' Initialize all the R6 objects
 #' using the list returned by `mzn_parse()` to
 #' create exactly the same structure in R.
 #' @import rlist
@@ -105,12 +107,9 @@ initItem = function(parsedList){
 
 
 #' @title initExpression (not exposed to the user)
-#' 
-#' @description recursive helper function for initilizing
+#' @description 
+#' Recursive helper function for initilizing
 #' expression classes
-#' 
-#' @import R6
-#' @import checkmate
 #' @import rlist
 #' @param pList list from mzn_parse to initialise objects
 initExpression = function(pList){
@@ -247,7 +246,8 @@ initExpression = function(pList){
 }
 
 #' @title initialized type (not exposed to user)
-#' @description  helper function to initialise the type
+#' @description  
+#' Helper function to initialise the type.
 #' @param type_str type string returned by `parse_mzn()`.
 #' @param kind par or var
 getType = function(type_str, kind){
@@ -295,8 +295,10 @@ getType = function(type_str, kind){
 
 
 #' @title helper delete item
-#' @description helper function to search the through a model for an item and return the 
-#' object if found
+#' @description 
+#' Helper function to search the through a
+#' model for an item and return the object
+#' if found
 #' @param classNm name of the object class
 helperDeleteItem = function(classNm){
   for (object in ls(parent.frame(n = 2))) {
@@ -308,7 +310,9 @@ helperDeleteItem = function(classNm){
 }
 
 #' @title helper delete expression
-#' @description helper function to search the through a model for an expression and return the 
+#' @description
+#' helper function to search the through a
+#' model for an expression and return the 
 #' object if found
 #' @param classNm name of the object class
 helperDeleteExpression = function(classNm){
@@ -321,7 +325,8 @@ helperDeleteExpression = function(classNm){
 }
 
 #' @title search item in model and delete
-#' @description find the object in the model and delete it.
+#' @description 
+#' Find the object in the model and delete it.
 #' @param classNm object to be deleted
 #' @param model model to delete the object from
 itemDelete = function(classNm, model){
@@ -338,7 +343,9 @@ itemDelete = function(classNm, model){
 }
 
 #' @title delete an expression
-#' @description delete the object everywhere from the MiniZinc model
+#' @description 
+#' Delete the object everywhere from the
+#' MiniZinc model
 #' @param classNm class of the object to delete
 #' @param model model to delete the object from
 expressionDelete = function(classNm, model){
@@ -351,7 +358,9 @@ expressionDelete = function(classNm, model){
 }
 
 #' @title check all possible items(Under Development)
-#' @description find the expressions in the items and delete them if matched
+#' @description 
+#' Find the expressions in the items and
+#' delete them if matched
 #' @param mod model to be searched
 #' @param classNm class name of the object to be deleted
 iterItem = function(mod, classNm){
@@ -431,8 +440,9 @@ iterItem = function(mod, classNm){
 }
 
 #' @title iterate through expressions and delete (Under Development)
-#' @description given an object to delete and expression
-#' object, delete all the embedded expression objects that
+#' @description 
+#' Given an object to delete and expression object,
+#' delete all the embedded expression objects that
 #' are identical
 #' @param classNm class name of the object to delete
 #' @param expObj expression object to iterate through

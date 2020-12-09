@@ -4,7 +4,8 @@
 \alias{IncludeItem}
 \title{Include Items}
 \description{
-include files in MiniZinc
+Include external mzn files
+in your model.
 }
 \section{Super class}{
 \code{\link[rminizinc:Item]{rminizinc::Item}} -> \code{IncludeItem}

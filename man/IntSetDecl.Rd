@@ -2,7 +2,7 @@
 % Please edit documentation in R/DeclFunctions.R
 \name{IntSetDecl}
 \alias{IntSetDecl}
-\title{new int set declaration}
+\title{int set declaration}
 \usage{
 IntSetDecl(name, kind, value = NULL)
 }
@@ -14,5 +14,5 @@ IntSetDecl(name, kind, value = NULL)
 \item{value}{value (NULL by default)}
 }
 \description{
-declare a new set of int
+Declare a new set of int
 }

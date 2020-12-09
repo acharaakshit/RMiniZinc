@@ -1,5 +1,7 @@
 #' @title Include Items
-#' @description include files in MiniZinc
+#' @description 
+#' Include external mzn files
+#' in your model.
 #' @export
 IncludeItem = R6Class("IncludeItem",
                       inherit = Item,

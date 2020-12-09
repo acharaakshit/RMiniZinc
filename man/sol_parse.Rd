@@ -10,5 +10,6 @@ sol_parse(solutionString)
 \item{solutionString}{solution of the model as a string representation}
 }
 \description{
-can parse the solution of a model
+can parse the JSON solution of a model to 
+return a list output
 }

@@ -4,7 +4,7 @@
 \alias{BinOp}
 \title{BinOp}
 \description{
-create a binary operation expression
+Create a binary operation expression
 }
 \examples{
 newBinOp = BinOp$new(lhs = Int$new(2), binop = "+", rhs = Int$new(5))

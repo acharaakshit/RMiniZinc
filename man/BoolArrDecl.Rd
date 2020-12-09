@@ -2,7 +2,7 @@
 % Please edit documentation in R/DeclFunctions.R
 \name{BoolArrDecl}
 \alias{BoolArrDecl}
-\title{new nD bool array declaration}
+\title{n-D bool array declaration}
 \usage{
 BoolArrDecl(name, kind, ind, value = NULL, ndim)
 }
@@ -18,5 +18,6 @@ BoolArrDecl(name, kind, ind, value = NULL, ndim)
 \item{ndim}{number of dimensions of the array}
 }
 \description{
-declare a new array of bool
+Declare a new n-dimensional array
+of bool
 }

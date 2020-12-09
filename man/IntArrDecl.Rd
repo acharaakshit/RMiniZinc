@@ -2,7 +2,7 @@
 % Please edit documentation in R/DeclFunctions.R
 \name{IntArrDecl}
 \alias{IntArrDecl}
-\title{new nD int array declaration}
+\title{n-D int array declaration}
 \usage{
 IntArrDecl(name, kind, ind, value = NULL, ndim)
 }
@@ -18,5 +18,6 @@ IntArrDecl(name, kind, ind, value = NULL, ndim)
 \item{ndim}{number of dimensions of the array}
 }
 \description{
-declare a new array of int
+Declare a new n-dimensional array
+of int
 }

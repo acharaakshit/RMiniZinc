@@ -36,8 +36,8 @@ mzn_parse <- function(model_string = "", mzn_path = "", include_path = NULL) {
 
 #' @title parse the solution
 #' 
-#' @description can parse the solution of a model
-#' 
+#' @description can parse the JSON solution of a model to 
+#' return a list output
 #' @importFrom Rcpp sourceCpp
 #' @import rjson
 #' @export sol_parse

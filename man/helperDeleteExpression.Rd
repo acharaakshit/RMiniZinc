@@ -10,6 +10,7 @@ helperDeleteExpression(classNm)
 \item{classNm}{name of the object class}
 }
 \description{
-helper function to search the through a model for an expression and return the 
+helper function to search the through a
+model for an expression and return the 
 object if found
 }

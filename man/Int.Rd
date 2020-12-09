@@ -4,7 +4,7 @@
 \alias{Int}
 \title{Int}
 \description{
-create an integer in MiniZinc
+Create an integer in MiniZinc
 }
 \examples{
 newInt = Int$new(10)

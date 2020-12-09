@@ -12,5 +12,5 @@ getType(type_str, kind)
 \item{kind}{par or var}
 }
 \description{
-helper function to initialise the type
+Helper function to initialise the type.
 }

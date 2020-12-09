@@ -4,7 +4,7 @@
 \alias{Type}
 \title{Type class}
 \description{
-the information of different data types
+The information of different data types
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}

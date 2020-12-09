@@ -1,5 +1,6 @@
 #' @title The variable declaration item
-#' @description Declaration items in the model
+#' @description 
+#' Declaration items in the model
 #' @export
 VarDeclItem = R6Class("VarDeclItem",
                       inherit = Item,

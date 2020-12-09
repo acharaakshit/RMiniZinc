@@ -4,7 +4,7 @@
 \alias{ArrayAccess}
 \title{Array Access}
 \description{
-create ArrayAccess elements in MiniZinc
+Create ArrayAccess elements in MiniZinc
 }
 \examples{
 vDecl1 = IntSetDecl(name = "SET", kind = "par")

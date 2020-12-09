@@ -10,6 +10,6 @@ initExpression(pList)
 \item{pList}{list from mzn_parse to initialise objects}
 }
 \description{
-recursive helper function for initilizing
+Recursive helper function for initilizing
 expression classes
 }

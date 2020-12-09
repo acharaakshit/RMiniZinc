@@ -14,5 +14,5 @@ BoolDecl(name, kind, value = NULL)
 \item{value}{value (NULL by default)}
 }
 \description{
-declare a new bool
+Declare a new bool
 }

@@ -10,7 +10,7 @@ getRModel(mznParseList)
 \item{mznParseList}{list input}
 }
 \description{
-given the return value of
+Given the return value of
 `mzn_parse()`, it creates a model in R
 using the API mirror
 }

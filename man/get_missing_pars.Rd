@@ -10,5 +10,5 @@ get_missing_pars(model)
 \item{model}{object of Model class}
 }
 \description{
-get the values of the missing parameters
+Get the values of the missing parameters
 }

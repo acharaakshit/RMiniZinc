@@ -12,5 +12,6 @@ VarDomainDecl(name, dom)
 \item{dom}{domain}
 }
 \description{
-declare a 0 dimensional (int, float, bool or string) variable with domain
+Declare a 0 dimensional (int, float,
+bool or string) variable with domain
 }

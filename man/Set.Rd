@@ -4,7 +4,7 @@
 \alias{Set}
 \title{Set}
 \description{
-create a set in MiniZinc
+Create a set in MiniZinc
 }
 \examples{
 newIntSet = Set$new(val = IntSetVal$new(1,5))

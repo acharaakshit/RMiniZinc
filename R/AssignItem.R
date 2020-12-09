@@ -1,5 +1,7 @@
 #' @title Assignment Items
-#' @description assignments in MiniZinc
+#' @description 
+#' Assign values to variables in MiniZinc
+#' by creating an assignment item.
 #' @export
 AssignItem = R6Class("AssignItem",
                      inherit = Item,
