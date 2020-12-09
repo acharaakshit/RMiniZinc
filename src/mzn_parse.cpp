@@ -1,11 +1,26 @@
 #include "config.h"
-#include <Rcpp.h>
+#include "helper_parse.h"
+
 
 using namespace Rcpp;
 
-#ifdef MZN_3
+//' @title MiniZinc syntax parser
+//' 
+//' @description parses the MiniZinc syntax into R objects
+//'
+//' @importFrom Rcpp sourceCpp
+//' @export mzn_parse
+//' @useDynLib rminizinc, .registration=TRUE
+//' @param model_string string representation of the MiniZinc model.
+//' @param mzn_path the path of model mzn.
+//' @param include_path path of the included mzn in the model if it exists.
+// [[Rcpp::export]]
+Environment mzn_parse(std::string model_string = "",
+                      std::string mzn_path = "",
+                      Nullable<std::vector<std::string>> include_path = R_NilValue);
 
-#include "helper_parse.h"
+#ifdef MZN_PARSE
+
 #include <minizinc/parser.hh>
 #include <minizinc/ast.hh>
 #include <minizinc/hash.hh>
@@ -47,8 +62,8 @@ MiniZinc::Model* parse_help(std::string modelString, std::string modelStringName
     std::stringstream ss;
     //change the underlying buffer and save the old buffer
     auto old_buf = std::cerr.rdbuf(ss.rdbuf()); 
-    model = MiniZinc::parseFromString(*env, modelString, modelStringName , includePath,
-                                      true, true, true, Rcpp::Rcerr, se);
+    model = MiniZinc::parse_from_string(*env, modelString, modelStringName , includePath,
+                                      false, false, false, false, Rcpp::Rcerr, se);
     std::cerr.rdbuf(old_buf); //reset
     Rcerr << ss.str();
     if(model==NULL) throw std::exception();
@@ -100,20 +115,20 @@ std::string uo_str_map(UnOpType OP){
 
 // Type details for variable declarations
 std::string get_type(Type tp){
-  if(tp.isann()) return ("annotation"); 
+  if(tp.isAnn()) return ("annotation"); 
   //else if(tp.bt() == Type::BT_BOT) return("bot");
   //else if(tp.bt() == Type::BT_TOP) return("top");
   else if(tp.isint()) return ("int");
   else if(tp.isfloat()) return ("float");
   else if(tp.isbool()) return ("bool");
   else if(tp.isstring()) return ("string");
-  else if(tp.is_set()){
+  else if(tp.isSet()){
     if(tp.bt() == Type::BT_INT) return ("set of int");
     else if(tp.bt() == Type::BT_FLOAT) return ("set of float");
     else if(tp.bt() == Type::BT_BOOL) return ("set of bool");
     else if(tp.bt() == Type::BT_STRING) return ("set of string");
     else return ("unknown set");
-  }else if(tp.dim() >= 1  && !tp.is_set()){
+  }else if(tp.dim() >= 1  && !tp.isSet()){
     string arr_tp = to_string(tp.dim());
     if(tp.bt() == Type::BT_INT && tp.st() == Type::ST_SET) return arr_tp.append(" dimensional array of set of int");
     else if(tp.bt() == Type::BT_FLOAT && tp.st() == Type::ST_SET) return arr_tp.append(" dimensional array of set of float");
@@ -136,7 +151,7 @@ void exp_details(MiniZinc::Expression *exp, List &expList){
     List Gentrs;
     CharacterVector gtnms;
     Comprehension *cp = exp->cast<Comprehension>();
-    int n_genrtrs =  cp->n_generators();
+    int n_genrtrs =  cp->numberOfGenerators();
     for(int i = 0; i<n_genrtrs;i++){
       List Gentr;
       List declLists;
@@ -146,7 +161,7 @@ void exp_details(MiniZinc::Expression *exp, List &expList){
       CharacterVector dnms;
       Expression *inExp = cp->in(i);
       Expression *whereExp = cp->where(i);
-      for(int j = 0; j < cp->n_decls(i); j++){
+      for(int j = 0; j < cp->numberOfDecls(i); j++){
         List declList;
         Expression *vd = cp->decl(i, j);
         exp_details(vd, declList);
@@ -270,7 +285,7 @@ void exp_details(MiniZinc::Expression *exp, List &expList){
     Call *cl = exp->cast<Call>();
     List cArgs;
     List cnms;
-    for(int k = 0; k < cl->n_args(); k++){
+    for(int k = 0; k < cl->argCount(); k++){
       List cArg;
       exp_details(cl->arg(k), cArg);
       cArgs.push_back(cArg);
@@ -280,7 +295,7 @@ void exp_details(MiniZinc::Expression *exp, List &expList){
     }
     cArgs.names() = cnms;
     List cList;
-    cList.push_back(cl->id().str().c_str());
+    cList.push_back(cl->id().c_str());
     cList.push_back(cArgs);
     cList.names() = CharacterVector({"NAME", "ARGUMENTS"});
     expList.push_back(cList);
@@ -302,7 +317,7 @@ void exp_details(MiniZinc::Expression *exp, List &expList){
     UnOp *uo = exp->cast<UnOp>();
     List uoArgs;
     CharacterVector uonms;
-    for(int i=0; i < uo->n_args(); i++) {
+    for(int i=0; i < uo->argCount(); i++) {
       List uoArg;
       exp_details(uo->arg(i), uoArg);
       uoArgs.push_back(uoArg);
@@ -367,14 +382,14 @@ void exp_details(MiniZinc::Expression *exp, List &expList){
     CharacterVector thennms;
     for(int i=0; i < ite->size(); i++){
       List ifExp;
-      exp_details(ite->e_if(i), ifExp);
+      exp_details(ite->ifExpr(i), ifExp);
       ifExps.push_back(ifExp);
       string iF = "IF";
       iF.append(to_string(i+1));
       ifnms.push_back(iF);
       
       List thenExp;
-      exp_details(ite->e_then(i), thenExp);
+      exp_details(ite->thenExpr(i), thenExp);
       thenExps.push_back(thenExp);
       string then = "THEN";
       then.append(to_string(i+1));
@@ -383,7 +398,7 @@ void exp_details(MiniZinc::Expression *exp, List &expList){
     ifExps.names() = ifnms;
     thenExps.names() = thennms;
     List elseExp;
-    exp_details(ite->e_else(), elseExp);
+    exp_details(ite->elseExpr(), elseExp);
     List iteList = {ifExps, thenExps, elseExp};
     iteList.names() = CharacterVector({"IF", "THEN", "ELSE"});
     expList.push_back(iteList);
@@ -417,7 +432,7 @@ void exp_details(MiniZinc::Expression *exp, List &expList){
     CharacterVector tinms;
     
     // decision variables or parameters
-    if(tExp->type().ispar()){
+    if(tExp->type().isPar()){
       //parameter
       TI.push_back("par");
     }else{
@@ -474,20 +489,9 @@ void exp_details(MiniZinc::Expression *exp, List &expList){
   }
 }
 
-//' @title MiniZinc syntax parser
-//' 
-//' @description parses the MiniZinc syntax into R objects
-//'
-//' @importFrom Rcpp sourceCpp
-//' @export mzn_parse
-//' @useDynLib rminizinc, .registration=TRUE
-//' @param model_string string representation of the MiniZinc model.
-//' @param mzn_path the path of model mzn.
-//' @param include_path path of the included mzn in the model if it exists.
-// [[Rcpp::export]]
-Environment mzn_parse(std::string model_string = "",
-                      std::string mzn_path = "",
-                      Nullable<std::vector<std::string>> include_path = R_NilValue){
+Environment mzn_parse(std::string model_string,
+                      std::string mzn_path,
+                      Nullable<std::vector<std::string>> include_path){
   
   model_string  = pathStringcheck(model_string, mzn_path);
   vector<string> ip;
@@ -779,10 +783,11 @@ Environment mzn_parse(std::string model_string = "",
 }
 
 #else
-Environment mzn_parse(std::string model_string = "",
-                      std::string mzn_path = "",
-                      Nullable<std::vector<std::string>> include_path = R_NilValue){
-  Rcpp::stop("Please set up MiniZinc, libminizinc and re-install the package");
+
+Environment mzn_parse(std::string model_string,
+                      std::string mzn_path,
+                      Nullable<std::vector<std::string>> include_path){
+  Rcpp::stop("Please install libminizinc on your system!");
 }
 
 #endif
