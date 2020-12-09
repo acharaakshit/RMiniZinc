@@ -1,5 +1,7 @@
 #include <Rcpp.h>
 
-std::string filetoString(std::string filepath);
-std::string pathStringcheck(std::string modelString, std::string mznpath);
+using namespace std;
+
+string filetoString(string filepath);
+string pathStringcheck(string modelString, string mznpath);
 int dirExists(const char* const path);

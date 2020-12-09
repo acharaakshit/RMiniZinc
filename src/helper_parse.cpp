@@ -1,7 +1,7 @@
 #include <fstream>
 #include <sys/types.h>
 #include <sys/stat.h>
-
+#include <Rcpp.h>
 #include "helper_parse.h"
 
 
@@ -33,9 +33,9 @@ std::string filetoString(std::string filepath) {
 // check if mznpath or model string is passed and take appropriate action
 std::string pathStringcheck(std::string modelString, std::string mznpath){
   if(modelString.empty() && mznpath.empty()){
-    Rcpp::stop("PROVIDE EITHER modelString OR mznfilename");
+    Rcpp::stop("PROVIDE EITHER modelString OR mznpath");
   }else if(!modelString.empty() && !mznpath.empty()){
-    Rcpp::stop("PROVIDE ONLY ONE OF modelString OR mznfilename");
+    Rcpp::stop("PROVIDE ONLY ONE OF modelString OR mznpath");
   }else if(mznpath.length()){
     // check file extension
     if(!(mznpath.substr(mznpath.find_last_of(".") + 1) == "mzn" ))
