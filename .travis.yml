@@ -14,6 +14,7 @@ jobs:
         - sudo -E cmake CMakeLists.txt;
         - sudo make;
         - sudo make install;
+        - cd $TRAVIS_BUILD_DIR;
       cache: packages
     - os: osx
       language: R
@@ -24,6 +25,7 @@ jobs:
         - hdiutil unmount '''/Volumes/MiniZinc IDE 2.4.3 (bundled)/''' ;
         - export PATH=/Applications/MiniZincIDE.app/Contents/Resources:$PATH ;
         - echo PATH ;
+        - cd $TRAVIS_BUILD_DIR;
   allow_failures:
     os: osx
    
