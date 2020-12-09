@@ -6,10 +6,6 @@ jobs:
       language: R
       sudo: required
       before_install:
-        - ls;
-        - ls /home/travis/build/acharaakshit;
-        - ls /home/travis/build/acharaakshit/RMiniZinc;
-        - ls /home/travis/build/acharaakshit/RMiniZinc/src;
         - cd /usr/local/lib;
         - sudo git clone https://github.com/MiniZinc/libminizinc.git; 
         - cd libminizinc/;
@@ -18,21 +14,6 @@ jobs:
         - sudo -E cmake CMakeLists.txt;
         - sudo make;
         - sudo make install;
-        - sudo cp -r /snap/minizinc/current/share/minizinc/solvers  /usr/local/lib/libminizinc/share/minizinc;
-        - cd share/minizinc/solvers;
-        - sudo sed -i 's+../../../bin+/snap/minizinc/current/bin+g' gecode.msc; 
-        - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/libminizinc;
-        - sudo echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib/libminizinc' >> ~/.bashrc;
-        - sudo ldconfig;
-        - sudo cp -r /snap/minizinc/current/share/minizinc/. /usr/local/share/minizinc/;
-        - cd /usr/local/share/minizinc/solvers;
-        - sudo sed -i 's+../../../bin+/snap/minizinc/current/bin+g' gecode.msc;
-        - cd;
-        - echo $TRAVIS_BUILD_DIR;
-        - cd $TRAVIS_BUILD_DIR;
-      addons:
-        snaps:
-          - minizinc --classic
       cache: packages
     - os: osx
       language: R

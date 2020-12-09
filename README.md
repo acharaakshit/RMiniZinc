@@ -17,28 +17,30 @@
 
 ### INSTALLATION
 
-This package is currently available only for Linux users, the support for OSX and Windows users will be added soon.   
+First, You need to download and build libminizinc library for MiniZinc to work properly. Please follow these steps:
 
-* **Setting up MiniZinc**
-  * `snap install minizinc --classic`
-  * Install and set up [libminizinc]((https://github.com/MiniZinc/libminizinc.git))
-    * `sudo git clone https://github.com/MiniZinc/libminizinc.git`
+Linux:
+
+ * `sudo git clone https://github.com/MiniZinc/libminizinc.git`
     * `cd libminizinc/`  
     *  `sudo sed -i '3 i set(CMAKE_POSITION_INDEPENDENT_CODE ON)' CMakeLists.txt`
     * `sudo cmake CMakeLists.txt`
     * `sudo make`
     * `sudo make install`
-    * `sudo cp -r /snap/minizinc/current/share/minizinc/solvers  /path/to/libminizinc/share/minizinc`
-    * `cd share/minizinc/solvers`
-    * `sudo sed -i 's+../../../bin+/snap/minizinc/current/bin+g' gecode.msc`
-    * `export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/path/to/libminizinc`
-    * `sudo echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/path/to/libminizinc' >> ~/.bashrc`
-    * `sudo ldconfig`
-    * `sudo sed -i 's+../../../bin+/snap/minizinc/current/bin+g' gecode.msc`
+    
+Similarly, build libminizinc on Windows and OSX.
 
-* **Install rminizinc**
-  * `remotes::install_github("acharaakshit/rminizinc", configure.args="--with-mzn=/path/to/libminizinc")`  
-  * Please note that if path arguments are not passed along with the installation (as `--with-mzn`), the default path `/usr/local/lib` will be chosen so you will require to install libminizinc in `/usr/local/lib`.
+Now download the solver binaries from the binary bundles at (https://www.minizinc.org/) to be able to solve the models and achieve full functionality of the package.
+
+Once these steps are over, you just need to re-install rminizinc by using
+
+* `remotes::install_github("acharaakshit/rminizinc", configure.args="--with-mzn=/path/to/libminizinc")`  
+
+* Please note that if path arguments are not passed along with the installation (as `--with-mzn`), the default path `/usr/local/lib` for Linux and OSX, and `C:/Program Files/` for Windows  will be chosen but only if libminizinc in present in these default paths.
+
+If you have the source tar, then you can do `R CMD INSTALL rminizinc_0.0.0.99.tar.gz --configure-args="--with-bin=/home/akshit/Documents/GSOC/bin --with-mzn=/path/to/libminizinc/"`
+
+NOTE: Please don't use `\` at the end of the path given to `--with-bin` as it will cause some solver configuration issues.
 
 ### FEATURES
 
