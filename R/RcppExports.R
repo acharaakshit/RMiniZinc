@@ -8,14 +8,16 @@
 #' @importFrom Rcpp sourceCpp
 #' @export mzn_eval
 #' @useDynLib rminizinc, .registration=TRUE
-#' @param solver the name of the solver to use.
 #' @param lib_path the path of the library where the solver is present.
 #' @param r_model R6 Model object
+#' @param mzn_path path of the mzn file to be solved
+#' @param model_string model string to be solved.
+#' @param solver the name of the solver to use.
 #' @param dzn_path path of the datafile to be used.
 #' @param all_solutions bool to specify if all solutions are specified.
 #' @param time_limit stop after <time_limit> milliseconds
-mzn_eval <- function(solver, lib_path, r_model, dzn_path = "", all_solutions = TRUE, time_limit = 300000L) {
-    .Call(`_rminizinc_mzn_eval`, solver, lib_path, r_model, dzn_path, all_solutions, time_limit)
+mzn_eval <- function(lib_path = "", r_model = NULL, mzn_path = "", model_string = "", solver = "org.gecode.gecode", dzn_path = "", all_solutions = TRUE, time_limit = 300000L) {
+    .Call(`_rminizinc_mzn_eval`, lib_path, r_model, mzn_path, model_string, solver, dzn_path, all_solutions, time_limit)
 }
 
 #' @title MiniZinc syntax parser

@@ -5,20 +5,26 @@
 \title{MiniZinc model evaluation}
 \usage{
 mzn_eval(
-  solver,
-  lib_path,
-  r_model,
+  lib_path = "",
+  r_model = NULL,
+  mzn_path = "",
+  model_string = "",
+  solver = "org.gecode.gecode",
   dzn_path = "",
   all_solutions = TRUE,
   time_limit = 300000L
 )
 }
 \arguments{
-\item{solver}{the name of the solver to use.}
-
 \item{lib_path}{the path of the library where the solver is present.}
 
 \item{r_model}{R6 Model object}
+
+\item{mzn_path}{path of the mzn file to be solved}
+
+\item{model_string}{model string to be solved.}
+
+\item{solver}{the name of the solver to use.}
 
 \item{dzn_path}{path of the datafile to be used.}
 

@@ -6,18 +6,20 @@
 using namespace Rcpp;
 
 // mzn_eval
-List mzn_eval(std::string solver, std::string lib_path, Environment& r_model, std::string dzn_path, bool all_solutions, int time_limit);
-RcppExport SEXP _rminizinc_mzn_eval(SEXP solverSEXP, SEXP lib_pathSEXP, SEXP r_modelSEXP, SEXP dzn_pathSEXP, SEXP all_solutionsSEXP, SEXP time_limitSEXP) {
+List mzn_eval(std::string lib_path, Rcpp::Nullable<Rcpp::Environment> r_model, std::string mzn_path, std::string model_string, std::string solver, std::string dzn_path, bool all_solutions, int time_limit);
+RcppExport SEXP _rminizinc_mzn_eval(SEXP lib_pathSEXP, SEXP r_modelSEXP, SEXP mzn_pathSEXP, SEXP model_stringSEXP, SEXP solverSEXP, SEXP dzn_pathSEXP, SEXP all_solutionsSEXP, SEXP time_limitSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< std::string >::type solver(solverSEXP);
     Rcpp::traits::input_parameter< std::string >::type lib_path(lib_pathSEXP);
-    Rcpp::traits::input_parameter< Environment& >::type r_model(r_modelSEXP);
+    Rcpp::traits::input_parameter< Rcpp::Nullable<Rcpp::Environment> >::type r_model(r_modelSEXP);
+    Rcpp::traits::input_parameter< std::string >::type mzn_path(mzn_pathSEXP);
+    Rcpp::traits::input_parameter< std::string >::type model_string(model_stringSEXP);
+    Rcpp::traits::input_parameter< std::string >::type solver(solverSEXP);
     Rcpp::traits::input_parameter< std::string >::type dzn_path(dzn_pathSEXP);
     Rcpp::traits::input_parameter< bool >::type all_solutions(all_solutionsSEXP);
     Rcpp::traits::input_parameter< int >::type time_limit(time_limitSEXP);
-    rcpp_result_gen = Rcpp::wrap(mzn_eval(solver, lib_path, r_model, dzn_path, all_solutions, time_limit));
+    rcpp_result_gen = Rcpp::wrap(mzn_eval(lib_path, r_model, mzn_path, model_string, solver, dzn_path, all_solutions, time_limit));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -46,13 +48,10 @@ BEGIN_RCPP
 END_RCPP
 }
 
-RcppExport SEXP run_testthat_tests();
-
 static const R_CallMethodDef CallEntries[] = {
-    {"_rminizinc_mzn_eval", (DL_FUNC) &_rminizinc_mzn_eval, 6},
+    {"_rminizinc_mzn_eval", (DL_FUNC) &_rminizinc_mzn_eval, 8},
     {"_rminizinc_mzn_parse", (DL_FUNC) &_rminizinc_mzn_parse, 3},
     {"_rminizinc_sol_parse", (DL_FUNC) &_rminizinc_sol_parse, 1},
-    {"run_testthat_tests", (DL_FUNC) &run_testthat_tests, 0},
     {NULL, NULL, 0}
 };
 
