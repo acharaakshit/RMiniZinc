@@ -347,13 +347,14 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 </ul></li>
 </ul>
 <p>Similarly, build libminizinc on Windows and OSX.</p>
-<p>Now download the solver binaries from the binary bundles to be able to solve the models and achieve full functionality of the package.</p>
+<p>Now download the solver binaries from the binary bundles at (<a href="https://www.minizinc.org/" class="uri">https://www.minizinc.org/</a>) to be able to solve the models and achieve full functionality of the package.</p>
 <p>Once these steps are over, you just need to re-install rminizinc by using</p>
 <ul>
 <li><p><code>remotes::install_github(&quot;acharaakshit/rminizinc&quot;, configure.args=&quot;--with-mzn=/path/to/libminizinc&quot;)</code></p></li>
 <li><p>Please note that if path arguments are not passed along with the installation (as <code>--with-mzn</code>), the default path <code>/usr/local/lib</code> for Linux and OSX, and <code>C:/Program Files/</code> for Windows will be chosen but only if libminizinc in present in these default paths.</p></li>
 </ul>
-<p>If you have the source tar, then you can do <code>R CMD INSTALL --configure-args=&#39;--with-mzn=/path/to/libminizinc&#39; rminizinc_0.0.0.99.tar.gz</code></p>
+<p>If you have the source tar, then you can do <code>R CMD INSTALL rminizinc_0.0.0.99.tar.gz --configure-args=&quot;--with-bin=/path/to/bin --with-mzn=/path/to/libminizinc/&quot;</code></p>
+<p>NOTE: Please don’t use <code>\</code> at the end of the path given to <code>--with-bin</code> as it will cause some solver configuration issues.</p>
 </div>
 <div id="getting-started" class="section level2">
 <h2>Getting Started</h2>
