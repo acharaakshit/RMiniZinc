@@ -145,7 +145,7 @@ List mzn_eval(std::string lib_path, Nullable<Environment> r_model,
               std::string solver,
               std::string dzn_path,
               bool all_solutions, int time_limit){
-  Rcpp::stop("Please install libminizinc on your system and provide solver binaries!");
+  Rcpp::stop("Please install libminizinc (2.5.2) on your system and provide solver binaries!");
 }
 
 #endif

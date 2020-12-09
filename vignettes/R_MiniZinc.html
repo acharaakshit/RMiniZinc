@@ -12,7 +12,7 @@
 
 <meta name="author" content="Akshit Achara, Lars Kotthoff" />
 
-<meta name="date" content="2020-12-09" />
+<meta name="date" content="2020-12-10" />
 
 <title>MiniZinc Interface for R</title>
 
@@ -319,7 +319,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">MiniZinc Interface for R</h1>
 <h4 class="author">Akshit Achara, Lars Kotthoff</h4>
-<h4 class="date">2020-12-09</h4>
+<h4 class="date">2020-12-10</h4>
 
 
 
@@ -333,7 +333,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 </div>
 <div id="installation" class="section level2">
 <h2>Installation</h2>
-<p>First, You need to download and build libminizinc library for MiniZinc to work properly. Please follow these steps:</p>
+<p>First, You need to download and build libminizinc (2.5.2) library for MiniZinc to work properly. Please follow these steps:</p>
 <p>Linux:</p>
 <ul>
 <li><code>sudo git clone https://github.com/MiniZinc/libminizinc.git</code>
@@ -450,7 +450,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="co"># R List object containing the solutions</span></span>
 <span id="cb8-2"><a href="#cb8-2"></a>solObj =<span class="st"> </span>rminizinc<span class="op">:::</span><span class="kw">mzn_eval</span>(model, <span class="dt">solver =</span> <span class="st">&quot;org.gecode.gecode&quot;</span>,</span>
 <span id="cb8-3"><a href="#cb8-3"></a>                   <span class="dt">lib_path =</span> <span class="kw">paste0</span>(PROJECT_DIRECTORY, <span class="st">&quot;/inst/minizinc/&quot;</span>))</span></code></pre></div>
-<pre><code>## Error in rminizinc:::mzn_eval(model, solver = &quot;org.gecode.gecode&quot;, lib_path = paste0(PROJECT_DIRECTORY, : Please install libminizinc on your system and provide solver binaries!</code></pre>
+<pre><code>## Error in rminizinc:::mzn_eval(model, solver = &quot;org.gecode.gecode&quot;, lib_path = paste0(PROJECT_DIRECTORY, : Please install libminizinc (2.5.2) on your system and provide solver binaries!</code></pre>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="co"># get all the solutions</span></span>
 <span id="cb10-2"><a href="#cb10-2"></a><span class="kw">print</span>(solObj<span class="op">$</span>SOLUTIONS)</span></code></pre></div>
 <pre><code>## Error in print(solObj$SOLUTIONS): object &#39;solObj&#39; not found</code></pre>
@@ -476,7 +476,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb16-5"><a href="#cb16-5"></a>                                   <span class="kw">mzn_parse</span>(<span class="dt">mzn_path =</span> mzn_path))</span></code></pre></div>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># R List object containing the solutions</span></span>
 <span id="cb17-2"><a href="#cb17-2"></a>solObj =<span class="st"> </span>rminizinc<span class="op">:::</span><span class="kw">mzn_eval</span>(<span class="dt">r_model =</span> model)</span></code></pre></div>
-<pre><code>## Error in rminizinc:::mzn_eval(r_model = model): Please install libminizinc on your system and provide solver binaries!</code></pre>
+<pre><code>## Error in rminizinc:::mzn_eval(r_model = model): Please install libminizinc (2.5.2) on your system and provide solver binaries!</code></pre>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="co"># get all the solutions</span></span>
 <span id="cb19-2"><a href="#cb19-2"></a><span class="kw">print</span>(solObj<span class="op">$</span>SOLUTIONS)</span></code></pre></div>
 <pre><code>## Error in print(solObj$SOLUTIONS): object &#39;solObj&#39; not found</code></pre>
@@ -686,6 +686,10 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb40-6"><a href="#cb40-6"></a><span class="kw">sprintf</span>(<span class="st">&quot;The modified constraint is: %s&quot;</span>, cItem<span class="op">$</span><span class="kw">c_str</span>())</span></code></pre></div>
 <pre><code>## [1] &quot;The current constraint is: constraint (sum(a) &lt; 10);\n&quot;
 ## [1] &quot;The modified constraint is: constraint (max(a) &lt; 10);\n&quot;</code></pre>
+</div>
+<div id="acknowledgment" class="section level2">
+<h2>ACKNOWLEDGMENT</h2>
+<p>I would like to thank all the developers of <a href="https://github.com/MiniZinc/libminizinc">libminizinc</a> for allowing me to use the library in my package and for providing help in understanding the usage of the library and MiniZinc.</p>
 </div>
 
 

@@ -4,11 +4,10 @@ PKG_LIBS = @MZN_LIBS@
 OBJECTS.sources = RcppExports.o mzn_parse.o mzn_eval.o sol_parse.o  
 OBJECTS.helpers = helper_parse.o 
 OBJECTS=$(OBJECTS.sources) $(OBJECTS.helpers) $(SOURCES:.cpp=.o)
-strippedLib: $(SHLIB)
-	if test -e "/usr/bin/strip"; then /usr/bin/strip --strip-debug $(SHLIB); fi
+all: $(SHLIB)
 	$(R_HOME)/bin/Rscript -e "LIBMINIZINC_PATH <- '@MZN_LIBS@'; save(LIBMINIZINC_PATH, file='../data/config.RData')"
 	$(R_HOME)/bin/Rscript -e "PROJECT_DIRECTORY <- '@PROJ_ROOT@'; save(PROJECT_DIRECTORY, file='../data/proot.RData')"
 	$(R_HOME)/bin/Rscript -e "SOLVER_BIN <- '@BIN_PATH@'; save(SOLVER_BIN, file='../data/slvbin.RData')"
 clean:
 	rm -f $(OBJECTS) Makevars *.so
-.phony: strippedLib clean
+.phony: all clean

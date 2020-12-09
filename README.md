@@ -17,7 +17,7 @@
 
 ### INSTALLATION
 
-First, You need to download and build libminizinc library for MiniZinc to work properly. Please follow these steps:
+First, You need to download and build libminizinc (2.5.2) library for MiniZinc to work properly. Please follow these steps:
 
 Linux:
 

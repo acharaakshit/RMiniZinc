@@ -787,7 +787,7 @@ Environment mzn_parse(std::string model_string,
 Environment mzn_parse(std::string model_string,
                       std::string mzn_path,
                       Nullable<std::vector<std::string>> include_path){
-  Rcpp::stop("Please install libminizinc on your system!");
+  Rcpp::stop("Please install libminizinc (2.5.2) on your system!");
 }
 
 #endif
