@@ -7,6 +7,6 @@
 LICENSE
 ^\.travis\.yml$
 ^aclocal.m4$
-\.o$
-\.so$
-.dll$
+^.*\.o$
+^.*\.so$
+^.*\.dll$

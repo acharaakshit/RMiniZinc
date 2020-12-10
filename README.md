@@ -38,7 +38,7 @@ Once these steps are over, you just need to re-install rminizinc by using
 
 * Please note that if path arguments are not passed along with the installation (as `--with-mzn`), the default path `/usr/local/lib` for Linux and OSX, and `C:/Program Files/` for Windows  will be chosen but only if libminizinc in present in these default paths.
 
-If you have the source tar, then you can do `R CMD INSTALL rminizinc_0.0.0.99.tar.gz --configure-args="--with-bin=/home/akshit/Documents/GSOC/bin --with-mzn=/path/to/libminizinc/"`
+If you have the source tar, then you can do `R CMD INSTALL rminizinc_0.0.1.tar.gz --configure-args="--with-bin=/home/akshit/Documents/GSOC/bin --with-mzn=/path/to/libminizinc/"`
 
 NOTE: Please don't use `\` at the end of the path given to `--with-bin` as it will cause some solver configuration issues.
 
