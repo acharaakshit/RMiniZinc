@@ -10,9 +10,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<meta name="author" content="Akshit Achara, Lars Kotthoff, Guido Tack, Hans W. Borchers" />
+<meta name="author" content="Akshit Achara, Lars Kotthoff, Hans W. Borchers, Guido Tack" />
 
-<meta name="date" content="2020-12-10" />
+<meta name="date" content="2020-12-14" />
 
 <title>MiniZinc Interface for R</title>
 
@@ -318,8 +318,8 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 <h1 class="title toc-ignore">MiniZinc Interface for R</h1>
-<h4 class="author">Akshit Achara, Lars Kotthoff, Guido Tack, Hans W. Borchers</h4>
-<h4 class="date">2020-12-10</h4>
+<h4 class="author">Akshit Achara, Lars Kotthoff, Hans W. Borchers, Guido Tack</h4>
+<h4 class="date">2020-12-14</h4>
 
 
 
@@ -349,12 +349,9 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <p>Similarly, build libminizinc on Windows and OSX.</p>
 <p>Now download the solver binaries from the binary bundles at (<a href="https://www.minizinc.org/" class="uri">https://www.minizinc.org/</a>) to be able to solve the models and achieve full functionality of the package.</p>
 <p>Once these steps are over, you just need to re-install rminizinc by using</p>
-<ul>
-<li><p><code>remotes::install_github(&quot;acharaakshit/rminizinc&quot;, configure.args=&quot;--with-mzn=/path/to/libminizinc&quot;)</code></p></li>
-<li><p>Please note that if path arguments are not passed along with the installation (as <code>--with-mzn</code>), the default path <code>/usr/local/lib</code> for Linux and OSX, and <code>C:/Program Files/</code> for Windows will be chosen but only if libminizinc in present in these default paths.</p></li>
-</ul>
-<p>If you have the source tar, then you can do <code>R CMD INSTALL rminizinc_0.0.1.tar.gz --configure-args=&quot;--with-bin=/path/to/bin --with-mzn=/path/to/libminizinc/&quot;</code></p>
+<p><code>install.packages(&quot;rminizinc&quot;, configure.args=&quot;--with-mzn=/path/to/libminizinc --with-bin=/path/to/bin&quot;)</code></p>
 <p>NOTE: Please don’t use <code>\</code> at the end of the path given to <code>--with-bin</code> as it will cause some solver configuration issues.</p>
+<p>Please note that if path arguments are not passed along with the installation (as <code>--with-mzn</code>), the default path <code>/usr/local/lib</code> for Linux and OSX, and <code>C:/Program Files/</code> for Windows will be chosen but only if libminizinc in present in these default paths.</p>
 </div>
 <div id="getting-started" class="section level2">
 <h2>Getting Started</h2>

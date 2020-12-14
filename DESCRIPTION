@@ -1,11 +1,11 @@
 Package: rminizinc
 Type: Package
-Title: R Interface to Use MiniZinc
+Title: R Interface to Use 'MiniZinc'
 Version: 0.0.1
 Author: Akshit Achara, Lars Kotthoff, Hans W. Borchers, Guido Tack
 Maintainer: Akshit Achara <acharaakshit@gmail.com>
-Description: R users can use the package to solve constraint programming problems without using MiniZinc
-    directly, modify existing MiniZinc models and also create their own models.
+Description: R users can use the package to solve constraint programming problems without using 'MiniZinc'
+    directly, modify existing 'MiniZinc' models and also create their own models.
 License: Mozilla Public License Version 2.0
 Encoding: UTF-8
 LazyData: TRUE

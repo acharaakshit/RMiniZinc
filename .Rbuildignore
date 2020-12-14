@@ -4,9 +4,11 @@
 ^doc$
 ^Meta$
 ^Readme\.md$
-LICENSE
+^LICENSE
 ^\.travis\.yml$
 ^aclocal.m4$
 ^.*\.o$
 ^.*\.so$
 ^.*\.dll$
+^src/Makevars$
+^cran-comments\.md$
