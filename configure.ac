@@ -21,17 +21,11 @@ case "${OS}" in
     *)
         uname_str=`uname -s`
         case "${uname_str}" in
-            Linux*)
-                BUILD_PLATFORM=Linux
-                ;;
-            Darwin*)
-                BUILD_PLATFORM=Darwin
-                ;;
             cygwin*|mingw*)
                 BUILD_PLATFORM=Windows
                 ;;
             *)
-                AC_MSG_ERROR(["OS $unamestr is not supported"])
+                BUILD_PLATFORM=MAC_OR_UNIX-LIKE
                 ;;
         esac
 esac
@@ -95,12 +89,12 @@ AC_ARG_WITH(
 					MZN_LIBS="-L${DEFAULT_INCLUDE} -lmzn"
 					MZN_LIB_PATH="${DEFAULT_INCLUDE}/libmzn.a"
 					
-					AC_CHECK_HEADER("${MZN_HEADER_PATH}/ast.hh",
- 						[AC_SUBST([MZN_PATH], 50)], [AC_MSG_NOTICE([header file ast.hh not found at default path!])])
 					file=${DEFAULT_INCLUDE}/libmzn.a
 
 					if [test -e "$file" ]; then
   							AC_SUBST([LIB_PATH], "${DEFAULT_INCLUDE}/libmzn.a")
+                            AC_CHECK_HEADER("${MZN_HEADER_PATH}/ast.hh",
+                            [AC_SUBST([MZN_PATH], 50)], [AC_MSG_NOTICE([header file ast.hh not found at default path!])])
 					else 
   							AC_MSG_NOTICE([libmzn.a not found at default path!])
 					fi 
@@ -112,13 +106,13 @@ AC_ARG_WITH(
 					MZN_HEADER_PATH="${DEFAULT_INCLUDE}/include/minizinc"
 					MZN_LIBS="-L${DEFAULT_INCLUDE} -lmzn"
 					MZN_LIB_PATH="${DEFAULT_INCLUDE}/libmzn.a"
-					AC_CHECK_HEADER("${MZN_HEADER_PATH}/ast.hh",
- 						[AC_SUBST([MZN_PATH], 50)], [AC_MSG_NOTICE([header file ast.hh not found at default path!])])
 
  					file=${DEFAULT_INCLUDE}/libmzn.a
 					
 					if [test -e "$file" ]; then
     					AC_SUBST([LIB_PATH], "${DEFAULT_INCLUDE}/libmzn.a")
+                        AC_CHECK_HEADER("${MZN_HEADER_PATH}/ast.hh",
+                        [AC_SUBST([MZN_PATH], 50)], [AC_MSG_NOTICE([header file ast.hh not found at default path!])])
 					else 
     					AC_MSG_NOTICE([libmzn.a not found at default path!])
 					fi 
@@ -134,7 +128,14 @@ AC_ARG_WITH(
         [path to the solver binaries. DON'T USE BACKSLASH AT THE END OF THE PATH])],
         [
         	AC_SUBST([BIN_PATH], ${with_bin})
-        	AC_SUBST([SLV_BIN], 50)
+            AS_IF([test "$MZN_PATH" = "50"], 
+                [
+                    AC_SUBST([SLV_BIN], 50)        
+                ],
+                [
+                    AC_MSG_NOTICE([Solver binaries are present but libminizinc is not present!])
+                ] )
+        	
         	AC_CONFIG_FILES([inst/minizinc/solvers/gecode.msc])
         	AC_CONFIG_FILES([inst/minizinc/solvers/chuffed.msc])
         	AC_CONFIG_FILES([inst/minizinc/solvers/findmus.msc])
@@ -150,12 +151,13 @@ AC_SUBST([PROJ_ROOT], "$ac_abs_confdir")
 AS_IF([test "${MZN_PATH}" != 50],
 			[
 				MZN_HEADER_PATH=""
-				MZN_INCLUDE=""
+                MZN_INCLUDE=""
+                MZN_LIBS=""
 			])
 
 AS_IF([test "${LIB_PATH}" = ""],
 			[
-				MZN_LIBS=""
+                MZN_LIBS=""
 			])
 
 CPP_FLAGS="${CPP_FLAGS} ${MZN_INCLUDE}"

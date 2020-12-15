@@ -3031,17 +3031,11 @@ case "${OS}" in
     *)
         uname_str=`uname -s`
         case "${uname_str}" in
-            Linux*)
-                BUILD_PLATFORM=Linux
-                ;;
-            Darwin*)
-                BUILD_PLATFORM=Darwin
-                ;;
             cygwin*|mingw*)
                 BUILD_PLATFORM=Windows
                 ;;
             *)
-                as_fn_error $? "\"OS $unamestr is not supported\"" "$LINENO" 5
+                BUILD_PLATFORM=MAC_OR_UNIX-LIKE
                 ;;
         esac
 esac
@@ -3779,8 +3773,6 @@ else
 
               if test "$BUILD_PLATFORM" = "Windows"; then :
 
-                { $as_echo "$as_me:${as_lineno-$LINENO}: Windows will be supported soon!" >&5
-$as_echo "$as_me: Windows will be supported soon!" >&6;}
                 { $as_echo "$as_me:${as_lineno-$LINENO}: Custom libminizinc path not provided!" >&5
 $as_echo "$as_me: Custom libminizinc path not provided!" >&6;}
                 DEFAULT_INCLUDE="C:/Program Files/libminizinc"
@@ -3790,7 +3782,12 @@ $as_echo "$as_me: Custom libminizinc path not provided!" >&6;}
           MZN_LIBS="-L${DEFAULT_INCLUDE} -lmzn"
           MZN_LIB_PATH="${DEFAULT_INCLUDE}/libmzn.a"
 
-          as_ac_Header=`$as_echo "ac_cv_header_"${MZN_HEADER_PATH}/ast.hh"" | $as_tr_sh`
+          file=${DEFAULT_INCLUDE}/libmzn.a
+
+          if test -e "$file" ; then
+                LIB_PATH="${DEFAULT_INCLUDE}/libmzn.a"
+
+                            as_ac_Header=`$as_echo "ac_cv_header_"${MZN_HEADER_PATH}/ast.hh"" | $as_tr_sh`
 ac_fn_cxx_check_header_mongrel "$LINENO" ""${MZN_HEADER_PATH}/ast.hh"" "$as_ac_Header" "$ac_includes_default"
 if eval test \"x\$"$as_ac_Header"\" = x"yes"; then :
   MZN_PATH=50
@@ -3800,11 +3797,6 @@ else
 $as_echo "$as_me: header file ast.hh not found at default path!" >&6;}
 fi
 
-
-          file=${DEFAULT_INCLUDE}/libmzn.a
-
-          if test -e "$file" ; then
-                LIB_PATH="${DEFAULT_INCLUDE}/libmzn.a"
 
           else
                 { $as_echo "$as_me:${as_lineno-$LINENO}: libmzn.a not found at default path!" >&5
@@ -3821,7 +3813,13 @@ $as_echo "$as_me: Custom libminizinc path not provided!" >&6;}
           MZN_HEADER_PATH="${DEFAULT_INCLUDE}/include/minizinc"
           MZN_LIBS="-L${DEFAULT_INCLUDE} -lmzn"
           MZN_LIB_PATH="${DEFAULT_INCLUDE}/libmzn.a"
-          as_ac_Header=`$as_echo "ac_cv_header_"${MZN_HEADER_PATH}/ast.hh"" | $as_tr_sh`
+
+          file=${DEFAULT_INCLUDE}/libmzn.a
+
+          if test -e "$file" ; then
+              LIB_PATH="${DEFAULT_INCLUDE}/libmzn.a"
+
+                        as_ac_Header=`$as_echo "ac_cv_header_"${MZN_HEADER_PATH}/ast.hh"" | $as_tr_sh`
 ac_fn_cxx_check_header_mongrel "$LINENO" ""${MZN_HEADER_PATH}/ast.hh"" "$as_ac_Header" "$ac_includes_default"
 if eval test \"x\$"$as_ac_Header"\" = x"yes"; then :
   MZN_PATH=50
@@ -3831,12 +3829,6 @@ else
 $as_echo "$as_me: header file ast.hh not found at default path!" >&6;}
 fi
 
-
-
-          file=${DEFAULT_INCLUDE}/libmzn.a
-
-          if test -e "$file" ; then
-              LIB_PATH="${DEFAULT_INCLUDE}/libmzn.a"
 
           else
               { $as_echo "$as_me:${as_lineno-$LINENO}: libmzn.a not found at default path!" >&5
@@ -3856,7 +3848,17 @@ if test "${with_bin+set}" = set; then :
   withval=$with_bin;
           BIN_PATH=${with_bin}
 
-          SLV_BIN=50
+            if test "$MZN_PATH" = "50"; then :
+
+                    SLV_BIN=50
+
+
+else
+
+                    { $as_echo "$as_me:${as_lineno-$LINENO}: Solver binaries are present but libminizinc is not present!" >&5
+$as_echo "$as_me: Solver binaries are present but libminizinc is not present!" >&6;}
+
+fi
 
           ac_config_files="$ac_config_files inst/minizinc/solvers/gecode.msc"
 
@@ -3883,13 +3885,14 @@ PROJ_ROOT="$ac_abs_confdir"
 if test "${MZN_PATH}" != 50; then :
 
         MZN_HEADER_PATH=""
-        MZN_INCLUDE=""
+                MZN_INCLUDE=""
+                MZN_LIBS=""
 
 fi
 
 if test "${LIB_PATH}" = ""; then :
 
-        MZN_LIBS=""
+                MZN_LIBS=""
 
 fi
 
@@ -3898,24 +3901,16 @@ CXX_FLAGS="${CXX_FLAGS} ${MZN_INCLUDE}"
 LDFLAGS="${LDFLAGS} ${MZN_LIBS}"
 
 
-if test "$BUILD_PLATFORM" = "Linux"; then :
+if test "$BUILD_PLATFORM" = "Windows"; then :
+
+  ac_config_files="$ac_config_files src/Makevars.win"
+
+
+else
 
   ac_config_files="$ac_config_files src/Makevars"
 
 
-else
-
-  if test "$BUILD_PLATFORM" = "Windows"; then :
-
-    ac_config_files="$ac_config_files src/Makevars.win"
-
-
-else
-
-    { $as_echo "$as_me:${as_lineno-$LINENO}: MAC OS will be supported soon!" >&5
-$as_echo "$as_me: MAC OS will be supported soon!" >&6;}
-
-fi
 
 fi
 
@@ -4631,8 +4626,8 @@ do
     "inst/minizinc/solvers/findmus.msc") CONFIG_FILES="$CONFIG_FILES inst/minizinc/solvers/findmus.msc" ;;
     "inst/minizinc/solvers/gecode-gist.msc") CONFIG_FILES="$CONFIG_FILES inst/minizinc/solvers/gecode-gist.msc" ;;
     "inst/minizinc/solvers/globalizer.msc") CONFIG_FILES="$CONFIG_FILES inst/minizinc/solvers/globalizer.msc" ;;
-    "src/Makevars") CONFIG_FILES="$CONFIG_FILES src/Makevars" ;;
     "src/Makevars.win") CONFIG_FILES="$CONFIG_FILES src/Makevars.win" ;;
+    "src/Makevars") CONFIG_FILES="$CONFIG_FILES src/Makevars" ;;
     "src/config.h") CONFIG_FILES="$CONFIG_FILES src/config.h" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
