@@ -1,5 +1,19 @@
 ## Notes
 
+### Third Submission
+
+> configure: error: "OS  is not supported"
+
+I was only checking for Windows, OSX and Linux OS in my configure
+script but Solaris is a different OS.
+The package should be configured differently for Windows and
+Non-Windows OS. Now, I am just checking if an OS is Windows or
+not. This will resolve issues for all types of systems.
+
+I have also updated the config.h.in file to make use
+of #if and #else correctly such that it is compatible
+with all OS.
+
 ### Second Submission
 
 > Possibly mis-spelled words in DESCRIPTION:  

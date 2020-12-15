@@ -9,3 +9,10 @@
 Load the required libraries used by 
 most of the functions and classes
 }
+\seealso{
+Useful links:
+\itemize{
+  \item Report bugs at \url{https://github.com/acharaakshit/RMiniZinc/issues}
+}
+
+}
