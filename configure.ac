@@ -1,4 +1,4 @@
-AC_INIT([rminizinc], [0.0.0.99])
+AC_INIT([rminizinc], [0.0.2])
 
 # Find the compiler and compiler flags used by R.
 : ${R_HOME=`R RHOME`}
