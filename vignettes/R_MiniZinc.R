@@ -17,6 +17,14 @@ if(SOLVER_BIN == ""){
   evaluate.next = TRUE
 }
 
+# check if vignettes should be executed
+if (!requireNamespace("rmarkdown") ||
+!rmarkdown::pandoc_available("1.14")) {
+     warning(call. = FALSE, "This vignette assumes that rmarkdown and pandoc
+version 1.14 are available. These were not found. Older versions will not work.")
+     knitr::knit_exit()
+   }
+
 ## ---- error=parse.next--------------------------------------------------------
 # mzn file path
 mzn_path = paste0(PROJECT_DIRECTORY, "/inst/extdata/mzn_examples/jobshop/jobshop_0.mzn")

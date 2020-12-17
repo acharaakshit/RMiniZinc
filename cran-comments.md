@@ -14,6 +14,10 @@ I have also updated the config.h.in file to make use
 of #if and #else correctly such that it is compatible
 with all OS.
 
+I added a check for the minimum required pandoc version in the
+vignette and also updated the SystemRequirements field of 
+Description accordingly.
+
 ### Second Submission
 
 > Possibly mis-spelled words in DESCRIPTION:  
@@ -46,17 +50,12 @@ I have added cleanup scripts for cleaning up the files instead to using `clean` 
 
 ## Test environments
 * Linux Mint 19 Tara, R version 4.0.3
-* win-builder
+* win-builder(except for r-oldrelease)
 * R-hub check_for_cran
 
 ## R CMD check results
 
-0 errors | 0 warnings | 2 notes
-
-checking CRAN incoming feasibility ... NOTE
-Maintainer: 'Akshit Achara <acharaakshit@gmail.com>'
-
-New submission
+0 errors | 0 warnings | 1 note
 
 * checking installed package size ... NOTE  
   installed size is  5.6Mb  

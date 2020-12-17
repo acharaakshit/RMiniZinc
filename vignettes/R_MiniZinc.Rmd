@@ -1,7 +1,6 @@
 ---
 title: "MiniZinc Interface for R"
 author: "Akshit Achara, Lars Kotthoff, Hans W. Borchers, Guido Tack" 
-date: "`r Sys.Date()`"
 output: 
   rmarkdown::html_vignette
 vignette: >
@@ -53,6 +52,7 @@ Please note that if path arguments are not passed along with the installation (a
 
 Load the library and the project root directory path.
 
+
 ```{r}
 library(rminizinc)
 # load the project directory
@@ -71,6 +71,14 @@ if(SOLVER_BIN == ""){
   warning("Please download solver binaries to solve the model")
   evaluate.next = TRUE
 }
+
+# check if vignettes should be executed
+if (!requireNamespace("rmarkdown") ||
+!rmarkdown::pandoc_available("1.14")) {
+     warning(call. = FALSE, "This vignette assumes that rmarkdown and pandoc
+version 1.14 are available. These were not found. Older versions will not work.")
+     knitr::knit_exit()
+   }
 ```
 
 ### Parse a MiniZinc Model
