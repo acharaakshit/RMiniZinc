@@ -1,9 +1,10 @@
 Package: rminizinc
 Type: Package
 Title: R Interface to Use 'MiniZinc'
-Version: 0.0.1
+Version: 0.0.2
 Author: Akshit Achara, Lars Kotthoff, Hans W. Borchers, Guido Tack
 Maintainer: Akshit Achara <acharaakshit@gmail.com>
+URL: https://github.com/acharaakshit/RMiniZinc
 BugReports: https://github.com/acharaakshit/RMiniZinc/issues
 Description: Constraint optimization, or constraint programming, is the name given to identifying
   feasible solutions out of a very large set of candidates, where the problem can be modeled in terms 
@@ -15,12 +16,13 @@ Description: Constraint optimization, or constraint programming, is the name giv
   modify existing 'MiniZinc' models and also create their own models.
 License: Mozilla Public License Version 2.0
 Encoding: UTF-8
-LazyData: TRUE
+LazyData: true
 RoxygenNote: 7.1.1
 Depends: R (>= 3.5.0), rjson
 Imports: R6, checkmate, Rcpp, rlang, rlist
-LinkingTo: Rcpp, testthat
+LinkingTo: Rcpp
 Suggests: knitr, rmarkdown, testthat, stringr
-VignetteBuilder: knitr, rmarkdown
+SystemRequirements: pandoc (>=1.14, needed for vignettes)
+VignetteBuilder: knitr
 Biarch: true
 
