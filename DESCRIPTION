@@ -22,7 +22,7 @@ Depends: R (>= 3.5.0), rjson
 Imports: R6, checkmate, Rcpp, rlang, rlist
 LinkingTo: Rcpp
 Suggests: knitr, rmarkdown, testthat, stringr
-SystemRequirements: pandoc (>=1.14, needed for vignettes)
+SystemRequirements: pandoc (>=1.14, needed for the vignette)
 VignetteBuilder: knitr
 Biarch: true
 
