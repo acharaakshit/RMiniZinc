@@ -13,3 +13,4 @@
     b) solver binaries and unbuilt libminizinc (i.e. without libmzn.a)
 * Modified config.h.in to prevent possible issues on Solaris.
 * Added a check for the minimum required pandoc version in the vignette and also update the SystemRequirements field of Description accordingly.
+* Changed Rscript to Rscript.exe in Makevars.win.in to avoid issues on Windows.
