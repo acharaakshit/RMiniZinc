@@ -1,2 +1,2 @@
 #!/bin/sh
-rm -f src/Makevars src/*.o src/*.so src/config.h
+rm -rf src/Makevars.win src/*.o src/*.so src/*.dll src/config.h config.* 
