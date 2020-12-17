@@ -623,7 +623,6 @@ LIBOBJS
 PROJ_ROOT
 SLV_BIN
 BIN_PATH
-LIB_PATH
 MZN_PATH
 EGREP
 GREP
@@ -631,6 +630,7 @@ CXXCPP
 ac_ct_CXX
 CXXFLAGS
 CXX
+LIB_PATH
 MZN_LIB_PATH
 MZN_LIBS
 MZN_HEADER_PATH
@@ -3714,26 +3714,27 @@ $as_echo "$as_me: Custom libminizinc path provided!" >&6;}
 					MZN_HEADER_PATH="${with_mzn}/include/minizinc"
 					MZN_LIBS="-L${with_mzn} -lmzn"
 					MZN_LIB_PATH="${with_mzn}/libmzn.a"
-					as_ac_Header=`$as_echo "ac_cv_header_"${MZN_HEADER_PATH}/ast.hh"" | $as_tr_sh`
+
+					file=${with_mzn}/libmzn.a
+
+					if test -e "$file" ; then
+                        LIB_PATH="${with_mzn}/libmzn.a"
+
+                        as_ac_Header=`$as_echo "ac_cv_header_"${MZN_HEADER_PATH}/ast.hh"" | $as_tr_sh`
 ac_fn_cxx_check_header_mongrel "$LINENO" ""${MZN_HEADER_PATH}/ast.hh"" "$as_ac_Header" "$ac_includes_default"
 if eval test \"x\$"$as_ac_Header"\" = x"yes"; then :
   MZN_PATH=50
 
 else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: header file ast.hh not found at custom path!" >&5
-$as_echo "$as_me: header file ast.hh not found at custom path!" >&6;}
+  { $as_echo "$as_me:${as_lineno-$LINENO}: header file ast.hh not found at default path!" >&5
+$as_echo "$as_me: header file ast.hh not found at default path!" >&6;}
 fi
 
 
-					file=${with_mzn}/libmzn.a
-
-					if test -e "$file" ; then
-							LIB_PATH="${with_mzn}/libmzn.a"
-
-					else
-  							{ $as_echo "$as_me:${as_lineno-$LINENO}: libmzn.a not found at custom path!" >&5
-$as_echo "$as_me: libmzn.a not found at custom path!" >&6;}
-					fi
+                    else
+                        { $as_echo "$as_me:${as_lineno-$LINENO}: libmzn.a not found at custom path, not checked for header files!" >&5
+$as_echo "$as_me: libmzn.a not found at custom path, not checked for header files!" >&6;}
+                    fi
 
 
 else
@@ -3745,27 +3746,24 @@ $as_echo "$as_me: Custom libminizinc path provided!" >&6;}
 					MZN_LIBS="-L${with_mzn} -lmzn"
 					MZN_LIB_PATH="${with_mzn}/libmzn.a"
 
-					as_ac_Header=`$as_echo "ac_cv_header_"${MZN_HEADER_PATH}/ast.hh"" | $as_tr_sh`
+					if test -e "$file" ; then
+                        LIB_PATH="${with_mzn}/libmzn.a"
+
+                        as_ac_Header=`$as_echo "ac_cv_header_"${MZN_HEADER_PATH}/ast.hh"" | $as_tr_sh`
 ac_fn_cxx_check_header_mongrel "$LINENO" ""${MZN_HEADER_PATH}/ast.hh"" "$as_ac_Header" "$ac_includes_default"
 if eval test \"x\$"$as_ac_Header"\" = x"yes"; then :
   MZN_PATH=50
 
 else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: header file ast.hh not found at custom path!" >&5
-$as_echo "$as_me: header file ast.hh not found at custom path!" >&6;}
+  { $as_echo "$as_me:${as_lineno-$LINENO}: header file ast.hh not found at default path!" >&5
+$as_echo "$as_me: header file ast.hh not found at default path!" >&6;}
 fi
 
 
-
-					file=${with_mzn}/libmzn.a
-
-					if test -e "$file" ; then
-    					LIB_PATH="${with_mzn}/libmzn.a"
-
-					else
-    					{ $as_echo "$as_me:${as_lineno-$LINENO}: libmzn.a not found at custom path!" >&5
-$as_echo "$as_me: libmzn.a not found at custom path!" >&6;}
-					fi
+                    else
+                        { $as_echo "$as_me:${as_lineno-$LINENO}: libmzn.a not found at custom path, not checked for header files!" >&5
+$as_echo "$as_me: libmzn.a not found at custom path, not checked for header files!" >&6;}
+                    fi
 
 
 fi
@@ -3799,8 +3797,8 @@ fi
 
 
 					else
-  							{ $as_echo "$as_me:${as_lineno-$LINENO}: libmzn.a not found at default path!" >&5
-$as_echo "$as_me: libmzn.a not found at default path!" >&6;}
+  							{ $as_echo "$as_me:${as_lineno-$LINENO}: libmzn.a not found at default path, not checked for header files!" >&5
+$as_echo "$as_me: libmzn.a not found at default path, not checked for header files!" >&6;}
 					fi
 
 else
@@ -3831,8 +3829,8 @@ fi
 
 
 					else
-    					{ $as_echo "$as_me:${as_lineno-$LINENO}: libmzn.a not found at default path!" >&5
-$as_echo "$as_me: libmzn.a not found at default path!" >&6;}
+    					{ $as_echo "$as_me:${as_lineno-$LINENO}: libmzn.a not found at default path, not checked for header files!" >&5
+$as_echo "$as_me: libmzn.a not found at default path, not checked for header files!" >&6;}
 					fi
 
 
@@ -3855,8 +3853,8 @@ if test "${with_bin+set}" = set; then :
 
 else
 
-                    { $as_echo "$as_me:${as_lineno-$LINENO}: Solver binaries are present but libminizinc is not present!" >&5
-$as_echo "$as_me: Solver binaries are present but libminizinc is not present!" >&6;}
+                    { $as_echo "$as_me:${as_lineno-$LINENO}: Solver binaries are present but libminizinc is not present or built!" >&5
+$as_echo "$as_me: Solver binaries are present but libminizinc is not present or built!" >&6;}
 
 fi
 

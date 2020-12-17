@@ -49,15 +49,16 @@ AC_ARG_WITH(
 					MZN_HEADER_PATH="${with_mzn}/include/minizinc"
 					MZN_LIBS="-L${with_mzn} -lmzn"
 					MZN_LIB_PATH="${with_mzn}/libmzn.a"
-					AC_CHECK_HEADER("${MZN_HEADER_PATH}/ast.hh",
- 						[AC_SUBST([MZN_PATH], 50)], [AC_MSG_NOTICE([header file ast.hh not found at custom path!])])
+
 					file=${with_mzn}/libmzn.a
 				
 					if [test -e "$file" ]; then
-							AC_SUBST([LIB_PATH], "${with_mzn}/libmzn.a")
-					else 
-  							AC_MSG_NOTICE([libmzn.a not found at custom path!])
-					fi 
+                        AC_SUBST([LIB_PATH], "${with_mzn}/libmzn.a")
+                        AC_CHECK_HEADER("${MZN_HEADER_PATH}/ast.hh",
+                        [AC_SUBST([MZN_PATH], 50)], [AC_MSG_NOTICE([header file ast.hh not found at default path!])])
+                    else 
+                        AC_MSG_NOTICE([libmzn.a not found at custom path, not checked for header files!])
+                    fi 
 
             	],
             	[
@@ -67,16 +68,13 @@ AC_ARG_WITH(
 					MZN_LIBS="-L${with_mzn} -lmzn"
 					MZN_LIB_PATH="${with_mzn}/libmzn.a"
 					
-					AC_CHECK_HEADER("${MZN_HEADER_PATH}/ast.hh",
- 						[AC_SUBST([MZN_PATH], 50)], [AC_MSG_NOTICE([header file ast.hh not found at custom path!])])
-
-					file=${with_mzn}/libmzn.a
-					
 					if [test -e "$file" ]; then
-    					AC_SUBST([LIB_PATH], "${with_mzn}/libmzn.a")
-					else 
-    					AC_MSG_NOTICE([libmzn.a not found at custom path!])
-					fi
+                        AC_SUBST([LIB_PATH], "${with_mzn}/libmzn.a")
+                        AC_CHECK_HEADER("${MZN_HEADER_PATH}/ast.hh",
+                        [AC_SUBST([MZN_PATH], 50)], [AC_MSG_NOTICE([header file ast.hh not found at default path!])])
+                    else 
+                        AC_MSG_NOTICE([libmzn.a not found at custom path, not checked for header files!])
+                    fi 
             	]
             )],
             [
@@ -96,7 +94,7 @@ AC_ARG_WITH(
                             AC_CHECK_HEADER("${MZN_HEADER_PATH}/ast.hh",
                             [AC_SUBST([MZN_PATH], 50)], [AC_MSG_NOTICE([header file ast.hh not found at default path!])])
 					else 
-  							AC_MSG_NOTICE([libmzn.a not found at default path!])
+  							AC_MSG_NOTICE([libmzn.a not found at default path, not checked for header files!])
 					fi 
             	],
             	[
@@ -114,7 +112,7 @@ AC_ARG_WITH(
                         AC_CHECK_HEADER("${MZN_HEADER_PATH}/ast.hh",
                         [AC_SUBST([MZN_PATH], 50)], [AC_MSG_NOTICE([header file ast.hh not found at default path!])])
 					else 
-    					AC_MSG_NOTICE([libmzn.a not found at default path!])
+    					AC_MSG_NOTICE([libmzn.a not found at default path, not checked for header files!])
 					fi 
             	]
             )]
@@ -133,7 +131,7 @@ AC_ARG_WITH(
                     AC_SUBST([SLV_BIN], 50)        
                 ],
                 [
-                    AC_MSG_NOTICE([Solver binaries are present but libminizinc is not present!])
+                    AC_MSG_NOTICE([Solver binaries are present but libminizinc is not present or built!])
                 ] )
         	
         	AC_CONFIG_FILES([inst/minizinc/solvers/gecode.msc])

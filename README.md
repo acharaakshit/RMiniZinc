@@ -58,6 +58,16 @@ The features have been tested over a wide variety of problems but doesn't cover 
 
 **Under Development**: Please note that the project is in it's early development stage and all the features haven't been tested for all of MiniZinc.
 
-### ACKNOWLEDGMENT
-  * Thanks to my mentor [Lars Kotthoff](https://github.com/larskotthoff) and co-mentors [Hans W Borchers](https://github.com/hwborchers) and [Guido Tack](https://github.com/guidotack) who helped me make key decisions for the project. Special thanks to [Jip Dekker](https://github.com/Dekker1) for solving my queries regarding libminizinc.
-  * I would like to thank all the developers of libminizinc.
+## ACKNOWLEDGMENT
+
+* Thanks to my mentor [Lars Kotthoff](https://github.com/larskotthoff) and co-mentors, [Hans W Borchers](https://github.com/hwborchers) and [Guido Tack](https://github.com/guidotack) who helped me make key decisions for the project, and [Jip Dekker](https://github.com/Dekker1) for solving my queries regarding libminizinc.
+
+* I would like to thank all the developers of [libminizinc](https://github.com/MiniZinc/libminizinc)  for allowing me to use the library in my package and for providing help in understanding the usage of the library and MiniZinc.
+
+* Special thanks to   
+  Uwe Ligges <ligges@statistik.tu-dortmund.de>  
+  Dirk Eddelbuettel <edd@debian.org>   
+  Nik Pocuca <nikpocuca@gmail.com>  
+  [Allan Cameron](https://github.com/AllanCameron)  
+  Duncan Murdoch <murdoch.duncan@gmail.com>  
+  and many other people who helped me on mailing lists as well as other platforms like StackOverflow.
