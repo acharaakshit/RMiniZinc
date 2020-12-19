@@ -1,5 +1,9 @@
 ## Notes
 
+### Fourth Submission
+
+Please find the bug fixes in NEWS.md.
+
 ### Third Submission
 
 > configure: error: "OS  is not supported"

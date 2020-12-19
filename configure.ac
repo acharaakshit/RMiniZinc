@@ -1,4 +1,4 @@
-AC_INIT([rminizinc], [0.0.2])
+AC_INIT([rminizinc], [0.0.3])
 
 # Find the compiler and compiler flags used by R.
 : ${R_HOME=`R RHOME`}
@@ -55,9 +55,9 @@ AC_ARG_WITH(
 					if [test -e "$file" ]; then
                         AC_SUBST([LIB_PATH], "${with_mzn}/libmzn.a")
                         AC_CHECK_HEADER("${MZN_HEADER_PATH}/ast.hh",
-                        [AC_SUBST([MZN_PATH], 50)], [AC_MSG_NOTICE([header file ast.hh not found at default path!])])
+                        [AC_SUBST([MZN_PATH], 50)], [AC_MSG_NOTICE([header file ast.hh not found at custom path!])])
                     else 
-                        AC_MSG_NOTICE([libmzn.a not found at custom path, not checked for header files!])
+                        AC_MSG_NOTICE([libmzn.a not found at custom path!])
                     fi 
 
             	],
@@ -71,9 +71,9 @@ AC_ARG_WITH(
 					if [test -e "$file" ]; then
                         AC_SUBST([LIB_PATH], "${with_mzn}/libmzn.a")
                         AC_CHECK_HEADER("${MZN_HEADER_PATH}/ast.hh",
-                        [AC_SUBST([MZN_PATH], 50)], [AC_MSG_NOTICE([header file ast.hh not found at default path!])])
+                        [AC_SUBST([MZN_PATH], 50)], [AC_MSG_NOTICE([header file ast.hh not found at custom path!])])
                     else 
-                        AC_MSG_NOTICE([libmzn.a not found at custom path, not checked for header files!])
+                        AC_MSG_NOTICE([libmzn.a not found at custom path!])
                     fi 
             	]
             )],
@@ -94,7 +94,7 @@ AC_ARG_WITH(
                             AC_CHECK_HEADER("${MZN_HEADER_PATH}/ast.hh",
                             [AC_SUBST([MZN_PATH], 50)], [AC_MSG_NOTICE([header file ast.hh not found at default path!])])
 					else 
-  							AC_MSG_NOTICE([libmzn.a not found at default path, not checked for header files!])
+  							AC_MSG_NOTICE([libmzn.a not found at default path!])
 					fi 
             	],
             	[
@@ -112,7 +112,7 @@ AC_ARG_WITH(
                         AC_CHECK_HEADER("${MZN_HEADER_PATH}/ast.hh",
                         [AC_SUBST([MZN_PATH], 50)], [AC_MSG_NOTICE([header file ast.hh not found at default path!])])
 					else 
-    					AC_MSG_NOTICE([libmzn.a not found at default path, not checked for header files!])
+    					AC_MSG_NOTICE([libmzn.a not found at default path!])
 					fi 
             	]
             )]
@@ -153,10 +153,7 @@ AS_IF([test "${MZN_PATH}" != 50],
                 MZN_LIBS=""
 			])
 
-AS_IF([test "${LIB_PATH}" = ""],
-			[
-                MZN_LIBS=""
-			])
+
 
 CPP_FLAGS="${CPP_FLAGS} ${MZN_INCLUDE}"
 CXX_FLAGS="${CXX_FLAGS} ${MZN_INCLUDE}"
