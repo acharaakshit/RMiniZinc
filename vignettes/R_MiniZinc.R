@@ -27,6 +27,9 @@ version 1.14 are available. These were not found. Older versions will not work."
 
 ## ---- error=parse.next--------------------------------------------------------
 # mzn file path
+"
+NOTE: This path is useful only when you build the package on your system, otherwise the project root directory path will be in tmp as the installation starts there. If the user builds the package on the system, then the project root path will be the build directory and vignette will run properly.
+"
 mzn_path = paste0(PROJECT_DIRECTORY, "/inst/extdata/mzn_examples/jobshop/jobshop_0.mzn")
 
 # parse the model

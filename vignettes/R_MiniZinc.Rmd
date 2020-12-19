@@ -50,7 +50,7 @@ Please note that if path arguments are not passed along with the installation (a
 
 ## Getting Started
 
-Load the library and the project root directory path.
+Load the library and the project root directory path 
 
 
 ```{r}
@@ -90,6 +90,9 @@ Now, let's solve a job shop model:
 
 ```{r, error=parse.next}
 # mzn file path
+"
+NOTE: This path is useful only when you build the package on your system, otherwise the project root directory path will be in tmp as the installation starts there. If the user builds the package on the system, then the project root path will be the build directory and vignette will run properly.
+"
 mzn_path = paste0(PROJECT_DIRECTORY, "/inst/extdata/mzn_examples/jobshop/jobshop_0.mzn")
 
 # parse the model
