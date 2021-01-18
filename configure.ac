@@ -68,10 +68,15 @@ AC_ARG_WITH(
 					MZN_LIBS="-L${with_mzn} -lmzn"
 					MZN_LIB_PATH="${with_mzn}/libmzn.a"
 					
+                    file=${with_mzn}/libmzn.a
+
 					if [test -e "$file" ]; then
                         AC_SUBST([LIB_PATH], "${with_mzn}/libmzn.a")
                         AC_CHECK_HEADER("${MZN_HEADER_PATH}/ast.hh",
-                        [AC_SUBST([MZN_PATH], 50)], [AC_MSG_NOTICE([header file ast.hh not found at custom path!])])
+                        [AC_SUBST([MZN_PATH], 50)], [AC_MSG_NOTICE([header file ast.hh not found at custom path!])],
+                        [[#ifdef HAVE_AST_HH
+                          #include <${MZN_HEADER_PATH}/ast.hh>
+                          #endif]])
                     else 
                         AC_MSG_NOTICE([libmzn.a not found at custom path!])
                     fi 
@@ -110,7 +115,10 @@ AC_ARG_WITH(
 					if [test -e "$file" ]; then
     					AC_SUBST([LIB_PATH], "${DEFAULT_INCLUDE}/libmzn.a")
                         AC_CHECK_HEADER("${MZN_HEADER_PATH}/ast.hh",
-                        [AC_SUBST([MZN_PATH], 50)], [AC_MSG_NOTICE([header file ast.hh not found at default path!])])
+                        [AC_SUBST([MZN_PATH], 50)], [AC_MSG_NOTICE([header file ast.hh not found at default path!])],
+                        [[#ifdef HAVE_AST_HH
+                          #include <${MZN_HEADER_PATH}/ast.hh>
+                          #endif]])
 					else 
     					AC_MSG_NOTICE([libmzn.a not found at default path!])
 					fi 

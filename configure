@@ -3746,11 +3746,16 @@ $as_echo "$as_me: Custom libminizinc path provided!" >&6;}
 					MZN_LIBS="-L${with_mzn} -lmzn"
 					MZN_LIB_PATH="${with_mzn}/libmzn.a"
 
+                    file=${with_mzn}/libmzn.a
+
 					if test -e "$file" ; then
                         LIB_PATH="${with_mzn}/libmzn.a"
 
                         as_ac_Header=`$as_echo "ac_cv_header_"${MZN_HEADER_PATH}/ast.hh"" | $as_tr_sh`
-ac_fn_cxx_check_header_mongrel "$LINENO" ""${MZN_HEADER_PATH}/ast.hh"" "$as_ac_Header" "$ac_includes_default"
+ac_fn_cxx_check_header_compile "$LINENO" ""${MZN_HEADER_PATH}/ast.hh"" "$as_ac_Header" "#ifdef HAVE_AST_HH
+                          #include <${MZN_HEADER_PATH}/ast.hh>
+                          #endif
+"
 if eval test \"x\$"$as_ac_Header"\" = x"yes"; then :
   MZN_PATH=50
 
@@ -3818,7 +3823,10 @@ $as_echo "$as_me: Custom libminizinc path not provided!" >&6;}
     					LIB_PATH="${DEFAULT_INCLUDE}/libmzn.a"
 
                         as_ac_Header=`$as_echo "ac_cv_header_"${MZN_HEADER_PATH}/ast.hh"" | $as_tr_sh`
-ac_fn_cxx_check_header_mongrel "$LINENO" ""${MZN_HEADER_PATH}/ast.hh"" "$as_ac_Header" "$ac_includes_default"
+ac_fn_cxx_check_header_compile "$LINENO" ""${MZN_HEADER_PATH}/ast.hh"" "$as_ac_Header" "#ifdef HAVE_AST_HH
+                          #include <${MZN_HEADER_PATH}/ast.hh>
+                          #endif
+"
 if eval test \"x\$"$as_ac_Header"\" = x"yes"; then :
   MZN_PATH=50
 
