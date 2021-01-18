@@ -23,7 +23,7 @@ jobs:
         - sudo git clone https://github.com/MiniZinc/libminizinc.git; 
         - cd libminizinc/;
         - sudo sed -i '' '3i\'$'\n''set(CMAKE_POSITION_INDEPENDENT_CODE ON)' CMakeLists.txt;
-        - brew install build-essential cmake;
+        - brew install cmake;
         - sudo -E cmake CMakeLists.txt;
         - sudo make;
         - sudo make install;
