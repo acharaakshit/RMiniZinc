@@ -1,4 +1,4 @@
-AC_INIT([rminizinc], [0.0.3])
+AC_INIT([rminizinc], [0.0.4])
 
 # Find the compiler and compiler flags used by R.
 : ${R_HOME=`R RHOME`}
@@ -63,20 +63,17 @@ AC_ARG_WITH(
             	],
             	[
             		AC_MSG_NOTICE([Custom libminizinc path provided!])
-					MZN_INCLUDE="-I${with_mzn}/include"
-					MZN_HEADER_PATH="${with_mzn}/include/minizinc"
-					MZN_LIBS="-L${with_mzn} -lmzn"
-					MZN_LIB_PATH="${with_mzn}/libmzn.a"
-					
+                    MZN_INCLUDE="-I${with_mzn}/include"
+                    MZN_HEADER_PATH="${with_mzn}/include/minizinc"
+                    MZN_LIBS="-L${with_mzn} -lmzn"
+                    MZN_LIB_PATH="${with_mzn}/libmzn.a"
+                    
                     file=${with_mzn}/libmzn.a
 
-					if [test -e "$file" ]; then
+                    if [test -e "$file" ]; then
                         AC_SUBST([LIB_PATH], "${with_mzn}/libmzn.a")
                         AC_CHECK_HEADER("${MZN_HEADER_PATH}/ast.hh",
-                        [AC_SUBST([MZN_PATH], 50)], [AC_MSG_NOTICE([header file ast.hh not found at custom path!])],
-                        [[#ifdef HAVE_AST_HH
-                          #include <${MZN_HEADER_PATH}/ast.hh>
-                          #endif]])
+                        [AC_SUBST([MZN_PATH], 50)], [AC_MSG_NOTICE([header file ast.hh not found at custom path!])])
                     else 
                         AC_MSG_NOTICE([libmzn.a not found at custom path!])
                     fi 

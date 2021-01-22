@@ -1,3 +1,10 @@
+## Version 0.0.4
+
+### BUGFIXES
+
+* Modified configure script:  
+    *  configuration was not working when `--with-mzn` argument was provided during the installation              because file variable path was not initialized for that section. It has now been fixed.
+
 ## Version 0.0.3
 
 ### BUGFIXES
