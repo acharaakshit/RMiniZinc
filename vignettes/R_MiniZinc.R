@@ -200,3 +200,11 @@ cItem$setExp(BinOp$new(lhs = Call$new(fnName = "max", args = list(vItem$getDecl(
                        binop = "<", rhs = Int$new(10)))
 sprintf("The modified constraint is: %s", cItem$c_str())
 
+## ---- error=evaluate.next-----------------------------------------------------
+# knapsack problem
+print(knapsack(n = 3, capacity = 9, profit = c(15,10,7), size = c(4,3,2)))
+
+## ---- error=evaluate.next-----------------------------------------------------
+# assignment problem
+print(assignment(n = 4, m = 5, cost = c(7,1,3,4,6,8,2,5,1,4,4,3,7,2,5,3,1,6,3,6)))
+

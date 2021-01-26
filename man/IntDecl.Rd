@@ -4,7 +4,7 @@
 \alias{IntDecl}
 \title{int declaration}
 \usage{
-IntDecl(name, kind, value = NULL)
+IntDecl(name, kind, value = NULL, domain = NULL)
 }
 \arguments{
 \item{name}{variable/parameter name}
@@ -12,6 +12,8 @@ IntDecl(name, kind, value = NULL)
 \item{kind}{"var" or "par"}
 
 \item{value}{value (NULL by default)}
+
+\item{domain}{domain of the int variable}
 }
 \description{
 Declare a new int

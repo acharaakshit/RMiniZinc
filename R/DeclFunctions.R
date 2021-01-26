@@ -5,11 +5,16 @@
 #' Declare a new int
 #' @param name variable/parameter name
 #' @param kind "var" or "par"
+#' @param domain domain of the int variable
 #' @param value value (NULL by default)
 #' @export
-IntDecl = function(name, kind, value = NULL){
-  parTI = TypeInst$new(Type$new(base_type = "int", kind = kind))
-  return(VarDecl$new(name, parTI, value))
+IntDecl = function(name, kind, value = NULL, domain = NULL){
+  if(!is.null(domain)){
+    parTI = TypeInst$new(type = Type$new(base_type = "unknown", kind = kind), domain = domain)  
+  }else{
+    parTI = TypeInst$new(type = Type$new(base_type = "int", kind = kind))
+  }
+  return(VarDecl$new(name = name, type_inst = parTI, value = value))
 }
 
 #' @title float declaration
@@ -17,11 +22,16 @@ IntDecl = function(name, kind, value = NULL){
 #' Declare a new float
 #' @param name variable/parameter name
 #' @param kind "var" or "par"
+#' @param domain domain of the float variable
 #' @param value value (NULL by default)
 #' @export
-FloatDecl = function(name, kind, value = NULL){
-  parTI = TypeInst$new(Type$new(base_type = "float", kind = kind))
-  return(VarDecl$new(name, parTI, value))
+FloatDecl = function(name, kind, value = NULL, domain = NULL){
+  if(!is.null(domain)){
+    parTI = TypeInst$new(type = Type$new(base_type = "unknown", kind = kind), domain = domain)  
+  }else{
+    parTI = TypeInst$new(type = Type$new(base_type = "float", kind = kind))
+  }
+  return(VarDecl$new(name = name, type_inst = parTI, value = value))
 }
 
 #' @title new bool declaration

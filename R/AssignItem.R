@@ -11,14 +11,14 @@ AssignItem = R6Class("AssignItem",
                        #' @param value expression to be assigned.
                        initialize = function(decl, value){
                            assertR6(decl, "VarDecl")
-                           assertNull(decl$value())
+                           assertNull(decl$getValue())
                            assertR6(value, "Expression")
                            private$.decl = decl
                            private$.e = value
                        },
                        #' @description  get the name of assigned variable
                        id = function(){
-                         return(private$.decl$id()$getId())
+                         return(private$.decl$getId()$getName())
                        },
                        #' @description get the value
                        getValue = function(){
@@ -42,7 +42,7 @@ AssignItem = R6Class("AssignItem",
                        },
                        #' @description get the MiniZinc representation
                        c_str = function(){
-                         return(sprintf("%s = %s;\n", private$.decl$id()$getId(), private$.e$c_str()))
+                         return(sprintf("%s = %s;\n", private$.decl$getId()$getName(), private$.e$c_str()))
                        },
                        #' @description delete flag for internal use
                        getDeleteFlag = function(){

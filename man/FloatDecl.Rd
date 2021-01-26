@@ -4,7 +4,7 @@
 \alias{FloatDecl}
 \title{float declaration}
 \usage{
-FloatDecl(name, kind, value = NULL)
+FloatDecl(name, kind, value = NULL, domain = NULL)
 }
 \arguments{
 \item{name}{variable/parameter name}
@@ -12,6 +12,8 @@ FloatDecl(name, kind, value = NULL)
 \item{kind}{"var" or "par"}
 
 \item{value}{value (NULL by default)}
+
+\item{domain}{domain of the float variable}
 }
 \description{
 Declare a new float

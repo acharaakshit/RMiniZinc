@@ -331,21 +331,32 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 </div>
 <div id="installation" class="section level2">
 <h2>Installation</h2>
-<p>First, You need to download and build libminizinc (2.5.2) library for MiniZinc to work properly. Please follow these steps:</p>
-<p>Linux:</p>
+<ol style="list-style-type: decimal">
+<li>Build libminizinc</li>
+</ol>
+<p>First, You need to download the latest libminizinc release and build libminizinc library for MiniZinc to work properly.</p>
+<p>Please follow these steps for Linux:</p>
 <ul>
-<li><code>sudo git clone https://github.com/MiniZinc/libminizinc.git</code>
-<ul>
+<li>Download the latest libminizinc release from <a href="https://github.com/MiniZinc/libminizinc/releases" class="uri">https://github.com/MiniZinc/libminizinc/releases</a>.</li>
+<li>Extract the downloaded tar.gz or zip (for Windows) and name the extracted folder <code>libminizinc</code>.</li>
 <li><code>cd libminizinc/</code><br />
 </li>
-<li><code>sudo sed -i &#39;3 i set(CMAKE_POSITION_INDEPENDENT_CODE ON)&#39; CMakeLists.txt</code></li>
-<li><code>sudo cmake CMakeLists.txt</code></li>
-<li><code>sudo make</code></li>
+<li><code>sudo sed -i &#39;3 i set(CMAKE_POSITION_INDEPENDENT_CODE ON)&#39; CMakeLists.txt</code><br />
+</li>
+<li><code>sudo cmake CMakeLists.txt</code><br />
+</li>
+<li><code>sudo make</code><br />
+</li>
 <li><code>sudo make install</code></li>
-</ul></li>
 </ul>
-<p>Similarly, build libminizinc on Windows and OSX.</p>
+<p>Similarly, build libminizinc on Windows (can use cygwin) and OSX.</p>
+<p>If <code>sed</code> command doesn’t work for you, just add <code>set(CMAKE_POSITION_INDEPENDENT_CODE ON)</code> in the 3rd line (or any empty line in the starting) of CMakeLists.txt and follow the next steps.</p>
+<ol start="2" style="list-style-type: decimal">
+<li>Get Solver Binaries</li>
+</ol>
+<p>Solvers are required to solve the MiniZinc models. The solvers currently supported by rminizinc are Chuffed, FindMUS and Gecode. Any solver can be selected based on the type of problem that is required to be solved.</p>
 <p>Now download the solver binaries from the binary bundles at (<a href="https://www.minizinc.org/" class="uri">https://www.minizinc.org/</a>) to be able to solve the models and achieve full functionality of the package.</p>
+<p>To get the solver binaries, the Users can download the MiniZinc binary bundles for Windows, MAC OS or Linux from <a href="https://www.minizinc.org/software.html" class="uri">https://www.minizinc.org/software.html</a> and the provide the path to the bin folder of the MiniZinc bundle folder as the <code>--with-bin</code> argument. All the required solver binaries are present in that folder. The solver binary corresponding to Gecode will be <code>fzn-gecode</code>, FindMUS will be <code>findMUS</code>, Chuffed will be <code>fzn-chuffed</code> (.exe extentions will be there on Windows for eg. <code>fzn-gecode.exe</code>). ALternatively, if you don’t want to keep the MiniZinc bundle, you can copy the solver binaries to another folder and just provide the path to that folder with <code>--with-bin</code>.</p>
 <p>Once these steps are over, you just need to re-install rminizinc by using</p>
 <p><code>install.packages(&quot;rminizinc&quot;, configure.args=&quot;--with-mzn=/path/to/libminizinc --with-bin=/path/to/bin&quot;)</code></p>
 <p>NOTE: Please don’t use <code>\</code> at the end of the path given to <code>--with-bin</code> as it will cause some solver configuration issues.</p>
@@ -451,7 +462,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <div id="solve-the-model" class="section level3">
 <h3>Solve the Model</h3>
 <p>The function <code>mzn_eval()</code> is used to evaluate a MiniZinc model and returns the solution string and a list of solutions if they were parsed without any error by the function <code>sol_parse()</code> otherwise it returns the solution string and an appropriate error. The parsed solutions are a named list where elements are of type <code>OBJ$SOLUTIONS$SOLUTION&lt;n&gt;$&lt;VARIABLE_NAME&gt;</code>. The optimal solution if found can be accessed using <code>OBJ$SOLUTIONS$OPTIMAL_SOLUTION</code> and the best solution can be accessed using <code>OBJ$SOLUTIONS$BEST_SOLUTION</code>. More details about the functions can be obtained using <code>?mzn_eval</code> and <code>?sol_parse</code>.</p>
-<p>The solver name of the solver that should be used to solve the model needs to be specified by the user (default is “Gecode”) and the lib_path (path of the solver related files) is by default provided but a custom path can be provided the user in case it is required. The model must be provided as one and only one of R6 <code>Model</code> object, <code>mzn_path</code> i.e. path of mzn file or <code>model_string</code> i.e. the string representation of the model. If the user wishes to provide a data file, it’s path can be provided to the argument <code>dznpath</code>. A time limit (in ms) can also be provided to the argument <code>time_limit</code>. (default is 300000 ms)</p>
+<p>The solver name of the solver that should be used to solve the model needs to be specified by the user (default is “Gecode”) and the <code>lib_path</code> (path of the solver configuration files) is by default provided but a custom path can be provided the user in case it is required. The model must be provided as one and only one of R6 <code>Model</code> object, <code>mzn_path</code> i.e. path of mzn file or <code>model_string</code> i.e. the string representation of the model. If the user wishes to provide a data file, it’s path can be provided to the argument <code>dznpath</code>. A time limit (in ms) can also be provided to the argument <code>time_limit</code>. (default is 300000 ms)</p>
 <p>A sample job shop problem has been solved below:</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="co"># R List object containing the solutions</span></span>
 <span id="cb11-2"><a href="#cb11-2"></a>solObj =<span class="st"> </span>rminizinc<span class="op">:::</span><span class="kw">mzn_eval</span>(model, <span class="dt">solver =</span> <span class="st">&quot;org.gecode.gecode&quot;</span>,</span>
@@ -472,9 +483,9 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb17-2"><a href="#cb17-2"></a>pVals =<span class="st"> </span><span class="kw">list</span>(Int<span class="op">$</span><span class="kw">new</span>(<span class="dv">3</span>), Int<span class="op">$</span><span class="kw">new</span>(<span class="dv">9</span>), Array<span class="op">$</span><span class="kw">new</span>(<span class="kw">intExpressions</span>(<span class="kw">c</span>(<span class="dv">15</span>,<span class="dv">10</span>,<span class="dv">7</span>)))</span>
 <span id="cb17-3"><a href="#cb17-3"></a>             , Array<span class="op">$</span><span class="kw">new</span>(<span class="kw">intExpressions</span>(<span class="kw">c</span>(<span class="dv">4</span>,<span class="dv">3</span>,<span class="dv">2</span>))))</span></code></pre></div>
 <pre><code>## dimensions not provided: initializing as 1d Array with
-##                                min index 1 and max index &lt;number_of_elements&gt;
+##                                min index 1 and max index 3
 ## dimensions not provided: initializing as 1d Array with
-##                                min index 1 and max index &lt;number_of_elements&gt;</code></pre>
+##                                min index 1 and max index 3</code></pre>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="kw">names</span>(pVals) =<span class="st"> </span>missingVals</span>
 <span id="cb19-2"><a href="#cb19-2"></a></span>
 <span id="cb19-3"><a href="#cb19-3"></a><span class="co"># set the missing parameters</span></span>
@@ -692,6 +703,32 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb43-6"><a href="#cb43-6"></a><span class="kw">sprintf</span>(<span class="st">&quot;The modified constraint is: %s&quot;</span>, cItem<span class="op">$</span><span class="kw">c_str</span>())</span></code></pre></div>
 <pre><code>## [1] &quot;The current constraint is: constraint (sum(a) &lt; 10);\n&quot;
 ## [1] &quot;The modified constraint is: constraint (max(a) &lt; 10);\n&quot;</code></pre>
+</div>
+<div id="some-common-cp-problems" class="section level2">
+<h2>Some Common CP Problems</h2>
+<p>Functions have been provided to directly solve some of the common constraint programming problems.</p>
+<ol style="list-style-type: decimal">
+<li>Knapsack problem</li>
+</ol>
+<p>The knapsack problem is a problem in combinatorial optimization: Given a set of items, each with a weight and a value, determine the number of each item to include in a collection so that the total weight is less than or equal to a given limit and the total value is as large as possible. It derives its name from the problem faced by someone who is constrained by a fixed-size knapsack and must fill it with the most valuable items. The problem often arises in resource allocation where the decision makers have to choose from a set of non-divisible projects or tasks under a fixed budget or time constraint, respectively.</p>
+<p>Here, n is the number of items, capacity is the total capacity of carrying weight, profit is the profit corresponding to each item and weight is the weight/size of each item. The goal is to maximize the total profit.</p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1"></a><span class="co"># knapsack problem</span></span>
+<span id="cb45-2"><a href="#cb45-2"></a><span class="kw">print</span>(<span class="kw">knapsack</span>(<span class="dt">n =</span> <span class="dv">3</span>, <span class="dt">capacity =</span> <span class="dv">9</span>, <span class="dt">profit =</span> <span class="kw">c</span>(<span class="dv">15</span>,<span class="dv">10</span>,<span class="dv">7</span>), <span class="dt">size =</span> <span class="kw">c</span>(<span class="dv">4</span>,<span class="dv">3</span>,<span class="dv">2</span>)))</span></code></pre></div>
+<pre><code>## dimensions not provided: initializing as 1d Array with
+##                                min index 1 and max index 3
+## dimensions not provided: initializing as 1d Array with
+##                                min index 1 and max index 3</code></pre>
+<pre><code>## Error in mzn_eval(r_model = model): Please install libminizinc (2.5.2) on your system and provide solver binaries!</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Assignment problem</li>
+</ol>
+<p>The assignment problem is a fundamental combinatorial optimization problem. In its most general form, the problem is as follows:</p>
+<p>The problem instance has a number of agents and a number of tasks. Any agent can be assigned to perform any task, incurring some cost that may vary depending on the agent-task assignment. It is required to perform as many tasks as possible by assigning at most one agent to each task and at most one task to each agent, in such a way that the total cost of the assignment is minimized.</p>
+<p>Here, n is the number of agents, m is the number of tasks and the profit(cost) is an m x n 2D array where each row corresponds to the cost of each task for that agent. Please provide the profit array as a 1D vector only as shown below:</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1"></a><span class="co"># assignment problem</span></span>
+<span id="cb48-2"><a href="#cb48-2"></a><span class="kw">print</span>(<span class="kw">assignment</span>(<span class="dt">n =</span> <span class="dv">4</span>, <span class="dt">m =</span> <span class="dv">5</span>, <span class="dt">cost =</span> <span class="kw">c</span>(<span class="dv">7</span>,<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">6</span>,<span class="dv">8</span>,<span class="dv">2</span>,<span class="dv">5</span>,<span class="dv">1</span>,<span class="dv">4</span>,<span class="dv">4</span>,<span class="dv">3</span>,<span class="dv">7</span>,<span class="dv">2</span>,<span class="dv">5</span>,<span class="dv">3</span>,<span class="dv">1</span>,<span class="dv">6</span>,<span class="dv">3</span>,<span class="dv">6</span>)))</span></code></pre></div>
+<pre><code>## Error in mzn_eval(r_model = model): Please install libminizinc (2.5.2) on your system and provide solver binaries!</code></pre>
+<p>More problems will be added with version updates.</p>
 </div>
 
 
