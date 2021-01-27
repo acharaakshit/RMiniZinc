@@ -296,8 +296,8 @@ Array = R6Class("Array",
                      assert_list(exprVec, "Expression")
                      private$.exprVec = exprVec
                      if(testNull(dimranges)){
-                       message("dimensions not provided: initializing as 1d Array with
-                               min index 1 and max index <number_of_elements>")
+                       message(sprintf("dimensions not provided: initializing as 1d Array with
+                               min index 1 and max index %s", length(exprVec)))
                        private$.dims = list(IntSetVal$new(imin = 1, imax = length(exprVec)))
                      }else{
                        assertList(dimranges, "IntSetVal") 
@@ -309,8 +309,12 @@ Array = R6Class("Array",
                        for (i in seq(1, length(dimranges), 1)) {
                            x = dimranges[[i]]
                            dim_sum = dim_sum * (x$getMax() - x$getMin() + 1)
-                        }
-                       assertTRUE(dim_sum == length(exprVec))
+                       }
+                       if(!testTRUE(dim_sum == length(exprVec))){
+                         warning("the difference between minimum and maximum index value
+                                 of the array is not equal to the number of values/expressions
+                                 stored in the array")
+                       }
                        private$.dims = dimranges 
                      }
                    },
@@ -469,7 +473,7 @@ ArrayAccess = R6Class("ArrayAccess",
                         #' @param v the value/identifier of variable decl
                         #' @param args the array indices
                         initialize =  function(v, args){
-                          assertR6(v, "Id")
+                          assertR6(v, "Expression")
                           private$.v = v
                           assertList(args, "Expression")
                           private$.args = args

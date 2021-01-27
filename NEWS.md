@@ -1,3 +1,17 @@
+## Version 0.0.5
+
+### CHANGES
+
+* Added functions for directly solving knapsack and assignment problem.
+* Improved `IntDecl()` and `FloatDecl()`. Now, integers and floats with domains can be declared.
+* Updated the MiniZinc files according to the latest MiniZinc release.
+
+### BUGFIXES
+
+* `AssignItem` constructor had incorrect function calls due to which the mzn_parse() function was           throwing errors for models containing assignments. This has now been fixed.
+* The assertion in the `ArrayAccess` class was incorrected which has now been resolved. 
+
+
 ## Version 0.0.4
 
 ### BUGFIXES

@@ -23,20 +23,31 @@ It would be nice to go through the tutorials on the [MiniZinc website](https://w
 
 ## Installation
 
-First, You need to download and build libminizinc (2.5.2) library for MiniZinc to work properly. Please follow these steps:
+1) Build libminizinc  
 
-Linux:
+First, You need to download the latest libminizinc release and build libminizinc library for MiniZinc to work properly.  
 
- * `sudo git clone https://github.com/MiniZinc/libminizinc.git`
-    * `cd libminizinc/`  
-    *  `sudo sed -i '3 i set(CMAKE_POSITION_INDEPENDENT_CODE ON)' CMakeLists.txt`
-    * `sudo cmake CMakeLists.txt`
-    * `sudo make`
-    * `sudo make install`
+Please follow these steps for Linux:  
+
+*  Download the latest libminizinc release from https://github.com/MiniZinc/libminizinc/releases.
+*  Extract the downloaded tar.gz or zip (for Windows) and name the extracted folder `libminizinc`.
+* `cd libminizinc/`  
+* `sudo sed -i '3 i set(CMAKE_POSITION_INDEPENDENT_CODE ON)' CMakeLists.txt`  
+* `sudo cmake CMakeLists.txt`  
+* `sudo make`  
+* `sudo make install`  
     
-Similarly, build libminizinc on Windows and OSX.
+Similarly, build libminizinc on Windows (can use cygwin) and OSX.
+
+If `sed` command doesn't work for you, just add `set(CMAKE_POSITION_INDEPENDENT_CODE ON)` in the 3rd line (or any empty line in the starting) of CMakeLists.txt and follow the next steps.
+
+2) Get Solver Binaries
+
+Solvers are required to solve the MiniZinc models. The solvers currently  supported by rminizinc are Chuffed, FindMUS and Gecode. Any solver can be selected based on the type of problem that is required to be solved.
 
 Now download the solver binaries from the binary bundles at (https://www.minizinc.org/) to be able to solve the models and achieve full functionality of the package.
+
+To get the solver binaries, the Users can download the MiniZinc binary bundles for Windows, MAC OS or Linux from https://www.minizinc.org/software.html and the provide the path to the bin folder of the MiniZinc bundle folder as the `--with-bin` argument. All the required solver binaries are present in that folder. The solver binary corresponding to Gecode will be `fzn-gecode`, FindMUS will be `findMUS`, Chuffed will be `fzn-chuffed` (.exe extentions will be there on Windows for eg. `fzn-gecode.exe`). ALternatively, if you don't want to keep the MiniZinc bundle, you can copy the solver binaries to another folder and just provide the path to that folder with `--with-bin`. 
 
 Once these steps are over, you just need to re-install rminizinc by using
 
@@ -45,8 +56,6 @@ Once these steps are over, you just need to re-install rminizinc by using
 NOTE: Please don't use `\` at the end of the path given to `--with-bin` as it will cause some solver configuration issues.
 
 Please note that if path arguments are not passed along with the installation (as `--with-mzn`), the default path `/usr/local/lib` for Linux and OSX, and `C:/Program Files/` for Windows  will be chosen but only if libminizinc in present in these default paths.
-
-
 
 ## Getting Started
 
@@ -127,7 +136,7 @@ cat(model$mzn_string())
 
 The function `mzn_eval()` is used to evaluate a MiniZinc model and returns the solution string and a list of solutions if they were parsed without any error by the function `sol_parse()` otherwise it returns the solution string and an appropriate error. The parsed solutions are a named list where elements are of type `OBJ$SOLUTIONS$SOLUTION<n>$<VARIABLE_NAME>`. The optimal solution if found can be accessed using `OBJ$SOLUTIONS$OPTIMAL_SOLUTION` and the best solution can be accessed using `OBJ$SOLUTIONS$BEST_SOLUTION`. More details about the functions can be obtained using `?mzn_eval` and `?sol_parse`.
 
-The solver name of the solver that should be used to solve the model needs to be specified by the user (default is "Gecode") and the lib_path (path of the solver related files) is by default provided but a custom path can be provided the user in case it is required. The model must be provided as one and only one of R6 `Model` object, `mzn_path` i.e. path of mzn file or `model_string` i.e. the string representation of the model. If the user wishes to provide a data file, it's path can be provided to the argument `dznpath`.  A time limit (in ms) can also be provided to the argument `time_limit`. (default is 300000 ms)
+The solver name of the solver that should be used to solve the model needs to be specified by the user (default is "Gecode") and the `lib_path` (path of the solver configuration files) is by default provided but a custom path can be provided the user in case it is required. The model must be provided as one and only one of R6 `Model` object, `mzn_path` i.e. path of mzn file or `model_string` i.e. the string representation of the model. If the user wishes to provide a data file, it's path can be provided to the argument `dznpath`.  A time limit (in ms) can also be provided to the argument `time_limit`. (default is 300000 ms)
 
 A sample job shop problem has been solved below:
 
@@ -360,3 +369,33 @@ cItem$setExp(BinOp$new(lhs = Call$new(fnName = "max", args = list(vItem$getDecl(
                        binop = "<", rhs = Int$new(10)))
 sprintf("The modified constraint is: %s", cItem$c_str())
 ```
+
+## Some Common CP Problems
+
+Functions have been provided to directly solve some of the common constraint programming problems.
+
+1) Knapsack problem
+
+The knapsack problem is a problem in combinatorial optimization: Given a set of items, each with a weight and a value, determine the number of each item to include in a collection so that the total weight is less than or equal to a given limit and the total value is as large as possible. It derives its name from the problem faced by someone who is constrained by a fixed-size knapsack and must fill it with the most valuable items. The problem often arises in resource allocation where the decision makers have to choose from a set of non-divisible projects or tasks under a fixed budget or time constraint, respectively.
+
+Here, n is the number of items, capacity is the total capacity of carrying weight, profit is the profit corresponding to each item and weight is the weight/size of each item. The goal is to maximize the total profit.
+
+```{r, error=evaluate.next}
+# knapsack problem
+print(knapsack(n = 3, capacity = 9, profit = c(15,10,7), size = c(4,3,2)))
+```
+
+2) Assignment problem
+
+The assignment problem is a fundamental combinatorial optimization problem. In its most general form, the problem is as follows:
+
+The problem instance has a number of agents and a number of tasks. Any agent can be assigned to perform any task, incurring some cost that may vary depending on the agent-task assignment. It is required to perform as many tasks as possible by assigning at most one agent to each task and at most one task to each agent, in such a way that the total cost of the assignment is minimized.
+
+Here, n is the number of agents, m is the number of tasks and the profit(cost) is an m x n 2D array where each row corresponds to the cost of each task for that agent. Please provide the profit array as a 1D vector only as shown below:
+
+```{r, error=evaluate.next}
+# assignment problem
+print(assignment(n = 4, m = 5, cost = c(7,1,3,4,6,8,2,5,1,4,4,3,7,2,5,3,1,6,3,6)))
+```
+
+More problems will be added with version updates.
