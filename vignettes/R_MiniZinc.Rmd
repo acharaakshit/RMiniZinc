@@ -47,7 +47,7 @@ Solvers are required to solve the MiniZinc models. The solvers currently  suppor
 
 Now download the solver binaries from the binary bundles at (https://www.minizinc.org/) to be able to solve the models and achieve full functionality of the package.
 
-To get the solver binaries, the Users can download the MiniZinc binary bundles for Windows, MAC OS or Linux from https://www.minizinc.org/software.html and the provide the path to the bin folder of the MiniZinc bundle folder as the `--with-bin` argument. All the required solver binaries are present in that folder. The solver binary corresponding to Gecode will be `fzn-gecode`, FindMUS will be `findMUS`, Chuffed will be `fzn-chuffed` (.exe extentions will be there on Windows for eg. `fzn-gecode.exe`). ALternatively, if you don't want to keep the MiniZinc bundle, you can copy the solver binaries to another folder and just provide the path to that folder with `--with-bin`. 
+To get the solver binaries, the Users can download the MiniZinc binary bundles for Windows, MAC OS or Linux from https://www.minizinc.org/software.html and the provide the path to the bin folder of the MiniZinc bundle folder as the `--with-bin` argument. All the required solver binaries are present in that folder. The solver binary corresponding to Gecode will be `fzn-gecode`, FindMUS will be `findMUS`, Chuffed will be `fzn-chuffed` (.exe extentions will be there on Windows for eg. `fzn-gecode.exe`). Alternatively, if you don't want to keep the MiniZinc bundle, you can copy the solver binaries to another folder and just provide the path to that folder with `--with-bin`. 
 
 Once these steps are over, you just need to re-install rminizinc by using
 
@@ -64,8 +64,10 @@ Load the library and the project root directory path
 
 ```{r}
 library(rminizinc)
-# load the project directory
+
+# load the PROJECT_DIRECTORY
 data("proot")
+
 # check if the library is present
 data("config")
 parse.next = FALSE
@@ -90,19 +92,62 @@ version 1.14 are available. These were not found. Older versions will not work."
    }
 ```
 
-### Parse a MiniZinc Model
+
+## Some Common CP Problems
+
+Functions have been provided to directly solve some of the common constraint programming problems.
+
+1) Knapsack problem
+
+The knapsack problem is a problem in combinatorial optimization: Given a set of items, each with a weight and a value, determine the number of each item to include in a collection so that the total weight is less than or equal to a given limit and the total value is as large as possible. It derives its name from the problem faced by someone who is constrained by a fixed-size knapsack and must fill it with the most valuable items. The problem often arises in resource allocation where the decision makers have to choose from a set of non-divisible projects or tasks under a fixed budget or time constraint, respectively.
+
+Here, n is the number of items, capacity is the total capacity of carrying weight, profit is the profit corresponding to each item and weight is the weight/size of each item. The goal is to maximize the total profit.
+
+```{r, error=evaluate.next}
+# knapsack problem
+print(knapsack(n = 3, capacity = 9, profit = c(15,10,7), size = c(4,3,2)))
+```
+
+2) Assignment problem
+
+The assignment problem is a fundamental combinatorial optimization problem. In its most general form, the problem is as follows:
+
+The problem instance has a number of agents and a number of tasks. Any agent can be assigned to perform any task, incurring some cost that may vary depending on the agent-task assignment. It is required to perform as many tasks as possible by assigning at most one agent to each task and at most one task to each agent, in such a way that the total cost of the assignment is minimized.
+
+Here, n is the number of agents, m is the number of tasks and the profit(cost) is an m x n 2D array where each row corresponds to the cost of each task for that agent. Please provide the profit array as a 1D vector only as shown below:
+
+```{r, error=evaluate.next}
+# assignment problem
+print(assignment(n = 4, m = 5, cost = c(7,1,3,4,6,8,2,5,1,4,4,3,7,2,5,3,1,6,3,6)))
+```
+
+More problems will be added with version updates.
+
+
+## Parse a MiniZinc Model
 
 A parser function `mzn_parse` has been implemented which can be used to detect possible syntax errors and get the smallest of details before the MiniZinc model is evaluated. The function returns the initialize `Model` R6 object.
-
 
 Now, let's solve a job shop model:
 
 ```{r, error=parse.next}
 # mzn file path
+
 "
-NOTE: This path is useful only when you build the package on your system, otherwise the project root directory path will be in tmp as the installation starts there. If the user builds the package on the system, then the project root path will be the build directory and vignette will run properly.
+NOTE: PROJECT_DIRECTORY is the project root directory path. This path is used for pointing to the mzn files provided with the package. If you have installed the package, PROJECT_DIRECTORY will initially point to tmp as the R package installation starts there. However, the next chunk of code will detect that and point to the installed rminizinc root folder. If you have installed rminizinc in some other location please make the PROJECT_DIRECTORY point to that folder.
 "
-mzn_path = paste0(PROJECT_DIRECTORY, "/inst/extdata/mzn_examples/jobshop/jobshop_0.mzn")
+
+mzn_local_location = "/inst/extdata/mzn_examples/"
+
+if(grepl( "tmp", PROJECT_DIRECTORY, fixed = TRUE)){
+  message("PROJECT_DIRECTORY is not a correct location anymore. Now PROJECT_DIRECTORY
+          is pointing to the location of installed rminizinc package. Please note that
+          the PROJECT_DIRECTORY stored in proot.RData is still the ")
+  PROJECT_DIRECTORY = paste0(.libPaths()[1], "/rminizinc")
+  mzn_local_location = "extdata/mzn_examples/"
+}
+
+mzn_path = paste0(PROJECT_DIRECTORY, mzn_local_location, "jobshop/jobshop_0.mzn")
 
 # parse the model
 parseObj = rminizinc:::mzn_parse(mzn_path = mzn_path)
@@ -110,7 +155,7 @@ parseObj = rminizinc:::mzn_parse(mzn_path = mzn_path)
 
 Look at the contents of parseObj for more understanding of the model.
 
-### Find the Missing Parameters
+## Find the Missing Parameters
 
 The missing parameters can be obtained using `get_missing_pars()`
 
@@ -119,9 +164,13 @@ missingPars = get_missing_pars(model = parseObj)
 print(missingPars)
 ```
 
-### Set Values of Missing Parameters 
+## Set Values of Missing Parameters 
 
 ```{r, error=parse.next}
+"Int$new() can be used to create a new Integer in MiniZinc"
+"intExpressions() creates a sequence of Ints in MiniZinc"
+"Array$new() is used to create an Array value expression"
+
 pVals = list(Int$new(3), Int$new(4),
              Array$new(exprVec = intExpressions(c(3, 3, 4, 4, 4, 3, 2, 2, 3, 3, 3, 4)),
                dimranges = list(IntSetVal$new(1,3), IntSetVal$new(1,4))), 
@@ -132,7 +181,7 @@ model = set_params(model = parseObj, modData = pVals)
 cat(model$mzn_string())
 ```
 
-### Solve the Model
+## Solve the Model
 
 The function `mzn_eval()` is used to evaluate a MiniZinc model and returns the solution string and a list of solutions if they were parsed without any error by the function `sol_parse()` otherwise it returns the solution string and an appropriate error. The parsed solutions are a named list where elements are of type `OBJ$SOLUTIONS$SOLUTION<n>$<VARIABLE_NAME>`. The optimal solution if found can be accessed using `OBJ$SOLUTIONS$OPTIMAL_SOLUTION` and the best solution can be accessed using `OBJ$SOLUTIONS$BEST_SOLUTION`. More details about the functions can be obtained using `?mzn_eval` and `?sol_parse`.
 
@@ -152,7 +201,7 @@ Let's solve another problem.
 
 ```{r, error=parse.next}
 # file path
-mzn_path = paste0(PROJECT_DIRECTORY, "/inst/extdata/mzn_examples/knapsack/knapsack_0.mzn")
+mzn_path = paste0(PROJECT_DIRECTORY, mzn_local_location, "knapsack/knapsack_0.mzn")
 
 # get missing parameter values
 missingVals=rminizinc:::get_missing_pars( model = mzn_parse(mzn_path = mzn_path))
@@ -179,6 +228,11 @@ Some examples of how to use these functions to solve optimization problems can b
 
 NOTE: Please don't include output formatting in the mzn files or the solutions might not be parsed properly.
 
+# Model Items/Components
+
+A MiniZinc model is made of several components namely, Variables (and Parameters), Constraints, Solve Items, Assignments and Annotations which are described below.
+
+
 ## Variables
 
 There are two types of variables in MiniZinc namely, decision variables and parameters. 
@@ -194,10 +248,11 @@ To create a variable declaration one needs to understand the elements of R6 clas
 Easy to use declaration functions have been created for the users to declare variables and parameters of different data types. Examples of how to declare variables is shown below.
 
 ```{r, error=parse.next}
-# create the variable and parameter declarations
+# IntDecl() can be used to declare an integer variable or parameter
 decl = IntDecl(name = "n", kind = "par")
+# VarDeclItem is the class for declaring a variable item
 item1 = VarDeclItem$new(decl = decl)
-
+# BinOp class is used to create binary arithmetic expressions
 par2_val = BinOp$new(lhs = Int$new(1), binop = "..", rhs = item1$getId())
 item2 = VarDeclItem$new(decl = IntSetDecl(name = "OBJ", kind = "par", value = par2_val))
 
@@ -369,33 +424,3 @@ cItem$setExp(BinOp$new(lhs = Call$new(fnName = "max", args = list(vItem$getDecl(
                        binop = "<", rhs = Int$new(10)))
 sprintf("The modified constraint is: %s", cItem$c_str())
 ```
-
-## Some Common CP Problems
-
-Functions have been provided to directly solve some of the common constraint programming problems.
-
-1) Knapsack problem
-
-The knapsack problem is a problem in combinatorial optimization: Given a set of items, each with a weight and a value, determine the number of each item to include in a collection so that the total weight is less than or equal to a given limit and the total value is as large as possible. It derives its name from the problem faced by someone who is constrained by a fixed-size knapsack and must fill it with the most valuable items. The problem often arises in resource allocation where the decision makers have to choose from a set of non-divisible projects or tasks under a fixed budget or time constraint, respectively.
-
-Here, n is the number of items, capacity is the total capacity of carrying weight, profit is the profit corresponding to each item and weight is the weight/size of each item. The goal is to maximize the total profit.
-
-```{r, error=evaluate.next}
-# knapsack problem
-print(knapsack(n = 3, capacity = 9, profit = c(15,10,7), size = c(4,3,2)))
-```
-
-2) Assignment problem
-
-The assignment problem is a fundamental combinatorial optimization problem. In its most general form, the problem is as follows:
-
-The problem instance has a number of agents and a number of tasks. Any agent can be assigned to perform any task, incurring some cost that may vary depending on the agent-task assignment. It is required to perform as many tasks as possible by assigning at most one agent to each task and at most one task to each agent, in such a way that the total cost of the assignment is minimized.
-
-Here, n is the number of agents, m is the number of tasks and the profit(cost) is an m x n 2D array where each row corresponds to the cost of each task for that agent. Please provide the profit array as a 1D vector only as shown below:
-
-```{r, error=evaluate.next}
-# assignment problem
-print(assignment(n = 4, m = 5, cost = c(7,1,3,4,6,8,2,5,1,4,4,3,7,2,5,3,1,6,3,6)))
-```
-
-More problems will be added with version updates.
