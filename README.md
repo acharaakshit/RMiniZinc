@@ -1,6 +1,5 @@
 # MINIZINC INTERFACE FOR R
 
-[![Build Status](https://travis-ci.org/acharaakshit/RMiniZinc.svg?branch=master)](https://travis-ci.org/acharaakshit/RMiniZinc)
 
 ### TABLE OF CONTENTS
 
@@ -17,20 +16,31 @@
 
 ### INSTALLATION
 
-First, You need to download and build libminizinc (2.5.2) library for MiniZinc to work properly. Please follow these steps:
+1) Build libminizinc  
 
-Linux:
+First, You need to download the latest libminizinc release and build libminizinc library for MiniZinc to work properly.  
 
- * `sudo git clone https://github.com/MiniZinc/libminizinc.git`
-    * `cd libminizinc/`  
-    *  `sudo sed -i '3 i set(CMAKE_POSITION_INDEPENDENT_CODE ON)' CMakeLists.txt`
-    * `sudo cmake CMakeLists.txt`
-    * `sudo make`
-    * `sudo make install`
-    
-Similarly, build libminizinc on Windows and OSX.
+Please follow these steps for Linux:  
 
-Now download the solver binaries from the binary bundles at (https://www.minizinc.org/) to be able to solve the models and achieve full functionality of the package.
+*  Download the latest libminizinc release from https://github.com/MiniZinc/libminizinc/releases.
+*  Extract the downloaded tar.gz or zip (for Windows) and name the extracted folder `libminizinc`.
+* `cd libminizinc/`  
+* `sudo sed -i '3 i set(CMAKE_POSITION_INDEPENDENT_CODE ON)' CMakeLists.txt`  
+* `sudo cmake CMakeLists.txt`  
+* `sudo make`  
+* `sudo make install`  
+
+Similarly, build libminizinc on Windows (can use cygwin) and OSX.
+
+If `sed` command doesn't work for you, just add `set(CMAKE_POSITION_INDEPENDENT_CODE ON)` in the 3rd line (or any empty line in the starting) of CMakeLists.txt and follow the next steps.
+
+2) Get Solver Binaries
+
+Solvers are required to solve the MiniZinc models. The solvers currently  supported by rminizinc are Chuffed, FindMUS and Gecode. Any solver can be selected based on the type of problem that is required to be solved.
+
+Now download the solver binaries to be able to solve the models and achieve full functionality of the package.
+
+To get the solver binaries, the Users can download the MiniZinc binary bundles for Windows, MAC OS or Linux from https://www.minizinc.org/software.html and the provide the path to the bin folder of the MiniZinc bundle folder as the `--with-bin` argument. All the required solver binaries are present in that folder. The solver binary corresponding to Gecode will be `fzn-gecode`, FindMUS will be `findMUS`, Chuffed will be `fzn-chuffed` (.exe extentions will be there on Windows for eg. `fzn-gecode.exe`). Alternatively, if you don't want to keep the MiniZinc bundle, you can copy the solver binaries to another folder and just provide the path to that folder with `--with-bin`.
 
 Once these steps are over, you just need to re-install rminizinc by using
 
