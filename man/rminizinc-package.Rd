@@ -4,7 +4,7 @@
 \name{rminizinc-package}
 \alias{rminizinc}
 \alias{rminizinc-package}
-\title{rminizinc: R Interface to Use 'MiniZinc'}
+\title{rminizinc: R Interface to 'MiniZinc'}
 \description{
 Load the required libraries used by 
 most of the functions and classes
