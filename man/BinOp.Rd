@@ -5,6 +5,11 @@
 \title{BinOp}
 \description{
 Create a binary operation expression
+possible binary operators are: 
+"+", "-", "!=", "<->", ">=", "<=", "*", ">", "<", "->", "<-",
+"..", "\\/", "/\\", "'not'", "subset", "superset", "union", 
+"diff", "symdiff", "intersect", "^", "div", "mod", "/", "++",
+"xor", "in", "="
 }
 \examples{
 newBinOp = BinOp$new(lhs = Int$new(2), binop = "+", rhs = Int$new(5))
