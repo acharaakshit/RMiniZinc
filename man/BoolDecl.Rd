@@ -11,7 +11,7 @@ BoolDecl(name, kind, value = NULL)
 
 \item{kind}{"var" or "par"}
 
-\item{value}{value (NULL by default)}
+\item{value}{provide TRUE or FALSE (NULL by default)}
 }
 \description{
 Declare a new bool

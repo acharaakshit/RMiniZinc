@@ -11,7 +11,7 @@ FloatSetDecl(name, kind, value = NULL)
 
 \item{kind}{"var" or "par"}
 
-\item{value}{value of the set (or NULL)}
+\item{value}{provide an FloatSetVal object (or NULL)}
 }
 \description{
 Declare a new set of float

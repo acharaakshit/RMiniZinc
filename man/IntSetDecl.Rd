@@ -11,7 +11,7 @@ IntSetDecl(name, kind, value = NULL)
 
 \item{kind}{"var" or "par"}
 
-\item{value}{value (NULL by default)}
+\item{value}{provide an IntSetVal object (NULL by default)}
 }
 \description{
 Declare a new set of int

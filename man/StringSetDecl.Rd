@@ -11,7 +11,7 @@ StringSetDecl(name, kind, value = NULL)
 
 \item{kind}{"var" or "par"}
 
-\item{value}{value of the set (or NULL)}
+\item{value}{provide a Set object (or NULL)}
 }
 \description{
 declare a new set of string
