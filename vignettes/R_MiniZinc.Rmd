@@ -15,11 +15,11 @@ MiniZinc is a free and open-source constraint modeling language. Constraint sati
 
 There are implementations of an Interface to MiniZinc in Python like MiniZinc Python and pymzn and JMiniZinc for Java but such an interface does not exist for R.
 
-This package provides an implementation of a very simple and easy to use interface for R that will help R users to solve optimization problems that can't be solved with R currently.
+This package provides an implementation of a very simple and easy to use interface for R that will help R users to solve optimization problems that couldn’t be solved with R till now.
 
-It's important to understand R6 classes before getting into the details. If you are not comfortable with R6, please go through this [tutorial](https://adv-r.hadley.nz/r6.html).
+It’s important to understand R6 classes before getting into the details. If you are not comfortable with R6, please go through this tutorial.
 
-It would be nice to go through the tutorials on the [MiniZinc website](https://www.minizinc.org/) to understand more about MiniZinc. This is mainly for those who are interested in contributing to the package.
+It would be nice to go through the tutorials on the MiniZinc website to understand more about MiniZinc. This is mainly for those who are interested in contributing to the package.
 
 ## Installation
 
@@ -62,7 +62,7 @@ Please note that if path arguments are not passed along with the installation (a
 Load the library and the project root directory path 
 
 
-```{r}
+```{r, results='hold'}
 library(rminizinc)
 
 # load the PROJECT_DIRECTORY
@@ -103,9 +103,13 @@ The knapsack problem is a problem in combinatorial optimization: Given a set of 
 
 Here, n is the number of items, capacity is the total capacity of carrying weight, profit is the profit corresponding to each item and weight is the weight/size of each item. The goal is to maximize the total profit.
 
-```{r, error=evaluate.next}
+```{r, error=evaluate.next, results='hold'}
 # knapsack problem
-print(knapsack(n = 3, capacity = 9, profit = c(15,10,7), size = c(4,3,2)))
+result = knapsack(n = 3, capacity = 9, profit = c(15,10,7), size = c(4,3,2))
+cat(sprintf("The minizinc representation of the problem is:\n%s", result$model$mzn_string()))
+cat(sprintf("The solutions returned by minizinc are:\n%s", result$solution$SOLUTION_STRING))
+# R representation of solutions
+print(result$solution$SOLUTIONS)
 ```
 
 2) Assignment problem
@@ -116,22 +120,29 @@ The problem instance has a number of agents and a number of tasks. Any agent can
 
 Here, n is the number of agents, m is the number of tasks and the profit(cost) is an m x n 2D array where each row corresponds to the cost of each task for that agent. Please provide the profit array as a 1D vector only as shown below:
 
-```{r, error=evaluate.next}
+```{r, error=evaluate.next, results='hold'}
 # assignment problem
-print(assignment(n = 4, m = 5, cost = c(7,1,3,4,6,8,2,5,1,4,4,3,7,2,5,3,1,6,3,6)))
+result  = assignment(n = 4, m = 5, cost = c(7,1,3,4,6,8,2,5,1,4,4,3,7,2,5,3,1,6,3,6))
+cat(sprintf("The minizinc representation of the problem is:\n%s", result$model$mzn_string()))
+cat(sprintf("The solutions returned by minizinc are:\n%s", result$solution$SOLUTION_STRING))
+# R representation of solutions
+print(result$solution$SOLUTIONS)
 ```
 
-More problems will be added with version updates.
+Some other problem specific functions that are available are `magic_series()`, `magic_square()`, `assignment_2()`, and `production_planning()`. More problems will be added with version updates.
 
 
 ## Parse a MiniZinc Model
 
 A parser function `mzn_parse` has been implemented which can be used to detect possible syntax errors and get the smallest of details before the MiniZinc model is evaluated. The function returns the initialize `Model` R6 object.
 
-Now, let's solve a job shop model:
+Now, let’s solve a knapsack model:
 
-```{r, error=parse.next}
+```{r, error=parse.next, results='hold'}
 # mzn file path
+
+# load the PROJECT_DIRECTORY
+data("proot")
 
 "
 NOTE: PROJECT_DIRECTORY is the project root directory path. This path is used for pointing to the mzn files provided with the package. If you have installed the package, PROJECT_DIRECTORY will initially point to tmp as the R package installation starts there. However, the next chunk of code will detect that and point to the installed rminizinc root folder. If you have installed rminizinc in some other location please make the PROJECT_DIRECTORY point to that folder.
@@ -144,13 +155,15 @@ if(grepl( "tmp", PROJECT_DIRECTORY, fixed = TRUE)){
           is pointing to the location of installed rminizinc package. Please note that
           the PROJECT_DIRECTORY stored in proot.RData is still the ")
   PROJECT_DIRECTORY = paste0(.libPaths()[1], "/rminizinc")
-  mzn_local_location = "extdata/mzn_examples/"
+  mzn_local_location = "/extdata/mzn_examples/"
 }
 
-mzn_path = paste0(PROJECT_DIRECTORY, mzn_local_location, "jobshop/jobshop_0.mzn")
+mzn_path = paste0(PROJECT_DIRECTORY, mzn_local_location, "knapsack/knapsack_0.mzn")
 
-# parse the model
-parseObj = rminizinc:::mzn_parse(mzn_path = mzn_path)
+# returns the R equivalent of a MiniZinc model
+parsedModel = rminizinc:::mzn_parse(mzn_path = mzn_path)
+
+cat(sprintf("The current model is:\n%s", parsedModel$mzn_string()))
 ```
 
 Look at the contents of parseObj for more understanding of the model.
@@ -159,26 +172,36 @@ Look at the contents of parseObj for more understanding of the model.
 
 The missing parameters can be obtained using `get_missing_pars()`
 
-```{r, error=parse.next}
-missingPars = get_missing_pars(model = parseObj)
+```{r, error=parse.next, results='hold'}
+missingPars = get_missing_pars(model = parsedModel)
 print(missingPars)
 ```
 
 ## Set Values of Missing Parameters 
 
-```{r, error=parse.next}
-"Int$new() can be used to create a new Integer in MiniZinc"
-"intExpressions() creates a sequence of Ints in MiniZinc"
-"Array$new() is used to create an Array value expression"
+The missing parameters can be directly provided a value instead of using a data (dzn) file to solve. The values can be provided as a named list of the parameters. The data will be entered according to the data file as shown below:
 
-pVals = list(Int$new(3), Int$new(4),
-             Array$new(exprVec = intExpressions(c(3, 3, 4, 4, 4, 3, 2, 2, 3, 3, 3, 4)),
-               dimranges = list(IntSetVal$new(1,3), IntSetVal$new(1,4))), 
-             Array$new(exprVec = intExpressions(c(1, 2, 3, 4, 1, 3, 2, 4, 4, 2, 1, 3)),
-               dimranges = list(IntSetVal$new(1,3), IntSetVal$new(1,4))))
+```
+n = 3;
+capacity = 9;
+profit = [15,10,7];
+size = [4,3,2];
+```
+
+```{r, error=parse.next, results='hold'}
+# Int$new() for creating a new integer in model
+# Array$new() for creating an array
+# intExpressions() to create a sequence of integers (useful for array)
+pVals = list(Int$new(3), Int$new(9), Array$new(c(Int$new(15), Int$new(10), Int$new(7)),
+                                               dimranges = c(IntSetVal$new(1, 3))),
+            Array$new(intExpressions(c(4,3,2)), dimranges = c(IntSetVal$new(1, 3))))
+
 names(pVals) = missingPars
-model = set_params(model = parseObj, modData = pVals)
-cat(model$mzn_string())
+
+model = set_params(model = parsedModel, modData = pVals)
+
+# check ?Model for more details
+cat(sprintf("The updated model is:\n %s", model$mzn_string()))
 ```
 
 ## Solve the Model
@@ -187,160 +210,205 @@ The function `mzn_eval()` is used to evaluate a MiniZinc model and returns the s
 
 The solver name of the solver that should be used to solve the model needs to be specified by the user (default is "Gecode") and the `lib_path` (path of the solver configuration files) is by default provided but a custom path can be provided the user in case it is required. The model must be provided as one and only one of R6 `Model` object, `mzn_path` i.e. path of mzn file or `model_string` i.e. the string representation of the model. If the user wishes to provide a data file, it's path can be provided to the argument `dznpath`.  A time limit (in ms) can also be provided to the argument `time_limit`. (default is 300000 ms)
 
-A sample job shop problem has been solved below:
-
-```{r, error=evaluate.next}
-# R List object containing the solutions
-solObj = rminizinc:::mzn_eval(model, solver = "org.gecode.gecode",
-                   lib_path = paste0(PROJECT_DIRECTORY, "/inst/minizinc/"))
-# get all the solutions
-print(solObj$SOLUTIONS)
-```
-
-Let's solve another problem.
-
-```{r, error=parse.next}
-# file path
-mzn_path = paste0(PROJECT_DIRECTORY, mzn_local_location, "knapsack/knapsack_0.mzn")
-
-# get missing parameter values
-missingVals=rminizinc:::get_missing_pars( model = mzn_parse(mzn_path = mzn_path))
-print(missingVals)
-
-# list of the data
-pVals = list(Int$new(3), Int$new(9), Array$new(intExpressions(c(15,10,7)))
-             , Array$new(intExpressions(c(4,3,2))))
-names(pVals) = missingVals
-
-# set the missing parameters
-model = rminizinc:::set_params(modData = pVals, 
-                                   mzn_parse(mzn_path = mzn_path))
-```
+A sample knapsack problem has been solved below::
 
 ```{r, error=evaluate.next}
 # R List object containing the solutions
 solObj = rminizinc:::mzn_eval(r_model = model)
+
 # get all the solutions
 print(solObj$SOLUTIONS)
 ```
 
-Some examples of how to use these functions to solve optimization problems can be found in `mzn_examples` which are taken from [minizinc-examples](https://github.com/MiniZinc/minizinc-examples).
+The above example is taken from [minizinc-examples](https://github.com/MiniZinc/minizinc-examples).
 
-NOTE: Please don't include output formatting in the mzn files or the solutions might not be parsed properly.
+NOTE: The output formatting in the mzn files will be automatically removed in the parsed R model.
 
-# Model Items/Components
+## Items
 
-A MiniZinc model is made of several components namely, Variables (and Parameters), Constraints, Solve Items, Assignments and Annotations which are described below.
+A MiniZinc model is made of several items namely, Variables, Constraints, Solve Items, Assignments,etc. which are described below.
 
+### Variables
 
-## Variables
-
-There are two types of variables in MiniZinc namely, decision variables and parameters. 
+There are two types of variables in MiniZinc namely, decision variables and parameters.
 
 The data types of variables can be single types i.e integers (int), floating point numbers (float), Booleans (bool) and strings (string) and collections i.e sets, enums and arrays (upto 6 dimensional arrays).
 
 Parameter is used to specify a parameter in a given problem and they are assigned a fixed value or expression.
 
-Decision variables are the unknowns that Minizinc model is finding solutions for. We do not need to give them a value, but instead we give them a domain of possible values. Sometimes expressions involving other variables and parameters are also assigned to decision variables. Decision variables need to satisfy a set of constraints which form the core of the problem. 
+Decision variables are the unknowns that Minizinc model is finding solutions for. We do not need to give them a value, but instead we give them a domain of possible values. Sometimes expressions involving other variables and parameters are also assigned to decision variables. Decision variables need to satisfy a set of constraints which form the core of the problem.
 
 To create a variable declaration one needs to understand the elements of R6 classes that will be used to create the variables.
 
-Easy to use declaration functions have been created for the users to declare variables and parameters of different data types. Examples of how to declare variables is shown below.
+Easy to use declaration functions have been created for the users to declare variables and parameters of different data types. Some examples of how to declare variables is shown below.
 
 ```{r, error=parse.next}
-# IntDecl() can be used to declare an integer variable or parameter
-decl = IntDecl(name = "n", kind = "par")
-# VarDeclItem is the class for declaring a variable item
-item1 = VarDeclItem$new(decl = decl)
-# BinOp class is used to create binary arithmetic expressions
-par2_val = BinOp$new(lhs = Int$new(1), binop = "..", rhs = item1$getId())
-item2 = VarDeclItem$new(decl = IntSetDecl(name = "OBJ", kind = "par", value = par2_val))
+# int: a;
+a = VarDeclItem$new(decl = IntDecl(name = "a", kind = "par"))
+a$c_str()
 
-item3 = VarDeclItem$new(decl = IntDecl(name = "capacity", kind = "par"))
+# var int: a;
+a = VarDeclItem$new(decl = IntDecl(name = "a", kind = "var"))
+a$c_str()
 
-item4 = VarDeclItem$new(decl = IntArrDecl(name = "profit", kind = "par", ndim = 1, 
-                                          ind = list(item2$getId())))
+# 0..3: a;
+a = VarDeclItem$new(decl = IntDecl(name = "a", kind = "par", 
+                                   domain = Set$new(IntSetVal$new(imin = 0, imax = 3))))
+a$c_str()
 
-item5 = VarDeclItem$new(decl = IntArrDecl(name = "size", kind = "par", ndim = 1, ind =                                                            list(item2$getId())))
+# set of int: b = 1..5;
+b = VarDeclItem$new(decl = IntSetDecl(name = "b", kind = "par", 
+                                      value = Set$new(IntSetVal$new(imin = 1, imax = 5))))
+b$c_str()
 
-item6 = VarDeclItem$new(decl = IntArrDecl(name = "x", kind = "var", ndim = 1, ind = list(item2$getId())))
+# set of int: b = {1, 3, 5, 7, 9};
+b = VarDeclItem$new(decl = IntSetDecl(name = "b", kind = "par", 
+                                      value = Set$new(val = intExpressions(c(1, 3, 5 ,7 ,9)))))
+b$c_str()
+
+# int: IND = 3;
+a = VarDeclItem$new(decl = IntDecl(name = "IND", kind = "par", value = 3))
+a$c_str()
+
+val = a$getDecl()$getValue()$getIntVal()
+sprintf("The value of a is: %s", val)
+
+# array[IND] of int: p = [15,10,7];
+p = VarDeclItem$new(decl = IntArrDecl(name = "p", kind = "par", ind = c(a$getId()),
+                                  value = Array$new(exprVec = intExpressions(c(15, 10, 7)),
+                                                    dimranges = c(IntSetVal$new(1, val))),
+                                        ndim = 1))
+p$c_str()
+
+# array[IND] of int: p = [|1, 2, 3 | 4, 5, 6 | 7, 8, 9|];
+# Array can only be used to provide 1D and 2D array values
+array_value = Array$new(exprVec = c(intExpressions(c(1,2,3)), intExpressions(c(4,5,6)),                                                                    intExpressions(c(7,8,9))),
+                                        dimranges = c(IntSetVal$new(1, val), IntSetVal$new(1, val)))
+p = VarDeclItem$new(decl = IntArrDecl(name = "p", kind = "par", ind = c(a$getId(), a$getId()),
+                    value = array_value, ndim = 2))
+cat(p$c_str())
+
+## Recommended way to provide array values
+array_value = Call$new(fnName = "array2d", args = c(a$getId(), a$getId(),
+                                                    intExpressions(c(1,2,3)), intExpressions(c(4,5,6)),                                                                    intExpressions(c(7,8,9))))
+p$getDecl()$setValue(array_value)
+cat(p$c_str())
 ```
 
-## Constraints
+### Constraints
 
 Constraints are defined on the decision variables to restrict the range of values that they can take. They can also be thought of as the rules of a problem.
 
-Constraints can be created using different R6 sub classes of the super class Expression. In this example Generator, BinOp, Comprehension and Call classes have been used. These classes take in the elements required to create an expression that will be used as a constraint. More information can be found using `?<class Name>`
+Constraints can be created using the R6 class ConstraintItem. More information can be found using ?<class Name>
 
 Create constraints:
 
 ```{r, error=parse.next}
+# var int a; constraint a < 10;
 
-# declare parameter for iterator
-parIter = IntDecl(name = "i", kind = "par")
+# var int a;
+a = VarDeclItem$new(decl = IntDecl(name = "a", kind = "var"))
+a$c_str()
 
+# a < 10;
+exp = BinOp$new(lhs = a$getId(), binop = "<", rhs = Int$new(10))
+exp$c_str()
 
-gen_forall = Generator$new(IN = item2$getId(), decls = list(parIter))
-bop1 = BinOp$new(lhs = ArrayAccess$new(v = item6$getId(),  args= list(gen_forall$getDecl(1)$getId())),
-                                                             binop = ">=", rhs = Int$new(0))
-
-Comp1 = Comprehension$new(generators = list(gen_forall), body = bop1, set = FALSE)
-cl1 = Call$new(fnName = "forall", args = list(Comp1))
-item7 = ConstraintItem$new(e = cl1)
-
-gen_sum = Generator$new(IN = item2$getId(), decls = list(parIter))
-
-bop2 = BinOp$new(lhs = ArrayAccess$new(v = item5$getId(), args = list(gen_sum$getDecl(1)$getId())),             
-                 binop = "*",  rhs = ArrayAccess$new(v = item6$getId() , 
-                 args = list(gen_sum$getDecl(1)$getId())))
-
-Comp2 = Comprehension$new(generators = list(gen_sum), body = bop2, set = FALSE)
-cl2 = Call$new(fnName = "sum", args = list(Comp2))
-bop3 = BinOp$new(lhs = cl2, binop = "<=", rhs = item3$getId())
-item8 = ConstraintItem$new(e = bop3)
+# constraint a < 10;
+cnst = ConstraintItem$new(e = exp)
+cnst$c_str()
 ```
 
+### Solve Types
 
-## Solve Type
-
-The constraint programming problem can be of three types, namely: Satisfaction , Minimization and Maximization.
-Satisfaction problems produce all the solutions that satisfy the constraints whereas minimization and maximization problems produce the solution which minimizes and maximizes the given expression.
+The constraint programming problem can be of three types, namely: satisfy (satisfaction) , minimize (minimization) and maximize (maximization). Satisfaction problems produce all the solutions that satisfy the constraints whereas minimization and maximization problems produce the solution which minimizes and maximizes the given expression.
 
 An example is shown below:
 
 ```{r, error=parse.next}
+# solve satisfy;
+s = SolveItem$new(solve_type = "satisfy")
+s$c_str()
 
-bop4 = BinOp$new(lhs = ArrayAccess$new(v = item4$getId(), args = list(gen_sum$getDecl(1)$getId())),
-                      binop = "*", rhs = ArrayAccess$new(v = item6$getId(), 
-                      args = list(gen_sum$getDecl(1)$getId())))
+# var int: sum; 
+sum = IntDecl(name = "sum", kind = "var")
+sum$c_str()
 
-Comp3 = Comprehension$new(generators = list(gen_sum), body = bop4, set = FALSE)
+# minimize sum;
+s = SolveItem$new(solve_type = "minimize", e = sum$getId())
+s$c_str()
 
-cl3 = Call$new(fnName = "sum", args = list(Comp3))
-
-item9 = SolveItem$new(solve_type = "maximize", e = cl3)
+# maximize sum;
+s = SolveItem$new(solve_type = "maximize", e = sum$getId())
+s$c_str()
 ```
 
-## Create the Model
 
-Combine all the items to create a MiniZinc model.
+## Expressions
 
-```{r, error=parse.next}
-items  = c(item1, item2, item3, item4, item5, item6, item7, item8, item9)
-mod = Model$new(items = items)
-modString = mod$mzn_string()
-cat(modString)
+Given below are some examples of commonly used MiniZinc expressions. Check examples of some other expressions in the [reference manual](https://cran.r-project.org/web/packages/rminizinc/rminizinc.pdf).
+
+### Comprehension
+
+Read more about comprehensions [here](https://www.minizinc.org/doc-2.4.3/en/spec.html#spec-set-comprehensions).
+
+```{r}
+# always provide ind (array index) in c() or list()
+a = VarDeclItem$new(decl = IntArrDecl(name = "a", kind = "var",ind = c(Int$new(4)),ndim = 1))
+a$c_str()
+
+iter = IntDecl(name = "i", kind = "par")
+generator = Generator$new(IN = a$getId(), decls = list(iter))
+bop = BinOp$new(lhs = ArrayAccess$new(v = a$getId(),  args= list(generator$getDecl(1)$getId())),
+                                                             binop = ">=", rhs = Int$new(0))
+
+comprehension = Comprehension$new(generators = list(generator), body = bop, set = FALSE)
+comprehension$c_str()
 ```
 
-## Delete Items
+### Call
 
-All the `Item` and `Expression` classes have a `delete()` function which is used to delete the objects from everywhere in the model. Note that the objects will be deleted from all the models present in the environment from where the `delete()` function is called. An example to demonstrate the same is shown below:
+Read more about call [here](https://www.minizinc.org/doc-2.4.3/en/spec.html#call-expressions).
 
-```{r, error=parse.next}
-# delete the item 1 i.e declaration of n 
-item1$delete()
-cat(mod$mzn_string())
+```{r}
+cl = Call$new(fnName = "forall", args = list(comprehension))
+cl$c_str()
 ```
+
+### If Then Else
+
+Read more about if-then-else expressions [here](https://www.minizinc.org/doc-2.4.3/en/spec.html#if-then-else-expressions).
+
+```{r}
+# if x < 0 then -1 elseif x > 0 then 1 else 0 endif
+
+# var int:x;
+x = IntDecl(name = "x", kind = "var")
+x$c_str()
+
+bop1 = BinOp$new(lhs = x$getId(), binop = "<", rhs = Int$new(0))
+bop1$c_str()
+uop = UnOp$new(args = c(Int$new(1)), op = "-")
+uop$c_str()
+bop2 = BinOp$new(lhs = x$getId(), binop = "<", rhs = Int$new(0))
+bop2$c_str()
+exp = Ite$new(ifs = c(bop1, bop2), thens = c(uop, Int$new(1)), Else = Int$new(0))
+exp$c_str()
+```
+
+### Let
+
+Read more about let expressions [here](https://www.minizinc.org/doc-2.4.3/en/spec.html#spec-let-expressions).
+
+```{r}
+# let { int: x = 3; int: y = 4; } in x + y
+x = VarDeclItem$new(IntDecl(name = "x", kind = "par", value = 3))
+y = VarDeclItem$new(IntDecl(name = "y", kind = "par", value = 4))
+bop = BinOp$new(lhs = x$getId(), binop = "+", rhs = y$getId())
+let = Let$new(let = c(x,y), body = bop)
+cat(let$c_str())
+```
+
 
 ## Create Items Using Strings 
 
@@ -401,6 +469,64 @@ sprintf("Function expression: %s", fnItem$getBody()$c_str())
 ```{r, error=parse.next}
 iItem = IncludeItem$new(mzn_str = "include \"cumulative.mzn\" ;")
 sprintf("Included mzn name: %s", iItem$getmznName())
+```
+
+
+## Create a Model from Scratch
+
+Let's compute the base of a right angled triangle given the height and hypotenuse. The Pythagoras theorem says that In a right-angled triangle, the square of the hypotenuse side is equal to the sum of squares of the other two sides i.e $a² + b² = c²$. The theorem give us three functions, $c = \sqrt{(a² + b²)}$, $a = \sqrt(c² - b²)$ and $b = \sqrt(c² - a²)$.
+
+MiniZinc Representation of the model:
+
+```
+int: a = 4;
+int: c = 5;
+var int: b;
+
+constraint b>0;
+constraint a² + b² = c²;
+
+solve satisfy;
+```
+
+```{r}
+a = IntDecl(name = "a", kind = "par", value = 4)
+c = IntDecl(name = "c", kind = "par", value = 5)
+b = IntDecl(name = "b", kind = "var")
+
+# declaration items
+a_item = VarDeclItem$new(decl = a)
+b_item = VarDeclItem$new(decl = b)
+c_item = VarDeclItem$new(decl = c)
+
+# b > 0 is a binary operation
+b_0 = BinOp$new(lhs = b$getId(), binop = ">", rhs = Int$new(0))
+constraint1  = ConstraintItem$new(e = b_0)
+
+# a ^ 2 is a binary operation
+# a$getId() gives the variable identifier
+a_2 = BinOp$new(lhs = a$getId(), binop = "^", Int$new(2))
+b_2 = BinOp$new(lhs = b$getId(), binop = "^", Int$new(2))
+a2_b2 = BinOp$new(lhs = a_2, binop = "+", rhs = b_2)
+c_2 = BinOp$new(lhs = c$getId(), binop = "^", Int$new(2))
+a2_b2_c2 = BinOp$new(lhs = a2_b2, binop = "=", rhs = c_2)
+constraint2  = ConstraintItem$new(e = a2_b2_c2)
+
+solve  = SolveItem$new(solve_type = "satisfy")
+
+model = Model$new(items = c(a_item, b_item, c_item, constraint1, constraint2, solve))
+
+cat(model$mzn_string())
+```
+
+## Delete Items and Expressions
+
+All the `Item` and `Expression` classes have a `delete()` function which is used to delete the objects from everywhere in the model. Note that the objects will be deleted from all the models present in the environment from where the `delete()` function is called. An example to demonstrate the same is shown below:
+
+```{r, error=parse.next}
+# delete the item a i.e declaration of a 
+a$delete()
+cat(model$mzn_string())
 ```
 
 ## Modify Variable Domain
