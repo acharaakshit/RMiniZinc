@@ -372,7 +372,11 @@ Array = R6Class("Array",
                            if((i %% dim2 == 0 && slice_flag %% 2 != 0) || 
                               (i %% dim1 == 0 && slice_flag %% 2 == 0)){
                              slice_flag = 2
-                             retStr = paste0(retStr, "\n|")
+                             if(i == length(private$.exprVec)){
+                               retStr = paste0(retStr, "\n|") 
+                             }else{
+                               retStr = paste0(retStr, ",\n|")
+                             }
                            }else{
                              retStr = paste0(retStr, ", ")
                            }
