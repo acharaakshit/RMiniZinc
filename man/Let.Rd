@@ -65,7 +65,7 @@ constructor
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{let}}{list of local declarations}
+\item{\code{let}}{list of local declaration items and/or constraint items}
 
 \item{\code{body}}{body of the let}
 }
@@ -76,7 +76,7 @@ constructor
 \if{html}{\out{<a id="method-getLets"></a>}}
 \if{latex}{\out{\hypertarget{method-getLets}{}}}
 \subsection{Method \code{getLets()}}{
-access list of local declarations
+access list of declaration items and/or constraint items
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Let$getLets()}\if{html}{\out{</div>}}
 }
@@ -86,7 +86,7 @@ access list of local declarations
 \if{html}{\out{<a id="method-setLets"></a>}}
 \if{latex}{\out{\hypertarget{method-setLets}{}}}
 \subsection{Method \code{setLets()}}{
-set list of local declarations
+set list of declaration items and/or constraint items
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Let$setLets(letList)}\if{html}{\out{</div>}}
 }
@@ -94,7 +94,7 @@ set list of local declarations
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{letList}}{list of declarations to be set}
+\item{\code{letList}}{list of declaration items and/or constraint items to be set}
 }
 \if{html}{\out{</div>}}
 }
@@ -103,7 +103,7 @@ set list of local declarations
 \if{html}{\out{<a id="method-getLet"></a>}}
 \if{latex}{\out{\hypertarget{method-getLet}{}}}
 \subsection{Method \code{getLet()}}{
-access local declaration i
+access declaration item and/or constraint item i
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Let$getLet(i)}\if{html}{\out{</div>}}
 }
@@ -111,7 +111,7 @@ access local declaration i
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{i}}{index of let declaration to be accessed}
+\item{\code{i}}{index of let declaration item and/or constraint item to be accessed}
 }
 \if{html}{\out{</div>}}
 }
@@ -120,7 +120,7 @@ access local declaration i
 \if{html}{\out{<a id="method-setLet"></a>}}
 \if{latex}{\out{\hypertarget{method-setLet}{}}}
 \subsection{Method \code{setLet()}}{
-set list of local declarations
+set list of declaration item and/or constraint item i
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Let$setLet(let)}\if{html}{\out{</div>}}
 }
@@ -128,7 +128,7 @@ set list of local declarations
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{let}}{declaration to be set}
+\item{\code{let}}{declaration item and/or constraint item to be set}
 }
 \if{html}{\out{</div>}}
 }

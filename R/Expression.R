@@ -737,6 +737,11 @@ Comprehension = R6Class("Comprehension",
 #' @title BinOp 
 #' @description 
 #' Create a binary operation expression
+#' possible binary operators are: 
+#' "+", "-", "!=", "<->", ">=", "<=", "*", ">", "<", "->", "<-",
+#' "..", "\\/", "/\\", "'not'", "subset", "superset", "union", 
+#' "diff", "symdiff", "intersect", "^", "div", "mod", "/", "++",
+#' "xor", "in", "="
 #' @export 
 #' @examples
 #' newBinOp = BinOp$new(lhs = Int$new(2), binop = "+", rhs = Int$new(5))
@@ -824,6 +829,8 @@ BinOp = R6Class("BinOp",
 #' @title UnOp 
 #' @description
 #' Unary operation expression in MiniZinc
+#' Possible unary operators are:
+#' "+", "-", "not"
 #' @export
 #' @examples 
 #' newUnOp = UnOp$new(args = list(Int$new(5)), op = "-")
@@ -1008,33 +1015,40 @@ Let = R6Class("Let",
               inherit = Expression,
               public = list(
                 #' @description constructor
-                #' @param let list of local declarations
+                #' @param let list of local declaration items and/or constraint items
                 #' @param body body of the let  
                 initialize = function(let, body){
-                  assertList(let, "Expression")
+                  for (l in let) {
+                    assertTRUE(testR6(l, "VarDeclItem") ||
+                                 testR6(l, "ConstraintItem"))
+                  }
                   assertR6(body, "Expression")
-                  private$.decl = let
+                  private$.let = let
                   private$.in = body
                 },
-                #' @description  access list of local declarations
+                #' @description  access list of declaration items and/or constraint items
                 getLets = function(){
                   return(private$.let)
                 },
-                #' @description  set list of local declarations
-                #' @param letList list of declarations to be set
+                #' @description  set list of declaration items and/or constraint items
+                #' @param letList list of declaration items and/or constraint items to be set
                 setLets = function(letList){
-                  assertList(letList, "Expression")
+                  for (l in letList) {
+                    assertTRUE(testR6(l, "VarDeclItem") ||
+                                 testR6(l, "ConstraintItem"))
+                  }
                   private$.let = letList
                 },
-                #' @description  access local declaration i
-                #' @param i index of let declaration to be accessed
+                #' @description  access declaration item and/or constraint item i
+                #' @param i index of let declaration item and/or constraint item to be accessed
                 getLet = function(i){
                   return(private$.let[[i]])
                 },
-                #' @description  set list of local declarations
-                #' @param let declaration to be set
+                #' @description  set list of declaration item and/or constraint item i
+                #' @param let declaration item and/or constraint item to be set
                 setLet = function(let){
-                  assertList(let, "Expression")
+                  assertTRUE(testR6(let, "VarDeclItem") ||
+                                 testR6(let, "ConstraintItem"))
                   private$.let[[i]] = let
                 },
                 #' @description get the body
@@ -1050,11 +1064,8 @@ Let = R6Class("Let",
                 #' @description get the MiniZinc representation
                 c_str = function(){
                   declStr = ""
-                  for(i in seq(1, length(private$.decl), 1)){
-                    declStr = paste0(declStr, private$.decl[[i]]$c_str())
-                    if(i < length(private$.decl)){
-                      declStr = paste0(declStr, ", ")
-                    }
+                  for(i in seq(1, length(private$.let), 1)){
+                    declStr = paste0(declStr, private$.let[[i]]$c_str())
                   }
                   return(sprintf("let {%s} in %s", declStr, private$.in$c_str()))
                 },
@@ -1071,7 +1082,7 @@ Let = R6Class("Let",
               private = list(
                 #' @field .decl
                 #' list of local declarations
-                .decl = NULL,
+                .let = NULL,
                 #' @field .in
                 #' body of the let
                 .in = NULL,
@@ -1204,9 +1215,10 @@ VarDecl = R6Class("VarDecl",
                     initialize = function(name, type_inst, value = NULL){
                       assertR6(type_inst, "TypeInst")
                       private$.ti = type_inst
-                      if(testR6(value, "Expression")){
-                        private$.e  =  value
-                      }
+                      
+                      assertTRUE(testR6(value, "Expression") || testNull(value))
+                      private$.e  =  value
+                      
                       assert_string(name)
                       private$.id = Id$new(name)
                     },
@@ -1248,7 +1260,7 @@ VarDecl = R6Class("VarDecl",
                       return(private$.e)
                     },
                     #' @description set the value
-                    #' @param val expression to be set
+                    #' @param val expression to be set (NULL to remove value)
                     setValue = function(val){
                       assertTRUE(testR6(val, "Expression") ||
                                    testNull(val))
@@ -1362,7 +1374,7 @@ VarDecl = R6Class("VarDecl",
 TypeInst = R6Class("TypeInst",
                    inherit = Expression,
                    public = list(
-                     #' @description constuctor
+                     #' @description constructor
                      #' @param type type of declaration
                      #' @param indexExprVec expression list of indices
                      #' @param domain the domain of decision variables
