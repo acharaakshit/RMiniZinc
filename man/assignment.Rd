@@ -2,7 +2,7 @@
 % Please edit documentation in R/CommonMZNProblems.R
 \name{assignment}
 \alias{assignment}
-\title{assignment problem}
+\title{assignment problem 2}
 \usage{
 assignment(n, m, cost)
 }
