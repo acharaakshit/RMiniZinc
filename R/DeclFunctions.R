@@ -136,7 +136,7 @@ FloatArrDecl = function(name, kind, ind, value = NULL, ndim){
 #' @title n-D bool array declaration
 #' @description 
 #' Declare a new n-dimensional array
-#' of bool
+#' of bools
 #' @param name variable/parameter name
 #' @param kind "var" or "par"
 #' @param ind index of the array
@@ -148,10 +148,10 @@ BoolArrDecl = function(name, kind, ind, value = NULL, ndim){
   return(VarDecl$new(name, parTI, value))
 }
 
-#' @title n-D bool array declaration
+#' @title n-D String array declaration
 #' @description 
 #' Declare a new n-dimensional array
-#' of bool
+#' of strings
 #' @param name variable/parameter name
 #' @param kind "var" or "par"
 #' @param ind index of the array

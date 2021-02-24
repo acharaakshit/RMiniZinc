@@ -2,7 +2,7 @@
 % Please edit documentation in R/DeclFunctions.R
 \name{StringArrDecl}
 \alias{StringArrDecl}
-\title{n-D bool array declaration}
+\title{n-D String array declaration}
 \usage{
 StringArrDecl(name, kind, ind, value = NULL, ndim)
 }
@@ -19,5 +19,5 @@ StringArrDecl(name, kind, ind, value = NULL, ndim)
 }
 \description{
 Declare a new n-dimensional array
-of bool
+of strings
 }
