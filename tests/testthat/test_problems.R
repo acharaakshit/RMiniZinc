@@ -1,7 +1,14 @@
 skip_if_no_libminizinc = function(){
   data("config")
+  if(LIBMINIZINC_PATH == ""){
+    return(0)
+  }
+  return(1)
+}
+
+skip_if_no_solvers = function(){
   data("slvbin")
-  if(LIBMINIZINC_PATH == "" || SOLVER_BIN == ""){
+  if(SOLVER_BIN == ""){
     return(0)
   }
   return(1)
@@ -16,8 +23,7 @@ test_that("type compatibility is detected correctly",{
 })
 
 test_that("production planning problems are solved",{
-  data("config")
-  if(skip_if_no_libminizinc()){
+  if(skip_if_no_libminizinc() && skip_if_no_solvers()){
   # for devtools::test()
   mznName = "../../inst/extdata/mzn_examples/production_planning/prod_plan_0.mzn"
   
