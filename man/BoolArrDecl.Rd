@@ -19,5 +19,5 @@ BoolArrDecl(name, kind, ind, value = NULL, ndim)
 }
 \description{
 Declare a new n-dimensional array
-of bool
+of bools
 }

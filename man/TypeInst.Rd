@@ -57,7 +57,7 @@ TypeInst$new(type = Type$new(base_type = "int", kind = "par" ,dim = 1),
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
-constuctor
+constructor
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{TypeInst$new(type, indexExprVec = NULL, domain = NULL)}\if{html}{\out{</div>}}
 }

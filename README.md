@@ -1,4 +1,4 @@
-# MINIZINC INTERFACE FOR R
+# R INTERFACE TO MINIZINC
 
 
 ### TABLE OF CONTENTS
@@ -40,7 +40,7 @@ Solvers are required to solve the MiniZinc models. The solvers currently  suppor
 
 Now download the solver binaries to be able to solve the models and achieve full functionality of the package.
 
-To get the solver binaries, the Users can download the MiniZinc binary bundles for Windows, MAC OS or Linux from https://www.minizinc.org/software.html and the provide the path to the bin folder of the MiniZinc bundle folder as the `--with-bin` argument. All the required solver binaries are present in that folder. The solver binary corresponding to Gecode will be `fzn-gecode`, FindMUS will be `findMUS`, Chuffed will be `fzn-chuffed` (.exe extentions will be there on Windows for eg. `fzn-gecode.exe`). Alternatively, if you don't want to keep the MiniZinc bundle, you can copy the solver binaries to another folder and just provide the path to that folder with `--with-bin`.
+To get the solver binaries, the Users can download the MiniZinc binary bundles for Windows, MAC OS or Linux from https://www.minizinc.org/software.html and the provide the path to the bin folder of the MiniZinc bundle folder as the `--with-bin` argument. All the required solver binaries are present in that folder. The solver binary corresponding to Gecode will be `fzn-gecode`, FindMUS will be `findMUS`, Chuffed will be `fzn-chuffed` (.exe extentions will be there on Windows for eg. `fzn-gecode.exe`). ALternatively, if you don't want to keep the MiniZinc bundle, you can copy the solver binaries to another folder and just provide the path to that folder with `--with-bin`.
 
 Once these steps are over, you just need to re-install rminizinc by using
 

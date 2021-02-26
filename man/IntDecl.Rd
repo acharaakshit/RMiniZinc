@@ -11,9 +11,9 @@ IntDecl(name, kind, value = NULL, domain = NULL)
 
 \item{kind}{"var" or "par"}
 
-\item{value}{value (NULL by default)}
+\item{value}{pass a numeric/integer value in R (NULL by default)}
 
-\item{domain}{domain of the int variable}
+\item{domain}{domain of the int variable (NULL by default)}
 }
 \description{
 Declare a new int

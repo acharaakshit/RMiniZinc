@@ -184,9 +184,16 @@ initExpression = function(pList){
     return(Comprehension$new(generators = genList, set = st,
                              body = initExpression(pList$COMPREHENSION$EXPRESSION)))
   }else if(names(pList) == "LET"){
+    # ONLY LET EXPRESSION CAN CONTAIN ITEMS
     letList = list()
     for(i in seq(1, length(pList$LET$LET_EXPRESSION), 1)){
-      letList = list.append(letList, initExpression(pList$LET$LET_EXPRESSION[[i]]))
+      letElement = NULL
+      if(names(pList$LET$LET_EXPRESSION[[i]]) != "VARIABLE_DECLARATION"){
+        letElement = ConstraintItem$new(e = initExpression(pList$LET$LET_EXPRESSION[[i]]))
+      }else{
+        letElement = VarDeclItem$new(decl = initExpression(pList$LET$LET_EXPRESSION[[i]]))
+      }
+      letList = list.append(letList, letElement)
     }
     return(Let$new(let = letList, body = initExpression(pList$LET$IN_EXPRESSION)))
   }else if(names(pList) == "ANNOTATION"){

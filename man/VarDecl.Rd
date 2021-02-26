@@ -182,7 +182,7 @@ set the value
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{val}}{expression to be set}
+\item{\code{val}}{expression to be set (NULL to remove value)}
 }
 \if{html}{\out{</div>}}
 }

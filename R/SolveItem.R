@@ -7,7 +7,7 @@ SolveItem = R6Class("SolveItem",
                     inherit = Item,
                            public = list(
                              #' @description create an instance of specify_problem class
-                             #' @param solve_type satisfaction, minimization or maximization
+                             #' @param solve_type satisfy, minimize or maximize
                              #' @param e expression to minimize or maximize
                              #' @param ann annotation
                              #' @param mzn_str string representation of Solve Item

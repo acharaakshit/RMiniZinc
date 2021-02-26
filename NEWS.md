@@ -1,3 +1,15 @@
+## Version 0.0.6
+
+### CHANGES
+
+* Added functions for directly solving magic square, magic series, assignment and production planning problem.
+* `IntDecl()`, `FloatDecl()` and  `BoolDecl()` can directly accept R integer, double and boolean values respectively.
+* `Let` class had incorrect serialization logic and its member functions were not working which has been resolved.
+* `Array` class had incorrect serialization which has been resolved.
+* The vignette has been re-written to make it easy to understand and more detailed.
+* Installation was not working in some OS due to the strip binary in `Makevars.in` which is now resolved.
+* Corrected the error messages in `mzn_parse()` and `mzn_eval()`.
+
 ## Version 0.0.5
 
 ### CHANGES
@@ -8,7 +20,7 @@
 
 ### BUGFIXES
 
-* `AssignItem` constructor had incorrect function calls due to which the mzn_parse() function was           throwing errors for models containing assignments. This has now been fixed.
+* `AssignItem` constructor had incorrect function calls due to which the mzn_parse() function was throwing errors for models containing assignments. This has now been fixed.
 * The assertion in the `ArrayAccess` class was incorrected which has now been resolved. 
 
 
@@ -17,14 +29,14 @@
 ### BUGFIXES
 
 * Modified configure script:  
-    *  configuration was not working when `--with-mzn` argument was provided during the installation              because file variable path was not initialized for that section. It has now been fixed.
+  *  Configuration was not working when `--with-mzn` argument was provided during the installation because file variable path was not initialized for that section. It has now been fixed.
 
 ## Version 0.0.3
 
 ### BUGFIXES
 
 * Modified configure script:  
-    *  checking for built libmzn.a, then looking for headers and then defining MZN_PATH so that mzn_parse           works correctly for custom paths. (It was only working for default paths earlier).
+  *  Checking for built libmzn.a, then looking for headers and then defining MZN_PATH so that mzn_parse works correctly for custom paths. (It was only working for default paths earlier).
 * Corrected config.h.in to make sure the correct definitions of `mzn_parse()` and `mzn_eval()` are used.
 
 ## Version 0.0.2

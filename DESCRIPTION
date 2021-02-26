@@ -1,7 +1,7 @@
 Package: rminizinc
 Type: Package
-Title: R Interface to Use 'MiniZinc'
-Version: 0.0.5
+Title: R Interface to 'MiniZinc'
+Version: 0.0.6
 Author: Akshit Achara, Lars Kotthoff, Hans W. Borchers, Guido Tack
 Maintainer: Akshit Achara <acharaakshit@gmail.com>
 URL: https://github.com/acharaakshit/RMiniZinc

@@ -71,7 +71,7 @@ create an instance of specify_problem class
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{solve_type}}{satisfaction, minimization or maximization}
+\item{\code{solve_type}}{satisfy, minimize or maximize}
 
 \item{\code{e}}{expression to minimize or maximize}
 

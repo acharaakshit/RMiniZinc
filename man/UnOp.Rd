@@ -5,6 +5,8 @@
 \title{UnOp}
 \description{
 Unary operation expression in MiniZinc
+Possible unary operators are:
+"+", "-", "not"
 }
 \examples{
 newUnOp = UnOp$new(args = list(Int$new(5)), op = "-")

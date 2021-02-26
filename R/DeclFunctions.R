@@ -5,14 +5,17 @@
 #' Declare a new int
 #' @param name variable/parameter name
 #' @param kind "var" or "par"
-#' @param domain domain of the int variable
-#' @param value value (NULL by default)
+#' @param domain domain of the int variable (NULL by default)
+#' @param value pass a numeric/integer value in R (NULL by default)
 #' @export
 IntDecl = function(name, kind, value = NULL, domain = NULL){
   if(!is.null(domain)){
     parTI = TypeInst$new(type = Type$new(base_type = "unknown", kind = kind), domain = domain)  
   }else{
     parTI = TypeInst$new(type = Type$new(base_type = "int", kind = kind))
+  }
+  if(!is.null(value)){
+    value = Int$new(value)
   }
   return(VarDecl$new(name = name, type_inst = parTI, value = value))
 }
@@ -22,14 +25,17 @@ IntDecl = function(name, kind, value = NULL, domain = NULL){
 #' Declare a new float
 #' @param name variable/parameter name
 #' @param kind "var" or "par"
-#' @param domain domain of the float variable
-#' @param value value (NULL by default)
+#' @param domain domain of the float variable (NULL by default)
+#' @param value pass a numeric/double value in R (NULL by default)
 #' @export
 FloatDecl = function(name, kind, value = NULL, domain = NULL){
   if(!is.null(domain)){
     parTI = TypeInst$new(type = Type$new(base_type = "unknown", kind = kind), domain = domain)  
   }else{
     parTI = TypeInst$new(type = Type$new(base_type = "float", kind = kind))
+  }
+  if(!is.null(value)){
+    value = Float$new(value)
   }
   return(VarDecl$new(name = name, type_inst = parTI, value = value))
 }
@@ -39,10 +45,13 @@ FloatDecl = function(name, kind, value = NULL, domain = NULL){
 #' Declare a new bool 
 #' @param name variable/parameter name
 #' @param kind "var" or "par"
-#' @param value value (NULL by default)
+#' @param value provide TRUE or FALSE (NULL by default)
 #' @export
 BoolDecl = function(name, kind, value = NULL){
   parTI = TypeInst$new(Type$new(base_type = "bool", kind = kind))
+  if(!is.null(value)){
+    value = Bool$new(value)
+  }
   return(VarDecl$new(name, parTI, value))
 }
 
@@ -51,7 +60,7 @@ BoolDecl = function(name, kind, value = NULL){
 #' Declare a new set of int
 #' @param name variable/parameter name
 #' @param kind "var" or "par"
-#' @param value value (NULL by default)
+#' @param value provide an IntSetVal object (NULL by default)
 #' @export
 IntSetDecl = function(name, kind, value = NULL){
   parTI = TypeInst$new(Type$new(base_type = "int", kind = kind, set_type = TRUE))
@@ -63,7 +72,7 @@ IntSetDecl = function(name, kind, value = NULL){
 #' Declare a new set of float
 #' @param name variable/parameter name
 #' @param kind "var" or "par"
-#' @param value value of the set (or NULL)
+#' @param value provide an FloatSetVal object (or NULL)
 #' @export
 FloatSetDecl = function(name, kind, value = NULL){
   parTI = TypeInst$new(Type$new(base_type = "float", kind = kind, set_type = TRUE))
@@ -75,7 +84,7 @@ FloatSetDecl = function(name, kind, value = NULL){
 #' Declare a new set of bool
 #' @param name variable/parameter name
 #' @param kind "var" or "par"
-#' @param value value of the set (or NULL)
+#' @param value provide a Set object (or NULL)
 #' @export
 BoolSetDecl = function(name, kind, value = NULL){
   parTI = TypeInst$new(Type$new(base_type = "bool", kind = kind, set_type = TRUE))
@@ -86,7 +95,7 @@ BoolSetDecl = function(name, kind, value = NULL){
 #' @description declare a new set of string
 #' @param name variable/parameter name
 #' @param kind "var" or "par"
-#' @param value value of the set (or NULL)
+#' @param value provide a Set object (or NULL)
 #' @export
 StringSetDecl = function(name, kind, value = NULL){
   parTI = TypeInst$new(Type$new(base_type = "string", kind = kind, set_type = TRUE))
@@ -100,7 +109,7 @@ StringSetDecl = function(name, kind, value = NULL){
 #' @param name variable/parameter name
 #' @param kind "var" or "par"
 #' @param ind index of the array
-#' @param value value (NULL by default)
+#' @param value Array Object (NULL by default)
 #' @param ndim number of dimensions of the array
 #' @export
 IntArrDecl = function(name, kind, ind, value = NULL, ndim){
@@ -127,7 +136,7 @@ FloatArrDecl = function(name, kind, ind, value = NULL, ndim){
 #' @title n-D bool array declaration
 #' @description 
 #' Declare a new n-dimensional array
-#' of bool
+#' of bools
 #' @param name variable/parameter name
 #' @param kind "var" or "par"
 #' @param ind index of the array
@@ -139,10 +148,10 @@ BoolArrDecl = function(name, kind, ind, value = NULL, ndim){
   return(VarDecl$new(name, parTI, value))
 }
 
-#' @title n-D bool array declaration
+#' @title n-D String array declaration
 #' @description 
 #' Declare a new n-dimensional array
-#' of bool
+#' of strings
 #' @param name variable/parameter name
 #' @param kind "var" or "par"
 #' @param ind index of the array

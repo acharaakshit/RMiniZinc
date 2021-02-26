@@ -13,7 +13,7 @@ IntArrDecl(name, kind, ind, value = NULL, ndim)
 
 \item{ind}{index of the array}
 
-\item{value}{value (NULL by default)}
+\item{value}{Array Object (NULL by default)}
 
 \item{ndim}{number of dimensions of the array}
 }
