@@ -1,5 +1,9 @@
 ## Notes
 
+### Seventh Submission
+
+I have changed the description and vigneete title to 'R Interface to MiniZinc' to make it consistent throughout. Please find the latest changes and bug fixes in NEWS.md.
+
 ### Sixth Submission
 
 Please find the latest changes and bug fixes in NEWS.md

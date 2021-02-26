@@ -346,7 +346,7 @@ s$c_str()
 
 ## Expressions
 
-Given below are some examples of commonly used MiniZinc expressions. Check examples of some other expressions in the [reference manual](https://cran.r-project.org/web/packages/rminizinc/rminizinc.pdf).
+Given below are some examples of commonly used MiniZinc expressions. Check examples of some other expressions in the package manual.
 
 ### Comprehension
 
