@@ -11,7 +11,7 @@ vignette: >
 
 ## Introduction
 
-MiniZinc is a free and open-source constraint modeling language. Constraint satisfaction and discrete optimization problems can be formulated in a high-level modeling language. Models are compiled into an intermediate representation that is understood by a wide range of solvers. MiniZinc itself provides several solvers, for instance GeCode. The existing packages in R are not powerful enough to solve even mid-sized problems in combinatorial optimization.
+MiniZinc is a free and open-source constraint modeling language. Constraint satisfaction and discrete optimization problems can be formulated in a high-level modeling language. Models are compiled into an intermediate representation that is understood by a wide range of solvers. MiniZinc itself provides several solvers, for instance GeCode. The existing packages in R are not powerful enough to solve even mid-sized problems in combinatorial optimization.  
 
 There are implementations of an Interface to MiniZinc in Python like MiniZinc Python and pymzn and JMiniZinc for Java but such an interface does not exist for R.
 
@@ -208,7 +208,7 @@ cat(sprintf("The updated model is:\n %s", model$mzn_string()))
 
 The function `mzn_eval()` is used to evaluate a MiniZinc model and returns the solution string and a list of solutions if they were parsed without any error by the function `sol_parse()` otherwise it returns the solution string and an appropriate error. The parsed solutions are a named list where elements are of type `OBJ$SOLUTIONS$SOLUTION<n>$<VARIABLE_NAME>`. The optimal solution if found can be accessed using `OBJ$SOLUTIONS$OPTIMAL_SOLUTION` and the best solution can be accessed using `OBJ$SOLUTIONS$BEST_SOLUTION`. More details about the functions can be obtained using `?mzn_eval` and `?sol_parse`.
 
-The solver name of the solver that should be used to solve the model needs to be specified by the user (default is "Gecode") and the `lib_path` (path of the solver configuration files) is by default provided but a custom path can be provided the user in case it is required. The model must be provided as one and only one of R6 `Model` object, `mzn_path` i.e. path of mzn file or `model_string` i.e. the string representation of the model. If the user wishes to provide a data file, it's path can be provided to the argument `dznpath`.  A time limit (in ms) can also be provided to the argument `time_limit`. (default is 300000 ms)
+The solver name of the solver that should be used to solve the model needs to be specified by the user (default is "Gecode") and the `lib_path` (path of the solver configuration files) is by default provided but a custom path can be provided the user in case it is required. The model must be provided as one and only one of R6 `Model` object, `mzn_path` i.e. path of mzn file or `model_string` i.e. the string representation of the model. If the user wishes to provide a data file, it's path can be provided to the argument `dznpath`.  A time limit (in ms) can also be provided to the argument `time_limit`. (default is 300000 ms). Other possible command line options can be provided as `c("a", .., "n")` to `other_cl_options`. Changing the default solution outputs will result in parsing errors and the solutions will not be parsed correctly to R but the solution string will be returned.
 
 A sample knapsack problem has been solved below::
 
