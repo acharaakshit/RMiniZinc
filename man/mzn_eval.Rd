@@ -12,11 +12,13 @@ mzn_eval(
   solver = "org.gecode.gecode",
   dzn_path = "",
   all_solutions = TRUE,
-  time_limit = 300000L
+  time_limit = 300000L,
+  other_cl_options = NULL
 )
 }
 \arguments{
-\item{lib_path}{the path of the library where the solver is present.}
+\item{lib_path}{the path of the library where the standard library files are present 
+(the parent directory of the std directory).}
 
 \item{r_model}{R6 Model object}
 
@@ -24,13 +26,20 @@ mzn_eval(
 
 \item{model_string}{model string to be solved.}
 
-\item{solver}{the name of the solver to use.}
+\item{solver}{the name of the solver to use.(default: Gecode)}
 
 \item{dzn_path}{path of the datafile to be used.}
 
-\item{all_solutions}{bool to specify if all solutions are specified.}
+\item{all_solutions}{bool to specify if all solutions are specified.(default: true)}
 
-\item{time_limit}{stop after <time_limit> milliseconds}
+\item{time_limit}{stop after <time_limit> milliseconds. (default: 300000ms -- 5 mins)}
+
+\item{other_cl_options}{other command line options/flags that you want to provide
+1. Please provide as a character/string vector with each element as a flag
+2. Incorrect flags or incorrect commands will throw errors.
+3. Changing the default solution output options will result in parsing errors and 
+the solutions will not be parsed correctly to R but the solution string will be 
+returned.}
 }
 \description{
 evaluates the MiniZinc model

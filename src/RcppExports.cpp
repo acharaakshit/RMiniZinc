@@ -6,8 +6,8 @@
 using namespace Rcpp;
 
 // mzn_eval
-List mzn_eval(std::string lib_path, Rcpp::Nullable<Rcpp::Environment> r_model, std::string mzn_path, std::string model_string, std::string solver, std::string dzn_path, bool all_solutions, int time_limit);
-RcppExport SEXP _rminizinc_mzn_eval(SEXP lib_pathSEXP, SEXP r_modelSEXP, SEXP mzn_pathSEXP, SEXP model_stringSEXP, SEXP solverSEXP, SEXP dzn_pathSEXP, SEXP all_solutionsSEXP, SEXP time_limitSEXP) {
+List mzn_eval(std::string lib_path, Rcpp::Nullable<Rcpp::Environment> r_model, std::string mzn_path, std::string model_string, std::string solver, std::string dzn_path, bool all_solutions, int time_limit, Nullable<std::vector<std::string>> other_cl_options);
+RcppExport SEXP _rminizinc_mzn_eval(SEXP lib_pathSEXP, SEXP r_modelSEXP, SEXP mzn_pathSEXP, SEXP model_stringSEXP, SEXP solverSEXP, SEXP dzn_pathSEXP, SEXP all_solutionsSEXP, SEXP time_limitSEXP, SEXP other_cl_optionsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -19,7 +19,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< std::string >::type dzn_path(dzn_pathSEXP);
     Rcpp::traits::input_parameter< bool >::type all_solutions(all_solutionsSEXP);
     Rcpp::traits::input_parameter< int >::type time_limit(time_limitSEXP);
-    rcpp_result_gen = Rcpp::wrap(mzn_eval(lib_path, r_model, mzn_path, model_string, solver, dzn_path, all_solutions, time_limit));
+    Rcpp::traits::input_parameter< Nullable<std::vector<std::string>> >::type other_cl_options(other_cl_optionsSEXP);
+    rcpp_result_gen = Rcpp::wrap(mzn_eval(lib_path, r_model, mzn_path, model_string, solver, dzn_path, all_solutions, time_limit, other_cl_options));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -49,7 +50,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_rminizinc_mzn_eval", (DL_FUNC) &_rminizinc_mzn_eval, 8},
+    {"_rminizinc_mzn_eval", (DL_FUNC) &_rminizinc_mzn_eval, 9},
     {"_rminizinc_mzn_parse", (DL_FUNC) &_rminizinc_mzn_parse, 3},
     {"_rminizinc_sol_parse", (DL_FUNC) &_rminizinc_sol_parse, 1},
     {NULL, NULL, 0}

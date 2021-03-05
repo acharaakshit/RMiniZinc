@@ -17,18 +17,9 @@ using namespace std;
 // [[Rcpp::export]]
 List sol_parse(std::string solutionString) {
   
-  string delimiter = "----------";
-  size_t pos = 0;
   static const size_t npos = -1;
-  std::string token;
-  vector<string> solutions;
   
-  while ((pos = solutionString.find(delimiter)) != npos) {
-    token = solutionString.substr(0, pos);
-    solutions.push_back(token);
-    solutionString.erase(0, pos + delimiter.length());
-  }
-  
+  // stop if no solution or similar
   if(solutionString.find("=====UNSATISFIABLE=====") != npos){
     Rcpp::stop("No Solution");
   }else if(solutionString.find("=====ERROR=====") != npos){
@@ -41,7 +32,30 @@ List sol_parse(std::string solutionString) {
     Rcpp::stop("Unsatisfiable or Unbounded solution");
   }
   
-  if(solutions.size()==0) Rcpp::stop("No solution seperator found-- incorrect solution string");
+  // remove comments in the solution
+  string str = solutionString;
+  size_t nFPos = 0;     
+  while(npos != (nFPos = solutionString.find('%')))
+  {
+      size_t second = solutionString.find('\n', nFPos);
+      solutionString.erase(nFPos, second - nFPos + 1);
+  }   
+  
+  // get the solutions using the delimiter
+  string delimiter = "----------";
+  size_t pos = 0;
+  std::string token;
+  vector<string> solutions;
+  
+  while ((pos = solutionString.find(delimiter)) != npos) {
+    token = solutionString.substr(0, pos);
+    solutions.push_back(token);
+    solutionString.erase(0, pos + delimiter.length());
+  }
+  
+  if(solutions.size()==0) {
+    Rcpp::stop("No '----------' solution seperator found -- incorrect solution string or maybe --compile or similar was used which resulted in no output"); 
+  }
   
   int optimal_sol_flag = solutionString.find("==========") != npos ? 1:0;
   

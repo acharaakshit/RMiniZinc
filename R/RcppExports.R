@@ -8,16 +8,23 @@
 #' @importFrom Rcpp sourceCpp
 #' @export mzn_eval
 #' @useDynLib rminizinc, .registration=TRUE
-#' @param lib_path the path of the library where the solver is present.
+#' @param lib_path the path of the library where the standard library files are present 
+#' (the parent directory of the std directory).
 #' @param r_model R6 Model object
 #' @param mzn_path path of the mzn file to be solved
 #' @param model_string model string to be solved.
-#' @param solver the name of the solver to use.
+#' @param solver the name of the solver to use.(default: Gecode)
 #' @param dzn_path path of the datafile to be used.
-#' @param all_solutions bool to specify if all solutions are specified.
-#' @param time_limit stop after <time_limit> milliseconds
-mzn_eval <- function(lib_path = "", r_model = NULL, mzn_path = "", model_string = "", solver = "org.gecode.gecode", dzn_path = "", all_solutions = TRUE, time_limit = 300000L) {
-    .Call(`_rminizinc_mzn_eval`, lib_path, r_model, mzn_path, model_string, solver, dzn_path, all_solutions, time_limit)
+#' @param all_solutions bool to specify if all solutions are specified.(default: true)
+#' @param time_limit stop after <time_limit> milliseconds. (default: 300000ms -- 5 mins)
+#' @param other_cl_options other command line options/flags that you want to provide
+#' 1. Please provide as a character/string vector with each element as a flag
+#' 2. Incorrect flags or incorrect commands will throw errors.
+#' 3. Changing the default solution output options will result in parsing errors and 
+#' the solutions will not be parsed correctly to R but the solution string will be 
+#' returned.
+mzn_eval <- function(lib_path = "", r_model = NULL, mzn_path = "", model_string = "", solver = "org.gecode.gecode", dzn_path = "", all_solutions = TRUE, time_limit = 300000L, other_cl_options = NULL) {
+    .Call(`_rminizinc_mzn_eval`, lib_path, r_model, mzn_path, model_string, solver, dzn_path, all_solutions, time_limit, other_cl_options)
 }
 
 #' @title MiniZinc syntax parser

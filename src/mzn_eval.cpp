@@ -12,14 +12,21 @@ using namespace Rcpp;
 //' @importFrom Rcpp sourceCpp
 //' @export mzn_eval
 //' @useDynLib rminizinc, .registration=TRUE
-//' @param lib_path the path of the library where the solver is present.
+//' @param lib_path the path of the library where the standard library files are present 
+//' (the parent directory of the std directory).
 //' @param r_model R6 Model object
 //' @param mzn_path path of the mzn file to be solved
 //' @param model_string model string to be solved.
-//' @param solver the name of the solver to use.
+//' @param solver the name of the solver to use.(default: Gecode)
 //' @param dzn_path path of the datafile to be used.
-//' @param all_solutions bool to specify if all solutions are specified.
-//' @param time_limit stop after <time_limit> milliseconds
+//' @param all_solutions bool to specify if all solutions are specified.(default: true)
+//' @param time_limit stop after <time_limit> milliseconds. (default: 300000ms -- 5 mins)
+//' @param other_cl_options other command line options/flags that you want to provide
+//' 1. Please provide as a character/string vector with each element as a flag
+//' 2. Incorrect flags or incorrect commands will throw errors.
+//' 3. Changing the default solution output options will result in parsing errors and 
+//' the solutions will not be parsed correctly to R but the solution string will be 
+//' returned.
 // [[Rcpp::export]]
 List mzn_eval(std::string lib_path = "", 
               Rcpp::Nullable<Rcpp::Environment> r_model = R_NilValue,
@@ -27,7 +34,8 @@ List mzn_eval(std::string lib_path = "",
               std::string model_string = "",
               std::string solver = "org.gecode.gecode",
               std::string dzn_path = "",
-              bool all_solutions = true, int time_limit = 300000);
+              bool all_solutions = true, int time_limit = 300000,
+              Nullable<std::vector<std::string>> other_cl_options = R_NilValue);
 
 #ifdef MZN_EVAL
 
@@ -79,7 +87,8 @@ List mzn_eval(std::string lib_path, Nullable<Environment> r_model,
               std::string model_string,
               std::string solver,
               std::string dzn_path,
-              bool all_solutions, int time_limit){
+              bool all_solutions, int time_limit,
+              Nullable<std::vector<std::string>> other_cl_options){
   
   model_string = envPathStringcheck(r_model, mzn_path, model_string);
   Rcpp::Environment utils("package:utils");
@@ -99,11 +108,20 @@ List mzn_eval(std::string lib_path, Nullable<Environment> r_model,
     {
       solconf.append("/minizinc");
       lib_path = solconf;
+    }else if(!dirExists(lib_path.c_str())){
+      Rcpp::stop("lib_path is not a valid directory path");
     }
     vector<std::string> options({"--stdlib-dir", lib_path, "--solver", solver,
                                 "--output-mode", "json", "--time-limit", to_string(time_limit)});
     if(!dzn_path.empty()) options.push_back(dzn_path);
     if(all_solutions) options.push_back("-a");
+    vector<string> other_options;
+    if(!Rf_isNull(other_cl_options)){
+      other_options = Rcpp::as<vector<string>>(other_cl_options);
+      for(int i = 0; i < other_options.size(); i++){
+        options.push_back(other_options[i]); 
+      }
+    }
     slv.run(options,model_string, "minizinc", "model.mzn");
     sol_string = sol_strn.str();
   }catch (const LocationException& e) {
@@ -144,7 +162,8 @@ List mzn_eval(std::string lib_path, Nullable<Environment> r_model,
               std::string model_string,
               std::string solver,
               std::string dzn_path,
-              bool all_solutions, int time_limit){
+              bool all_solutions, int time_limit,
+              Nullable<std::vector<std::string>> other_cl_options){
   Rcpp::stop("Please install libminizinc on your system and provide solver binaries!");
 }
 
