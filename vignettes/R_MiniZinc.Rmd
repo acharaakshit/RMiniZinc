@@ -23,13 +23,15 @@ It would be nice to go through the tutorials on the MiniZinc website to understa
 
 ## Installation
 
+NOTE: This package is compatible with MiniZinc 2.5.5.
+
 1) Build libminizinc  
 
-First, You need to download the latest libminizinc release and build libminizinc library for MiniZinc to work properly.  
+First, You need to download the libminizinc 2.5.5 release and build libminizinc library for MiniZinc to work properly.  
 
 Please follow these steps for Linux:  
 
-*  Download the latest libminizinc release from https://github.com/MiniZinc/libminizinc/releases.
+*  Download the libminizinc 2.5.5 release from https://github.com/MiniZinc/libminizinc/releases.
 *  Extract the downloaded tar.gz or zip (for Windows) and name the extracted folder `libminizinc`.
 * `cd libminizinc/`  
 * `sudo sed -i '3 i set(CMAKE_POSITION_INDEPENDENT_CODE ON)' CMakeLists.txt`  
