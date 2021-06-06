@@ -1,3 +1,8 @@
+## Version 0.0.7
+
+### CHANGES
+* Allow all command line options to be provided with `mzn_eval()` for solving a MiniZinc model like `other_cl_options`. 
+
 ## Version 0.0.6
 
 ### CHANGES

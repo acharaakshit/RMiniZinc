@@ -1,10 +1,10 @@
 ---
-title: "MiniZinc Interface for R"
+title: "R Interface to MiniZinc"
 author: "Akshit Achara, Lars Kotthoff, Hans W. Borchers, Guido Tack" 
 output: 
   rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{MiniZinc Interface for R}
+  %\VignetteIndexEntry{R Interface to MiniZinc}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
