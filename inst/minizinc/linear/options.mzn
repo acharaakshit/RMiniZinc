@@ -40,9 +40,23 @@ bool: MZN__MinMaxGeneral = if absent(MinMaxGeneral) then false else deopt(MinMax
 
 %% CUMULATIVE
 opt bool: CumulativeSolverConfig;               %% As set in share/minizinc/Preferences.json
-opt bool: Cumulative;          %% User option, e.g., with -D
-bool: MZN__Cumulative_Fixed_d_r = if occurs(Cumulative) then deopt(Cumulative)
+opt bool: UseCumulative;       %% User option, e.g., with -D
+bool: MZN__Cumulative_Fixed_d_r = if occurs(UseCumulative) then deopt(UseCumulative)
                       elseif occurs(CumulativeSolverConfig) then deopt(CumulativeSolverConfig)
+                      else false endif;
+
+%% ORBISACK
+opt bool: OrbisackSolverConfig;               %% As set in share/minizinc/Preferences.json
+opt bool: UseOrbisack;          %% User option, e.g., with -D
+bool: MZN__Orbisack = if occurs(UseOrbisack) then deopt(UseOrbisack)
+                      elseif occurs(OrbisackSolverConfig) then deopt(OrbisackSolverConfig)
+                      else false endif;
+
+%% ORBITOPE
+opt bool: OrbitopeSolverConfig;               %% As set in share/minizinc/Preferences.json
+opt bool: UseOrbitope;          %% User option, e.g., with -D
+bool: MZN__Orbitope = if occurs(UseOrbitope) then deopt(UseOrbitope)
+                      elseif occurs(OrbitopeSolverConfig) then deopt(OrbitopeSolverConfig)
                       else false endif;
 
 
