@@ -1,8 +1,21 @@
 ## Notes
 
+### Eighth Submission
+
+> Check: files in 'vignettes', Result: WARNING
+  Files in the 'vignettes' directory but no files in 'inst/doc':
+    'R_MiniZinc.R', 'R_MiniZinc.Rmd', 'R_MiniZinc.html'
+> Check: package vignettes, Result: WARNING
+  dir.exists(dir) is not TRUE
+  Package vignette without corresponding single PDF/HTML:
+     'R_MiniZinc.Rmd'
+
+I was using --no-build-vignettes option while building which I have removed now. The warnings are resolved.
+
+
 ### Seventh Submission
 
-I have changed the description and vigneete title to 'R Interface to MiniZinc' to make it consistent throughout. Please find the latest changes and bug fixes in NEWS.md.
+I have changed the description and vignette title to 'R Interface to MiniZinc' to make it consistent throughout. Please find the latest changes and bug fixes in NEWS.md.
 
 ### Sixth Submission
 
