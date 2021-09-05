@@ -64,7 +64,7 @@ Please note that if path arguments are not passed along with the installation (a
 
 ### SCOPE OF FEATURES
 
-The features have been tested over a wide variety of problems but doesn't cover MiniZinc in its entirety. Please feel free to [open an issue](https://docs.github.com/en/enterprise/2.15/user/articles/creating-an-issue) or submit a PR if you find any problems in the package.
+The features have been tested over a wide variety of problems but doesn't cover MiniZinc in its entirety. Please feel free to [open an issue](https://docs.github.com/en/enterprise/2.15/user/articles/creating-an-issue) or submit a PR if you find any problems in the package. Any help towards making the installation easier is highly appreciated.
 
 ### PROJECT STATUS
 
