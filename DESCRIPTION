@@ -1,7 +1,7 @@
 Package: rminizinc
 Type: Package
 Title: R Interface to 'MiniZinc'
-Version: 0.0.7
+Version: 0.0.8
 Author: Akshit Achara, Lars Kotthoff, Hans W. Borchers, Guido Tack
 Maintainer: Akshit Achara <acharaakshit@gmail.com>
 URL: https://github.com/acharaakshit/RMiniZinc
@@ -17,7 +17,7 @@ Description: Constraint optimization, or constraint programming, is the name giv
 License: Mozilla Public License Version 2.0
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Depends: R (>= 3.5.0), rjson
 Imports: R6, checkmate, Rcpp, rlang, rlist
 LinkingTo: Rcpp
@@ -25,4 +25,3 @@ Suggests: knitr, rmarkdown, testthat, stringr
 SystemRequirements: pandoc (>=1.14, needed for the vignette)
 VignetteBuilder: knitr
 Biarch: true
-

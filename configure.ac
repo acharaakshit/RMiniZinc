@@ -1,4 +1,4 @@
-AC_INIT([rminizinc], [0.0.7])
+AC_INIT([rminizinc],[0.0.8])
 
 # Find the compiler and compiler flags used by R.
 : ${R_HOME=`R RHOME`}
@@ -38,9 +38,7 @@ AC_SUBST([MZN_LIB_PATH], "")
 
 AC_ARG_WITH(
 	[mzn],
-    [AC_HELP_STRING(
-    	[--with-mzn=PREFIX],
-        [path to where libminizinc is installed])],
+    [AS_HELP_STRING([--with-mzn=PREFIX],[path to where libminizinc is installed])],
             [
             	AS_IF([test "$BUILD_PLATFORM" = "Windows"], 
             	[
@@ -126,9 +124,7 @@ AC_ARG_WITH(
 
 AC_ARG_WITH(
 	[bin],
-    [AC_HELP_STRING(
-    	[--with-bin=PREFIX],
-        [path to the solver binaries. DON'T USE BACKSLASH AT THE END OF THE PATH])],
+    [AS_HELP_STRING([--with-bin=PREFIX],[path to the solver binaries. DON'T USE BACKSLASH AT THE END OF THE PATH])],
         [
         	AC_SUBST([BIN_PATH], ${with_bin})
             AS_IF([test "$MZN_PATH" = "50"], 

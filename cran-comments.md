@@ -1,5 +1,14 @@
 ## Notes
 
+### Ninth Submission
+
+> checking top-level files ... WARNING
+  Output from running autoreconf:
+  configure.ac:39: warning: The macro `AC_HELP_STRING' is obsolete.
+  configure.ac:39: You should run autoupdate.
+
+Ran autoupdate to remove the warning.
+
 ### Eighth Submission
 
 > Check: files in 'vignettes', Result: WARNING

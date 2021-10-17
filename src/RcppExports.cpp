@@ -5,6 +5,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // mzn_eval
 List mzn_eval(std::string lib_path, Rcpp::Nullable<Rcpp::Environment> r_model, std::string mzn_path, std::string model_string, std::string solver, std::string dzn_path, bool all_solutions, int time_limit, Nullable<std::vector<std::string>> other_cl_options);
 RcppExport SEXP _rminizinc_mzn_eval(SEXP lib_pathSEXP, SEXP r_modelSEXP, SEXP mzn_pathSEXP, SEXP model_stringSEXP, SEXP solverSEXP, SEXP dzn_pathSEXP, SEXP all_solutionsSEXP, SEXP time_limitSEXP, SEXP other_cl_optionsSEXP) {
